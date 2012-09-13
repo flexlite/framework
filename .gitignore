@@ -7,3 +7,5 @@ bin-release/
 .flexProperties
 .settings/
 .project
+.gitignore
+.svn
