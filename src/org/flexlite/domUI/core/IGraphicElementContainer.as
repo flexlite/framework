@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package org.flexlite.domUI.core
 {
 	public interface IGraphicElementContainer
@@ -22,29 +21,4 @@ package org.flexlite.domUI.core
 		
 		
 	}
-=======
-package org.flexlite.domUI.core
-{
-	public interface IGraphicElementContainer
-	{
-		/**
-		 * 通知主机组件绘图元素的图层已经更改 
-		 */		
-		function invalidateGraphicElementSharing(element:IGraphicElement):void
-		/**
-		 *  通知主机组件绘图元素的属性已经更改 
-		 */			
-		function invalidateGraphicElementProperties(element:IGraphicElement):void;
-		/**
-		 *  通知主机组件绘图元素的尺寸需要重新测量
-		 */		
-		function invalidateGraphicElementSize(element:IGraphicElement):void;
-		/**
-		 *  通知主机组件绘图元素需要重新绘制
-		 */		
-		function invalidateGraphicElementDisplayList(element:IGraphicElement):void;
-		
-		
-	}
->>>>>>> master
 }

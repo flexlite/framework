@@ -10,11 +10,7 @@ package org.flexlite.domUI.skins.spark
 	import org.flexlite.domUI.primitives.graphic.RadialGradient;
 	import org.flexlite.domUI.states.AddItems;
 	import org.flexlite.domUI.states.SetProperty;
-<<<<<<< HEAD
 	import org.flexlite.domUI.states.State;
-=======
-	import org.flexlite.domUI.states.State;
->>>>>>> master
 
 	/**
 	 * @private

@@ -5,11 +5,7 @@ package org.flexlite.domUI.skins.spark
 	import org.flexlite.domUI.primitives.Rect;
 	import org.flexlite.domUI.primitives.graphic.SolidColor;
 	import org.flexlite.domUI.primitives.graphic.SolidColorStroke;
-<<<<<<< HEAD
 	import org.flexlite.domUI.states.State;
-=======
-	import org.flexlite.domUI.states.State;
->>>>>>> master
 	
 	/**
 	 * 单行文本输入控件默认皮肤

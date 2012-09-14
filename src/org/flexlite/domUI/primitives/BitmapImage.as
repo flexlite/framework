@@ -30,11 +30,7 @@ package org.flexlite.domUI.primitives
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
 	import flash.system.LoaderContext;
-<<<<<<< HEAD
 	import flash.utils.ByteArray;
-=======
-	import flash.utils.ByteArray;
->>>>>>> master
 	
 	use namespace dx_internal;
 	

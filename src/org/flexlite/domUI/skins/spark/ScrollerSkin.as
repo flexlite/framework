@@ -2,11 +2,7 @@ package org.flexlite.domUI.skins.spark
 {
 	import org.flexlite.domUI.components.HScrollBar;
 	import org.flexlite.domUI.components.VScrollBar;
-<<<<<<< HEAD
 	import org.flexlite.domUI.skins.SparkSkin;
-=======
-	import org.flexlite.domUI.skins.SparkSkin;
->>>>>>> master
 	
 	/**
 	 * 滚动条组件默认皮肤

@@ -18,11 +18,7 @@ package org.flexlite.domUI.skins.spark
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	
-<<<<<<< HEAD
 	import flashx.textLayout.formats.TextAlign;
-=======
-	import flashx.textLayout.formats.TextAlign;
->>>>>>> master
 
 	/**
 	 * @private

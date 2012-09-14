@@ -4,11 +4,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	
-<<<<<<< HEAD
 	import flash.events.Event;
-=======
-	import flash.events.Event;
->>>>>>> master
 	
 	
 	use namespace dx_internal;

@@ -2,11 +2,7 @@ package org.flexlite.domUI.components
 {
 	
 	import org.flexlite.domUI.core.IDisplayText;
-<<<<<<< HEAD
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-=======
-	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
->>>>>>> master
 
 	[SkinState("normal")]
 	

@@ -8,11 +8,7 @@ package org.flexlite.domUI.skins.spark
 	import org.flexlite.domUI.primitives.graphic.SolidColor;
 	import org.flexlite.domUI.primitives.graphic.SolidColorStroke;
 	import org.flexlite.domUI.states.SetProperty;
-<<<<<<< HEAD
 	import org.flexlite.domUI.states.State;
-=======
-	import org.flexlite.domUI.states.State;
->>>>>>> master
 	
 	/**
 	 * 水平滚动条滑块按钮默认皮肤
