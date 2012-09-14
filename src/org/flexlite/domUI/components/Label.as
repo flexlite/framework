@@ -544,7 +544,7 @@ package org.flexlite.domUI.components
 				else if(_verticalAlign==VerticalAlign.BOTTOM)
 					valign = 1;
 				textField.y += Math.floor((unscaledTextHeight-textField.textHeight)*valign);
-				
+				textField.$height = unscaledTextHeight-textField.y;
 			}
 		}
 		

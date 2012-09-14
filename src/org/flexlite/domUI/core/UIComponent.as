@@ -1,5 +1,12 @@
 package org.flexlite.domUI.core
 {
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.InteractiveObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.geom.Point;
+	
 	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
@@ -7,12 +14,6 @@ package org.flexlite.domUI.core
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUI.managers.ToolTipManager;
-	
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.InteractiveObject;
-	import flash.display.Sprite;
-	import flash.events.Event;
 	
 	use namespace dx_internal;
 	
@@ -110,18 +111,30 @@ package org.flexlite.domUI.core
 			_toolTipClass = value;
 		}
 		
-		private var _toolTipShowDelay:Number = 500;
+		private var _toolTipOffset:Point;
 		
-		public function get toolTipShowDelay():Number
+		public function get toolTipOffset():Point
 		{
-			return _toolTipShowDelay;
+			return _toolTipOffset;
 		}
 		
-		public function set toolTipShowDelay(value:Number):void
+		public function set toolTipOffset(value:Point):void
 		{
-			_toolTipShowDelay = value;
+			_toolTipOffset = value;
 		}
 		
+		private var _toolTipPosition:String = "mouse";
+
+		public function get toolTipPosition():String
+		{
+			return _toolTipPosition;
+		}
+
+		public function set toolTipPosition(value:String):void
+		{
+			_toolTipPosition = value;
+		}
+
 		private var _isPopUp:Boolean;
 		
 		public function get isPopUp():Boolean
@@ -293,7 +306,6 @@ package org.flexlite.domUI.core
 		private function onAddedToStage(e:Event=null):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			DomGlobals.initlize(stage);
 			checkInvalidateFlag();
 			addRenderListener();
 		}

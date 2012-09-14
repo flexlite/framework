@@ -8,6 +8,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.managers.PopUpManager;
@@ -114,8 +115,8 @@ package org.flexlite.domUI.components
 		
 		private var _popUpPosition:String = PopUpPosition.TOP_LEFT;
 		/**
-		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。
-		 * @see org.flexlite.domUI.components.PopUpPosition
+		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。默认值TOP_LEFT。
+		 * @see org.flexlite.domUI.core.PopUpPosition
 		 */		
 		public function get popUpPosition():String
 		{
@@ -148,36 +149,34 @@ package org.flexlite.domUI.components
 		private function calculatePopUpPosition():Point
 		{
 			var registrationPoint:Point = new Point();
+			var centerX:Number = (width - popUp.layoutBoundsWidth)*0.5;
+			var centerY:Number = (height - popUp.layoutBoundsHeight)*0.5;
 			switch(_popUpPosition)
 			{
 				case PopUpPosition.BELOW:
-					registrationPoint.x = 0;
+					registrationPoint.x = centerX;
 					registrationPoint.y = height;
 					break;
 				case PopUpPosition.ABOVE:
-					registrationPoint.x = 0;
+					registrationPoint.x = centerX;
 					registrationPoint.y = -popUp.layoutBoundsHeight;
 					break;
 				case PopUpPosition.LEFT:
 					registrationPoint.x = -popUp.layoutBoundsWidth;
-					registrationPoint.y = 0;
+					registrationPoint.y = centerY;
 					break;
 				case PopUpPosition.RIGHT:
 					registrationPoint.x = width;
-					registrationPoint.y = 0;
+					registrationPoint.y = centerY;
 					break;            
 				case PopUpPosition.CENTER:
-					registrationPoint.x = (width - popUp.layoutBoundsWidth)*0.5;
-					registrationPoint.y = (height - popUp.layoutBoundsHeight)*0.5;
+					registrationPoint.x = centerX;
+					registrationPoint.y = centerY;
 					break;            
 				case PopUpPosition.TOP_LEFT:
 					break;
 			}
 			registrationPoint = localToGlobal(registrationPoint);
-			if(DomGlobals.appContainer)
-			{
-				registrationPoint = DomGlobals.appContainer.globalToLocal(registrationPoint);
-			}
 			return registrationPoint;
 		}
 		/**

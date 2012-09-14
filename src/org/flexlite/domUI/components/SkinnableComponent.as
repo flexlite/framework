@@ -50,7 +50,7 @@ package org.flexlite.domUI.components
 		
 		override protected function createChildren():void
 		{
-			if(skinName==null||skinName=="")
+			if(skinName==null)
 			{
 				skinName = InjectorManager.skinInjector.getSkinName(hostComponentKey);
 			}
