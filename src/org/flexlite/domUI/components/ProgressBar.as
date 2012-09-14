@@ -59,6 +59,8 @@ package org.flexlite.domUI.components
 			// 抛出完成事件
 			if (value == maximum && value > 0)
 			{
+				if(label) label.text = String(value+"/"+maximum);
+				thumb.width = this.width;
 				stopPlayingIndeterminate();
 				dispatchEvent(new Event(Event.COMPLETE));
 			}
@@ -90,26 +92,31 @@ package org.flexlite.domUI.components
 		
 		private function updateIndeterminateHandler(e:TimerEvent):void
 		{
-			if(thumb.width<this.width*(value/maximum))
+			if(Math.abs(thumb.width-this.width*(value/maximum))<1)
+			{
+				stopPlayingIndeterminate();
+			}
+			else if(thumb.width<this.width*(value/maximum))
 			{
 				if(label) label.text = String(value+"/"+maximum);
 				thumb.width++;
 			}
 			else
 			{
-				stopPlayingIndeterminate();
+				if(label) label.text = String(value+"/"+maximum);
+				thumb.width--;
 			}
 		}
 		
 		/**
 		 * [SkinPart]实体滑块组件
 		 */		
-		public var thumb:Button;
+		public var thumb:DisplayObject;
 		
 		/**
 		 * [SkinPart]实体轨道组件
 		 */
-		public var track:Button; 
+		public var track:DisplayObject; 
 		
 		/**
 		 * [SkinPart]进度数字显示 可选
