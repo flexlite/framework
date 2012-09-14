@@ -8,11 +8,7 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.globalization.LocaleID;
-<<<<<<< HEAD
 	import flash.globalization.NumberFormatter;
-=======
-	import flash.globalization.NumberFormatter;
->>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	use namespace dx_internal;
 	

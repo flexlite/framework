@@ -12,15 +12,9 @@ package org.flexlite.domUI.components
 	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
-<<<<<<< HEAD
 	import flash.events.SecurityErrorEvent;
 	
 	use namespace dx_internal;
-=======
-	import flash.events.SecurityErrorEvent;
-	
-	use namespace dx_internal;
->>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	[DXML(show="true")]
 	

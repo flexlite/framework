@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package org.flexlite.domUI.events
 {
 	import org.flexlite.domUI.core.IVisualElement;
@@ -50,56 +49,3 @@ package org.flexlite.domUI.events
 	}
 	
 }
-=======
-package org.flexlite.domUI.events
-{
-	import org.flexlite.domUI.core.IVisualElement;
-	
-	import flash.events.Event;
-	
-	/**
-	 * Group添加或移除元素时分派的事件。
-	 * @author DOM
-	 */	
-	public class ElementExistenceEvent extends Event
-	{
-		/**
-		 * 元素添加 
-		 */		
-		public static const ELEMENT_ADD:String = "elementAdd";
-		/**
-		 * 元素移除 
-		 */		
-		public static const ELEMENT_REMOVE:String = "elementRemove";
-
-		public function ElementExistenceEvent(
-			type:String, bubbles:Boolean = false,
-			cancelable:Boolean = false,
-			element:IVisualElement = null, 
-			index:int = -1)
-		{
-			super(type, bubbles, cancelable);
-			
-			this.element = element;
-			this.index = index;
-		}
-		
-		/**
-		 * 指向已添加或删除元素的位置的索引。 
-		 */		
-		public var index:int;
-		
-		/**
-		 * 对已添加或删除的视觉元素的引用。 
-		 */		
-		public var element:IVisualElement;
-		
-		override public function clone():Event
-		{
-			return new ElementExistenceEvent(type, bubbles, cancelable,
-				element, index);
-		}
-	}
-	
-}
->>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be

@@ -1,12 +1,7 @@
 package org.flexlite.domUI.core
 {
-<<<<<<< HEAD
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
-=======
-	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-
->>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	/**
 	 * 具有管理IVisualElement子显示对象的容器接口
 	 * @author DOM
