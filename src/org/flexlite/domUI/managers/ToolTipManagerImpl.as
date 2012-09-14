@@ -17,7 +17,11 @@ package org.flexlite.domUI.managers
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+<<<<<<< HEAD
 	import flash.utils.Timer;
+=======
+	import flash.utils.Timer;
+>>>>>>> master
 	
 	use namespace dx_internal;
 	
@@ -66,6 +70,7 @@ package org.flexlite.domUI.managers
 		 * 回收时需要手动调用destroyToolTip(toolTipClass)方法。
 		 * 若为false，则每次都重新创建新的ToolTip实例。 默认为true。
 		 */
+<<<<<<< HEAD
 		public function get reuseToolTip():Boolean
 		{
 			return _reuseToolTip;
@@ -74,6 +79,16 @@ package org.flexlite.domUI.managers
 		public function set reuseToolTip(value:Boolean):void
 		{
 			_reuseToolTip = value;
+=======
+		public function get reuseToolTip():Boolean
+		{
+			return _reuseToolTip;
+		}
+
+		public function set reuseToolTip(value:Boolean):void
+		{
+			_reuseToolTip = value;
+>>>>>>> master
 		}
 		
 		private var toolTipCache:Dictionary = new Dictionary;

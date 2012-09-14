@@ -3,7 +3,11 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.DropDownListBase;
 	import org.flexlite.domUI.components.supportClasses.TextBase;
 	import org.flexlite.domUI.core.IDisplayText;
+<<<<<<< HEAD
 	import org.flexlite.domUI.core.dx_internal;
+=======
+	import org.flexlite.domUI.core.dx_internal;
+>>>>>>> master
 	
 	use namespace dx_internal;
 	

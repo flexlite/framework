@@ -8,7 +8,11 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domUI.core.IToolTip;
 	import org.flexlite.domUI.core.UIComponent;
+<<<<<<< HEAD
 	import org.flexlite.domUI.core.UITextField;
+=======
+	import org.flexlite.domUI.core.UITextField;
+>>>>>>> master
 	
 	/**
 	 * 工具提示组件

@@ -10,7 +10,11 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.dx_internal;
+<<<<<<< HEAD
 	import org.flexlite.domUI.managers.PopUpManager;
+=======
+	import org.flexlite.domUI.managers.PopUpManager;
+>>>>>>> master
 	
 	use namespace dx_internal;
 	

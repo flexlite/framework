@@ -2,7 +2,11 @@ package org.flexlite.domUI.components
 {
 	import org.flexlite.domUI.components.supportClasses.ToggleButtonBase;
 	
+<<<<<<< HEAD
 	[DXML(show="true")]
+=======
+	[DXML(show="true")]
+>>>>>>> master
 	/**
 	 * 切换按钮
 	 * @author DOM
