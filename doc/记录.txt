@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 目标要点:
 1.皮肤分离机制:用XML布局，用可视化工具编辑并生成皮肤代码，组件上只写逻辑，通过公共属性接口动态控制皮肤，监听事件。
 2.完整的自动布局机制：完全实现Flex的流式布局方式。在所有组件上应用,让制作好的UI通用性更强。
@@ -55,3 +56,62 @@
 7.SkinnableComponent和Skin之间定义的共享组件实例，不需要显式声明[SkinPart]标签，只要两边定义了同名的引用型公开变量，框架底层在附加皮肤的时候就会自动完成实例的注入。
 8.SkinnableComponent与Skin之间完全解耦。除了支持Flex的标准Skin外，SkinnableComponent还可以接受任何类型的显示对象作为皮肤。解析规则由项目注入的皮肤解析适配器决定。
 这样，比如Button等小型的元件，直接设置一个影片剪辑即可。扩展性更强，同样也优化了嵌套过多层级的问题。
+=======
+目标要点:
+1.皮肤分离机制:用XML布局，用可视化工具编辑并生成皮肤代码，组件上只写逻辑，通过公共属性接口动态控制皮肤，监听事件。
+2.完整的自动布局机制：完全实现Flex的流式布局方式。在所有组件上应用,让制作好的UI通用性更强。
+3.对非框架显示对象的兼容：通过UIElement类包装普通显示对象，也实现统一的自动布局。
+4.实现一套组件默认皮肤，为迅速搭建UI写测试逻辑的工作流提供支持,不用等待正式UI完成才开始，可以并行工作，逻辑完成后能方便地替换皮肤。
+5.全局的多语言翻译函数支持，tr("key")，在底层做注入的统一处理。
+6.实现游戏中常用UI组件的针对性封装，除了普通的List，TabBar等，再提供Window，Alert等使用率较高的组件，减小二次开发成本。
+
+进度：
+1.initialize creationComplete事件 √
+2.tr()全局多语言支持函数 √
+3.skin自动同步background尺寸大小 √
+4.Group容器，当监听鼠标事件时绘制鼠标点击区域  √
+5.GroupBase,invalidateDisplayListExceptLayout()方法，标记只更新显示列表不更新布局  √
+6.UIElement让普通显示对象实现自动布局的包装器 √
+7.layout：HorizontalLayout	VerticalLayout	TileLayout √
+8.DataGroup:列表，Tab等组件的承载容器 √
+9.List，Tab组件
+10.GraphicElement：Rect Ellipse Path等带有自动布局的绘图元素对象√
+11.用GraphicElement绘制一套组件默认皮肤
+
+计划：
+1.让Skin支持State机制;StateSkin;ItemRenderer和Button的over,up,down,disabled状态;
+2.设计外部素材注入的方式，考虑异步应用皮肤的问题
+3.先把可以使用的组件都写完吧。
+
+备注：
+1.各种布局类的滚动位置量获取方法还未实现
+2.写XML检测时记得非显示元素不允许使用includeIn和excludeFrom属性
+3.编译器要加上对@Style('styleName')的兼容，保证导出的as文件一定能通过编译
+4.state增加切换动态效果
+5.增加各种默认皮肤的必要样式属性
+6.FocusManager，Tab键切换控件
+7.飘文字组件,或许可以改成toolTip的一种？
+8，用一个类作为查询全局默认值的接口，然后在项目里完成注入。
+9.增加owner属性。
+10.解耦各个模块，用接口的方式衔接，避免编译过多的代码进入最终项目。有可能耦合的类和接口都放到core包里，其余每个模块的包都应该是可以直接删除而不会导致编译错误的。
+11.优化Image嵌套过多的性能问题，不继承SkinnableComponent，不
+.使用Skin。
+12.放弃现在的绘图元素Skin机制？改成全位图的，外部UI。使用专门的UI工具生成字节流skin。
+13.合并所有位图素材。异步位图解码。
+14.首先明确针对的平台:AIR,移动？Web？桌面
+15.聊天用的图文混排组件
+16.dxr增加对九宫格数据和帧标签的存储
+17.Scroller有问题,要修正一下.
+
+与Flex区别的地方
+0.针对游戏开发的需求，为了达到性能最优化，去除了绑定机制，绘图元素,全局样式表等比较损耗性能模块的支持。其中List等组件的数据源绑定刷新功能，仍然可以通过ArrayCollection类来实现。
+1.可视化编辑器限制为只能编辑Skin及其基类，为了更好地与原生的纯as项目无缝集成，不允许xml和as代码混排，防止混乱地嵌套影响模块解耦和代码管理。as代码只在项目里编写，xml布局代码只在编辑器里编辑。
+2.配合第1条，setStyle()和getStyle()只在SkinnableComponent里提供，起到共享属性并在附加皮肤时延迟应用的作用。并在xml代码里提供@Style('styleName')样式绑定标签。
+3.配合第1条，ItemRenderer改为继承SkinnableComponent，同样实现Skin分离机制,因为ItemRenderer内通常含有as代码。
+4.Image直接继承UIComponent而不是SkinnableComponent，因为在实际项目中，它自定义皮肤的几率很小，作为原子组件更加合适。全都使用皮肤分离机制将导致显示对象嵌套层级过多，影响性能。
+5.callLater()方法修改为在组件三阶段延迟渲染结束后回调。为了配合在延迟渲染机制中方便地获取正确的组件尺寸。Flex里的这个方法只是延迟，不一定保证组件尺寸渲染完成。
+6.考虑到游戏中对特殊文本的需求很少,而且对FP版本兼容性也有要求，Label和EditableText的核心文本对象改用TextFiled重新实现而非TLF，但是实现了与TLF文本组件几乎一致的外部功能接口。不需要额外编译tlf库。也降低了FP的版本需求。
+7.SkinnableComponent和Skin之间定义的共享组件实例，不需要显式声明[SkinPart]标签，只要两边定义了同名的引用型公开变量，框架底层在附加皮肤的时候就会自动完成实例的注入。
+8.SkinnableComponent与Skin之间完全解耦。除了支持Flex的标准Skin外，SkinnableComponent还可以接受任何类型的显示对象作为皮肤。解析规则由项目注入的皮肤解析适配器决定。
+这样，比如Button等小型的元件，直接设置一个影片剪辑即可。扩展性更强，同样也优化了嵌套过多层级的问题。
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be

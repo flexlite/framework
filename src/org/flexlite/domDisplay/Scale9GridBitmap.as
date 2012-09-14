@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.flexlite.domDisplay
 {
 	import flash.display.*;
@@ -326,4 +327,334 @@ package org.flexlite.domDisplay
 			}
 		}
 	}
+=======
+package org.flexlite.domDisplay
+{
+	import flash.display.*;
+	import flash.events.Event;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
+	import org.flexlite.domUI.core.dx_internal;
+	
+	use namespace dx_internal;
+	/**
+	 * 具有九宫格缩放功能的位图显示对象
+	 * 注意：此类不具有鼠标事件
+	 * @author DOM
+	 */
+	public class Scale9GridBitmap extends Shape
+	{
+		/**
+		 * 构造函数
+		 * @param bitmapData 被引用的BitmapData对象。
+		 * @param target 要绘制到的目标Graphics对象，若不传入，则绘制到自身。
+		 */		
+		public function Scale9GridBitmap(bitmapData:BitmapData=null,target:Graphics=null)
+		{
+			super();
+			if(bitmapData)
+				this.bitmapData = bitmapData;
+			if(target)
+				this.target = target;
+			else 
+				this.target = graphics;
+		}
+		
+		/**
+		 * 要绘制到的目标Graphics对象。
+		 */		
+		private var target:Graphics;
+		
+		private var _bitmapData:BitmapData;
+		/**
+		 * 被引用的BitmapData对象。
+		 */
+		public function get bitmapData():BitmapData
+		{
+			return _bitmapData;
+		}
+
+		public function set bitmapData(value:BitmapData):void
+		{
+			if(_bitmapData==value)
+				return;
+			_bitmapData = value;
+			target.clear();
+			
+			if(value)
+				applyBitmapData();
+		}
+		
+		private var scale9GridChanged:Boolean = false;
+		
+		private var _scale9Grid:Rectangle;
+
+		override public function get scale9Grid():Rectangle
+		{
+			return _scale9Grid;
+		}
+
+		override public function set scale9Grid(value:Rectangle):void
+		{
+			if(value==_scale9Grid)
+				return;
+			cachedDestGrid = null;
+			cachedSourceGrid = null;
+			_scale9Grid = value;
+			scale9GridChanged = true;
+			invalidateProperties();
+		}
+		
+		private var offsetPointChanged:Boolean = false;
+		
+		dx_internal var _offsetPoint:Point;
+
+		/**
+		 * 位图起始位置偏移量。
+		 * 注意：如果同时设置了scale9Grid属性，将会影响九宫格绘制的结果。
+		 * 这与直接设置xy效果不同，后者只是先应用了scale9Grid再平移一次。
+		 */
+		dx_internal function get offsetPoint():Point
+		{
+			return _offsetPoint;
+		}
+
+		/**
+		 * @private
+		 */
+		dx_internal function set offsetPoint(value:Point):void
+		{
+			if(_offsetPoint==value)
+				return;
+			_offsetPoint = value;
+			offsetPointChanged = true;
+			invalidateProperties();
+		}
+
+		
+		private var widthChanged:Boolean = false;
+		/**
+		 * 宽度显式设置标记
+		 */		
+		private var widthExplicitSet:Boolean = false;
+		
+		private var _width:Number;
+		
+		override public function get width():Number
+		{
+			return _width;
+		}
+		
+		override public function set width(value:Number):void
+		{
+			if(value==_width)
+				return;
+			_width = value;
+			widthExplicitSet = !isNaN(value);
+			widthChanged = true;
+			invalidateProperties();
+		}
+		
+		private var heightChanged:Boolean = false;
+		/**
+		 * 高度显式设置标志
+		 */		
+		private var heightExplicitSet:Boolean = false;
+		
+		private var _height:Number;
+		
+		override public function get height():Number
+		{
+			return _height;
+		}
+		
+		override public function set height(value:Number):void
+		{
+			if(_height==value)
+				return;
+			_height = value;
+			heightExplicitSet = !isNaN(value);
+			widthChanged = true;
+			invalidateProperties();
+		}
+		
+		private var invalidateFlag:Boolean = false;
+		/**
+		 * 标记有属性变化需要延迟应用
+		 */		
+		protected function invalidateProperties():void
+		{
+			if(!invalidateFlag)
+			{
+				invalidateFlag = true;
+				addEventListener(Event.ENTER_FRAME,validateProperties);
+			}
+		}
+		/**
+		 * 延迟应用属性事件
+		 */		
+		private function validateProperties(event:Event=null):void
+		{
+			removeEventListener(Event.ENTER_FRAME,validateProperties);
+			commitProperties();
+			invalidateFlag = false;
+		}	
+		
+		/**
+		 * 立即应用所有标记为延迟验证的属性
+		 */		
+		public function validateNow():void
+		{
+			if(invalidateFlag)
+				validateProperties();
+		}
+		
+		/**
+		 * 延迟应用属性
+		 */
+		protected function commitProperties():void
+		{
+			if(widthChanged||heightChanged||scale9GridChanged||offsetPointChanged)
+			{
+				if(bitmapData)
+					applyBitmapData();
+			}
+		}
+
+		private static var matrix:Matrix = new Matrix();
+		/**
+		 * 应用bitmapData属性
+		 */		
+		private function applyBitmapData():void
+		{
+			if(!widthExplicitSet)
+				_width = _bitmapData.width;
+			if(!heightExplicitSet)
+				_height = _bitmapData.height;
+			
+			if(_scale9Grid)
+			{
+				if(widthChanged||heightChanged)
+				{
+					cachedDestGrid = null;
+				}
+				applyScaledBitmapData(this);
+			}
+			else
+			{
+				var offset:Point = _offsetPoint;
+				if(!offset)
+					offset = new Point();
+				matrix.identity();
+				matrix.scale(_width/_bitmapData.width,_height/_bitmapData.height);
+				matrix.translate(offset.x,offset.y);
+				
+				target.beginBitmapFill(bitmapData,matrix,false);
+				target.drawRect(offset.x,offset.x,_width,_height);
+				target.endFill();
+			}
+			widthChanged = false;
+			heightChanged = false;
+			scale9GridChanged = false;
+		}
+
+		/**
+		 * 缓存的源九宫格网格坐标数据
+		 */		
+		private var cachedSourceGrid:Array;
+		/**
+		 * 缓存的目标九宫格网格坐标数据
+		 */		
+		private var cachedDestGrid:Array;
+		/**
+		 * 应用具有九宫格缩放规则的位图数据
+		 */		
+		private static function applyScaledBitmapData(target:Scale9GridBitmap):void
+		{
+			var bitmapData:BitmapData = target.bitmapData;
+			var width:Number = target.width;
+			var height:Number = target.height;
+			var offset:Point = target.offsetPoint;
+			if(!offset)
+			{
+				offset = new Point();
+			}
+			var roundedDrawX:Number = Math.round(offset.x);
+			var roundedDrawY:Number = Math.round(offset.y);
+			var s9g:Rectangle = new Rectangle(
+				target.scale9Grid.x-roundedDrawX,target.scale9Grid.y-roundedDrawY,
+				target.scale9Grid.width,target.scale9Grid.height);
+			var cachedSourceGrid:Array = target.cachedSourceGrid;
+			if (cachedSourceGrid == null)
+			{
+				cachedSourceGrid = target.cachedSourceGrid = [];
+				cachedSourceGrid.push([new Point(0, 0), new Point(s9g.left, 0),
+					new Point(s9g.right, 0), new Point(bitmapData.width, 0)]);
+				cachedSourceGrid.push([new Point(0, s9g.top), new Point(s9g.left, s9g.top),
+					new Point(s9g.right, s9g.top), new Point(bitmapData.width, s9g.top)]);
+				cachedSourceGrid.push([new Point(0, s9g.bottom), new Point(s9g.left, s9g.bottom),
+					new Point(s9g.right, s9g.bottom), new Point(bitmapData.width, s9g.bottom)]);
+				cachedSourceGrid.push([new Point(0, bitmapData.height), new Point(s9g.left, bitmapData.height),
+					new Point(s9g.right, bitmapData.height), new Point(bitmapData.width, bitmapData.height)]);
+			}
+			
+			var cachedDestGrid:Array = target.cachedDestGrid;
+			if (cachedDestGrid == null)
+			{
+				var destScaleGridBottom:Number = height - (bitmapData.height - s9g.bottom);
+				var destScaleGridRight:Number = width - (bitmapData.width - s9g.right);
+				if(bitmapData.width - s9g.width>width)
+				{
+					var a:Number = (bitmapData.width-s9g.right)/s9g.left;
+					var center:Number = width/(1+a);
+					destScaleGridRight = s9g.left = s9g.right = Math.round(isNaN(center)?0:center);
+				}
+				if(bitmapData.height - s9g.height>height)
+				{
+					var b:Number = (bitmapData.height-s9g.bottom)/s9g.top;
+					var middle:Number = height/(1+b);
+					destScaleGridBottom = s9g.top = s9g.bottom = Math.round(isNaN(middle)?0:middle);
+				}
+				cachedDestGrid = target.cachedDestGrid = [];
+				cachedDestGrid.push([new Point(0, 0), new Point(s9g.left, 0),
+					new Point(destScaleGridRight, 0), new Point(width, 0)]);
+				cachedDestGrid.push([new Point(0, s9g.top), new Point(s9g.left, s9g.top),
+					new Point(destScaleGridRight, s9g.top), new Point(width, s9g.top)]);
+				cachedDestGrid.push([new Point(0, destScaleGridBottom), new Point(s9g.left, destScaleGridBottom),
+					new Point(destScaleGridRight, destScaleGridBottom), new Point(width, destScaleGridBottom)]);
+				cachedDestGrid.push([new Point(0, height), new Point(s9g.left, height),
+					new Point(destScaleGridRight, height), new Point(width, height)]);
+			}
+			
+			var sourceSection:Rectangle = new Rectangle();
+			var destSection:Rectangle = new Rectangle();
+			
+			var g:Graphics = target.target;
+			g.clear();
+			
+			for (var rowIndex:int=0; rowIndex < 3; rowIndex++)
+			{
+				for (var colIndex:int = 0; colIndex < 3; colIndex++)
+				{
+					sourceSection.topLeft = cachedSourceGrid[rowIndex][colIndex];
+					sourceSection.bottomRight = cachedSourceGrid[rowIndex+1][colIndex+1];
+					
+					destSection.topLeft = cachedDestGrid[rowIndex][colIndex];
+					destSection.bottomRight = cachedDestGrid[rowIndex+1][colIndex+1];
+					
+					matrix.identity();
+					matrix.scale(destSection.width / sourceSection.width, destSection.height / sourceSection.height);
+					matrix.translate(destSection.x - sourceSection.x * matrix.a, destSection.y - sourceSection.y * matrix.d);
+					matrix.translate(roundedDrawX, roundedDrawY);
+					
+					g.beginBitmapFill(bitmapData, matrix,false);
+					g.drawRect(destSection.x + roundedDrawX, destSection.y + roundedDrawY, destSection.width, destSection.height);
+					g.endFill();
+				}
+			}
+		}
+	}
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 }

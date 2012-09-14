@@ -7,7 +7,11 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.DropDownListBase;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
 	import org.flexlite.domUI.core.dx_internal;
+<<<<<<< HEAD
 	import org.flexlite.domUI.events.UIEvent;
+=======
+	import org.flexlite.domUI.events.UIEvent;
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	use namespace dx_internal;
 

@@ -2,7 +2,11 @@ package org.flexlite.domUI.components
 {
 	import org.flexlite.domUI.components.supportClasses.SliderBase;
 	
+<<<<<<< HEAD
 	import flash.geom.Point;
+=======
+	import flash.geom.Point;
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	/**
 	 * 垂直滑块控件

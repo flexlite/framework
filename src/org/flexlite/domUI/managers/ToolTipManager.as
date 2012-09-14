@@ -5,7 +5,11 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.dx_internal;
 	
 	import flash.display.DisplayObject;
+<<<<<<< HEAD
 	import flash.events.EventDispatcher;
+=======
+	import flash.events.EventDispatcher;
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	use namespace dx_internal;
 	

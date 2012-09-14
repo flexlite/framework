@@ -9,7 +9,11 @@ package org.flexlite.domUI.skins.spark
 	import org.flexlite.domUI.primitives.graphic.SolidColor;
 	import org.flexlite.domUI.primitives.graphic.SolidColorStroke;
 	import org.flexlite.domUI.states.SetProperty;
+<<<<<<< HEAD
 	import org.flexlite.domUI.states.State;
+=======
+	import org.flexlite.domUI.states.State;
+>>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
 	
 	/**
 	 * 滚动条向左滚动按钮默认皮肤
