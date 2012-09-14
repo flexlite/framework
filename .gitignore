@@ -8,10 +8,7 @@ bin/
 .flexProperties
 .settings/
 .project
-<<<<<<< HEAD
-=======
+
 .gitignore
->>>>>>> f78d49f3fecf49af6a0fd0692d66a604051e89be
-.svn
 .flexLibProperties
 
