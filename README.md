@@ -1,4 +1,5 @@
-flexlite
-========
+framework
+=========
 
-a ui framework for flash game
+an Open Source UI Framework for Flash Games!
+
