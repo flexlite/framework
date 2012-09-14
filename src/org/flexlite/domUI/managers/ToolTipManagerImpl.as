@@ -1,13 +1,6 @@
 package org.flexlite.domUI.managers
 {
 	
-	import org.flexlite.domUI.components.ToolTip;
-	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.core.IInvalidating;
-	import org.flexlite.domUI.core.IToolTip;
-	import org.flexlite.domUI.core.dx_internal;
-	import org.flexlite.domUI.events.ToolTipEvent;
-	
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -18,6 +11,14 @@ package org.flexlite.domUI.managers
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	
+	import org.flexlite.domUI.components.ToolTip;
+	import org.flexlite.domUI.core.DomGlobals;
+	import org.flexlite.domUI.core.IInvalidating;
+	import org.flexlite.domUI.core.IToolTip;
+	import org.flexlite.domUI.core.PopUpPosition;
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.events.ToolTipEvent;
 	
 	use namespace dx_internal;
 	
@@ -63,8 +64,10 @@ package org.flexlite.domUI.managers
 		
 		/**
 		 * 是否复用ToolTip实例,若为true,则每个ToolTipClass只创建一个实例缓存于管理器，
-		 * 回收时需要手动调用destroyToolTip(toolTipClass)方法。
+		 * 回收时需要手动调用destroyToolTipClass(toolTipClass)方法。
 		 * 若为false，则每次都重新创建新的ToolTip实例。 默认为true。
+		 * @see #destroyAllCache()
+		 * @see #destroyToolTipClass()
 		 */
 		public function get reuseToolTip():Boolean
 		{
@@ -78,11 +81,14 @@ package org.flexlite.domUI.managers
 		
 		private var toolTipCache:Dictionary = new Dictionary;
 		/**
-		 * 销毁指定类对应的ToolTip实例。
+		 * 销毁指定类对应的ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
+		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
 		 * @param toolTipClass 要移除的ToolTip类定义
 		 * @return 是否移除成功,若不存在该实例，返回false。
-		 */		
-		public function destroyToolTip(toolTipClass:Class):Boolean
+		 * @see #reuseToolTip
+		 * @see #destroyAllCache()
+		 */				
+		public function destroyToolTipClass(toolTipClass:Class):Boolean
 		{
 			if(toolTipCache[toolTipClass]!==undefined)
 			{
@@ -90,6 +96,17 @@ package org.flexlite.domUI.managers
 				return true;
 			}
 			return false;
+		}
+		
+		/**
+		 * 销毁所有缓存在ToolTipManager内ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
+		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
+		 * @see #reuseToolTip
+		 * @see #destroyToolTipClass()
+		 */			
+		public function destroyAllCache():void
+		{
+			toolTipCache = new Dictionary;
 		}
 		
 		private var _currentTarget:IToolTipManagerClient;
@@ -161,6 +178,20 @@ package org.flexlite.domUI.managers
 		public function set scrubDelay(value:Number):void
 		{
 			_scrubDelay = value;
+		}
+		
+		private var _showDelay:Number = 0;
+		/**
+		 * 当用户将鼠标移至具有工具提示的组件上方时，等待 ToolTip框出现所需的时间（以毫秒为单位）。
+		 * 若要立即显示ToolTip框，请将toolTipShowDelay设为0。默认值：0。
+		 */		
+		public function get showDelay():Number 
+		{
+			return _showDelay;
+		}
+		public function set showDelay(value:Number):void
+		{
+			_showDelay = value;
 		}
 		
 		private var _toolTipClass:Class = ToolTip;
@@ -341,9 +372,8 @@ package org.flexlite.domUI.managers
 				event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_START);
 				currentTarget.dispatchEvent(event);
 				
-				if (currentTarget.toolTipShowDelay==0||showImmediatelyFlag||scrubTimer.running)
+				if (_showDelay==0||showImmediatelyFlag||scrubTimer.running)
 				{
-					
 					createTip();
 					initializeTip();
 					positionTip();
@@ -351,7 +381,7 @@ package org.flexlite.domUI.managers
 				}
 				else
 				{
-					showTimer.delay = currentTarget.toolTipShowDelay;
+					showTimer.delay = _showDelay;
 					showTimer.start();
 				}
 			}
@@ -384,8 +414,7 @@ package org.flexlite.domUI.managers
 			}
 			
 			currentToolTip.visible = false;
-			
-			DomGlobals.stage.addChild(currentToolTip as DisplayObject);
+			DomGlobals.systemManager.toolTipContainer.addElement(currentToolTip);
 		}
 		/**
 		 * 初始化ToolTip显示对象
@@ -412,29 +441,59 @@ package org.flexlite.domUI.managers
 		 */		
 		private function positionTip():void
 		{
+			var stage:Stage = DomGlobals.stage;
 			var x:Number;
 			var y:Number;
-			
-			var screenWidth:Number = DomGlobals.stage.stageWidth;
-			var screenHeight:Number = DomGlobals.stage.stageHeight;
-			
-			var stage:Stage = DomGlobals.stage;
-			x = stage.mouseX + 10; 
-			y = stage.mouseY + 20;
 			var toolTipWidth:Number = currentToolTip.width;
-			if (x + toolTipWidth > screenWidth)
-			{
-				x = screenWidth - toolTipWidth;
-			}
 			var toolTipHeight:Number = currentToolTip.height;
+			var rect:Rectangle = DisplayObject(currentTarget).getRect(stage);
+			var centerX:Number = rect.left+(rect.width - toolTipWidth)*0.5;
+			var centetY:Number = rect.top+(rect.height - toolTipHeight)*0.5;
+			switch(currentTarget.toolTipPosition)
+			{
+				case PopUpPosition.BELOW:
+					x = centerX;
+					y = rect.bottom;
+					break;
+				case PopUpPosition.ABOVE:
+					x = centerX;
+					y = rect.top-toolTipHeight;
+					break;
+				case PopUpPosition.LEFT:
+					x = rect.left-toolTipWidth;
+					y = centetY;
+					break;
+				case PopUpPosition.RIGHT:
+					x = rect.right;
+					y = centetY;
+					break;            
+				case PopUpPosition.CENTER:
+					x = centerX;
+					y = centetY;
+					break;            
+				case PopUpPosition.TOP_LEFT:
+					x = rect.left;
+					y = rect.top;
+					break;
+				default:
+					x = stage.mouseX + 10; 
+					y = stage.mouseY + 20;
+					break;
+			}
+			var offset:Point = currentTarget.toolTipOffset;
+			if(offset)
+			{
+				x += offset.x;
+				y = offset.y;
+			}
+			var screenWidth:Number = stage.stageWidth;
+			var screenHeight:Number = stage.stageHeight;
+			if (x + toolTipWidth > screenWidth)
+				x = screenWidth - toolTipWidth;
 			if (y + toolTipHeight > screenHeight)
 				y = screenHeight - toolTipHeight;
-			
-			var pos:Point = new Point(x, y);
-			pos = stage.localToGlobal(pos);
-
-			currentToolTip.x = pos.x;
-			currentToolTip.y = pos.y;
+			currentToolTip.x = x;
+			currentToolTip.y = y;
 		}
 		/**
 		 * 显示ToolTip
@@ -482,7 +541,7 @@ package org.flexlite.domUI.managers
 			hideTimer.reset();
 			if (currentToolTip)
 			{
-				DomGlobals.stage.removeChild(currentToolTip as DisplayObject);
+				DomGlobals.systemManager.toolTipContainer.removeElement(currentToolTip);
 				currentToolTip = null;
 				
 				scrubTimer.delay = scrubDelay;
@@ -504,7 +563,7 @@ package org.flexlite.domUI.managers
 		{
 			var toolTip:IToolTip = new toolTipClass() as IToolTip;
 			
-			DomGlobals.stage.addChild(toolTip as DisplayObject);
+			DomGlobals.systemManager.toolTipContainer.addElement(toolTip);
 			
 			toolTip.toolTipData = toolTipData;
 			

@@ -1,6 +1,7 @@
 package org.flexlite.domUI.managers
 {
 	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
 
 	/**
 	 * 包含工具提示功能的组件接口
@@ -28,11 +29,15 @@ package org.flexlite.domUI.managers
 		function set toolTipClass(value:Class):void;
 		
 		/**
-		 * 当用户将鼠标移至具有工具提示的组件上方时，等待 ToolTip框出现所需的时间（以毫秒为单位）。
-		 * 若要立即显示ToolTip框，请将toolTipShowDelay设为0。。默认值：500。
+		 * toolTip弹出位置，请使用PopUpPosition定义的常量，若不设置或设置了非法的值，则弹出位置跟随鼠标。
 		 */		
-		function get toolTipShowDelay():Number;
-		function set toolTipShowDelay(value:Number):void;
+		function get toolTipPosition():String;
+		function set toolTipPosition(value:String):void;
+		/**
+		 * toolTip弹出位置的偏移量
+		 */		
+		function get toolTipOffset():Point;
+		function set toolTipOffset(value:Point):void;
 	}
 	
 }

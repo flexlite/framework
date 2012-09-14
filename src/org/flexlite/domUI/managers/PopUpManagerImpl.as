@@ -4,6 +4,7 @@ package org.flexlite.domUI.managers
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domUI.core.DomGlobals;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
@@ -125,23 +126,25 @@ package org.flexlite.domUI.managers
 			insert(popUpData);
 			updateCurrentPopUps();
 		}
+		
 		/**
 		 * 更新当前的窗口打开项
 		 */		
 		private function updateCurrentPopUps():void
 		{
 			var popUps:Vector.<PopUpData> = getCurrentPopUps();
+			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
 			for each(var data:PopUpData in _currentPopUps)
 			{
 				if(popUps.indexOf(data)==-1)
 				{
 					if(data.popUp.parent)
-						DomGlobals.appContainer.popUpLayer.removeElement(data.popUp);
+						popUpContainer.removeElement(data.popUp);
 				}
 			}
 			for each(data in popUps)
 			{
-				DomGlobals.appContainer.popUpLayer.addElement(data.popUp);
+				popUpContainer.addElement(data.popUp);
 			}
 			_currentPopUps = popUps;
 		}
@@ -218,6 +221,7 @@ package org.flexlite.domUI.managers
 		public function removePopUp(popUp:IVisualElement):void
 		{
 			var data:PopUpData = popUpDataDic[popUp];
+			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
 			if(data)
 			{
 				delete popUpDataDic[popUp];
@@ -225,9 +229,9 @@ package org.flexlite.domUI.managers
 				if(data.popUp is IUIComponent)
 					(data.popUp as IUIComponent).isPopUp = false;
 				var parent:DisplayObjectContainer = data.popUp.parent;
-				if(data.popUp.parent==DomGlobals.appContainer.popUpLayer)
+				if(data.popUp.parent==popUpContainer)
 				{
-					DomGlobals.appContainer.popUpLayer.removeElement(data.popUp);
+					popUpContainer.removeElement(data.popUp);
 				}
 				updateCurrentPopUps();	
 			}

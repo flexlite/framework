@@ -38,28 +38,44 @@ package org.flexlite.domUI.managers
 		
 		/**
 		 * 是否复用ToolTip实例,若为true,则每个ToolTipClass只创建一个实例缓存于管理器，
-		 * 回收时需要手动调用destroyToolTip(toolTipClass)方法。
+		 * 回收时需要手动调用destroyToolTipClass(toolTipClass)方法。
 		 * 若为false，则每次都重新创建新的ToolTip实例。 默认为true。
+		 * @see #destroyAllCache()
+		 * @see #destroyToolTipClass()
 		 */
-		public function get reuseToolTip():Boolean
+		public static function get reuseToolTip():Boolean
 		{
 			return impl.reuseToolTip;
 		}
 		
-		public function set reuseToolTip(value:Boolean):void
+		public static function set reuseToolTip(value:Boolean):void
 		{
 			impl.reuseToolTip = value;
 		}
 		
 		/**
-		 * 销毁指定类对应的ToolTip实例。
+		 * 销毁指定类对应的ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
+		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
 		 * @param toolTipClass 要移除的ToolTip类定义
 		 * @return 是否移除成功,若不存在该实例，返回false。
+		 * @see #reuseToolTip
+		 * @see #destroyAllCache()
 		 */		
-		public function destroyToolTip(toolTipClass:Class):Boolean
+		public static function destroyToolTipClass(toolTipClass:Class):Boolean
 		{
-			return impl.destroyToolTip(toolTipClass);
+			return impl.destroyToolTipClass(toolTipClass);
 		}
+		/**
+		 * 销毁所有缓存在ToolTipManager内ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
+		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
+		 * @see #reuseToolTip
+		 * @see #destroyToolTipClass()
+		 */			
+		public static function destroyAllCache():void
+		{
+			impl.destroyAllCache();
+		}
+		
 		/**
 		 * 当前的IToolTipManagerClient组件
 		 */			
@@ -114,7 +130,8 @@ package org.flexlite.domUI.managers
 		}
 		
 		/**
-		 * 当第一个ToolTip显示完毕后，若在此时间间隔内快速移动到下一个组件上，就直接显示ToolTip而不延迟showDelay。默认值：100。
+		 * 当第一个ToolTip显示完毕后，若在此时间间隔内快速移动到下一个组件上，
+		 * 就直接显示ToolTip而不延迟showDelay。默认值：100。
 		 */		
 		public static function get scrubDelay():Number 
 		{
@@ -124,6 +141,19 @@ package org.flexlite.domUI.managers
 		public static function set scrubDelay(value:Number):void
 		{
 			impl.scrubDelay = value;
+		}
+		
+		/**
+		 * 当用户将鼠标移至具有工具提示的组件上方时，等待 ToolTip框出现所需的时间（以毫秒为单位）。
+		 * 若要立即显示ToolTip框，请将toolTipShowDelay设为0。默认值：0。
+		 */			
+		public static function get showDelay():Number 
+		{
+			return impl.showDelay;
+		}
+		public static function set showDelay(value:Number):void
+		{
+			impl.showDelay = value;
 		}
 
 		/**

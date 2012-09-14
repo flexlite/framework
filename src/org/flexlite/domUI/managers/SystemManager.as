@@ -1,6 +1,15 @@
 package org.flexlite.domUI.managers
 {
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	import flash.events.EventPhase;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
+	
 	import org.flexlite.domUI.components.Group;
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
@@ -20,7 +29,118 @@ package org.flexlite.domUI.managers
 		public function SystemManager()
 		{
 			super();
+			if(stage)
+			{
+				onAddToStage();
+			}
+			else
+			{
+				addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
+			}
 		}
+		/**
+		 * 添加到舞台
+		 */		
+		private function onAddToStage(event:Event=null):void
+		{
+			if(event)
+			{
+				removeEventListener(Event.ADDED_TO_STAGE,onAddToStage);
+			}
+			
+			DomGlobals._stage = stage;
+			DomGlobals.layoutManager = new LayoutManager();
+			DomGlobals.systemManager = this;
+			
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			stage.addEventListener(Event.RESIZE,onResize);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
+			onResize();
+		}
+		
+		/**
+		 * 过滤鼠标事件为可以取消的
+		 */		
+		private function mouseEventHandler(e:MouseEvent):void
+		{
+			if (!e.cancelable&&e.eventPhase!=EventPhase.BUBBLING_PHASE)
+			{
+				e.stopImmediatePropagation();
+				var cancelableEvent:MouseEvent = null;
+				if ("clickCount" in e)
+				{
+					var mouseEventClass:Class = MouseEvent;
+					
+					cancelableEvent = new mouseEventClass(e.type, e.bubbles, true, e.localX,
+						e.localY, e.relatedObject, e.ctrlKey, e.altKey,
+						e.shiftKey, e.buttonDown, e.delta, 
+						e["commandKey"], e["controlKey"], e["clickCount"]);
+				}
+				else
+				{
+					cancelableEvent = new MouseEvent(e.type, e.bubbles, true, e.localX, 
+						e.localY, e.relatedObject, e.ctrlKey, e.altKey,
+						e.shiftKey, e.buttonDown, e.delta);
+				}
+				
+				e.target.dispatchEvent(cancelableEvent);               
+			}
+		}
+		
+		/**
+		 * 过滤键盘事件为可以取消的
+		 */		
+		private function keyDownHandler(e:KeyboardEvent):void
+		{
+			if (!e.cancelable)
+			{
+				switch (e.keyCode)
+				{
+					case Keyboard.UP:
+					case Keyboard.DOWN:
+					case Keyboard.PAGE_UP:
+					case Keyboard.PAGE_DOWN:
+					case Keyboard.HOME:
+					case Keyboard.END:
+					case Keyboard.LEFT:
+					case Keyboard.RIGHT:
+					case Keyboard.ENTER:
+					{
+						e.stopImmediatePropagation();
+						var cancelableEvent:KeyboardEvent =
+							new KeyboardEvent(e.type, e.bubbles, true, e.charCode, e.keyCode, 
+								e.keyLocation, e.ctrlKey, e.altKey, e.shiftKey)              
+						e.target.dispatchEvent(cancelableEvent);
+					}
+				}
+			}
+		}
+		
+		/**
+		 * 舞台尺寸改变
+		 */		
+		protected function onResize(event:Event=null):void
+		{
+			super.width = stage.stageWidth;
+			super.height = stage.stageHeight;
+		}
+		
+		//==========================================================================
+		//                            禁止外部布局顶级容器
+		//==========================================================================
+		override public function set x(value:Number):void{}
+		override public function set y(value:Number):void{}
+		override public function set width(value:Number):void{}
+		override public function set height(value:Number):void{}
+		override public function set scaleX(value:Number):void{}
+		override public function set scaleY(value:Number):void{}
+		override public function setActualSize(w:Number, h:Number):void{}
+		override public function setLayoutBoundsPosition(x:Number, y:Number):void{}
+		override public function setLayoutBoundsSize(layoutWidth:Number, layoutHeight:Number):void{}
+		
 		
 		private var _popUpContainer:SystemContainer;
 		/**
@@ -133,7 +253,9 @@ package org.flexlite.domUI.managers
 			_cursorIndex = value;
 		}
 		
-		//========================复写容器操作方法======================end========================
+		//==========================================================================
+		//                                复写容器操作方法
+		//==========================================================================
 		override public function get numElements():int
 		{
 			return _noTopMostIndex;
@@ -250,10 +372,10 @@ package org.flexlite.domUI.managers
 			}
 			return false;
 		}
-		//========================复写容器操作方法======================end========================
 		
-		
-		//========================保留容器原始操作方法=====================start=======================
+		//==========================================================================
+		//                                保留容器原始操作方法
+		//==========================================================================
 		dx_internal function get raw_numElements():int
 		{
 			return super.numElements;
@@ -335,6 +457,5 @@ package org.flexlite.domUI.managers
 		{
 			return super.containsElement(element);
 		}
-		//========================保留容器原始操作方法======================end========================
 	}
 }
