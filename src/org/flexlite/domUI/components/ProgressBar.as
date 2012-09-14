@@ -4,6 +4,7 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
 	import org.flexlite.domUI.components.supportClasses.TrackBase;
@@ -30,7 +31,7 @@ package org.flexlite.domUI.components
 		}
 		
 		private var indeterminatePlaying:Boolean;
-		private var pollTimer:Object;
+		private var pollTimer:Timer = new Timer(100);
 		
 		/**
 		 *  设置想对于总量的当前进度值		 
@@ -67,37 +68,53 @@ package org.flexlite.domUI.components
 		
 		private function stopPlayingIndeterminate():void
 		{
-						
+			if (indeterminatePlaying)
+			{
+				indeterminatePlaying = false;
+				
+				pollTimer.removeEventListener(TimerEvent.TIMER,updateIndeterminateHandler);
+				pollTimer.stop();
+			}				
 		}
 		
 		protected function startPlayingIndeterminate():void
 		{
 			if (!indeterminatePlaying)
 			{
-//				indeterminatePlaying = true;
-//				
-//				pollTimer.addEventListener(TimerEvent.TIMER, updateIndeterminateHandler, false, 0, true);
-//				pollTimer.start();
+				indeterminatePlaying = true;
+				
+				pollTimer.addEventListener(TimerEvent.TIMER,updateIndeterminateHandler, false, 0, true);
+				pollTimer.start();
 			}		
 		}
 		
-		private function updateIndeterminateHandler():void
+		private function updateIndeterminateHandler(e:TimerEvent):void
 		{
-			if (thumb.x < 1)
-				thumb.x += 1;
+			if(thumb.width<this.width*(value/maximum))
+			{
+				if(label) label.text = String(value+"/"+maximum);
+				thumb.width++;
+			}
 			else
-				thumb.x = - (getStyle("indeterminateMoveInterval") - 2);
+			{
+				stopPlayingIndeterminate();
+			}
 		}
 		
 		/**
 		 * [SkinPart]实体滑块组件
 		 */		
-		public var thumb:DisplayObject;
+		public var thumb:Button;
 		
 		/**
 		 * [SkinPart]实体轨道组件
 		 */
-		public var track:DisplayObject; 
+		public var track:Button; 
+		
+		/**
+		 * [SkinPart]进度数字显示 可选
+		 */
+		public var label:Label;
 		
 		/**
 		 * 更新滑块的大小 
