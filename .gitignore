@@ -1,0 +1,13 @@
+# Build and Release Folders
+bin-debug/
+bin-release/
+bin/
+
+# Project property files
+.actionScriptProperties
+.flexProperties
+.settings/
+.project
+.svn
+.flexLibProperties
+
