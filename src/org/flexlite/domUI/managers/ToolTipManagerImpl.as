@@ -180,10 +180,10 @@ package org.flexlite.domUI.managers
 			_scrubDelay = value;
 		}
 		
-		private var _showDelay:Number = 0;
+		private var _showDelay:Number = 200;
 		/**
 		 * 当用户将鼠标移至具有工具提示的组件上方时，等待 ToolTip框出现所需的时间（以毫秒为单位）。
-		 * 若要立即显示ToolTip框，请将toolTipShowDelay设为0。默认值：0。
+		 * 若要立即显示ToolTip框，请将toolTipShowDelay设为0。默认值：200。
 		 */		
 		public function get showDelay():Number 
 		{

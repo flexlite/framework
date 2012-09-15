@@ -1,6 +1,8 @@
 package org.flexlite.domUI.skins
 {
+	import flash.display.GradientType;
 	import flash.display.Graphics;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
 	
 	import org.flexlite.domUI.components.supportClasses.Skin;
@@ -40,58 +42,58 @@ package org.flexlite.domUI.skins
 		}
 		
 		/**
-		 * 将RGB颜色的按比例调整亮度
+		 * 文本投影滤镜
 		 */		
-		protected static function adjustBrightness(rgb:uint, brite:Number):uint
-		{
-			var r:Number;
-			var g:Number;
-			var b:Number;
-			
-			if (brite == 0)
-				return rgb;
-			
-			if (brite < 0)
-			{
-				brite = (100 + brite) / 100;
-				r = ((rgb >> 16) & 0xFF) * brite;
-				g = ((rgb >> 8) & 0xFF) * brite;
-				b = (rgb & 0xFF) * brite;
-			}
-			else
-			{
-				brite /= 100;
-				r = ((rgb >> 16) & 0xFF);
-				g = ((rgb >> 8) & 0xFF);
-				b = (rgb & 0xFF);
-				
-				r += ((0xFF - r) * brite);
-				g += ((0xFF - g) * brite);
-				b += ((0xFF - b) * brite);
-				
-				r = Math.min(r, 255);
-				g = Math.min(g, 255);
-				b = Math.min(b, 255);
-			}
-			
-			return (r << 16) | (g << 8) | b;
-		}
+		protected static const dropShadowFilter:Array = [new DropShadowFilter(1,270,0,0.3,1,1)];
+		/**
+		 * 边框线条颜色
+		 */		
+		protected static const borderColors:Array = [0xD4D4D4,0x518CC6,0x686868];
+		/**
+		 * 底线颜色
+		 */		
+		protected static const bottomLineColors:Array = [0xBCBCBC,0x2A65A0,0x656565];
+		/**
+		 * 边框圆角
+		 */		
+		protected static const cornerRadius:Number = 3;
+		/**
+		 * 填充颜色 
+		 */		
+		protected static const fillColors:Array = [0xFAFAFA,0xEAEAEA,0x589ADB,0x3173B4,0x777777,0x9B9B9B];
+		/**
+		 * 文本颜色
+		 */		
+		protected static const textColors:Array = [0x333333,0xFFFFFF,0xFFFFFF];
 		
-		protected var borderColor:uint = 0xB7BABC;
-		protected var fillAlphas:Array = [0.6,0.4,0.75,0.65];
-		protected var fillColors:Array = [0xFFFFFF,0xCCCCCC,0xFFFFFF,0xEEEEEE];
-		protected var highlightAlphas:Array = [0.3,0,2];				
-		protected var themeColor:uint = 0x009DFF;
-		protected var fillColorPress1:uint = 0xD8F0FF;
-		protected var fillColorPress2:uint = 0x99D7FF;
-		protected var borderColorDrk1:uint = 0x5B5D5E;
-		protected var themeColorDrk1:uint = 0x0075BF;
-		
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		/**
+		 * 绘制当前的视图状态
+		 */		
+		protected function drawCurrentState(x:Number,y:Number,w:Number,h:Number,borderColor:uint,
+											bottomLineColor:uint,fillColors:Array,cornerRadius:Number=0):void
 		{
-			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			fillColorPress1 = adjustBrightness(themeColor, 85);
-			fillColorPress2 = adjustBrightness(themeColor, 60);
+			var crr1:Number = cornerRadius==0?0:cornerRadius-1;
+			//绘制边框
+			drawRoundRect(
+				x, y, w, h, cornerRadius,
+				borderColor, 1,
+				verticalGradientMatrix(x, y, w, h ),
+				GradientType.LINEAR, null, 
+				{ x: x+1, y: y+1, w: w - 2, h: h - 2, r: crr1}); 
+			//绘制填充
+			drawRoundRect(
+				x+1, y+1, w - 2, h - 2, crr1,
+				fillColors, 1,
+				verticalGradientMatrix(x+1, y+1, w - 2, h - 2)); 
+			//绘制底线
+			if(w>cornerRadius*2&&h>1)
+			{
+				var g:Graphics = graphics;
+				g.lineStyle(1,bottomLineColor);
+				g.moveTo(x+crr1,y+h-1);
+				g.lineTo(x+w-crr1,y+h-1);
+				g.endFill();
+			}
 		}
 		
 		/**
