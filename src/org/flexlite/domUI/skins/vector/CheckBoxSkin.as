@@ -6,10 +6,11 @@ package org.flexlite.domUI.skins.vector
 	import flashx.textLayout.formats.TextAlign;
 	
 	import org.flexlite.domUI.components.Label;
+	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
-	
+	use namespace dx_internal;
 	/**
 	 * CheckBox默认皮肤
 	 * @author DOM
@@ -32,7 +33,7 @@ package org.flexlite.domUI.skins.vector
 			labelDisplay.textAlign = TextAlign.CENTER;
 			labelDisplay.verticalAlign = VerticalAlign.MIDDLE;
 			labelDisplay.maxDisplayedLines = 1;
-			labelDisplay.left = 18;
+			labelDisplay.left = 16;
 			labelDisplay.right = 0;
 			labelDisplay.top = 3;
 			labelDisplay.bottom = 3;
@@ -43,6 +44,13 @@ package org.flexlite.domUI.skins.vector
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);
+			
+			var g:Graphics = graphics;
+			g.clear();
+			g.beginFill(0xFFFFFF,0);
+			g.drawRect(0,0,w,h);
+			g.endFill();
+			
 			var startY:Number = Math.round((h-14)*0.5);
 			if(startY<0)
 				startY = 0;
@@ -50,10 +58,6 @@ package org.flexlite.domUI.skins.vector
 			h = 14;
 			
 			var selected:Boolean = false;
-			
-			var g:Graphics = graphics;
-			g.clear();
-			
 			switch (currentState)
 			{
 				case "up":
@@ -62,12 +66,13 @@ package org.flexlite.domUI.skins.vector
 						[fillColors[0],fillColors[1]]);
 					break;
 				case "over":
+				case "overAndSelected":
 					drawCurrentState(0,startY,w,h,borderColors[1],bottomLineColors[1],
 						[fillColors[2],fillColors[3]]);
+					selected = (currentState!="over");
 					break;
 				case "down":
 				case "upAndSelected":
-				case "overAndSelected":
 				case "downAndSelected":
 				case "disabledAndSelected":
 					drawCurrentState(0,startY,w,h,borderColors[2],bottomLineColors[2],
@@ -78,7 +83,7 @@ package org.flexlite.domUI.skins.vector
 			
 			if (selected)
 			{
-				g.lineStyle(1,0xFFFFFF);
+				g.lineStyle(0,0,0);
 				g.beginFill(0xFFFFFF);
 				g.moveTo(3, startY+5);
 				g.lineTo(5, startY+10);

@@ -6,6 +6,7 @@ package org.flexlite.domUI.skins
 	import flash.geom.Matrix;
 	
 	import org.flexlite.domUI.components.supportClasses.Skin;
+	import org.flexlite.domUI.core.dx_internal;
 	
 	/**
 	 * Vector主题皮肤基类
@@ -44,56 +45,83 @@ package org.flexlite.domUI.skins
 		/**
 		 * 文本投影滤镜
 		 */		
-		protected static const dropShadowFilter:Array = [new DropShadowFilter(1,270,0,0.3,1,1)];
+		dx_internal static var dropShadowFilter:Array = [new DropShadowFilter(1,270,0,0.3,1,1)];
 		/**
 		 * 边框线条颜色
 		 */		
-		protected static const borderColors:Array = [0xD4D4D4,0x518CC6,0x686868];
+		dx_internal static var borderColors:Array = [0xD4D4D4,0x518CC6,0x686868];
 		/**
 		 * 底线颜色
 		 */		
-		protected static const bottomLineColors:Array = [0xBCBCBC,0x2A65A0,0x656565];
+		dx_internal static var bottomLineColors:Array = [0xBCBCBC,0x2A65A0,0x656565];
 		/**
 		 * 边框圆角
 		 */		
-		protected static const cornerRadius:Number = 3;
+		dx_internal static var cornerRadius:Number = 3;
 		/**
 		 * 填充颜色 
 		 */		
-		protected static const fillColors:Array = [0xFAFAFA,0xEAEAEA,0x589ADB,0x3173B4,0x777777,0x9B9B9B];
+		dx_internal static var fillColors:Array = [0xFAFAFA,0xEAEAEA,0x589ADB,0x3173B4,0x777777,0x9B9B9B];
 		/**
-		 * 文本颜色
+		 * 主题颜色，应用到文本或者图标上
 		 */		
-		protected static const textColors:Array = [0x333333,0xFFFFFF,0xFFFFFF];
-		
+		dx_internal static var themeColors:Array = [0x333333,0xFFFFFF];
 		/**
 		 * 绘制当前的视图状态
 		 */		
-		protected function drawCurrentState(x:Number,y:Number,w:Number,h:Number,borderColor:uint,
-											bottomLineColor:uint,fillColors:Array,cornerRadius:Number=0):void
+		dx_internal function drawCurrentState(x:Number,y:Number,w:Number,h:Number,borderColor:uint,
+											bottomLineColor:uint,fillColors:Object,cornerRadius:Object=null,g:Graphics=null):void
 		{
-			var crr1:Number = cornerRadius==0?0:cornerRadius-1;
+			var crr:Object = cornerRadius;
+			var crr1:Object;
+			if(cornerRadius==null||cornerRadius is Number)
+			{
+				crr1 = cornerRadius==null?0:Number(cornerRadius)-1;
+				if(crr1<0)
+					crr1 = 0;
+				crr1 = {tl:crr1,tr:crr1,
+					bl:crr1,br:crr1};
+			}
+			else
+			{
+				crr1 = {tl:Math.max(0,crr.tl-1),tr:Math.max(0,crr.tr-1),
+					bl:Math.max(0,crr.bl-1),br:Math.max(0,crr.br-1)};
+			}
 			//绘制边框
 			drawRoundRect(
 				x, y, w, h, cornerRadius,
 				borderColor, 1,
 				verticalGradientMatrix(x, y, w, h ),
 				GradientType.LINEAR, null, 
-				{ x: x+1, y: y+1, w: w - 2, h: h - 2, r: crr1}); 
+				{ x: x+1, y: y+1, w: w - 2, h: h - 2, r: crr1},g); 
 			//绘制填充
 			drawRoundRect(
 				x+1, y+1, w - 2, h - 2, crr1,
 				fillColors, 1,
-				verticalGradientMatrix(x+1, y+1, w - 2, h - 2)); 
+				verticalGradientMatrix(x+1, y+1, w - 2, h - 2),GradientType.LINEAR,null,null,g); 
 			//绘制底线
-			if(w>cornerRadius*2&&h>1)
+			if(w>(crr1.bl+crr1.br)&&h>1)
 			{
-				var g:Graphics = graphics;
-				g.lineStyle(1,bottomLineColor);
-				g.moveTo(x+crr1,y+h-1);
-				g.lineTo(x+w-crr1,y+h-1);
-				g.endFill();
+				drawLine(x+crr1.bl,y+h-1,x+w-crr1.br,y+h-1,bottomLineColor,g);
 			}
+		}
+		/**
+		 * 绘制一条直线
+		 * @param startX 起始点坐标x
+		 * @param startY 起始点坐标y
+		 * @param endX 结束点坐标x
+		 * @param endY 结束点坐标y
+		 * @param color 线条颜色
+		 * @param g 要绘制到的目标Graphics，留空则绘制到自身。
+		 */		
+		protected function drawLine(startX:Number,startY:Number,endX:Number,endY:Number,color:uint,g:Graphics=null):void
+		{
+			if(g==null)
+				g = graphics;
+			g.lineStyle(1,color);
+			g.moveTo(startX,startY);
+			g.lineTo(endX,endY);
+			g.endFill();
 		}
 		
 		/**
@@ -109,7 +137,7 @@ package org.flexlite.domUI.skins
 		 * @param gradientType 渐变填充的类型。可能的值为 GradientType.LINEAR 或 GradientType.RADIAL。（GradientType 类位于 flash.display 包中。）
 		 * @param gradientRatios （可选默认值为 [0,255]）指定颜色分布。条目数必须与在 color 参数中定义的颜色数匹配。各值均定义 100% 采样的颜色所在位置的宽度百分比。值 0 表示渐变框中的左侧位置，255 表示渐变框中的右侧位置。
 		 * @param hole （可选）应从另一个实心填充的圆角矩形 { x: #, y: #, w: #, h: #, r: # 或 { br: #, bl: #, tl: #, tr: # } } 中央凸出的圆角矩形孔
-		 * 
+		 * @param g 要绘制到的目标Graphics，留空则绘制到自身。
 		 */		
 		protected function drawRoundRect(
 			x:Number, y:Number, width:Number, height:Number,
@@ -119,9 +147,10 @@ package org.flexlite.domUI.skins
 			gradientMatrix:Matrix = null,
 			gradientType:String = "linear",
 			gradientRatios:Array = null,
-			hole:Object = null):void
+			hole:Object = null,g:Graphics=null):void
 		{
-			var g:Graphics = graphics;
+			if(g==null)
+				g = graphics;
 			
 			if (width == 0 || height == 0)
 				return;

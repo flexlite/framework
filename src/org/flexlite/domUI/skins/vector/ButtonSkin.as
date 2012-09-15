@@ -41,7 +41,6 @@ package org.flexlite.domUI.skins.vector
 			addElement(labelDisplay);
 		}
 		
-		private var upFilter:Array = [new DropShadowFilter(1,90,0,0.3,1,1,1,1,true)];
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);
@@ -54,17 +53,17 @@ package org.flexlite.domUI.skins.vector
 				case "disabled":
 					drawCurrentState(0,0,w,h,borderColors[0],bottomLineColors[0],
 						[fillColors[0],fillColors[1]],cornerRadius);
-					textColor = textColors[0];
+					textColor = themeColors[0];
 					break;
 				case "over":
 					drawCurrentState(0,0,w,h,borderColors[1],bottomLineColors[1],
 						[fillColors[2],fillColors[3]],cornerRadius);
-					textColor = textColors[1];
+					textColor = themeColors[1];
 					break;
 				case "down":
 					drawCurrentState(0,0,w,h,borderColors[2],bottomLineColors[2],
 						[fillColors[4],fillColors[5]],cornerRadius);
-					textColor = textColors[2];
+					textColor = themeColors[1];
 					break;
 			}
 			if(labelDisplay)
