@@ -341,6 +341,17 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			return _textFormat;
 		}
+		/**
+		 * 由于设置了默认文本格式后，是延迟一帧才集中应用的，若需要立即应用文本样式，可以手动调用此方法。
+		 */		
+		public function applyTextFormatNow():void
+		{
+			if(defaultStyleChanged)
+			{
+				textField.$setTextFormat(defaultTextFormat);
+				textField.defaultTextFormat = defaultTextFormat;
+			}
+		}
 		
 		/**
 		 * 从另外一个文本组件复制默认文字格式信息到自身。<br/>
