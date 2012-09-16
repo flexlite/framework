@@ -1,6 +1,8 @@
 package org.flexlite.domUI.managers
 {
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Graphics;
+	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domUI.core.DomGlobals;
@@ -8,6 +10,7 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.core.UIComponent;
 
 	[ExcludeClass]
 	
@@ -126,7 +129,14 @@ package org.flexlite.domUI.managers
 			insert(popUpData);
 			updateCurrentPopUps();
 		}
-		
+		/**
+		 * 模态层
+		 */		
+		private var modalLayer:UIComponent;
+		/**
+		 * 遮罩层已经添加的标志 
+		 */		
+		private var modalAttached:Boolean = false;
 		/**
 		 * 更新当前的窗口打开项
 		 */		
@@ -142,11 +152,45 @@ package org.flexlite.domUI.managers
 						popUpContainer.removeElement(data.popUp);
 				}
 			}
+			var needModal:Boolean = false;
 			for each(data in popUps)
 			{
 				popUpContainer.addElement(data.popUp);
+				if(!needModal&&data.modal)
+					needModal = true;
 			}
 			_currentPopUps = popUps;
+			if(needModal==modalAttached)
+				return;
+			if(needModal)
+			{
+				if(!modalLayer)
+				{
+					modalLayer = new UIComponent();
+				}
+				popUpContainer.addElementAt(modalLayer,0);
+				onResize();
+				DomGlobals.stage.addEventListener(Event.RESIZE,onResize);
+				modalAttached = true;
+			}
+			else
+			{
+				DomGlobals.stage.removeEventListener(Event.RESIZE,onResize);
+				popUpContainer.removeElement(modalLayer);
+				modalAttached = false;
+			}
+		}
+		
+		/**
+		 * 舞台尺寸改变,重绘遮罩层。
+		 */		
+		private function onResize(event:Event=null):void
+		{
+			var g:Graphics = modalLayer.graphics;
+			g.clear();
+			g.beginFill(0xFFFFFF,0);
+			g.drawRect(0,0,DomGlobals.stage.stageWidth,DomGlobals.stage.stageHeight);
+			g.endFill();
 		}
 		
 		/**
