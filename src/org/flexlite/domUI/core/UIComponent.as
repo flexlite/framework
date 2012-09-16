@@ -167,8 +167,16 @@ package org.flexlite.domUI.core
 		{
 			return _hasParent||parent!=null;
 		}
-		
-		
+		/**
+		 * 添加到舞台
+		 */		
+		private function onAddedToStage(e:Event=null):void
+		{
+			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			DomGlobals.initlize(stage);
+			checkInvalidateFlag();
+			addRenderListener();
+		}
 		/**
 		 * 被添加到显示列表时
 		 */		
@@ -299,16 +307,6 @@ package org.flexlite.domUI.core
 			return super.addChildAt(child,index);
 		}
 		
-		
-		/**
-		 * 添加到舞台
-		 */		
-		private function onAddedToStage(e:Event=null):void
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			checkInvalidateFlag();
-			addRenderListener();
-		}
 		/**
 		 * 检查属性失效标记并应用
 		 */		

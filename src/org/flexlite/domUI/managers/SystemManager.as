@@ -48,8 +48,6 @@ package org.flexlite.domUI.managers
 				removeEventListener(Event.ADDED_TO_STAGE,onAddToStage);
 			}
 			
-			DomGlobals._stage = stage;
-			DomGlobals.layoutManager = new LayoutManager();
 			DomGlobals.systemManager = this;
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
