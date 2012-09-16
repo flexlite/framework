@@ -70,7 +70,7 @@ package org.flexlite.domUI.skins.vector
 			{
 				labelDisplay.textColor = textColor;
 				labelDisplay.applyTextFormatNow();
-				labelDisplay.filters = (currentState=="over"||currentState=="down")?dropShadowFilter:null;
+				labelDisplay.filters = (currentState=="over"||currentState=="down")?textOverFilter:null;
 			}
 			this.alpha = currentState=="disabled"?0.5:1;
 		}
