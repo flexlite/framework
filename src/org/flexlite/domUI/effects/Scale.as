@@ -159,7 +159,8 @@ package org.flexlite.domUI.effects
 			}
 			if(!result[0]&&!result[2])
 				return result;
-			if(target.hasOwnProperty("parent")&&target["parent"].hasOwnProperty("layout"))
+			if(target.hasOwnProperty("parent")&&target["parent"]&&
+				target["parent"].hasOwnProperty("layout"))
 			{
 				var layout:Object = target["parent"]["layout"];
 				if(layout is HorizontalLayout||layout is VerticalLayout)

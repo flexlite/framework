@@ -129,7 +129,8 @@ package org.flexlite.domUI.effects
 		 */		
 		private static function checkParentLayout(target:Object):Boolean
 		{
-			if(target.hasOwnProperty("parent")&&target["parent"].hasOwnProperty("layout"))
+			if(target.hasOwnProperty("parent")&&target["parent"]&&
+				target["parent"].hasOwnProperty("layout"))
 			{
 				var layout:Object = target["parent"]["layout"];
 				if(layout is HorizontalLayout||layout is VerticalLayout)

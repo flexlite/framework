@@ -239,6 +239,7 @@ package org.flexlite.domUI.effects.animation
 			_currentValue = {};
 			caculateCurrentValue(0);
 			startTime = getTimer();
+			doInterval();
 			addAnimation(this);
 		}
 		

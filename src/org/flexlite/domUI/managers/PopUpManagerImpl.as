@@ -7,10 +7,12 @@ package org.flexlite.domUI.managers
 	
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.events.EffectEvent;
 
 	[ExcludeClass]
 	
@@ -114,11 +116,13 @@ package org.flexlite.domUI.managers
 		 * @param exclusive 是否独占。若为true，它总是不与任何窗口共存。当弹出时，将隐藏层级在它后面的所有窗口。
 		 * 若有层级在它前面的窗口弹出，无论新窗口是否独占，都将它和它后面的窗口全部隐藏。默认为false。
 		 * @param priority 弹出优先级。优先级高的窗口显示层级在低的前面。同一优先级的窗口，后添加的窗口层级在前面。
+		 * @param popUpEffect 窗口弹出时要播放的动画特效。
 		 */		
 		public function addPopUp(popUp:IVisualElement,modal:Boolean = false,
-										exclusive:Boolean=false,priority:int=0):void
+										exclusive:Boolean=false,priority:int=0,
+										popUpEffect:IEffect=null):void
 		{
-			var popUpData:PopUpData = new PopUpData(popUp,modal,exclusive,priority);
+			var popUpData:PopUpData = new PopUpData(popUp,modal,exclusive,priority,popUpEffect);
 			if(popUpDataDic[popUp]!=null)
 			{
 				remove(popUpDataDic[popUp]);
@@ -156,6 +160,10 @@ package org.flexlite.domUI.managers
 			for each(data in popUps)
 			{
 				popUpContainer.addElement(data.popUp);
+				if(data.popUpEffect&&_currentPopUps.indexOf(data.popUp)==-1)
+				{
+					showEffect(data.popUp,data.popUpEffect);
+				}
 				if(!needModal&&data.modal)
 					needModal = true;
 			}
@@ -179,6 +187,26 @@ package org.flexlite.domUI.managers
 				popUpContainer.removeElement(modalLayer);
 				modalAttached = false;
 			}
+		}
+		/**
+		 * 播放动画特效
+		 */		
+		private function showEffect(popUp:IVisualElement,effect:IEffect):void
+		{
+			popUp.visible = false;
+			popUp.callLater(function():void{
+				effect.addEventListener(EffectEvent.EFFECT_START,onEffectStart);
+				effect.play([popUp]);
+			});
+		}
+		/**
+		 * 动画开始播放
+		 */		
+		private function onEffectStart(event:EffectEvent):void
+		{
+			var effect:IEffect = event.target as IEffect;
+			effect.removeEventListener(EffectEvent.EFFECT_START,onEffectStart);
+			(effect.target as IVisualElement).visible = true;
 		}
 		
 		/**
@@ -283,6 +311,8 @@ package org.flexlite.domUI.managers
 	}
 }
 
+
+import org.flexlite.domUI.core.IEffect;
 import org.flexlite.domUI.core.IVisualElement;
 
 /**
@@ -292,12 +322,13 @@ import org.flexlite.domUI.core.IVisualElement;
 class PopUpData
 {
 	public function PopUpData(popUp:IVisualElement,modal:Boolean,
-							  exclusive:Boolean,priority:int)
+							  exclusive:Boolean,priority:int,popUpEffect:IEffect)
 	{
 		this.popUp = popUp;
 		this.modal = modal;
 		this.exclusive = exclusive;
 		this.priority = priority;
+		this.popUpEffect = popUpEffect;
 	}
 	/**
 	 * 弹出窗口
@@ -315,4 +346,8 @@ class PopUpData
 	 * 优先级
 	 */	
 	public var priority:int;
+	/**
+	 * 窗口弹出时要播放的特效
+	 */	
+	public var popUpEffect:IEffect;
 }

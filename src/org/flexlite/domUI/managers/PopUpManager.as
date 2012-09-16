@@ -1,5 +1,6 @@
 package org.flexlite.domUI.managers
 {
+	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.core.IVisualElement;
 	
 	/**
@@ -35,11 +36,13 @@ package org.flexlite.domUI.managers
 		 * @param exclusive 是否独占。若为true，它总是不与任何窗口共存。当弹出时，将隐藏层级在它后面的所有窗口。
 		 * 若有层级在它前面的窗口弹出，无论新窗口是否独占，都将它和它后面的窗口全部隐藏。默认为false。
 		 * @param priority 弹出优先级。优先级高的窗口显示层级在低的前面。同一优先级的窗口，后添加的窗口层级在前面。
+		 * @param popUpEffect 窗口弹出时要播放的动画特效。
 		 */		
 		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,
-										exclusive:Boolean=false,priority:int=0):void
+										exclusive:Boolean=false,priority:int=0,
+										popUpEffect:IEffect=null):void
 		{
-			impl.addPopUp(popUp,modal,exclusive,priority);
+			impl.addPopUp(popUp,modal,exclusive,priority,popUpEffect);
 		}
 		
 		/**

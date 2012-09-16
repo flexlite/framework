@@ -1,12 +1,13 @@
 package org.flexlite.domUI.effects
 {
+	import flash.events.EventDispatcher;
+	
+	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.events.EffectEvent;
-	
-	import flash.events.EventDispatcher;
 	
 	use namespace dx_internal;
 	
@@ -30,7 +31,7 @@ package org.flexlite.domUI.effects
 	 * 动画特效基类
 	 * @author DOM
 	 */
-	public class Effect extends EventDispatcher
+	public class Effect extends EventDispatcher implements IEffect
 	{
 		/**
 		 * 构造函数
