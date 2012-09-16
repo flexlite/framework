@@ -1,15 +1,18 @@
 package org.flexlite.domUI.components.supportClasses
 {
-	import org.flexlite.domUI.components.Button;
-	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.events.ResizeEvent;
-	import org.flexlite.domUI.events.TrackBaseEvent;
-	import org.flexlite.domUI.events.UIEvent;
-	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	
+	import org.flexlite.domUI.components.Button;
+	import org.flexlite.domUI.core.DomGlobals;
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.events.ResizeEvent;
+	import org.flexlite.domUI.events.TrackBaseEvent;
+	import org.flexlite.domUI.events.UIEvent;
+	
+	use namespace dx_internal;
 	
 	/**
 	 * 当控件的值由于用户交互操作而发生更改时分派。 
@@ -193,7 +196,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 记录鼠标在thumb上按下的位置
 		 */		
-		private var clickOffset:Point;
+		dx_internal var clickOffset:Point;
 		
 		/**
 		 * 更新皮肤部件（通常为滑块）的大小和可见性。<br/>
@@ -248,6 +251,7 @@ package org.flexlite.domUI.components.supportClasses
 				stage_mouseUpHandler, false,0,true);
 			DomGlobals.stage.addEventListener(Event.MOUSE_LEAVE,
 				stage_mouseUpHandler, false,0,true);
+			addEventListener(Event.ENTER_FRAME,onEnterFrame);
 			
 			clickOffset = thumb.globalToLocal(new Point(event.stageX, event.stageY));
 			
@@ -256,14 +260,28 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
-		 * 鼠标移动事件
+		 * 当鼠标拖动thumb时，需要更新value的标记。
 		 */		
-		protected function stage_mouseMoveHandler(event:MouseEvent):void
+		private var needUpdateValue:Boolean = false;
+		/**
+		 * 拖动thumb过程中触发的EnterFrame事件
+		 */		
+		private function onEnterFrame(event:Event):void
 		{
-			if (!track)
+			if(!needUpdateValue||!track)
 				return;
-			
-			var p:Point = track.globalToLocal(new Point(event.stageX, event.stageY));
+			updateWhenMouseMove();
+			needUpdateValue = false;
+		}
+		
+		/**
+		 * 当thumb被拖动时更新值，此方法每帧只被调用一次，比直接在鼠标移动事件里更新性能更高。
+		 */		
+		protected function updateWhenMouseMove():void
+		{
+			if(!track)
+				return;
+			var p:Point = track.globalToLocal(new Point(DomGlobals.stage.mouseX, DomGlobals.stage.mouseY));
 			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
 			
@@ -274,8 +292,16 @@ package org.flexlite.domUI.components.supportClasses
 				dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
 				dispatchEvent(new Event(Event.CHANGE));
 			}
-			
-			event.updateAfterEvent();
+		}
+		
+		/**
+		 * 鼠标移动事件
+		 */		
+		private function stage_mouseMoveHandler(event:MouseEvent):void
+		{
+			if (needUpdateValue)
+				return;
+			needUpdateValue = true;
 		}
 		
 		/**
@@ -289,7 +315,12 @@ package org.flexlite.domUI.components.supportClasses
 				stage_mouseUpHandler);
 			DomGlobals.stage.addEventListener(Event.MOUSE_LEAVE,
 				stage_mouseUpHandler);
-			
+			removeEventListener(Event.ENTER_FRAME,updateWhenMouseMove);
+			if(needUpdateValue)
+			{
+				updateWhenMouseMove();
+				needUpdateValue = false;
+			}
 			dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_RELEASE));
 			dispatchEvent(new UIEvent(UIEvent.CHANGE_END));
 		}
