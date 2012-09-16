@@ -40,7 +40,7 @@ package org.flexlite.domUI.layouts
 			for (var i:int = 0; i < count; i++)
 			{
 				var layoutElement:ILayoutElement = target.getElementAt(i) as ILayoutElement;
-				if (!layoutElement)
+				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
 				
 				var hCenter:Number   = layoutElement.horizontalCenter;
@@ -115,7 +115,7 @@ package org.flexlite.domUI.layouts
 			for (var i:int = 0; i < count; i++)
 			{
 				var layoutElement:ILayoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement==null)
+				if (layoutElement==null||!layoutElement.includeInLayout)
 					continue;
 				
 				var hCenter:Number          = layoutElement.horizontalCenter;

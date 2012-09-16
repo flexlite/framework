@@ -9,6 +9,13 @@ package org.flexlite.domUI.core
 	public interface ILayoutElement extends IEventDispatcher
 	{
 		/**
+		 * 指定此组件是否包含在父容器的布局中。若为false，则父级容器在测量和布局阶段都忽略此组件。默认值为true。
+		 * 注意，visible属性与此属性不同，设置visible为false，父级容器仍会对其布局。
+		 */		
+		function get includeInLayout():Boolean;
+		
+		function set includeInLayout(value:Boolean):void;
+		/**
 		 * 距父级容器离左边距离
 		 */		
 		function get left():Number;

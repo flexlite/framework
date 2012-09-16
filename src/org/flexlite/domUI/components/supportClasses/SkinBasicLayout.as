@@ -44,10 +44,10 @@ package org.flexlite.domUI.components.supportClasses
 			var measureH:Number = 0;
 			
 			var count:int = target.numChildren;
-			for (var i:int = 0; i < count; i++)
+			for(var i:int = 0; i < count; i++)
 			{
 				var layoutElement:ILayoutElement = target.getChildAt(i) as ILayoutElement;
-				if (!layoutElement||layoutElement==target.skin)
+				if (!layoutElement||layoutElement==target.skin||!layoutElement.includeInLayout)
 					continue;
 				
 				var hCenter:Number   = layoutElement.horizontalCenter;
@@ -117,10 +117,10 @@ package org.flexlite.domUI.components.supportClasses
 			
 			var count:int = target.numChildren;
 			
-			for (var i:int = 0; i < count; i++)
+			for(var i:int = 0; i < count; i++)
 			{
 				var layoutElement:ILayoutElement = target.getChildAt(i) as ILayoutElement;
-				if (layoutElement==null||layoutElement==target.skin)
+				if (layoutElement==null||layoutElement==target.skin||!layoutElement.includeInLayout)
 					continue;
 				
 				var hCenter:Number          = layoutElement.horizontalCenter;

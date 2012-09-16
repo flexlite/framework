@@ -926,6 +926,19 @@ package org.flexlite.domUI.core
 					this, prop, oldValue, value));
 		}
 		
+		private var _includeInLayout:Boolean = true;
+		/**
+		 * @copy org.flexlite.domUI.core.ILayoutElement#includeInLayout
+		 */
+		public function get includeInLayout():Boolean
+		{
+			return _includeInLayout;
+		}
+		public function set includeInLayout(value:Boolean):void
+		{
+			_includeInLayout = value;
+		}
+
 		
 		private var _left:Number;
 		

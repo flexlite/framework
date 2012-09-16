@@ -192,7 +192,7 @@ package org.flexlite.domUI.layouts
 			for each(var i:int in visibleIndices)
 			{
 				var layoutElement:ILayoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement == null)
+				if (layoutElement == null||!layoutElement.includeInLayout)
 					continue;
 				
 				var preferredWidth:Number = layoutElement.preferredWidth;
@@ -220,7 +220,7 @@ package org.flexlite.domUI.layouts
 			for (var i:int = 0; i < count; i++)
 			{
 				var layoutElement:ILayoutElement = target.getElementAt(i) as ILayoutElement;
-				if (!layoutElement)
+				if (!layoutElement||!layoutElement.includeInLayout)
 				{
 					numElements--;
 					continue;
@@ -487,7 +487,7 @@ package org.flexlite.domUI.layouts
 				for(var index:int=startIndex;index<=endIndex;index++)
 				{
 					layoutElement = target.getVirtualElementAt(i) as ILayoutElement;
-					if (layoutElement==null)
+					if (layoutElement==null||!layoutElement.includeInLayout)
 						continue;
 					maxElementHeight = Math.max(maxElementHeight,layoutElement.preferredHeight);
 				}
@@ -502,7 +502,14 @@ package org.flexlite.domUI.layouts
 				var exceesHeight:Number = 0;
 				layoutElement = target.getVirtualElementAt(i) as ILayoutElement;
 				if (layoutElement==null)
+				{
 					continue;
+				}
+				else if(!layoutElement.includeInLayout)
+				{
+					elementSizeTable[i] = 0;
+					continue;
+				}
 				if(justify)
 				{
 					y = _paddingTop;
@@ -569,7 +576,7 @@ package org.flexlite.domUI.layouts
 			for (i = 0; i < count; i++)
 			{
 				layoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement==null)
+				if (layoutElement==null||!layoutElement.includeInLayout)
 				{
 					numElements--;
 					continue;
@@ -634,7 +641,7 @@ package org.flexlite.domUI.layouts
 			{
 				var exceesHeight:Number = 0;
 				layoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement==null)
+				if (layoutElement==null||!layoutElement.includeInLayout)
 					continue;
 				if(justify)
 				{

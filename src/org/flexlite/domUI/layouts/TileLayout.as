@@ -487,7 +487,7 @@ package org.flexlite.domUI.layouts
 			for(var index:int = 0;index<numElements;index++)
 			{
 				var elt:ILayoutElement = target.getElementAt(index) as ILayoutElement;
-				if(elt==null)
+				if(elt==null||!elt.includeInLayout)
 					continue;
 				maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
 				maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
@@ -635,7 +635,7 @@ package org.flexlite.domUI.layouts
 					elt = target.getVirtualElementAt(index) as ILayoutElement;
 				else
 					elt = target.getElementAt(index) as ILayoutElement;
-				if(elt == null)
+				if(elt == null||!elt.includeInLayout)
 					continue;
 				
 				maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
