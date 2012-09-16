@@ -48,8 +48,6 @@ package org.flexlite.domUI.managers
 				removeEventListener(Event.ADDED_TO_STAGE,onAddToStage);
 			}
 			
-			DomGlobals._stage = stage;
-			DomGlobals.layoutManager = new LayoutManager();
 			DomGlobals.systemManager = this;
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -256,24 +254,26 @@ package org.flexlite.domUI.managers
 		//==========================================================================
 		//                                复写容器操作方法
 		//==========================================================================
-		override public function get numElements():int
-		{
-			return _noTopMostIndex;
-		}
 		
 		override public function addElement(element:IVisualElement):IVisualElement
 		{
-			var addIndex:int = _noTopMostIndex;
-			if (element.parent == this)
-				addIndex--;
-			
-			return addElementAt(element, addIndex);
+			return addElementAt(element, _noTopMostIndex);
 		}
 		
 		override public function addElementAt(element:IVisualElement,index:int):IVisualElement
 		{
-			checkForRangeError(index,true);
-			noTopMostIndex++;
+			if(index>_noTopMostIndex)
+				index = _noTopMostIndex;
+			if(element.parent == this&&
+				super.getElementIndex(element)<_noTopMostIndex)
+			{
+				if(index == _noTopMostIndex)
+					index--;
+			}
+			else
+			{
+				noTopMostIndex++;
+			}
 			return super.addElementAt(element,index);
 		}
 		
@@ -304,20 +304,6 @@ package org.flexlite.domUI.managers
 			else 
 				cursorIndex--;
 			return super.removeElementAt(index);
-		}
-		
-		override public function getElementAt(index:int):IVisualElement
-		{
-			checkForRangeError(index);
-			return super.getElementAt(index)
-		}
-		
-		override public function getElementIndex(element:IVisualElement):int
-		{
-			var index:int = super.getElementIndex(element);
-			if(index>=_noTopMostIndex)
-				index = -1;
-			return index;
 		}
 		
 		override public function setElementIndex(element:IVisualElement, newIndex:int):void

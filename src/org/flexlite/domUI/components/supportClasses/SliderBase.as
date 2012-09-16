@@ -1,21 +1,19 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.utils.Timer;
+	
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.Sine;
 	import org.flexlite.domUI.events.TrackBaseEvent;
 	import org.flexlite.domUI.events.UIEvent;
-	
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.geom.Point;
-	import flash.ui.Keyboard;
-	import flash.utils.Timer;
 	
 	use namespace dx_internal;
 	
@@ -39,23 +37,6 @@ package org.flexlite.domUI.components.supportClasses
 		private var animator:Animation = null;
 		
 		private var slideToValue:Number;
-		
-		/**
-		 * 鼠标在thumb上按下时的坐标
-		 */	
-		private var clickOffset:Point;  
-		/**
-		 * 记录最近一次鼠标移动事件相对于track的坐标。
-		 */	
-		private var mostRecentMousePoint:Point;
-		/**
-		 * 拖拽时用于强制刷新显示列表的计时器。
-		 */	
-		private var dragTimer:Timer = null;
-		
-		private var dragPending:Boolean = false;
-		
-		private static const MAX_DRAG_RATE:Number = 30;
 		
 		override public function get maximum():Number
 		{
@@ -117,12 +98,10 @@ package org.flexlite.domUI.components.supportClasses
 		
 		override protected function thumb_mouseDownHandler(event:MouseEvent):void
 		{
-			
 			if (animator && animator.isPlaying)
 				stopAnimation();
 			
 			super.thumb_mouseDownHandler(event);
-			clickOffset = thumb.globalToLocal(new Point(event.stageX, event.stageY));
 		}
 		
 		private var _liveDragging:Boolean = true;
@@ -139,9 +118,13 @@ package org.flexlite.domUI.components.supportClasses
 			_liveDragging = value;
 		}
 		
-		private function handleMousePoint(p:Point):void
-		{
-			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
+		override protected function updateWhenMouseMove():void
+		{      
+			if(!track)
+				return;
+			
+			var pos:Point = track.globalToLocal(new Point(DomGlobals.stage.mouseX, DomGlobals.stage.mouseY));
+			var newValue:Number = pointToValue(pos.x - clickOffset.x,pos.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
 			
 			if (newValue != pendingValue)
@@ -159,72 +142,14 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
-		override protected function stage_mouseMoveHandler(event:MouseEvent):void
-		{      
-			if (!track)
-				return;
-			
-			mostRecentMousePoint = track.globalToLocal(new Point(event.stageX, event.stageY));
-			if (!dragTimer)
-			{
-				dragTimer = new Timer(1000/MAX_DRAG_RATE, 0);
-				dragTimer.addEventListener(TimerEvent.TIMER, dragTimerHandler);
-			}
-			
-			if (!dragTimer.running)
-			{
-				
-				handleMousePoint(mostRecentMousePoint);
-				event.updateAfterEvent();
-				dragTimer.start();
-				dragPending = false;
-			}
-			else
-			{
-				dragPending = true;
-			}
-		}
-		/**
-		 * 
-		 */	
-		private function dragTimerHandler(event:TimerEvent):void
-		{
-			if (dragPending)
-			{
-				
-				handleMousePoint(mostRecentMousePoint);
-				event.updateAfterEvent();
-				dragPending = false;
-			}
-			else
-			{
-				dragTimer.stop();
-			}
-		}
-		
 		override protected function stage_mouseUpHandler(event:Event):void
 		{
-			if (dragTimer)
-			{
-				if (dragPending)
-				{
-					
-					handleMousePoint(mostRecentMousePoint);
-					if (event is MouseEvent)
-						MouseEvent(event).updateAfterEvent();
-				}
-				
-				dragTimer.stop();
-				dragTimer.removeEventListener(TimerEvent.TIMER, dragTimerHandler);
-				dragTimer = null;
-			}
-			
+			super.stage_mouseUpHandler(event);
 			if ((liveDragging == false) && (value != pendingValue))
 			{
 				setValue(pendingValue);
 				dispatchEvent(new Event(Event.CHANGE));
 			}
-			super.stage_mouseUpHandler(event);
 		}
 		
 		override protected function track_mouseDownHandler(event:MouseEvent):void
@@ -269,7 +194,6 @@ package org.flexlite.domUI.components.supportClasses
 				}
 			}
 			
-			event.updateAfterEvent();
 		}
 	}
 	

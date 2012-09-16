@@ -68,23 +68,10 @@ package org.flexlite.domUI.components.supportClasses
 			var hsb:ScrollBarBase = getScroller().horizontalScrollBar;
 			if (!hsb)
 				return;
-			
+			if(hsb.visible == value)
+				return;
 			hsb.visible = value;
-			if (value)
-			{
-				if (hsb.scaleX == 0) 
-					hsb.scaleX = hsbScaleX;
-				if (hsb.scaleY == 0) 
-					hsb.scaleY = hsbScaleY;
-			}
-			else 
-			{
-				if (hsb.scaleX != 0)
-					hsbScaleX = hsb.scaleX;
-				if (hsb.scaleY != 0)
-					hsbScaleY = hsb.scaleY;
-				hsb.scaleX = hsb.scaleY = 0;            
-			}
+			hsb.includeInLayout = value;
 		}
 		
 		/**
@@ -130,23 +117,10 @@ package org.flexlite.domUI.components.supportClasses
 			var vsb:ScrollBarBase = getScroller().verticalScrollBar;
 			if (!vsb)
 				return;
-			
+			if(vsb.visible == value)
+				return;
 			vsb.visible = value;
-			if (value)
-			{
-				if (vsb.scaleX == 0) 
-					vsb.scaleX = vsbScaleX;
-				if (vsb.scaleY == 0) 
-					vsb.scaleY = vsbScaleY;
-			}
-			else 
-			{
-				if (vsb.scaleX != 0)
-					vsbScaleX = vsb.scaleX;
-				if (vsb.scaleY != 0)
-					vsbScaleY = vsb.scaleY;
-				vsb.scaleX = vsb.scaleY = 0;            
-			}
+			vsb.includeInLayout = value;
 		}
 		
 		/**

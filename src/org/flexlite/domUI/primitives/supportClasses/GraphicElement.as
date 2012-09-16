@@ -784,6 +784,17 @@ package org.flexlite.domUI.primitives.supportClasses
 			invalidateTransform(previous != needsDisplayObject);    
 		}
 		
+		private var _includeInLayout:Boolean = true;
+
+		public function get includeInLayout():Boolean
+		{
+			return _includeInLayout;
+		}
+		public function set includeInLayout(value:Boolean):void
+		{
+			_includeInLayout = value;
+		}
+		
 		private var _top:Number;
 		
 		public function get top():Number

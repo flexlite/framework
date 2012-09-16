@@ -373,11 +373,6 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
-		override protected function getCurrentSkinState():String
-		{
-			return enabled ? "normal" : "disabled";
-		}
-		
 		override public function setFocus():void
 		{
 			if(textDisplay!=null)

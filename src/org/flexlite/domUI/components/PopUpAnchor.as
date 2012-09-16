@@ -149,29 +149,27 @@ package org.flexlite.domUI.components
 		private function calculatePopUpPosition():Point
 		{
 			var registrationPoint:Point = new Point();
-			var centerX:Number = (width - popUp.layoutBoundsWidth)*0.5;
-			var centerY:Number = (height - popUp.layoutBoundsHeight)*0.5;
 			switch(_popUpPosition)
 			{
 				case PopUpPosition.BELOW:
-					registrationPoint.x = centerX;
+					registrationPoint.x = 0;
 					registrationPoint.y = height;
 					break;
 				case PopUpPosition.ABOVE:
-					registrationPoint.x = centerX;
+					registrationPoint.x = 0;
 					registrationPoint.y = -popUp.layoutBoundsHeight;
 					break;
 				case PopUpPosition.LEFT:
 					registrationPoint.x = -popUp.layoutBoundsWidth;
-					registrationPoint.y = centerY;
+					registrationPoint.y = 0;
 					break;
 				case PopUpPosition.RIGHT:
 					registrationPoint.x = width;
-					registrationPoint.y = centerY;
+					registrationPoint.y = 0;
 					break;            
 				case PopUpPosition.CENTER:
-					registrationPoint.x = centerX;
-					registrationPoint.y = centerY;
+					registrationPoint.x = (width - popUp.layoutBoundsWidth)*0.5;
+					registrationPoint.y = (height - popUp.layoutBoundsHeight)*0.5;
 					break;            
 				case PopUpPosition.TOP_LEFT:
 					break;
@@ -226,6 +224,8 @@ package org.flexlite.domUI.components
 				popUp.height = unscaledHeight;
 			else
 				popUp.height = NaN;
+			if(popUpPoint is IInvalidating)
+				(popUpPoint as IInvalidating).validateNow();
 			var popUpPoint:Point = calculatePopUpPosition();
 			popUp.x = popUpPoint.x;
 			popUp.y = popUpPoint.y;

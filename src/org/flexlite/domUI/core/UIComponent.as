@@ -167,8 +167,16 @@ package org.flexlite.domUI.core
 		{
 			return _hasParent||parent!=null;
 		}
-		
-		
+		/**
+		 * 添加到舞台
+		 */		
+		private function onAddedToStage(e:Event=null):void
+		{
+			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			DomGlobals.initlize(stage);
+			checkInvalidateFlag();
+			addRenderListener();
+		}
 		/**
 		 * 被添加到显示列表时
 		 */		
@@ -299,16 +307,6 @@ package org.flexlite.domUI.core
 			return super.addChildAt(child,index);
 		}
 		
-		
-		/**
-		 * 添加到舞台
-		 */		
-		private function onAddedToStage(e:Event=null):void
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			checkInvalidateFlag();
-			addRenderListener();
-		}
 		/**
 		 * 检查属性失效标记并应用
 		 */		
@@ -928,6 +926,19 @@ package org.flexlite.domUI.core
 					this, prop, oldValue, value));
 		}
 		
+		private var _includeInLayout:Boolean = true;
+		/**
+		 * @copy org.flexlite.domUI.core.ILayoutElement#includeInLayout
+		 */
+		public function get includeInLayout():Boolean
+		{
+			return _includeInLayout;
+		}
+		public function set includeInLayout(value:Boolean):void
+		{
+			_includeInLayout = value;
+		}
+
 		
 		private var _left:Number;
 		
