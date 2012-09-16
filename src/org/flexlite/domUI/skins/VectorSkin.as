@@ -45,7 +45,7 @@ package org.flexlite.domUI.skins
 		/**
 		 * 文本投影滤镜
 		 */		
-		dx_internal static var dropShadowFilter:Array = [new DropShadowFilter(1,270,0,0.3,1,1)];
+		dx_internal static var textOverFilter:Array = [new DropShadowFilter(1,270,0,0.3,1,1)];
 		/**
 		 * 边框线条颜色
 		 */		

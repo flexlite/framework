@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.filters.ColorMatrixFilter;
 	import flash.utils.Dictionary;
 	
@@ -272,6 +273,8 @@ package org.flexlite.domUI.components
 				(curSkin as IStateClient).currentState = curState;
 				hasState = (curSkin as IStateClient).hasState(curState);
 			}
+			if(hasEventListener("stateChanged"))
+				dispatchEvent(new Event("stateChanged"));
 			if(enabled)
 			{
 				if(grayFilterIsSet)
