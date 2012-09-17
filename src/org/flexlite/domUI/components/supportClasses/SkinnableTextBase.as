@@ -1,13 +1,18 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	
-	import org.flexlite.domUI.components.EditableText;
-	import org.flexlite.domUI.components.SkinnableComponent;
-	import org.flexlite.domUI.core.ISkinPartHost;
-	import org.flexlite.domUI.core.dx_internal;
-	
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.TextEvent;
+	
+	import org.flexlite.domUI.components.EditableText;
+	import org.flexlite.domUI.components.SkinnableComponent;
+	import org.flexlite.domUI.core.IEditableText;
+	import org.flexlite.domUI.core.ISkinPartHost;
+	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.core.dx_internal;
+	
+	import spark.components.RichEditableText;
 	
 	use namespace dx_internal;
 	
@@ -38,7 +43,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * [SkinPart]实体文本输入组件
 		 */		
-		public var textDisplay:EditableText;
+		public var textDisplay:IEditableText;
 		/**
 		 * textDisplay改变时传递的参数
 		 */		
@@ -399,7 +404,7 @@ package org.flexlite.domUI.components.supportClasses
 			if(!(skin is ISkinPartHost)&&textDisplay)
 			{
 				partRemoved("textDisplay",textDisplay);
-				removeFromDisplayList(textDisplay);
+				removeFromDisplayList(DisplayObject(textDisplay));
 				textDisplay = null;
 			}
 			super.detachSkin(skin);

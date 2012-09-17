@@ -1,12 +1,10 @@
 package org.flexlite.domUI.core
 {
-	import flash.events.IEventDispatcher;
-	
 	/**
 	 * 简单文本显示控件接口。
 	 * @author DOM
 	 */	
-	public interface IDisplayText extends IEventDispatcher
+	public interface IDisplayText extends IUIComponent
 	{
 		/**
 		 * 此文本组件所显示的文本。

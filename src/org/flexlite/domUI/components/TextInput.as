@@ -1,9 +1,11 @@
 package org.flexlite.domUI.components
 {
-	import org.flexlite.domUI.components.supportClasses.SkinnableTextBase;
-	import org.flexlite.domUI.core.dx_internal;
-	
+	import flash.display.DisplayObject;
 	import flash.events.Event;
+	
+	import org.flexlite.domUI.components.supportClasses.SkinnableTextBase;
+	import org.flexlite.domUI.core.IViewport;
+	import org.flexlite.domUI.core.dx_internal;
 	
 	use namespace dx_internal;
 
@@ -56,7 +58,8 @@ package org.flexlite.domUI.components
 			if (instance == textDisplay)
 			{
 				textDisplay.multiline = false;
-				textDisplay.clipAndEnableScrolling = false;
+				if(textDisplay is IViewport)
+					(textDisplay as IViewport).clipAndEnableScrolling = false;
 			}
 		}
 		
@@ -70,7 +73,7 @@ package org.flexlite.domUI.components
 			textDisplay.right = 1;
 			textDisplay.top = 1;
 			textDisplay.bottom = 1;
-			addToDisplyList(textDisplay);
+			addToDisplyList(DisplayObject(textDisplay));
 			partAdded("textDisplay",textDisplay);
 		}
 	}

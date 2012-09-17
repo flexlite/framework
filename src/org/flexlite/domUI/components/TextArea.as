@@ -1,10 +1,11 @@
 package org.flexlite.domUI.components
 {
 	
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	
 	import org.flexlite.domUI.components.supportClasses.SkinnableTextBase;
 	import org.flexlite.domUI.core.dx_internal;
-	
-	import flash.events.Event;
 	
 	use namespace dx_internal;
 	
@@ -162,7 +163,7 @@ package org.flexlite.domUI.components
 			textDisplay = new EditableText();
 			textDisplay.widthInChars = 15;
 			textDisplay.heightInLines = 10;
-			addToDisplyList(textDisplay);
+			addToDisplyList(DisplayObject(textDisplay));
 			partAdded("textDisplay",textDisplay);
 		}
 		

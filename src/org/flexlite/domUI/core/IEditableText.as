@@ -19,12 +19,6 @@ package org.flexlite.domUI.core
 		function set editable(value:Boolean):void;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#enabled
-		 */		
-		function get enabled():Boolean;
-		function set enabled(value:Boolean):void;
-		
-		/**
 		 * @copy org.flexlite.domUI.core.IViewport#horizontalScrollPosition
 		 */		
 		function get horizontalScrollPosition():Number;
@@ -84,5 +78,17 @@ package org.flexlite.domUI.core
 		 * 选中所有文本。
 		 */		
 		function selectAll():void;
+		
+		/**
+		 * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
+		 */		
+		function get widthInChars():Number;
+		function set widthInChars(value:Number):void;
+		
+		/**
+		 * 控件的默认高度（以行为单位测量）。 若设置了multiline属性为false，则忽略此属性。
+		 */		
+		function get heightInLines():Number;
+		function set heightInLines(value:Number):void;
 	}
 }

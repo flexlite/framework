@@ -35,6 +35,10 @@ package org.flexlite.domUI.core
 		 * 不会影响显式标记尺寸属性widthExplicitlySet,_heightExplicitlySet
 		 */		
 		function setActualSize(newWidth:Number, newHeight:Number):void;
+		/**
+		 * 设置当前组件为焦点对象
+		 */		
+		function setFocus():void;
 	}
 	
 }
