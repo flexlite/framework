@@ -17,7 +17,7 @@ package org.flexlite.domUI.components
 	
 	[DefaultProperty(name="popUp")]
 	
-	[DXML(show="false")]
+	[DXML(show="true")]
 	/**
 	 * PopUpAnchor组件用于定位布局中的弹出控件或下拉控件
 	 * @author DOM
@@ -224,8 +224,8 @@ package org.flexlite.domUI.components
 				popUp.height = unscaledHeight;
 			else
 				popUp.height = NaN;
-			if(popUpPoint is IInvalidating)
-				(popUpPoint as IInvalidating).validateNow();
+			if(popUp is IInvalidating)
+				(popUp as IInvalidating).validateNow();
 			var popUpPoint:Point = calculatePopUpPosition();
 			popUp.x = popUpPoint.x;
 			popUp.y = popUpPoint.y;

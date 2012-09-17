@@ -34,7 +34,8 @@
   <component id="ListBase" p="org.flexlite.domUI.components.supportClasses.ListBase" s="org.flexlite.domUI.components.SkinnableDataContainer"/>
   <component id="Panel" p="org.flexlite.domUI.components.Panel" show="true" s="org.flexlite.domUI.components.SkinnableContainer"/>
   <component id="Path" p="org.flexlite.domUI.primitives.Path" s="org.flexlite.domUI.primitives.supportClasses.FilledElement"/>
-  <component id="PopUpAnchor" p="org.flexlite.domUI.components.PopUpAnchor" d="popUp" s="org.flexlite.domUI.core.UIComponent"/>
+  <component id="PopUpAnchor" p="org.flexlite.domUI.components.PopUpAnchor" show="true" d="popUp" s="org.flexlite.domUI.core.UIComponent"/>
+  <component id="PopUpSkin" p="org.flexlite.domUI.skins.PopUpSkin" s="org.flexlite.domUI.components.supportClasses.Skin"/>
   <component id="ProgressBar" p="org.flexlite.domUI.components.ProgressBar" show="true" s="org.flexlite.domUI.components.supportClasses.Range"/>
   <component id="RadialGradient" p="org.flexlite.domUI.primitives.graphic.RadialGradient" s="org.flexlite.domUI.primitives.graphic.GradientBase"/>
   <component id="RadialGradientStroke" p="org.flexlite.domUI.primitives.graphic.RadialGradientStroke" s="org.flexlite.domUI.primitives.graphic.GradientStroke"/>
