@@ -4,6 +4,7 @@ package org.flexlite.domUI.managers
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.EventPhase;
+	import flash.events.FullScreenEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
@@ -53,6 +54,7 @@ package org.flexlite.domUI.managers
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.RESIZE,onResize);
+			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
