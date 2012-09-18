@@ -37,8 +37,9 @@ package org.flexlite.domUI.components
 		 *  设置想对于总量的当前进度值		 
 		 *  @param value 当前进度值		 
 		 *  @param maximum 总量		   
+		 *  @param isTween 是否需要渐变效果
 		 */
-		public function setProgress(value:uint, total:uint):void
+		public function setProgress(value:uint, total:uint, isTween:Boolean=false):void
 		{
 			if( isNaN(value) || isNaN(maximum)) return;
 			
@@ -54,7 +55,15 @@ package org.flexlite.domUI.components
 			progressEvent.bytesTotal = maximum;
 			dispatchEvent(progressEvent);
 			
-			startPlayingIndeterminate();
+			if(isTween)
+			{
+				if(label) label.text = String(value+"/"+maximum);
+				thumb.width = this.width*(value/maximum);
+			}
+			else
+			{
+				startPlayingIndeterminate();
+			}
 			
 			// 抛出完成事件
 			if (value == maximum && value > 0)

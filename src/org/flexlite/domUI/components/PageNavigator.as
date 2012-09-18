@@ -137,8 +137,8 @@ package org.flexlite.domUI.components
 				_viewport.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
 				if(_viewport is GroupBase)
 				{
-					_viewport.addEventListener("layoutChanged",updateDirection);
-					updateDirection();
+					_viewport.addEventListener("layoutChanged",onLayoutChanged);
+					pageDirection = updateDirection();
 				}
 				updateaTotalPages();
 			}
@@ -158,34 +158,43 @@ package org.flexlite.domUI.components
 				_viewport.removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);	
 				if(_viewport is GroupBase)
 				{
-					_viewport.removeEventListener("layoutChanged",updateDirection);
+					_viewport.removeEventListener("layoutChanged",onLayoutChanged);
 				}
 			}
 		}
+		/**
+		 * viewport的layout属性改变,更新翻页方向.
+		 */		
+		private function onLayoutChanged(event:Event=null):void
+		{
+			pageDirection = updateDirection();
+		}
 		
 		/**
-		 * 翻页朝向是否为垂直。
+		 * 翻页朝向，true代表垂直翻页，false代表水平翻页。
 		 */		
-		private var verticalDirection:Boolean = true;
+		private var pageDirection:Boolean = true;
 		/**
-		 * 更新翻页方向
+		 * 安装viewport时调用此方法，返回当前的翻页方向，true代表垂直翻页，反之水平翻页。
 		 */		
-		private function updateDirection(event:Event=null):void
+		protected function updateDirection():Boolean
 		{
 			var layout:LayoutBase = (_viewport as GroupBase).layout;
+			var direction:Boolean = true;
 			if(layout is HorizontalAlign)
 			{
-				verticalDirection = false;
+				direction = false;
 			}
 			else if(layout is TileLayout&&
 				(layout as TileLayout).orientation==TileOrientation.COLUMNS)
 			{
-				verticalDirection = false;
+				direction = false;
 			}
 			else
 			{
-				verticalDirection = true;
+				direction = true;
 			}
+			return direction;
 		}
 		
 		/**
@@ -227,7 +236,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			if(verticalDirection)
+			if(pageDirection)
 			{
 				_totalPages = Math.ceil(_viewport.contentHeight/_viewport.height);
 				if(isNaN(_totalPages))
@@ -269,7 +278,7 @@ package org.flexlite.domUI.components
 			var length:int = Math.abs(_currentPage-index);
 			var i:int;
 			var navigatorUint:uint;
-			if(verticalDirection)
+			if(pageDirection)
 			{
 				if(index==0)
 				{
