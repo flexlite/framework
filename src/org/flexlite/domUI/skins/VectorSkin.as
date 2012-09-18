@@ -41,6 +41,20 @@ package org.flexlite.domUI.skins
 				0.5 * Math.PI,x,y);
 			return tempMatrix;
 		}
+		/**
+		 * 创建水平渐变矩阵。
+		 * @param x 渐变的左边缘。
+		 * @param y 渐变的上边缘。
+		 * @param width 渐变的宽度。
+		 * @param height 渐变的高度。
+		 */	
+		protected function horizontalGradientMatrix(x:Number, y:Number,
+													width:Number,
+													height:Number):Matrix
+		{
+			tempMatrix.createGradientBox(width, height,0, x, y);
+			return tempMatrix;
+		}
 		
 		/**
 		 * 文本投影滤镜

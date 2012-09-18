@@ -1,5 +1,12 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.Timer;
+	
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IViewport;
@@ -12,12 +19,6 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.UIEvent;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.geom.Point;
-	import flash.utils.Timer;
 	
 	use namespace dx_internal;
 	
@@ -555,7 +556,8 @@ package org.flexlite.domUI.components.supportClasses
 			
 			var newScrollValue:Number = pointToValue(trackPosition.x, trackPosition.y);
 			trackScrollDown = (newScrollValue > value);
-			
+			var rect:Rectangle = thumb.getBounds(this);
+			thumb.x += 0.5;
 			if (event.shiftKey)
 			{
 				var adjustedValue:Number = nearestValidValue(newScrollValue, snapInterval);
