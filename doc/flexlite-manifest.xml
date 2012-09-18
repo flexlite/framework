@@ -32,6 +32,7 @@
   <component id="LinearGradientStroke" p="org.flexlite.domUI.primitives.graphic.LinearGradientStroke" s="org.flexlite.domUI.primitives.graphic.GradientStroke"/>
   <component id="List" p="org.flexlite.domUI.components.List" show="true" s="org.flexlite.domUI.components.supportClasses.ListBase"/>
   <component id="ListBase" p="org.flexlite.domUI.components.supportClasses.ListBase" s="org.flexlite.domUI.components.SkinnableDataContainer"/>
+  <component id="PageNavigator" p="org.flexlite.domUI.components.PageNavigator" show="true" d="viewport" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="Panel" p="org.flexlite.domUI.components.Panel" show="true" s="org.flexlite.domUI.components.SkinnableContainer"/>
   <component id="Path" p="org.flexlite.domUI.primitives.Path" s="org.flexlite.domUI.primitives.supportClasses.FilledElement"/>
   <component id="PopUpAnchor" p="org.flexlite.domUI.components.PopUpAnchor" show="true" d="popUp" s="org.flexlite.domUI.core.UIComponent"/>
