@@ -12,6 +12,7 @@ package org.flexlite.domUI.skins.themes
 	import org.flexlite.domUI.skins.spark.ItemRendererSkin;
 	import org.flexlite.domUI.skins.spark.ListSkin;
 	import org.flexlite.domUI.skins.spark.NumericStepperSkin;
+	import org.flexlite.domUI.skins.spark.PageNavigatorSkin;
 	import org.flexlite.domUI.skins.spark.PanelSkin;
 	import org.flexlite.domUI.skins.spark.ScrollerSkin;
 	import org.flexlite.domUI.skins.spark.SpinnerSkin;
@@ -41,6 +42,7 @@ package org.flexlite.domUI.skins.themes
 			injector.mapSkin("org.flexlite.domUI.components::Image",ImageSkin);
 			injector.mapSkin("org.flexlite.domUI.components::List",ListSkin);
 			injector.mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
+			injector.mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
 			injector.mapSkin("org.flexlite.domUI.components::TextArea",TextAreaSkin);
 			injector.mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
 			injector.mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);

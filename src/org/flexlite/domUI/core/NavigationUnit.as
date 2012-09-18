@@ -42,32 +42,12 @@ package org.flexlite.domUI.core
 		 */		
 		public static const PAGE_DOWN:uint = Keyboard.PAGE_DOWN;
 		/**
-		 * 向左导航一页。此常量的值 0x2397 与 Unicode“previous page”字符相同。
+		 * 向左导航一页。
 		 */		
 		public static const PAGE_LEFT:uint = 0x2397;
 		/**
-		 * 向左导航一页。此常量的值 0x2397 与 Unicode“previous page”字符相同。
+		 * 向左导航一页。
 		 */		
 		public static const PAGE_RIGHT:uint = 0x2398;
-		
-		/**
-		 * 如果 keyCode 直接映射到一个 NavigationUnit 枚举值，则返回 true。
-		 * @param keyCode 键代码值。
-		 */		
-		public static function isNavigationUnit(keyCode:uint):Boolean
-		{
-			switch (keyCode)
-			{
-				case Keyboard.LEFT:         return true;
-				case Keyboard.RIGHT:        return true;
-				case Keyboard.UP:           return true;
-				case Keyboard.DOWN:         return true;
-				case Keyboard.PAGE_UP:      return true;
-				case Keyboard.PAGE_DOWN:    return true;
-				case Keyboard.HOME:         return true;
-				case Keyboard.END:          return true;
-				default:                    return false;
-			}
-		}
 	}
 }

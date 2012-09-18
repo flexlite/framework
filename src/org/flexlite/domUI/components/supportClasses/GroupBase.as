@@ -1,5 +1,9 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
@@ -8,10 +12,6 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.layouts.BasicLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
 	
 	use namespace dx_internal;
 	
@@ -135,6 +135,7 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			invalidateSize();
 			invalidateDisplayList();
+			dispatchEvent(new Event("layoutChanged"));
 		}
 		
 		/**
