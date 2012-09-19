@@ -4,6 +4,7 @@ package org.flexlite.domUI.components
 	
 	import flash.geom.Point;
 	
+	[DXML(show="true")]
 	
 	/**
 	 * 水平滑块控件

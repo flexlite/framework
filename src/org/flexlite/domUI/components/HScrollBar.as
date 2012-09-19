@@ -17,8 +17,6 @@ package org.flexlite.domUI.components
 	
 	[DXML(show="true")]
 	
-	[DefaultProperty(name="elementsContent",array="true")]
-	
 	/**
 	 * 水平滚动条组件
 	 * @author DOM

@@ -23,6 +23,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DXML(show="false")]
 	
+	[DefaultProperty(name="viewport",array="false")]
 	/**
 	 * 滚动条基类
 	 * @author DOM

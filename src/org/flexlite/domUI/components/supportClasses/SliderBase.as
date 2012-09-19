@@ -17,6 +17,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	use namespace dx_internal;
 	
+	[DXML(show="false")]
 	/**
 	 * 滑块控件基类
 	 * @author DOM
