@@ -252,14 +252,34 @@ package org.flexlite.domDisplay
 			if(!invalidateFlag)
 			{
 				invalidateFlag = true;
-				addEventListener(Event.ENTER_FRAME,validateProperties);
+				if(stage)
+				{
+					addEventListener(Event.RENDER,validateProperties);
+					if(stage) 
+						stage.invalidate();
+				}
+				else
+				{
+					addEventListener(Event.ENTER_FRAME,validateProperties);
+				}
 			}
 		}
+		
+		/**
+		 * 立即应用所有标记为延迟验证的属性
+		 */		
+		public function validateNow():void
+		{
+			if(invalidateFlag)
+				validateProperties();
+		}
+		
 		/**
 		 * 延迟应用属性事件
 		 */		
-		private function validateProperties(event:Event):void
+		private function validateProperties(event:Event=null):void
 		{
+			removeEventListener(Event.RENDER,validateProperties);
 			removeEventListener(Event.ENTER_FRAME,validateProperties);
 			commitProperties();
 			invalidateFlag = false;

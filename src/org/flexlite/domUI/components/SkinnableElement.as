@@ -98,6 +98,8 @@ package org.flexlite.domUI.components
 			}
 			invalidateSize();
 			invalidateParentSizeAndDisplayList();
+			if(stage)
+				validateNow();
 		}
 		
 		override protected function commitProperties():void

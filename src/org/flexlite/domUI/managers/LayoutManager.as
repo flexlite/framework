@@ -342,6 +342,20 @@ package org.flexlite.domUI.managers
 			if (oldTargetLevel == int.MAX_VALUE)
 			{
 				targetLevel = int.MAX_VALUE;
+				if (!skipDisplayList)
+				{
+					obj = ILayoutManagerClient(updateCompleteQueue.removeLargestChild(target));
+					while (obj)
+					{
+						if (!obj.initialized)
+							obj.initialized = true;
+						
+						if (obj.hasEventListener(UIEvent.UPDATE_COMPLETE))
+							obj.dispatchEvent(new UIEvent(UIEvent.UPDATE_COMPLETE));
+						obj.updateCompletePendingFlag = false;
+						obj = ILayoutManagerClient(updateCompleteQueue.removeLargestChild(target));
+					}
+				}
 			}
 		}
 

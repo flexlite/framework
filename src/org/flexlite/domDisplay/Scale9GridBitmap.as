@@ -159,7 +159,16 @@ package org.flexlite.domDisplay
 			if(!invalidateFlag)
 			{
 				invalidateFlag = true;
-				addEventListener(Event.ENTER_FRAME,validateProperties);
+				if(stage)
+				{
+					addEventListener(Event.RENDER,validateProperties);
+					if(stage) 
+						stage.invalidate();
+				}
+				else
+				{
+					addEventListener(Event.ENTER_FRAME,validateProperties);
+				}
 			}
 		}
 		/**
@@ -168,6 +177,7 @@ package org.flexlite.domDisplay
 		private function validateProperties(event:Event=null):void
 		{
 			removeEventListener(Event.ENTER_FRAME,validateProperties);
+			removeEventListener(Event.RENDER,validateProperties);
 			commitProperties();
 			invalidateFlag = false;
 		}	
@@ -193,7 +203,14 @@ package org.flexlite.domDisplay
 			}
 		}
 
-		private static var matrix:Matrix = new Matrix();
+		/**
+		 * 缓存的源九宫格网格坐标数据
+		 */		
+		private var cachedSourceGrid:Array;
+		/**
+		 * 缓存的目标九宫格网格坐标数据
+		 */		
+		private var cachedDestGrid:Array;
 		/**
 		 * 应用bitmapData属性
 		 */		
@@ -230,14 +247,7 @@ package org.flexlite.domDisplay
 			scale9GridChanged = false;
 		}
 
-		/**
-		 * 缓存的源九宫格网格坐标数据
-		 */		
-		private var cachedSourceGrid:Array;
-		/**
-		 * 缓存的目标九宫格网格坐标数据
-		 */		
-		private var cachedDestGrid:Array;
+		private static var matrix:Matrix = new Matrix();
 		/**
 		 * 应用具有九宫格缩放规则的位图数据
 		 */		
