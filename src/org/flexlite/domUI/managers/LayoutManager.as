@@ -244,6 +244,11 @@ package org.flexlite.domUI.managers
 					if (obj.hasParent)
 					{
 						obj.validateProperties();
+						if (!obj.updateCompletePendingFlag)
+						{
+							updateCompleteQueue.insert(obj);
+							obj.updateCompletePendingFlag = true;
+						}
 					}
 					obj = ILayoutManagerClient(invalidatePropertiesQueue.removeSmallestChild(target));
 				}
@@ -260,6 +265,11 @@ package org.flexlite.domUI.managers
 					if (obj.hasParent)
 					{
 						obj.validateSize();
+						if (!obj.updateCompletePendingFlag)
+						{
+							updateCompleteQueue.insert(obj);
+							obj.updateCompletePendingFlag = true;
+						}
 					}
 					if (invalidateClientPropertiesFlag)
 					{
@@ -290,6 +300,11 @@ package org.flexlite.domUI.managers
 						if (obj.hasParent)
 						{
 							obj.validateDisplayList();
+							if (!obj.updateCompletePendingFlag)
+							{
+								updateCompleteQueue.insert(obj);
+								obj.updateCompletePendingFlag = true;
+							}
 						}
 						if (invalidateClientPropertiesFlag)
 						{
