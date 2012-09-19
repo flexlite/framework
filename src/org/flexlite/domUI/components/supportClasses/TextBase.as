@@ -1,15 +1,16 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.events.Event;
+	import flash.text.AntiAliasType;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
+	import flash.text.TextLineMetrics;
+	
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.core.dx_internal;
-	
-	import flash.events.Event;
-	import flash.text.TextFormat;
-	import flash.text.TextFormatAlign;
-	import flash.text.TextLineMetrics;
 	
 	use namespace dx_internal;
 	
@@ -606,6 +607,7 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				textField = new UITextField;
 				textField.selectable = selectable;
+				textField.antiAliasType = AntiAliasType.ADVANCED; 
 				textField.mouseWheelEnabled = false;
 				
 				textField.addEventListener("textChanged",

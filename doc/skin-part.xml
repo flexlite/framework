@@ -2,85 +2,110 @@
 <root>
 	<component id="Button">
 		<skinpart>labelDisplay</skinpart>
+		<skinpart>upSkin</skinpart>
+		<skinpart>overSkin</skinpart>
+		<skinpart>downSkin</skinpart>
 	</component>
 	<component id="CheckBox">
-		<skinpart>labelDisplay</skinpart>
+		<skinpart >labelDisplay</skinpart>
 	</component>
 	<component id="ComboBox">
-		<skinpart>textInput</skinpart>
+		<skinpart>popUp</skinpart>
+		<skinpart type="TextInput">textInput</skinpart>
 		<skinpart>dropDown</skinpart>
-		<skinpart>openButton</skinpart>
-		<skinpart>scroller</skinpart>
+		<skinpart type="Button">openButton</skinpart>
+		<skinpart type="Scroller">scroller</skinpart>
+		<skinpart>dataGroup</skinpart>
+	</component>
+	<component id="DropDownList">
+		<skinpart>popUp</skinpart>
+		<skinpart>labelDisplay</skinpart>
+		<skinpart>dropDown</skinpart>
+		<skinpart type="Button">openButton</skinpart>
+		<skinpart type="Scroller">scroller</skinpart>
 		<skinpart>dataGroup</skinpart>
 	</component>
 	<component id="HScrollBar">
-		<skinpart>decrementButton</skinpart>
-		<skinpart>incrementButton</skinpart>
-		<skinpart>thumb</skinpart>
-		<skinpart>track</skinpart>
+		<skinpart type="Button">decrementButton</skinpart>
+		<skinpart type="Button">incrementButton</skinpart>
+		<skinpart type="Button">thumb</skinpart>
+		<skinpart type="Button">track</skinpart>
 	</component>
 	<component id="HSlider">
-		<skinpart>thumb</skinpart>
-		<skinpart>track</skinpart>
+		<skinpart type="Button">thumb</skinpart>
+		<skinpart type="Button">track</skinpart>
 	</component>
 	<component id="ItemRenderer">
-		<skinpart>labelDisplay</skinpart>
+		<skinpart >labelDisplay</skinpart>
 		<skinpart>upSkin</skinpart>
 		<skinpart>overSkin</skinpart>
 		<skinpart>downSkin</skinpart>
 	</component>
 	<component id="List">
-		<skinpart>scroller</skinpart>
+		<skinpart type="Scroller">scroller</skinpart>
 		<skinpart>dataGroup</skinpart>
 	</component>
 	<component id="NumericStepper">
-		<skinpart>textDisplay</skinpart>
-		<skinpart>decrementButton</skinpart>
-		<skinpart>incrementButton</skinpart>
+		<skinpart >textDisplay</skinpart>
+		<skinpart type="Button">decrementButton</skinpart>
+		<skinpart type="Button">incrementButton</skinpart>
 	</component>
 	<component id="Panel">
-		<skinpart>titleDisplay</skinpart>
-		<skinpart>contentGroup</skinpart>
+		<skinpart >titleDisplay</skinpart>
+		<skinpart type="Group">contentGroup</skinpart>
 	</component>
 	<component id="Scroller">
-		<skinpart>horizontalScrollBar</skinpart>
-		<skinpart>verticalScrollBar</skinpart>
+		<skinpart type="HScrollBar">horizontalScrollBar</skinpart>
+		<skinpart type="VScrollBar">verticalScrollBar</skinpart>
 	</component>
 	<component id="SkinnableContainer">
-		<skinpart>contentGroup</skinpart>
+		<skinpart type="Group">contentGroup</skinpart>
 	</component>
 	<component id="SkinnableDataContainer">
 		<skinpart>dataGroup</skinpart>
 	</component>
 	<component id="Spinner">
-		<skinpart>decrementButton</skinpart>
-		<skinpart>incrementButton</skinpart>
+		<skinpart type="Button">decrementButton</skinpart>
+		<skinpart type="Button">incrementButton</skinpart>
 	</component>
 	<component id="TabBar">
-		<skinpart>scroller</skinpart>
+		<skinpart type="Scroller">scroller</skinpart>
 		<skinpart>dataGroup</skinpart>
 	</component>
 	<component id="TabBarButton">
-		<skinpart>labelDisplay</skinpart>
+		<skinpart >labelDisplay</skinpart>
 	</component>
 	<component id="TextArea">
-		<skinpart>scroller</skinpart>
-		<skinpart>textDisplay</skinpart>
+		<skinpart type="Scroller">scroller</skinpart>
+		<skinpart >textDisplay</skinpart>
 	</component>
 	<component id="TextInput">
-		<skinpart>textDisplay</skinpart>
+		<skinpart >textDisplay</skinpart>
 	</component>
 	<component id="ToggleButton">
-		<skinpart>labelDisplay</skinpart>
+		<skinpart >labelDisplay</skinpart>
 	</component>
 	<component id="VScrollBar">
-		<skinpart>decrementButton</skinpart>
-		<skinpart>incrementButton</skinpart>
-		<skinpart>thumb</skinpart>
-		<skinpart>track</skinpart>
+		<skinpart type="Button">decrementButton</skinpart>
+		<skinpart type="Button">incrementButton</skinpart>
+		<skinpart type="Button">thumb</skinpart>
+		<skinpart type="Button">track</skinpart>
 	</component>
 	<component id="VSlider">
+		<skinpart type="Button">thumb</skinpart>
+		<skinpart type="Button">track</skinpart>
+	</component>
+	<component id="ProgressBar">
 		<skinpart>thumb</skinpart>
 		<skinpart>track</skinpart>
+		<skinpart>label</skinpart>
+	</component>
+	<component id="PageNavigator">
+		<skinpart type="Button">prevPage</skinpart>
+		<skinpart type="Button">nextPage</skinpart>
+		<skinpart type="Button">firstPage</skinpart>
+		<skinpart type="Button">lastPage</skinpart>
+		<skinpart >labelDisplay</skinpart>
+		<skinpart >contentGroup</skinpart>
 	</component>
 </root>
