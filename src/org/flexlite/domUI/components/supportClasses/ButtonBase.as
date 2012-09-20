@@ -364,8 +364,6 @@ package org.flexlite.domUI.components.supportClasses
 					return;
 				}
 			}
-			if(mouseEvent)
-				mouseEvent.updateAfterEvent();
 		}
 		
 		/**
