@@ -1,19 +1,15 @@
 package org.flexlite.domDisplay.codec
 {
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
-	import flash.display.StageQuality;
-	import flash.filters.BitmapFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
 	import org.flexlite.domDisplay.DxrData;
-	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.managers.InjectorManager;
 	import org.flexlite.domUtils.CRC32Util;
