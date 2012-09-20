@@ -4,6 +4,7 @@ package org.flexlite.domDisplay.codec
 	import flash.display.DisplayObject;
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -200,7 +201,8 @@ package org.flexlite.domDisplay.codec
 		}
 		
 		/**
-		 * 绘制一个显示对象，转换为DxrData对象
+		 * 绘制一个显示对象，转换为DxrData对象。<br/>
+		 * 注意：绘制的结果是其原始显示对象，不包含alpha,scale,rotation,或matrix值。但包含滤镜和除去alpha的colorTransfrom。
 		 * @param dp 要绘制的显示对象，可以是MovieClip
 		 * @param key DxrData对象的导出键名
 		 * @param codec 位图编解码器标识符,"jpegxr"|"jpeg32"|"png",留空默认值为"jpeg32"
@@ -263,17 +265,28 @@ package org.flexlite.domDisplay.codec
 			var matrix:Matrix = new Matrix(1,0,0,1,-dpRect.left,-dpRect.top);
 			var tempBmData:BitmapData;
 			var containsFilters:Boolean = dp.filters.length>0;
+			var roundX:Number = 0;
+			var roundY:Number = 0;
 			if(containsFilters)
 			{
 				tempBmData = new BitmapData(dpRect.width*2,dpRect.height*2,true,0); 
-				matrix.tx += Math.round(dpRect.width*0.5);
-				matrix.ty += Math.round(dpRect.height*0.5);
+				roundX = Math.round(dpRect.width*0.5);
+				roundY = Math.round(dpRect.height*0.5);
+				matrix.translate(roundX,roundY);
 			}
 			else
 			{
 				tempBmData = new BitmapData(Math.ceil(dpRect.width),Math.ceil(dpRect.height),true,0); 
 			}
 			tempBmData.draw(dp,matrix,null,null,null,true);
+			var ct:ColorTransform = drawColorTransfrom(dp);
+			if(ct)
+			{
+				var ctRect:Rectangle = dpRect.clone();
+				ctRect.x += roundX;
+				ctRect.y += roundY;
+				tempBmData.colorTransform(ctRect,ct);
+			}
 			
 			var colorRect:Rectangle = getColorRect(tempBmData);
 			var frameData:BitmapData = new BitmapData(colorRect.width,colorRect.height,true,0);
@@ -282,10 +295,26 @@ package org.flexlite.domDisplay.codec
 			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x,Math.round(dpRect.top)+colorRect.y);
 			if(containsFilters)
 			{
-				offsetPoint.x -= Math.round(dpRect.width*0.5);
-				offsetPoint.y -= Math.round(dpRect.height*0.5);
+				offsetPoint.x -= roundX;
+				offsetPoint.y -= roundY;
 			}
 			dxrData.frameOffsetList.push(offsetPoint);
+		}
+		/**
+		 * 获取指定显示对象的除去alpha值的colorTransform对象。若对象各个属性都是初始状态，则返回null。
+		 */		
+		private function drawColorTransfrom(dp:DisplayObject):ColorTransform
+		{
+			var ct:ColorTransform = dp.transform.colorTransform;
+			if(ct.redMultiplier==1&&ct.greenMultiplier==1&&ct.blueMultiplier==1&&
+				ct.redOffset==0&&ct.greenOffset==0&&ct.blueOffset==0&&ct.alphaOffset==0)
+			{
+				return null;
+			}
+			var newCT:ColorTransform = new ColorTransform();
+			newCT.concat(ct);
+			newCT.alphaMultiplier = 1;
+			return newCT;
 		}
 	}
 }
