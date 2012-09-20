@@ -57,31 +57,16 @@ package org.flexlite.domDisplay.codec
 		 * @param mcList MovieClip列表
 		 * @param keyList 导出键名列表,如果留空,编码器会为每个dxrData自动生成一个唯一的key
 		 * @param codecList 位图编解码器标识符列表,"jpegxr"|"jpeg32"|"png",留空默认值为"jpeg32"
-		 * @param useScale9grid 是否记录scale9grid数据,若为true,会先将对象的scaleX和scaleY设置为1，再进行绘制。默认为true。
 		 */		
-		public function drawMcList(mcList:Array,keyList:Array=null,codecList:Array=null,useScale9grid:Boolean=true):Array
+		public function drawMcList(mcList:Array,keyList:Array=null,codecList:Array=null):Array
 		{
 			var dxrDataList:Array = [];
 			var index:int = 0;
-			var oldScaleX:Number;
-			var oldScalY:Number
 			for each(var mc:DisplayObject in mcList)
 			{
 				var codec:String = codecList?codecList[index]:DEFAULT_CODEC;
 				var key:String = keyList?keyList[index]:null;
-				if(useScale9grid)
-				{
-					oldScaleX = mc.scaleX;
-					oldScalY = mc.scaleY;
-					mc.scaleX = mc.scaleY = 1;
-				}
 				var dxrData:DxrData = drawDxrData(mc,key,codec);
-				if(useScale9grid)
-				{
-					dxrData._scale9Grid = mc.scale9Grid;
-					mc.scaleX = oldScaleX;
-					mc.scaleY = oldScalY;
-				}
 				if(key==null||key=="")
 				{
 					generateKey(dxrData);
@@ -251,6 +236,7 @@ package org.flexlite.domDisplay.codec
 			{
 				drawDisplayObject(dp,dxrData);
 			}
+			dxrData._scale9Grid = mc.scale9Grid;
 			return dxrData;
 		}
 		/**
