@@ -1,10 +1,9 @@
 package org.flexlite.domDisplay.utils
 {
-	import org.flexlite.domDisplay.DxrFile;
-	
 	import flash.events.EventDispatcher;
-	import flash.filesystem.File;
 	import flash.utils.Dictionary;
+	
+	import org.flexlite.domDisplay.DxrFile;
 	
 	/**
 	 * Dxr素材库解析工具

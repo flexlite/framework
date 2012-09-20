@@ -50,6 +50,10 @@ package org.flexlite.domUI.skins
 					else if(hasOwnProperty("upSkin"))
 						currentSkin = this["upSkin"];
 					break;
+				default:
+					if(hasOwnProperty("upSkin"))
+						currentSkin = this["upSkin"];
+					break;
 			}
 			if(currentSkin)
 			{

@@ -30,7 +30,7 @@ package org.flexlite.domCompile.compiler
 	[Event(name="compileError", type="org.flexlite.domCompile.events.CompileEvent")]
 	
 	/**
-	 * Flex皮肤编译器 
+	 * DXML皮肤编译器 
 	 * @author DOM
 	 */	
 	public class DXMLCompiler extends EventDispatcher
