@@ -35,8 +35,6 @@ package org.flexlite.domUI.components.supportClasses
 		 */	
 		private var animator:Animation = null;
 		
-		private var slideToValue:Number;
-		
 		override public function get maximum():Number
 		{
 			return super.maximum;
@@ -72,6 +70,10 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			pendingValue = animation.currentValue["value"];
 		}
+		/**
+		 * 动画播放结束时要到达的value。
+		 */		
+		private var slideToValue:Number;
 		/**
 		 * 动画播放完毕
 		 */	

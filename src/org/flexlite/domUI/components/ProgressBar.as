@@ -1,143 +1,169 @@
 package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.ProgressEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
+	import flash.geom.Point;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
+	import org.flexlite.domUI.effects.animation.Animation;
+	import org.flexlite.domUI.effects.animation.MotionPath;
+	import org.flexlite.domUI.effects.easing.Sine;
 	
 	[DXML(show="true")]
+	
 	/**
-	 * 进度条
-	 * 支持通过setProgress手动设定进度
+	 * 进度条控件。注意：此控件默认禁用鼠标事件。
 	 * @author chenglong
-	 * 
 	 */
 	public class ProgressBar extends Range
 	{
 		public function ProgressBar()
 		{
 			super();
-			mouseEnabled = false;
 			mouseChildren = false;
+			mouseEnabled = false;
 		}
-		
-		override protected function commitProperties():void
-		{
-			super.commitProperties();			
-		}
-		
-		private var indeterminatePlaying:Boolean;
-		private var pollTimer:Timer = new Timer(100);
 		
 		/**
-		 *  设置想对于总量的当前进度值		 
-		 *  @param value 当前进度值		 
-		 *  @param maximum 总量		   
-		 *  @param isTween 是否需要渐变效果
+		 * [SkinPart]滑块显示对象。
+		 */		
+		public var thumb:DisplayObject;
+		/**
+		 * [SkinPart]轨道显示对象，用于确定thumb要覆盖的区域。
+		 */		
+		public var track:DisplayObject;
+		/**
+		 * [SkinPart]进度条文本
 		 */
-		public function setProgress(value:uint, total:uint, isTween:Boolean=false):void
+		public var labelDisplay:Label;
+		
+		private var _labelFunction:Function;
+		/**
+		 * 进度条文本格式化回调函数。示例：labelFunction(value:Number,maximum:Number):String;
+		 */
+		public function get labelFunction():Function
 		{
-			if( isNaN(value) || isNaN(maximum)) return;
-			
-			this.value = value;
-			maximum = total;
-			
-			// 抛出 "change"类型事件
-			dispatchEvent(new Event(Event.CHANGE));
-			
-			// 抛出 Progress 事件
-			var progressEvent:ProgressEvent = new ProgressEvent(ProgressEvent.PROGRESS);
-			progressEvent.bytesLoaded = value;
-			progressEvent.bytesTotal = maximum;
-			dispatchEvent(progressEvent);
-			
-			if(isTween)
+			return _labelFunction;
+		}
+		public function set labelFunction(value:Function):void
+		{
+			if(_labelFunction == value)
+				return;
+			_labelFunction = value;
+			invalidateDisplayList();
+		}
+
+		/**
+		 * 将当前value转换成文本
+		 */		
+		protected function valueToLabel(value:Number,maximum:Number):String
+		{
+			if(labelFunction!=null)
 			{
-				if(label) label.text = String(value+"/"+maximum);
-				thumb.width = this.width*(value/maximum);
+				return labelFunction(value);
+			}
+			return value+" / "+maximum;
+		}
+		
+		private var _slideDuration:Number = 500;
+		
+		/**
+		 * value改变时调整thumb长度的缓动动画时间，单位毫秒。设置为0则不执行缓动。默认值500。
+		 */		
+		public function get slideDuration():Number
+		{
+			return _slideDuration;
+		}
+		
+		public function set slideDuration(value:Number):void
+		{
+			_slideDuration = value;
+		}
+		
+		/**
+		 * 动画实例
+		 */	
+		private var animator:Animation = null;
+		/**
+		 * 动画播放结束时要到达的value。
+		 */		
+		private var slideToValue:Number;
+		
+		override public function set value(newValue:Number):void
+		{
+			if(super.value == newValue)
+				return;
+			if (_slideDuration == 0)
+			{
+				super.value = newValue;
 			}
 			else
 			{
-				startPlayingIndeterminate();
+				if (!animator)
+				{
+					animator = new Animation(animationUpdateHandler);
+					animator.endFunction = animationEndHandler;
+					
+					animator.easer = new Sine(0);
+				}
+				if (animator.isPlaying)
+					animator.stop();
+				slideToValue = nearestValidValue(newValue, snapInterval);
+				animator.duration = _slideDuration * 
+					(Math.abs(super.value - slideToValue) / (maximum - minimum));
+				animator.motionPaths = new <MotionPath>[
+					new MotionPath("value", super.value, slideToValue)];
+				animator.play();
 			}
-			
-			// 抛出完成事件
-			if (value == maximum && value > 0)
-			{
-				if(label) label.text = String(value+"/"+maximum);
-				thumb.width = this.width;
-				stopPlayingIndeterminate();
-				dispatchEvent(new Event(Event.COMPLETE));
-			}
-			
+		}
+		
+		/**
+		 * 动画播放更新数值
+		 */	
+		private function animationUpdateHandler(animation:Animation):void
+		{
+			setValue(nearestValidValue(animation.currentValue["value"], snapInterval));
+		}
+		
+		/**
+		 * 动画播放完毕
+		 */	
+		private function animationEndHandler(animation:Animation):void
+		{
+			setValue(slideToValue);
+		}
+		
+		override protected function setValue(value:Number):void
+		{
+			super.setValue(value);
 			invalidateDisplayList();
 		}
 		
-		private function stopPlayingIndeterminate():void
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
-			if (indeterminatePlaying)
-			{
-				indeterminatePlaying = false;
-				
-				pollTimer.removeEventListener(TimerEvent.TIMER,updateIndeterminateHandler);
-				pollTimer.stop();
-			}				
+			super.updateDisplayList(unscaledWidth,unscaledHeight);
+			updateSkinDisplayList();
 		}
-		
-		protected function startPlayingIndeterminate():void
-		{
-			if (!indeterminatePlaying)
-			{
-				indeterminatePlaying = true;
-				
-				pollTimer.addEventListener(TimerEvent.TIMER,updateIndeterminateHandler, false, 0, true);
-				pollTimer.start();
-			}		
-		}
-		
-		private function updateIndeterminateHandler(e:TimerEvent):void
-		{
-			if(Math.abs(thumb.width-this.width*(value/maximum))<1)
-			{
-				stopPlayingIndeterminate();
-			}
-			else if(thumb.width<this.width*(value/maximum))
-			{
-				if(label) label.text = String(value+"/"+maximum);
-				thumb.width++;
-			}
-			else
-			{
-				if(label) label.text = String(value+"/"+maximum);
-				thumb.width--;
-			}
-		}
-		
 		/**
-		 * [SkinPart]实体滑块组件
+		 * 更新皮肤部件大小和可见性。
 		 */		
-		public var thumb:DisplayObject;
-		
-		/**
-		 * [SkinPart]实体轨道组件
-		 */
-		public var track:DisplayObject; 
-		
-		/**
-		 * [SkinPart]进度数字显示 可选
-		 */
-		public var label:Label;
-		
-		/**
-		 * 更新滑块的大小 
-		 * 
-		 */
 		protected function updateSkinDisplayList():void
 		{
-			if(thumb) thumb.width = uint(maxWidth * (value/maximum));
+			var currentValue:Number = isNaN(value)?0:value;
+			var maxValue:Number = isNaN(maximum)?0:maximum;
+			if(thumb&&track)
+			{
+				var w:Number = isNaN(track.width)?0:track.width;
+				
+				var thumbWidth:Number = (value/maximum)*w;
+				if(thumbWidth<0)
+					thumbWidth = 0;
+				thumb.width = isNaN(thumbWidth)?0:thumbWidth;
+				thumb.x = globalToLocal(track.localToGlobal(new Point)).x;
+			}
+			if(labelDisplay)
+			{
+				labelDisplay.text = valueToLabel(currentValue,maxValue);
+			}
 		}
 	}
 }

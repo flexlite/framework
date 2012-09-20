@@ -255,6 +255,7 @@ package org.flexlite.domUI.components.supportClasses
 				_value = Math.min(maximum, Math.max(minimum, value));
 			else
 				_value = value;
+			valueChanged = false;
 		}
 		
 		/**
