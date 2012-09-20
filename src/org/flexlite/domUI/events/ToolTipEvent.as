@@ -1,8 +1,8 @@
 package org.flexlite.domUI.events
 {
-	import org.flexlite.domUI.core.IToolTip;
-	
 	import flash.events.Event;
+	
+	import org.flexlite.domUI.core.IToolTip;
 	
 	/**
 	 * 工具提示事件

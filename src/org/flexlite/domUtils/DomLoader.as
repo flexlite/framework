@@ -1,12 +1,12 @@
 package org.flexlite.domUtils
 {
+	import flash.system.ApplicationDomain;
+	
 	import org.flexlite.domUtils.loader.MultiLoader;
 	import org.flexlite.domUtils.loader.MultiURLLoader;
 	import org.flexlite.domUtils.loader.RootLoader;
 	import org.flexlite.domUtils.loader.SingleLoader;
 	import org.flexlite.domUtils.loader.SingleURLLoader;
-	
-	import flash.system.ApplicationDomain;
 
 
 	/**

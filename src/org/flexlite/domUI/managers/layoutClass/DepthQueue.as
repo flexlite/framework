@@ -1,9 +1,9 @@
 package org.flexlite.domUI.managers.layoutClass
 {
-	import org.flexlite.domUI.managers.ILayoutManagerClient;
-	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	
+	import org.flexlite.domUI.managers.ILayoutManagerClient;
 
 	[ExcludeClass]
 	/**

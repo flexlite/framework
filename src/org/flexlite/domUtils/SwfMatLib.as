@@ -1,7 +1,6 @@
 package org.flexlite.domUtils
 {
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	import flash.system.ApplicationDomain;
 	import flash.utils.Dictionary;
 	

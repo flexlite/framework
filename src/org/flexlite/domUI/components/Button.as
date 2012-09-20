@@ -1,12 +1,11 @@
 package org.flexlite.domUI.components
 {
+	import flash.display.MovieClip;
+	import flash.utils.Dictionary;
+	
 	import org.flexlite.domUI.components.supportClasses.ButtonBase;
 	import org.flexlite.domUI.core.IMovieClip;
 	import org.flexlite.domUI.utils.MovieClipUtil;
-	
-	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
-	import flash.utils.Dictionary;
 	
 	[DXML(show="true")]
 	

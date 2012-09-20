@@ -1,13 +1,10 @@
 package org.flexlite.domUI.utils
 {
-	import org.flexlite.domUI.components.supportClasses.Skin;
-	
-	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
-	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	import flash.utils.getQualifiedSuperclassName;
+	
+	import org.flexlite.domUI.components.supportClasses.Skin;
 
 	/**
 	 * 获取皮肤定义的公开属性名工具类

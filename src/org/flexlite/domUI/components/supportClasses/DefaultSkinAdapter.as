@@ -2,8 +2,6 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import org.flexlite.domUI.core.ISkinAdapter;
 	
-	import flash.display.DisplayObject;
-	
 	
 	/**
 	 * 默认的ISkinAdapter接口实现

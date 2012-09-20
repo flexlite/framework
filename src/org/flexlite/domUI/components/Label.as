@@ -1,14 +1,14 @@
 package org.flexlite.domUI.components
 {
-	import org.flexlite.domUI.components.supportClasses.TextBase;
-	import org.flexlite.domUI.core.dx_internal;
-	import org.flexlite.domUI.events.UIEvent;
-	import org.flexlite.domUI.layouts.VerticalAlign;
-	
 	import flash.events.Event;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
+	
+	import org.flexlite.domUI.components.supportClasses.TextBase;
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.events.UIEvent;
+	import org.flexlite.domUI.layouts.VerticalAlign;
 	
 	use namespace dx_internal;
 	

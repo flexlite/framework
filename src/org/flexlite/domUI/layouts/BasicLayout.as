@@ -1,10 +1,7 @@
 package org.flexlite.domUI.layouts
 {
-	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.events.IEventDispatcher;
 	
 	[DXML(show="false")]
 	

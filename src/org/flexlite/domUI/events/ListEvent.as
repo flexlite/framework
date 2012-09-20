@@ -1,10 +1,10 @@
 package org.flexlite.domUI.events
 {
-	import org.flexlite.domUI.components.IItemRenderer;
-	
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	
+	import org.flexlite.domUI.components.IItemRenderer;
 	
 	/**
 	 * 列表事件

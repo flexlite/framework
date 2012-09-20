@@ -1,11 +1,11 @@
 package org.flexlite.domUI.managers
 {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.managers.layoutClass.DepthQueue;
-	
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	
 	/**
 	 * 所有组件的一次三个延迟验证渲染阶段全部完成 

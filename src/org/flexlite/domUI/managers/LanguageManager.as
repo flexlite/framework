@@ -1,7 +1,6 @@
 package org.flexlite.domUI.managers
 {
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	
 	/**

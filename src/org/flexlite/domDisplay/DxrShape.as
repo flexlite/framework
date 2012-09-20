@@ -2,8 +2,8 @@ package org.flexlite.domDisplay
 {
 	import flash.geom.Point;
 	
-	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.core.IBitmapAsset;
+	import org.flexlite.domUI.core.dx_internal;
 	
 	use namespace dx_internal;
 	

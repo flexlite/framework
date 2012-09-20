@@ -1,8 +1,6 @@
 package org.flexlite.domUI.components
 {
 	import org.flexlite.domUI.core.ILayoutElement;
-	
-	import flash.display.DisplayObjectContainer;
 
 	/**
 	 * 列表类组件的项呈示器接口

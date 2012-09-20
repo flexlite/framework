@@ -1,11 +1,10 @@
 package org.flexlite.domDisplay.image
 {
-	import org.flexlite.domDisplay.codec.IBitmapEncoder;
-	
 	import flash.display.BitmapData;
-	import flash.display.JPEGEncoderOptions;
 	import flash.display.JPEGXREncoderOptions;
 	import flash.utils.ByteArray;
+	
+	import org.flexlite.domDisplay.codec.IBitmapEncoder;
 	
 	/**
 	 * JPEG-XR位图编码器，需要Flash Player11.3及以上版本支持

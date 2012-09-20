@@ -6,13 +6,12 @@ package org.flexlite.domDisplay
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import org.flexlite.domUI.core.IBitmapAsset;
 	import org.flexlite.domUI.core.IMovieClip;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.MoveClipPlayEvent;
-	import org.flexlite.domUI.core.IBitmapAsset;
 	
 	use namespace dx_internal;
 	

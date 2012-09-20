@@ -1,18 +1,18 @@
 package org.flexlite.domUI.components
 {
 	
-	import org.flexlite.domUI.core.dx_internal;
-	import org.flexlite.domUI.events.UIEvent;
-	import org.flexlite.domUI.primitives.BitmapImage;
-	import org.flexlite.domUI.primitives.graphic.BitmapScaleMode;
-	import org.flexlite.domUI.skins.spark.ImageSkin;
-	
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
+	
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.events.UIEvent;
+	import org.flexlite.domUI.primitives.BitmapImage;
+	import org.flexlite.domUI.primitives.graphic.BitmapScaleMode;
+	import org.flexlite.domUI.skins.spark.ImageSkin;
 	
 	use namespace dx_internal;
 	

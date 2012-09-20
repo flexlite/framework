@@ -1,5 +1,12 @@
 package org.flexlite.domUI.components
 {
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
+	
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
@@ -11,13 +18,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
 
 	use namespace dx_internal;
 	

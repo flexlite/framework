@@ -1,8 +1,5 @@
 package org.flexlite.domUI.managers
 {
-	import flash.display.DisplayObjectContainer;
-	import flash.events.Event;
-	
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.dx_internal;

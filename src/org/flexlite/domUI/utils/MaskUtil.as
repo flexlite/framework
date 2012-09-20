@@ -1,13 +1,13 @@
 package org.flexlite.domUI.utils
 {
 	
-	import org.flexlite.domUI.core.MaskType;
-	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.primitives.graphic.shaderClasses.LuminosityMaskShader;
-	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.filters.ShaderFilter;
+	
+	import org.flexlite.domUI.core.MaskType;
+	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.primitives.graphic.shaderClasses.LuminosityMaskShader;
 	
 	
 	/**

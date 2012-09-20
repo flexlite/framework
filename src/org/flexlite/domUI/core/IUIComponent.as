@@ -1,11 +1,5 @@
 package org.flexlite.domUI.core
 {
-	
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Sprite;
-	import flash.geom.Rectangle;
-	
 	/**
 	 * UI组件接口
 	 * @author DOM

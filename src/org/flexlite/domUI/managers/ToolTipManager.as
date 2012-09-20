@@ -1,11 +1,11 @@
 package org.flexlite.domUI.managers
 {
 	
-	import org.flexlite.domUI.core.IToolTip;
-	import org.flexlite.domUI.core.dx_internal;
-	
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
+	
+	import org.flexlite.domUI.core.IToolTip;
+	import org.flexlite.domUI.core.dx_internal;
 	
 	use namespace dx_internal;
 	

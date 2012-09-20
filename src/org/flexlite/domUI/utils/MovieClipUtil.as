@@ -1,10 +1,10 @@
 package org.flexlite.domUI.utils
 {
-	import org.flexlite.domUI.core.IMovieClip;
-	
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 	import flash.utils.Dictionary;
+	
+	import org.flexlite.domUI.core.IMovieClip;
 	
 	/**
 	 * 影片剪辑工具类

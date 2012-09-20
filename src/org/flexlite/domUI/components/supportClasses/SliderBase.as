@@ -3,9 +3,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
 	import flash.geom.Point;
-	import flash.utils.Timer;
 	
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.dx_internal;

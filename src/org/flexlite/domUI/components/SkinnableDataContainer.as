@@ -5,9 +5,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.display.DisplayObject;
-	import flash.events.Event;
 
 	use namespace dx_internal;
 	

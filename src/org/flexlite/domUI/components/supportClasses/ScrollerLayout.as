@@ -1,13 +1,13 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.geom.Point;
+	
 	import org.flexlite.domUI.components.Scroller;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.ScrollPolicy;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.geom.Point;
 	
 	
 	/**

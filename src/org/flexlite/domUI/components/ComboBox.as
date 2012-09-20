@@ -2,7 +2,6 @@ package org.flexlite.domUI.components
 {
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
-	import flash.events.TextEvent;
 	
 	import org.flexlite.domUI.components.supportClasses.DropDownListBase;
 	import org.flexlite.domUI.components.supportClasses.ListBase;

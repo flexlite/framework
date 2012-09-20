@@ -4,7 +4,6 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
-	import flash.filters.ColorMatrixFilter;
 	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
@@ -12,14 +11,10 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
-	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.ISkinPartHost;
-	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
-	
-	import spark.components.supportClasses.ButtonBase;
 	
 	use namespace dx_internal;
 	

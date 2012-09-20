@@ -7,7 +7,6 @@ package org.flexlite.domUI.components
 	import flash.utils.Timer;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
-	import org.flexlite.domUI.components.supportClasses.TrackBase;
 	
 	[DXML(show="true")]
 	/**

@@ -1,5 +1,8 @@
 package org.flexlite.domUI.components
 {
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.flexlite.domUI.components.supportClasses.ScrollerLayout;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.ISkin;
@@ -8,10 +11,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.NavigationUnit;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
-	
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
 	[DXML(show="true")]
 	

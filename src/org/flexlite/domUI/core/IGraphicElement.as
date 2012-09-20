@@ -1,10 +1,6 @@
 package org.flexlite.domUI.core
 {
-	import org.flexlite.domUI.core.ILayoutElement;
-	import org.flexlite.domUI.core.IVisualElement;
-	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 
 	/**
 	 * 绘图元素接口

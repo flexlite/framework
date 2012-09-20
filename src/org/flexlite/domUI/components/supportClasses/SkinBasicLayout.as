@@ -2,8 +2,6 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.ILayoutElement;
-	
-	import flash.display.DisplayObjectContainer;
 
 	/**
 	 * 皮肤简单布局类。当SkinnableComponent的皮肤不是ISkinPartHost对象时启用。以提供子项的简单布局。

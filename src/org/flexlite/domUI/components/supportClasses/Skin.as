@@ -1,5 +1,7 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.utils.Dictionary;
+	
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.ISkin;
@@ -7,8 +9,6 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.utils.SkinPartUtil;
-	
-	import flash.utils.Dictionary;
 
 	use namespace dx_internal;
 	

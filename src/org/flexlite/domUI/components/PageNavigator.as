@@ -5,7 +5,6 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IDisplayText;
-	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;

@@ -1,8 +1,8 @@
 package org.flexlite.domUI.components
 {
-	import org.flexlite.domUI.components.supportClasses.SliderBase;
-	
 	import flash.geom.Point;
+	
+	import org.flexlite.domUI.components.supportClasses.SliderBase;
 	
 	[DXML(show="true")]
 	

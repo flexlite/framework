@@ -1,5 +1,8 @@
 package org.flexlite.domUI.components
 {
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	
 	import org.flexlite.domUI.components.supportClasses.ScrollBarBase;
 	import org.flexlite.domUI.core.EventPriority;
 	import org.flexlite.domUI.core.IInvalidating;
@@ -8,9 +11,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
-	
-	import flash.events.MouseEvent;
-	import flash.geom.Point;
 	
 	
 	use namespace dx_internal;

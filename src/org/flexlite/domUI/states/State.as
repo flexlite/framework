@@ -1,10 +1,10 @@
 package org.flexlite.domUI.states
 {
 	
+	import flash.events.EventDispatcher;
+	
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
-	
-	import flash.events.EventDispatcher;
 	
 	use namespace dx_internal;
 	

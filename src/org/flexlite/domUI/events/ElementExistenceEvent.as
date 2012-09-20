@@ -1,8 +1,8 @@
 package org.flexlite.domUI.events
 {
-	import org.flexlite.domUI.core.IVisualElement;
-	
 	import flash.events.Event;
+	
+	import org.flexlite.domUI.core.IVisualElement;
 	
 	/**
 	 * Group添加或移除元素时分派的事件。

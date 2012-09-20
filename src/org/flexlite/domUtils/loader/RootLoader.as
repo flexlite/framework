@@ -7,8 +7,6 @@ package org.flexlite.domUtils.loader
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.net.URLRequest;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
 	
 	/**
 	 * 文档类加载工具

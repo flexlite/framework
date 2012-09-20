@@ -5,7 +5,6 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.PopUpPosition;

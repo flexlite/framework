@@ -1,14 +1,14 @@
 package org.flexlite.domUI.components
 {
 	
-	import org.flexlite.domUI.core.dx_internal;
-	import org.flexlite.domUI.events.UIEvent;
-	
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.globalization.LocaleID;
 	import flash.globalization.NumberFormatter;
+	
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
 	

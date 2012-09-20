@@ -5,8 +5,6 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.MouseEvent;
 	
 	import org.flexlite.domUI.components.IItemRenderer;
-	import org.flexlite.domUI.components.Label;
-	import org.flexlite.domUI.components.SkinnableComponent;
 	
 	[DXML(show="false")]
 	

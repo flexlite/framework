@@ -1,7 +1,6 @@
 package org.flexlite.domUI.components
 {
 	
-	import flash.display.DisplayObject;
 	import flash.filters.DropShadowFilter;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;

@@ -1,8 +1,8 @@
 package org.flexlite.domUI.utils
 {
-	import flash.events.IEventDispatcher;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	
 	/**
 	 * 对于分派事件但期望侦听器不常用的类，OnDemandEventDispatcher 用作其基类。

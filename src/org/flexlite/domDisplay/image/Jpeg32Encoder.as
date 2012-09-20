@@ -1,12 +1,12 @@
 package org.flexlite.domDisplay.image
 {
-	import org.flexlite.domDisplay.codec.IBitmapEncoder;
-	
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
 	import flash.display.JPEGEncoderOptions;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
+	
+	import org.flexlite.domDisplay.codec.IBitmapEncoder;
 	
 	
 	/**

@@ -1,8 +1,8 @@
 package org.flexlite.domUI.events
 {
-	import org.flexlite.domUI.components.IItemRenderer;
-	
 	import flash.events.Event;
+	
+	import org.flexlite.domUI.components.IItemRenderer;
 	
 	/**
 	 * 在DataGroup添加或删除项呈示器时分派的事件。

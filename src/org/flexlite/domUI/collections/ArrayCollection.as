@@ -1,12 +1,12 @@
 package org.flexlite.domUI.collections
 {
-	import org.flexlite.domUI.events.CollectionEvent;
-	import org.flexlite.domUI.events.CollectionEventKind;
-	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.Proxy;
 	import flash.utils.flash_proxy;
+	
+	import org.flexlite.domUI.events.CollectionEvent;
+	import org.flexlite.domUI.events.CollectionEventKind;
 	
 	/**
 	 * 集合数据发生改变 

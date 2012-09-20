@@ -6,7 +6,6 @@ package org.flexlite.domDisplay.codec
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.sampler.getSize;
 	import flash.utils.ByteArray;
 	
 	import org.flexlite.domDisplay.DxrData;

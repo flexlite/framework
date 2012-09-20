@@ -4,11 +4,8 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.FocusEvent;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
-	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	
 	import org.flexlite.domUI.core.DomGlobals;

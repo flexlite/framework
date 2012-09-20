@@ -1,7 +1,6 @@
 package org.flexlite.domUI.utils
 {
 	
-	import flash.display.DisplayObject;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
 	import flash.geom.PerspectiveProjection;
@@ -9,8 +8,6 @@ package org.flexlite.domUI.utils
 	import flash.geom.Rectangle;
 	import flash.geom.Utils3D;
 	import flash.geom.Vector3D;
-	import flash.system.ApplicationDomain;
-	import flash.utils.getDefinitionByName;
 	
 	public final class MatrixUtil
 	{

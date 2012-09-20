@@ -1,17 +1,15 @@
 package org.flexlite.domUI.components
 {
+	import flash.events.Event;
+	import flash.events.TextEvent;
+	import flash.text.TextFieldType;
+	
 	import org.flexlite.domUI.components.supportClasses.TextBase;
-	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.IEditableText;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.NavigationUnit;
-	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.core.dx_internal;
-	
-	import flash.events.Event;
-	import flash.events.TextEvent;
-	import flash.text.TextFieldType;
 	
 	use namespace dx_internal;
 	

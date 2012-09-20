@@ -1,7 +1,5 @@
 package org.flexlite.domDisplay.image
 {
-	import org.flexlite.domDisplay.codec.IBitmapDecoder;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -10,6 +8,8 @@ package org.flexlite.domDisplay.image
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	
+	import org.flexlite.domDisplay.codec.IBitmapDecoder;
 	
 	
 	/**

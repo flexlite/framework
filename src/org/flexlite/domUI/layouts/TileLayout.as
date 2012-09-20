@@ -1,9 +1,9 @@
 package org.flexlite.domUI.layouts
 {
+	import flash.geom.Rectangle;
+	
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import flash.geom.Rectangle;
 	
 	[DXML(show="false")]
 	
