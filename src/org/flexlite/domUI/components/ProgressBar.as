@@ -87,12 +87,14 @@ package org.flexlite.domUI.components
 		 * 动画播放结束时要到达的value。
 		 */		
 		private var slideToValue:Number;
-		
+		/**
+		 * @param org.flexlite.domUI.components.supportClasses.Range#value
+		 */		
 		override public function set value(newValue:Number):void
 		{
 			if(super.value == newValue)
 				return;
-			if (_slideDuration == 0)
+			if (_slideDuration == 0||!stage)
 			{
 				super.value = newValue;
 			}
