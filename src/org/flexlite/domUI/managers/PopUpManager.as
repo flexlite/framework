@@ -30,19 +30,21 @@ package org.flexlite.domUI.managers
 		}
 		
 		/**
-		 * 弹出一个窗口,请调用 removePopUp()来移除使用 addPopUp()方法弹出的窗口。
+		 * 弹出一个窗口,请调用 removePopUp()来移除使用 addPopUp()方法弹出的窗口。<br/>
+		 * 注意：弹出层禁用了自动布局功能。所有相对位置属性在弹出层都是无效的。只能通过设置x,y绝对坐标来控制位置。
 		 * @param popUp 要弹出的窗口显示对象
 		 * @param modal 是否启用模态。禁用弹出层以下的鼠标事件。默认false。
+		 * @param center 是否居中窗口。默认true。
 		 * @param exclusive 是否独占。若为true，它总是不与任何窗口共存。当弹出时，将隐藏层级在它后面的所有窗口。
 		 * 若有层级在它前面的窗口弹出，无论新窗口是否独占，都将它和它后面的窗口全部隐藏。默认为false。
 		 * @param priority 弹出优先级。优先级高的窗口显示层级在低的前面。同一优先级的窗口，后添加的窗口层级在前面。
 		 * @param popUpEffect 窗口弹出时要播放的动画特效。
 		 */		
-		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,
+		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,center:Boolean=true,
 										exclusive:Boolean=false,priority:int=0,
 										popUpEffect:IEffect=null):void
 		{
-			impl.addPopUp(popUp,modal,exclusive,priority,popUpEffect);
+			impl.addPopUp(popUp,modal,center,exclusive,priority,popUpEffect);
 		}
 		
 		/**

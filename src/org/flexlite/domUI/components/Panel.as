@@ -3,14 +3,10 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domUI.core.IDisplayText;
 
-	[SkinState("normal")]
-	
-	[SkinState("disabled")]
-	
 	[DXML(show="true")]
 	
 	/**
-	 * 带有标题，边框，内容区域的面板组件
+	 * 带有标题，内容区域的面板组件
 	 * @author DOM
 	 */	
 	public class Panel extends SkinnableContainer

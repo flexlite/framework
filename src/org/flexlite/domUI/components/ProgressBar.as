@@ -23,6 +23,11 @@ package org.flexlite.domUI.components
 			mouseEnabled = false;
 		}
 		
+		override protected function get hostComponentKey():Object
+		{
+			return ProgressBar;
+		}
+		
 		/**
 		 * [SkinPart]滑块显示对象。
 		 */		
@@ -159,7 +164,7 @@ package org.flexlite.domUI.components
 				var thumbWidth:Number = (value/maximum)*w;
 				if(thumbWidth<0)
 					thumbWidth = 0;
-				thumb.width = isNaN(thumbWidth)?0:thumbWidth;
+				thumb.width = Math.round(isNaN(thumbWidth)?0:thumbWidth);
 				thumb.x = globalToLocal(track.localToGlobal(new Point)).x;
 			}
 			if(labelDisplay)

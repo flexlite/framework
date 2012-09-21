@@ -112,20 +112,24 @@ package org.flexlite.domUI.managers
 			}
 			return arr;
 		}
+		
+		private var resizeEventAttached:Boolean = false;
 		/**
-		 * 弹出一个窗口,请调用 removePopUp()来移除使用 addPopUp()方法弹出的窗口。
+		 * 弹出一个窗口,请调用 removePopUp()来移除使用 addPopUp()方法弹出的窗口。<br/>
+		 * 注意：弹出层禁用了自动布局功能。所有相对位置属性在弹出层都是无效的。只能通过设置x,y绝对坐标来控制位置。
 		 * @param popUp 要弹出的窗口显示对象
 		 * @param modal 是否启用模态。禁用弹出层以下的鼠标事件。默认false。
+		 * @param center 是否居中窗口。默认true。
 		 * @param exclusive 是否独占。若为true，它总是不与任何窗口共存。当弹出时，将隐藏层级在它后面的所有窗口。
 		 * 若有层级在它前面的窗口弹出，无论新窗口是否独占，都将它和它后面的窗口全部隐藏。默认为false。
 		 * @param priority 弹出优先级。优先级高的窗口显示层级在低的前面。同一优先级的窗口，后添加的窗口层级在前面。
 		 * @param popUpEffect 窗口弹出时要播放的动画特效。
 		 */		
-		public function addPopUp(popUp:IVisualElement,modal:Boolean = false,
+		public function addPopUp(popUp:IVisualElement,modal:Boolean = false,center:Boolean=true,
 										exclusive:Boolean=false,priority:int=0,
 										popUpEffect:IEffect=null):void
 		{
-			var popUpData:PopUpData = new PopUpData(popUp,modal,exclusive,priority,popUpEffect);
+			var popUpData:PopUpData = new PopUpData(popUp,modal,center,exclusive,priority,popUpEffect);
 			if(popUpDataDic[popUp]!=null)
 			{
 				remove(popUpDataDic[popUp]);
@@ -135,7 +139,30 @@ package org.flexlite.domUI.managers
 				(popUp as IUIComponent).isPopUp = true;
 			insert(popUpData);
 			updateCurrentPopUps();
+			if(!resizeEventAttached)
+			{
+				resizeEventAttached = true;
+				DomGlobals.stage.addEventListener(Event.RESIZE,onStageResize);
+			}
 		}
+		
+		/**
+		 * 舞台尺寸改变,重绘遮罩层。
+		 */		
+		private function onStageResize(event:Event=null):void
+		{
+			if(modalAttached)
+				updateModalSize();
+			for each(var data:PopUpData in _currentPopUps)
+			{
+				if(data.center&&lastCenterPopUps.indexOf(data.popUp)==-1)
+				{
+					setOnePopUpCenter(data.popUp)
+				}
+			}
+			updateCenterPopUps();
+		}
+		
 		/**
 		 * 模态层
 		 */		
@@ -144,6 +171,18 @@ package org.flexlite.domUI.managers
 		 * 遮罩层已经添加的标志 
 		 */		
 		private var modalAttached:Boolean = false;
+		/**
+		 * 更新模态层的大小
+		 */		
+		private function updateModalSize():void
+		{
+			var g:Graphics = modalLayer.graphics;
+			g.clear();
+			g.beginFill(0xFFFFFF,0);
+			g.drawRect(0,0,DomGlobals.stage.stageWidth,DomGlobals.stage.stageHeight);
+			g.endFill();
+		}
+
 		/**
 		 * 更新当前的窗口打开项
 		 */		
@@ -163,6 +202,11 @@ package org.flexlite.domUI.managers
 			for each(data in popUps)
 			{
 				popUpContainer.addElement(data.popUp);
+				if(data.center&&
+					lastCenterPopUps.indexOf(data.popUp)==-1)
+				{
+					setOnePopUpCenter(data.popUp)
+				}
 				if(data.popUpEffect&&_currentPopUps.indexOf(data.popUp)==-1)
 				{
 					showEffect(data.popUp,data.popUpEffect);
@@ -170,6 +214,7 @@ package org.flexlite.domUI.managers
 				if(!needModal&&data.modal)
 					needModal = true;
 			}
+			updateCenterPopUps();
 			_currentPopUps = popUps;
 			if(needModal==modalAttached)
 				return;
@@ -180,16 +225,25 @@ package org.flexlite.domUI.managers
 					modalLayer = new UIComponent();
 				}
 				popUpContainer.addElementAt(modalLayer,0);
-				onResize();
-				DomGlobals.stage.addEventListener(Event.RESIZE,onResize);
+				updateModalSize();
 				modalAttached = true;
 			}
 			else
 			{
-				DomGlobals.stage.removeEventListener(Event.RESIZE,onResize);
 				popUpContainer.removeElement(modalLayer);
 				modalAttached = false;
 			}
+		}
+		
+		/**
+		 * 居中一个popUp
+		 */		
+		private function setOnePopUpCenter(popUp:IVisualElement):void
+		{
+			if(popUp is IInvalidating&&(popUp as IInvalidating).invalidateFlag)
+				(popUp as IInvalidating).validateNow();
+			popUp.x = (DomGlobals.stage.stageWidth-popUp.layoutBoundsWidth)*0.5;
+			popUp.y = (DomGlobals.stage.stageHeight-popUp.layoutBoundsHeight)*0.5;
 		}
 		/**
 		 * 播放动画特效
@@ -210,18 +264,6 @@ package org.flexlite.domUI.managers
 			var effect:IEffect = event.target as IEffect;
 			effect.removeEventListener(EffectEvent.EFFECT_START,onEffectStart);
 			(effect.target as IVisualElement).visible = true;
-		}
-		
-		/**
-		 * 舞台尺寸改变,重绘遮罩层。
-		 */		
-		private function onResize(event:Event=null):void
-		{
-			var g:Graphics = modalLayer.graphics;
-			g.clear();
-			g.beginFill(0xFFFFFF,0);
-			g.drawRect(0,0,DomGlobals.stage.stageWidth,DomGlobals.stage.stageHeight);
-			g.endFill();
 		}
 		
 		/**
@@ -261,7 +303,10 @@ package org.flexlite.domUI.managers
 		/**
 		 * 上一次居中的窗口列表
 		 */		
-		private var lastCenterPopUps:Array;
+		private var lastCenterPopUps:Array=[];
+		private var centerGap:Number = 5;
+		private var centerOffsetX:Number;
+		private var centerOffsetY:Number;
 		/**
 		 * 设置指定的窗口位置居中。若窗口为多个，则将按水平排列窗口，并使其整体居中。
 		 * @param popUps 要居中显示的窗口列表
@@ -271,51 +316,43 @@ package org.flexlite.domUI.managers
 		 */
 		public function centerPopUps(popUps:Array,gap:Number=5,offsetX:Number=0,offsetY:Number=0):void
 		{
+			if(!popUps)
+				popUps = [];
+			lastCenterPopUps = popUps;
+			centerGap = gap;
+			centerOffsetX = offsetX;
+			centerOffsetY = offsetY;
+			updateCenterPopUps();
+		}
+		/**
+		 * 更新当前的居中窗口队列
+		 */		
+		private function updateCenterPopUps():void
+		{
+			if(lastCenterPopUps.length==0)
+				return;
 			var popUp:IVisualElement;
-			if(lastCenterPopUps)
-			{
-				for each(popUp in lastCenterPopUps)
-				{
-					var popUpData:PopUpData = popUpDataDic[popUp];
-					if(popUpData&&popUpData.positionChanged)
-						popUpData.resetPosition();
-				}
-			}
-			
 			var maxWidth:Number = 0;
-			for each(popUp in popUps)
+			for each(popUp in lastCenterPopUps)
 			{
 				if((popUp is IInvalidating)&&(popUp as IInvalidating).invalidateFlag)
 					(popUp as IInvalidating).validateNow();
 				maxWidth += popUp.layoutBoundsWidth;
 			}
-			maxWidth += gap*popUps.length-1;
-			var centerX:Number = DomGlobals.stage.stageWidth*0.5;
-			var centerY:Number = DomGlobals.stage.stageHeight*0.5;
-			var startX:Number = centerX-maxWidth*0.5;
+			maxWidth += centerGap*lastCenterPopUps.length-1;
+			var startX:Number = (DomGlobals.stage.stageWidth-maxWidth)*0.5;
 			var layerHeight:Number = DomGlobals.stage.stageHeight;
-			var pos:Point = new Point;
 			
-			for each(popUp in popUps)
+			for each(popUp in lastCenterPopUps)
 			{
-				pos.x = Math.round(startX+offsetX)-centerX+popUp.layoutBoundsWidth*0.5;
-				startX += popUp.layoutBoundsWidth+gap;
-				pos.y = offsetY;
-				positionPopUp(popUp,pos);
+				popUp.x = startX;
+				if(popUp.x<0)
+					popUp.x = 0;
+				startX += popUp.layoutBoundsWidth+centerGap;
+				popUp.y = (layerHeight-popUp.layoutBoundsHeight)*0.5;
+				if(popUp.y<0)
+					popUp.y = 0;
 			}
-			lastCenterPopUps = popUps;
-		}
-		/**
-		 * 设置popUp相对位置
-		 */		
-		private function positionPopUp(popUp:IVisualElement,pos:Point):void
-		{
-			var popUpData:PopUpData = popUpDataDic[popUp];
-			if(popUpData)
-				popUpData.positionChanged = true;
-			popUp.left = popUp.right = popUp.top = popUp.bottom = NaN;
-			popUp.horizontalCenter = pos.x;
-			popUp.verticalCenter = pos.y;
 		}
 		/**
 		 * 移除由addPopUp()方法弹出的窗口。
@@ -336,7 +373,11 @@ package org.flexlite.domUI.managers
 				{
 					popUpContainer.removeElement(data.popUp);
 				}
-				data.resetPosition();
+				var index:int = lastCenterPopUps.indexOf(data.popUp);
+				if(index!=-1)
+				{
+					lastCenterPopUps.splice(index,1);
+				}
 				updateCurrentPopUps();	
 			}
 		}
@@ -353,22 +394,15 @@ import org.flexlite.domUI.core.IVisualElement;
  */
 class PopUpData
 {
-	public function PopUpData(popUp:IVisualElement,modal:Boolean,
+	public function PopUpData(popUp:IVisualElement,modal:Boolean,center:Boolean,
 							  exclusive:Boolean,priority:int,popUpEffect:IEffect)
 	{
 		this.popUp = popUp;
 		this.modal = modal;
+		this.center = center;
 		this.exclusive = exclusive;
 		this.priority = priority;
 		this.popUpEffect = popUpEffect;
-		if(!popUp)
-			return;
-		left = popUp.left;
-		right = popUp.right;
-		top = popUp.top;
-		bottom = popUp.bottom;
-		horizontalCenter = popUp.horizontalCenter;
-		verticalCenter = popUp.verticalCenter;
 	}
 	/**
 	 * 弹出窗口
@@ -378,6 +412,10 @@ class PopUpData
 	 * 是否启用模态
 	 */	
 	public var modal:Boolean;
+	/**
+	 * 窗口居中
+	 */	
+	public var center:Boolean;
 	/**
 	 * 是否独占
 	 */	
@@ -390,29 +428,4 @@ class PopUpData
 	 * 窗口弹出时要播放的特效
 	 */	
 	public var popUpEffect:IEffect;
-	/**
-	 * 位置被调整过标志
-	 */	
-	public var positionChanged:Boolean = false;
-	
-	private var left:Number;
-	private var right:Number;
-	private var top:Number;
-	private var bottom:Number;
-	private var horizontalCenter:Number;
-	private var verticalCenter:Number;
-	/**
-	 * 重置相对位置属性
-	 */	
-	public function resetPosition():void
-	{
-		if(!popUp||!positionChanged)
-			return;
-		popUp.left = left;
-		popUp.right = right;
-		popUp.top = top;
-		popUp.bottom = bottom;
-		popUp.horizontalCenter = horizontalCenter;
-		popUp.verticalCenter = verticalCenter;
-	}
 }

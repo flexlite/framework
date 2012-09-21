@@ -144,7 +144,7 @@ package org.flexlite.domUI.managers
 		
 		private var _popUpContainer:SystemContainer;
 		/**
-		 * 弹出窗口层容器
+		 * 弹出窗口层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
 		 */		
 		public function get popUpContainer():IContainer
 		{
@@ -160,7 +160,7 @@ package org.flexlite.domUI.managers
 		
 		private var _toolTipContainer:SystemContainer;
 		/**
-		 * 工具提示层容器
+		 * 工具提示层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
 		 */		
 		public function get toolTipContainer():IContainer
 		{
@@ -176,7 +176,7 @@ package org.flexlite.domUI.managers
 		
 		private var _cursorContainer:SystemContainer;
 		/**
-		 * 鼠标样式层容器
+		 * 鼠标样式层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
 		 */		
 		public function get cursorContainer():IContainer
 		{
@@ -256,6 +256,10 @@ package org.flexlite.domUI.managers
 		//==========================================================================
 		//                                复写容器操作方法
 		//==========================================================================
+		override public function get numElements():int
+		{
+			return _noTopMostIndex;
+		}
 		
 		override public function addElement(element:IVisualElement):IVisualElement
 		{

@@ -16,10 +16,10 @@ package org.flexlite.domUI.skins.themes
 	import org.flexlite.domUI.skins.spark.PanelSkin;
 	import org.flexlite.domUI.skins.spark.ScrollerSkin;
 	import org.flexlite.domUI.skins.spark.SpinnerSkin;
-	import org.flexlite.domUI.skins.spark.TabBarButtonSkin;
 	import org.flexlite.domUI.skins.spark.TabBarSkin;
 	import org.flexlite.domUI.skins.spark.TextAreaSkin;
 	import org.flexlite.domUI.skins.spark.TextInputSkin;
+	import org.flexlite.domUI.skins.spark.TitleWindowSkin;
 	import org.flexlite.domUI.skins.spark.ToggleButtonSkin;
 	import org.flexlite.domUI.skins.spark.VScrollBarSkin;
 	import org.flexlite.domUI.skins.spark.VSliderSkin;
@@ -58,6 +58,7 @@ package org.flexlite.domUI.skins.themes
 			injector.mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
 			injector.mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
 			injector.mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
+			injector.mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
 		}
 	}
 }

@@ -189,7 +189,7 @@ package org.flexlite.domUI.components
 			
 			if (popUp.parent == null && displayPopUp)
 			{
-				PopUpManager.addPopUp(popUp);
+				PopUpManager.addPopUp(popUp,false,false);
 				popUp.owner = this;
 				popUpIsDisplayed = true;
 				applyPopUpTransform(width, height);
@@ -223,11 +223,11 @@ package org.flexlite.domUI.components
 				popUp.height = unscaledHeight;
 			else
 				popUp.height = NaN;
-			if(popUp is IInvalidating)
-				(popUp as IInvalidating).validateNow();
-			var popUpPoint:Point = calculatePopUpPosition();
-			popUp.x = popUpPoint.x;
-			popUp.y = popUpPoint.y;
+			popUp.callLater(function():void{
+				var popUpPoint:Point = calculatePopUpPosition();
+				popUp.x = popUpPoint.x;
+				popUp.y = popUpPoint.y;
+			});
 		}
 		/**
 		 * 添加到舞台事件

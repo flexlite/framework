@@ -76,10 +76,10 @@ package org.flexlite.domUI.components
 		 */		
 		private function invalidateSkin():void
 		{
-			if (skin is ISkin)
+			if (skin is IInvalidating)
 			{
-				(skin as ISkin).invalidateSize();
-				(skin as ISkin).invalidateDisplayList();
+				(skin as IInvalidating).invalidateSize();
+				(skin as IInvalidating).invalidateDisplayList();
 			}
 		}    
 		

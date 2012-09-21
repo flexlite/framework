@@ -620,7 +620,7 @@ package org.flexlite.domUI.core
 				return;
 			super.x = value;
 			invalidateProperties();
-			if (parent && parent is UIComponent)
+			if (_includeInLayout&&parent && parent is UIComponent)
 				UIComponent(parent).childXYChanged();
 		}
 		
@@ -635,7 +635,7 @@ package org.flexlite.domUI.core
 				return;
 			super.y = value;
 			invalidateProperties();
-			if (parent && parent is UIComponent)
+			if (_includeInLayout&&parent && parent is UIComponent)
 				UIComponent(parent).childXYChanged();
 		}
 		
@@ -830,7 +830,7 @@ package org.flexlite.domUI.core
 		 */		
 		protected function invalidateParentSizeAndDisplayList():void
 		{
-			if (!_hasParent)
+			if (!_hasParent||!_includeInLayout)
 				return;
 			var p:IInvalidating = parent as IInvalidating;
 			if (!p)
@@ -936,6 +936,10 @@ package org.flexlite.domUI.core
 		}
 		public function set includeInLayout(value:Boolean):void
 		{
+			if(_includeInLayout==value)
+				return;
+			_includeInLayout = true;
+			invalidateParentSizeAndDisplayList();
 			_includeInLayout = value;
 		}
 
