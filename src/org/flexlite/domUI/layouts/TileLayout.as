@@ -621,7 +621,10 @@ package org.flexlite.domUI.layouts
 				getIndexInView();
 			}
 			if(startIndex == -1||endIndex==-1)
+			{
+				target.setContentSize(0,0);
 				return;
+			}
 			
 			var elt:ILayoutElement;
 			var x:Number;

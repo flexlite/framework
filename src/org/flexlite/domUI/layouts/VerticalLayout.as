@@ -458,7 +458,10 @@ package org.flexlite.domUI.layouts
 				getIndexInView();
 		
 			if(startIndex == -1||endIndex==-1)
+			{
+				target.setContentSize(0,0);
 				return;
+			}
 			//获取水平布局参数
 			var justify:Boolean = _horizontalAlign==HorizontalAlign.JUSTIFY||_horizontalAlign==HorizontalAlign.CONTENT_JUSTIFY;
 			var contentJustify:Boolean = _horizontalAlign==HorizontalAlign.CONTENT_JUSTIFY;

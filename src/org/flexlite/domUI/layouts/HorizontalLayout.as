@@ -462,7 +462,10 @@ package org.flexlite.domUI.layouts
 				getIndexInView();
 			
 			if(startIndex == -1||endIndex==-1)
+			{
+				target.setContentSize(0,0);
 				return;
+			}
 			//获取垂直布局参数
 			var justify:Boolean = _verticalAlign==VerticalAlign.JUSTIFY||_verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
 			var contentJustify:Boolean = _verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
