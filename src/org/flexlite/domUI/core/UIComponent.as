@@ -7,6 +7,8 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import mx.core.UIComponent;
+	
 	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
@@ -713,7 +715,14 @@ package org.flexlite.domUI.core
 				invalidateSizeFlag = false;
 			}
 		}
-		
+		/**
+		 * 上一次测量的首选宽度
+		 */		
+		private var oldPreferWidth:Number;
+		/**
+		 * 上一次测量的首选高度
+		 */		
+		private var oldPreferHeight:Number;
 		/**
 		 * 测量组件尺寸，返回尺寸是否发生变化
 		 */		
@@ -727,7 +736,6 @@ package org.flexlite.domUI.core
 			if (!canSkipMeasurement())
 			{
 				measure();
-				
 				if(measuredWidth<minWidth)
 				{
 					measuredWidth = minWidth;
@@ -745,12 +753,19 @@ package org.flexlite.domUI.core
 					measuredHeight = maxHeight
 				}
 			}
-			
-			if(measuredWidth!=width||measuredHeight!=height)
+			if(isNaN(oldPreferWidth))
 			{
+				oldPreferWidth = preferredWidth;
+				oldPreferHeight = preferredHeight;
 				changed = true;
 			}
-			
+			else
+			{
+				if(preferredWidth!=oldPreferWidth||preferredHeight!=oldPreferHeight)
+					changed = true;
+				oldPreferWidth = preferredWidth;
+				oldPreferHeight = preferredHeight;
+			}
 			return changed;
 		}
 		

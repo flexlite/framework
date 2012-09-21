@@ -223,11 +223,11 @@ package org.flexlite.domUI.components
 				popUp.height = unscaledHeight;
 			else
 				popUp.height = NaN;
-			popUp.callLater(function():void{
-				var popUpPoint:Point = calculatePopUpPosition();
-				popUp.x = popUpPoint.x;
-				popUp.y = popUpPoint.y;
-			});
+			if(popUp is IInvalidating)
+				(popUp as IInvalidating).validateNow();
+			var popUpPoint:Point = calculatePopUpPosition();
+			popUp.x = popUpPoint.x;
+			popUp.y = popUpPoint.y;
 		}
 		/**
 		 * 添加到舞台事件
