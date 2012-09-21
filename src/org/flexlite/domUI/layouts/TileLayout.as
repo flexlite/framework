@@ -412,10 +412,10 @@ package org.flexlite.domUI.layouts
 			
 			var itemWidth:Number = _columnWidth + _horizontalGap;
 			//防止出现除数为零的情况
-			if(itemWidth == 0)
+			if(itemWidth <= 0)
 				itemWidth = 1;
 			var itemHeight:Number = _rowHeight + _verticalGap;
-			if(itemHeight == 0)
+			if(itemHeight <= 0)
 				itemHeight = 1;
 			
 			var orientedByColumns:Boolean = (orientation == TileOrientation.COLUMNS);
@@ -558,7 +558,7 @@ package org.flexlite.domUI.layouts
 			if(orientation == TileOrientation.COLUMNS)
 			{
 				var itemWidth:Number = _columnWidth + _horizontalGap;
-				if(itemWidth == 0)
+				if(itemWidth <= 0)
 				{
 					startIndex = 0;
 					endIndex = numElements-1;
@@ -578,7 +578,7 @@ package org.flexlite.domUI.layouts
 			else
 			{
 				var itemHeight:Number = _rowHeight + _verticalGap;
-				if(itemHeight == 0)
+				if(itemHeight <= 0)
 				{
 					startIndex = 0;
 					endIndex = numElements-1;
@@ -730,10 +730,10 @@ package org.flexlite.domUI.layouts
 			_horizontalGap = isNaN(_horizontalGap)?0:_horizontalGap;
 			
 			var itemWidth:Number = _columnWidth + _horizontalGap;
-			if(itemWidth == 0)
+			if(itemWidth <= 0)
 				itemWidth = 1;
 			var itemHeight:Number = _rowHeight + _verticalGap;
-			if(itemHeight == 0)
+			if(itemHeight <= 0)
 				itemHeight = 1;
 			
 			var offsetY:Number = (targetHeight+_verticalGap)%itemHeight;
