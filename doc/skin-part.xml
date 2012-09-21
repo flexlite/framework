@@ -98,7 +98,7 @@
 	<component id="ProgressBar">
 		<skinpart>thumb</skinpart>
 		<skinpart>track</skinpart>
-		<skinpart>label</skinpart>
+		<skinpart>labelDisplay</skinpart>
 	</component>
 	<component id="PageNavigator">
 		<skinpart type="Button">prevPage</skinpart>
