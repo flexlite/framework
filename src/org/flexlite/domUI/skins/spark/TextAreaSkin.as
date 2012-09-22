@@ -25,9 +25,9 @@ package org.flexlite.domUI.skins.spark
 
 		public var borderStroke:SolidColorStroke;
 
-		public var scroller:Scroller;
-
 		public var shadow:Rect;
+
+		public var scroller:Scroller;
 
 		public var textDisplay:EditableText;
 

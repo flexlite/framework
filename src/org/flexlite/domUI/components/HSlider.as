@@ -47,6 +47,12 @@ package org.flexlite.domUI.components
 			var thumbPosParentX:Number = thumb.parent.globalToLocal(thumbPos).x;
 			
 			thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), thumb.layoutBoundsY);
+			if(showTrackHighlight&&trackHighlight&&trackHighlight.parent)
+			{
+				var trackHighlightX:Number = trackHighlight.parent.globalToLocal(thumbPos).x-thumbPosTrackX;
+				trackHighlight.x = Math.round(trackHighlightX);
+				trackHighlight.width = Math.round(thumbPosTrackX);
+			}
 		}
 	}
 	

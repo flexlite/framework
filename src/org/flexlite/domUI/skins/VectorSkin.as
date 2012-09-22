@@ -114,7 +114,7 @@ package org.flexlite.domUI.skins
 				fillColors, 1,
 				verticalGradientMatrix(x+1, y+1, w - 2, h - 2),GradientType.LINEAR,null,null,g); 
 			//绘制底线
-			if(w>(crr1.bl+crr1.br)&&h>1)
+			if(w>(crr1.bl+crr1.br+2)&&h>1)
 			{
 				drawLine(x+crr1.bl,y+h-1,x+w-crr1.br,y+h-1,bottomLineColor,g);
 			}

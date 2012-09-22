@@ -1,7 +1,7 @@
 package org.flexlite.domUI.effects.animation
 {
-	import flash.display.Shape;
-	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -421,11 +421,11 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		private static var currentTime:Number = 0;
 		
-		private static var tickDispatcher:Shape;
-		/**
-		 * 正在运行动画计时器标志
-		 */		
-		private static var running:Boolean = false;
+		
+		private static const TIMER_RESOLUTION:Number = 1000 / 60;	// 60 fps
+		
+		private static var timer:Timer;
+		
 		/**
 		 * 正在活动的动画
 		 */		
@@ -439,27 +439,14 @@ package org.flexlite.domUI.effects.animation
 			if(activeAnimations.indexOf(animation)==-1)
 			{
 				activeAnimations.push(animation);
-				if (tickDispatcher==null)
-					tickDispatcher = new Shape();
-				if(!running)
-					startTick();
+				if (timer==null)
+				{
+					timer = new Timer(TIMER_RESOLUTION);
+					timer.addEventListener(TimerEvent.TIMER, timerHandler);
+				}
+				if(!timer.running)
+					timer.start();
 			}
-		}
-		/**
-		 * 开始动画计时器
-		 */		
-		private static function startTick():void
-		{
-			tickDispatcher.addEventListener(Event.ENTER_FRAME,onTick);
-			running = true;
-		}
-		/**
-		 * 停止动画计时器
-		 */		
-		private static function stopTick():void
-		{
-			tickDispatcher.removeEventListener(Event.ENTER_FRAME,onTick);
-			running = false;
 		}
 		
 		/**
@@ -484,9 +471,9 @@ package org.flexlite.domUI.effects.animation
 				if(index<=currentIntervalIndex)
 					currentIntervalIndex--;
 			}
-			if(activeAnimations.length==0&&tickDispatcher!=null&&running)
+			if(activeAnimations.length==0&&timer!=null&&timer.running)
 			{
-				stopTick();
+				timer.stop();
 			}
 		}
 		
@@ -498,7 +485,7 @@ package org.flexlite.domUI.effects.animation
 		/**
 		 * 计时器触发函数
 		 */		
-		private static function onTick(event:Event):void
+		private static function timerHandler(event:TimerEvent):void
 		{
 			currentTime = getTimer();
 			currentIntervalIndex = 0;
@@ -514,8 +501,9 @@ package org.flexlite.domUI.effects.animation
 			currentIntervalIndex = -1;
 			if(activeAnimations.length==0)
 			{
-				stopTick();
+				timer.stop();
 			}
+			event.updateAfterEvent();
 		}
 		
 	}

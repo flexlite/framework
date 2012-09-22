@@ -1,6 +1,8 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	
+	import flash.display.DisplayObjectContainer;
+	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
@@ -30,6 +32,34 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 			maximum = 10;
 		}
+		
+		/**
+		 * [SkinPart]轨道高亮显示对象
+		 */		
+		public var trackHighlight:InteractiveObject;
+		
+		private var _showTrackHighlight:Boolean = true;
+		
+		/**
+		 * 是否启用轨道高亮效果。默认值为true。
+		 * 注意，皮肤里的子部件trackHighlight要同时为非空才能显示高亮效果。
+		 */
+		public function get showTrackHighlight():Boolean
+		{
+			return _showTrackHighlight;
+		}
+		
+		public function set showTrackHighlight(value:Boolean):void
+		{
+			if(_showTrackHighlight==value)
+				return;
+			_showTrackHighlight = value;
+			if(trackHighlight)
+				trackHighlight.visible = value;
+			invalidateDisplayList();
+		}
+
+		
 		/**
 		 * 动画实例
 		 */	
@@ -195,6 +225,18 @@ package org.flexlite.domUI.components.supportClasses
 				}
 			}
 			
+		}
+		
+		override protected function partAdded(partName:String, instance:Object):void
+		{
+			super.partAdded(partName,instance);
+			if(instance == trackHighlight)
+			{
+				trackHighlight.mouseEnabled = false;
+				if(trackHighlight is DisplayObjectContainer)
+					(trackHighlight as DisplayObjectContainer).mouseChildren = false;
+				trackHighlight.visible = _showTrackHighlight;
+			}
 		}
 	}
 	
