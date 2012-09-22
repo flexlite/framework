@@ -16,6 +16,7 @@ package org.flexlite.domUI.skins.themes
 	import org.flexlite.domUI.skins.spark.PanelSkin;
 	import org.flexlite.domUI.skins.spark.ScrollerSkin;
 	import org.flexlite.domUI.skins.spark.SpinnerSkin;
+	import org.flexlite.domUI.skins.spark.TabBarButtonSkin;
 	import org.flexlite.domUI.skins.spark.TabBarSkin;
 	import org.flexlite.domUI.skins.spark.TextAreaSkin;
 	import org.flexlite.domUI.skins.spark.TextInputSkin;
@@ -53,7 +54,7 @@ package org.flexlite.domUI.skins.themes
 			injector.mapSkin("org.flexlite.domUI.components::Spinner",SpinnerSkin);
 			injector.mapSkin("org.flexlite.domUI.components::NumericStepper",NumericStepperSkin);
 			injector.mapSkin("org.flexlite.domUI.components.supportClasses::ItemRenderer",ItemRendererSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TabBarButton",ToggleButtonSkin);
+			injector.mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);
 			injector.mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
 			injector.mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
 			injector.mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);

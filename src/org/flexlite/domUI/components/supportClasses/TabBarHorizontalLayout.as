@@ -20,7 +20,7 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 		}
 		
-		private var _gap:int = 0;
+		private var _gap:int = -1;
 		/**
 		 * 布局元素之间的水平空间。
 		 */		

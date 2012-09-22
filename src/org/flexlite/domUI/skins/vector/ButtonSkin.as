@@ -36,8 +36,8 @@ package org.flexlite.domUI.skins.vector
 			labelDisplay.maxDisplayedLines = 1;
 			labelDisplay.left = 5;
 			labelDisplay.right = 5;
-			labelDisplay.top = 5;
-			labelDisplay.bottom = 5;
+			labelDisplay.top = 3;
+			labelDisplay.bottom = 3;
 			addElement(labelDisplay);
 		}
 		
