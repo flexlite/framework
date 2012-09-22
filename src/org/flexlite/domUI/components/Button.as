@@ -18,8 +18,6 @@ package org.flexlite.domUI.components
 		public function Button()
 		{
 			super();
-			buttonMode = true;
-			useHandCursor = true;
 		}   
 		
 		override protected function get hostComponentKey():Object

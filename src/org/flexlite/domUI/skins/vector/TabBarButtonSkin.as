@@ -58,7 +58,7 @@ package org.flexlite.domUI.skins.vector
 					textColor = themeColors[0];
 					break;
 				case "over":
-					drawCurrentState(0,0,w,h,borderColors[1],bottomLineColors[1],
+					drawCurrentState(0,0,w,h,borderColors[0],bottomLineColors[0],
 						[fillColors[2],fillColors[3]],radius);
 					textColor = themeColors[1];
 					break;

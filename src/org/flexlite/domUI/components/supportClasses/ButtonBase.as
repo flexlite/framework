@@ -43,6 +43,8 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super();
 			mouseChildren = false;
+			buttonMode = true;
+			useHandCursor = true;
 			addHandlers();
 		}
 		
