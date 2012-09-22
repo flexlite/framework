@@ -110,7 +110,7 @@ package org.flexlite.domUI.components
 		{
 			this.x = event.stageX - offsetX;
 			this.y = event.stageY - offsetY;
-			trace("MouseMove x:"+event.stageX+"y:"+event.stageY);
+			event.updateAfterEvent();
 		}
 		/**
 		 * 鼠标在舞台上弹起事件
@@ -125,7 +125,6 @@ package org.flexlite.domUI.components
 				Event.MOUSE_LEAVE, moveArea_mouseUpHandler);
 			offsetX = NaN;
 			offsetY = NaN;
-			trace("mouseUp");
 		}
 	}
 }
