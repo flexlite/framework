@@ -1,6 +1,5 @@
 package org.flexlite.domUI.skins.vector
 {
-	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.components.HScrollBar;
 	import org.flexlite.domUI.components.VScrollBar;
 	import org.flexlite.domUI.core.dx_internal;
