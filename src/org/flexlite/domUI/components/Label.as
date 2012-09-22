@@ -303,11 +303,6 @@ package org.flexlite.domUI.components
 				{
 					measureUsingWidth(lastUnscaledWidth);
 				}
-				else
-				{
-					measuredWidth = 0;
-					measuredHeight = 0;
-				}
 				return;
 			}
 			

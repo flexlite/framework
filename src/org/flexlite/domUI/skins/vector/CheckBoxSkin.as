@@ -1,6 +1,5 @@
 package org.flexlite.domUI.skins.vector
 {
-	import flash.display.GradientType;
 	import flash.display.Graphics;
 	
 	import flashx.textLayout.formats.TextAlign;

@@ -206,7 +206,6 @@ package org.flexlite.domUI.components.supportClasses
 			_underline = value;
 			defaultStyleChanged = true;
 			invalidateProperties();
-			invalidateSize();
 		}
 		
 		private var _textAlign:String = TextFormatAlign.LEFT;
@@ -277,7 +276,6 @@ package org.flexlite.domUI.components.supportClasses
 				_textColor = value;
 				defaultStyleChanged = true;
 				invalidateProperties();
-				invalidateSize();
 			}
 			else
 			{
