@@ -24,16 +24,16 @@ package org.flexlite.domUI.components
 	[DXML(show="false")]
 	
 	/**
-	 * 最轻量级的可设置外观元素，通常作为普通显示对象的包装器。默认禁用了鼠标事件。<p/>
-	 * 可将普通显示对象直接赋值给skinName属性,或赋值任何类型，从而调用注入的皮肤解析适配器自动获取皮肤并赋值给skin。
-	 * 获取的skin对象将会自动跟随SkinnableElement尺寸缩放。<p/>
-	 * 注意：SkinnableElement仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
-	 * 若做了引起skin尺寸发生变化的操作, 需手动调用SkinnableElement的invalidateSize()进行重新测量。
+	 * 素材包装器。默认禁用了鼠标事件。<p/>
+	 * 可将任何类型值赋值给skinName属性,它会调用项目注入的皮肤解配器，
+	 * 解析skinName并获取显示对象赋值给skin属性。
+	 * 注意：UIAsset仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
+	 * 若做了引起skin尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
 	 * @author DOM
 	 */
-	public class SkinnableElement extends UIComponent
+	public class UIAsset extends UIComponent
 	{
-		public function SkinnableElement()
+		public function UIAsset()
 		{
 			super();
 			mouseChildren = false;
@@ -97,7 +97,7 @@ package org.flexlite.domUI.components
 				super.addChildAt(_skin,0);
 			}
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
+			invalidateDisplayList();
 			if(stage)
 				validateNow();
 		}

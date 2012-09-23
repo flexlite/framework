@@ -40,7 +40,7 @@ package org.flexlite.domUI.components
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @author DOM
 	 */
-	public class SkinnableComponent extends SkinnableElement implements IStyleClient,IHostComponent
+	public class SkinnableComponent extends UIAsset implements IStyleClient,IHostComponent
 	{
 		public function SkinnableComponent()
 		{

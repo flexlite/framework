@@ -92,7 +92,7 @@ package org.flexlite.domDisplay
 				}
 				return;
 			}
-			useScale9Grid = (_dxrData._scale9Grid!=null);
+			useScale9Grid = (totalFrames==1&&_dxrData._scale9Grid!=null);
 			if(useScale9Grid)
 			{
 				if(bitmapContent)

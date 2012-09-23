@@ -1,10 +1,9 @@
 package org.flexlite.domUI.skins.studio
 {
+	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.components.supportClasses.Skin;
 	import org.flexlite.domUI.core.IMovieClip;
 	import org.flexlite.domUI.core.dx_internal;
-	
-	import flash.display.DisplayObject;
 	
 	use namespace dx_internal;
 	
@@ -58,7 +57,12 @@ package org.flexlite.domUI.skins.studio
 			if(currentSkin)
 			{
 				currentSkin["visible"] = true;
-				if(currentSkin is IMovieClip)
+				if(currentSkin is UIAsset&&currentSkin["skin"] is IMovieClip)
+				{
+					(currentSkin["skin"] as IMovieClip).repeatPlay = false;
+					(currentSkin["skin"] as IMovieClip).gotoAndPlay(0);
+				}
+				else if(currentSkin is IMovieClip)
 				{
 					(currentSkin as IMovieClip).repeatPlay = false;
 					(currentSkin as IMovieClip).gotoAndPlay(0);

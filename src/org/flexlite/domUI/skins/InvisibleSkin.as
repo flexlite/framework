@@ -1,6 +1,6 @@
 package org.flexlite.domUI.skins
 {
-	import org.flexlite.domUI.components.SkinnableElement;
+	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
 	import org.flexlite.domUI.core.IInvisibleSkin;
 	import org.flexlite.domUI.core.ISkinAdapter;

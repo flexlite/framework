@@ -1,7 +1,7 @@
 package org.flexlite.domUI.skins.vector
 {
 	import org.flexlite.domUI.components.Button;
-	import org.flexlite.domUI.components.SkinnableElement;
+	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
@@ -25,7 +25,7 @@ package org.flexlite.domUI.skins.vector
 		
 		public var track:Button;
 		
-		public var trackHighlight:SkinnableElement;
+		public var trackHighlight:UIAsset;
 		
 		override protected function createChildren():void
 		{
@@ -41,7 +41,7 @@ package org.flexlite.domUI.skins.vector
 			track.skinName = HSliderTrackSkin;
 			addElement(track);
 			
-			trackHighlight = new SkinnableElement;
+			trackHighlight = new UIAsset;
 			trackHighlight.top = 0;
 			trackHighlight.bottom = 0;
 			trackHighlight.minWidth = 33;

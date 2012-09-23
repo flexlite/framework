@@ -8,7 +8,7 @@ package org.flexlite.domUI.managers.injectorClass
 	 * 以下类若有调用，需要显式注入：<br>
 	 * IBitmapDecoder:DXR位图动画所用的解码器实例,可选值：JpegXRDecoder,Jpeg32Decoder,PngDecoder<br>
 	 * IBitmapEncoder:DXR位图动画所用的编码器实例,可选值：JpegXREncoder,Jpeg32Encoder,PngEncoder<br>
-	 * ISkinAdapter:皮肤解析适配器实例。通过解析SkinnableElement.skinName属性，返回特定显示对象作为皮肤。
+	 * ISkinAdapter:皮肤解析适配器实例。通过解析UIAsset.skinName属性，返回特定显示对象作为皮肤。
 	 * @author DOM
 	 */
 	public class SingletonInjector
