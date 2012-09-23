@@ -675,6 +675,7 @@ package org.flexlite.domUI.components
 			event.stopImmediatePropagation();
 			dispatchEvent(new Event(Event.CHANGE));
 			invalidateSize();
+			invalidateDisplayList();
 			updateContentSize();
 		}
 		

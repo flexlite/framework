@@ -127,6 +127,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		private var _size:uint = 12;
@@ -147,6 +148,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		private var _bold:Boolean = false;
@@ -167,6 +169,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		private var _italic:Boolean = false;
@@ -187,6 +190,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		private var _underline:Boolean = false;
@@ -227,6 +231,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		
@@ -248,6 +253,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		/**
@@ -324,6 +330,7 @@ package org.flexlite.domUI.components.supportClasses
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		dx_internal var _textFormat:TextFormat;
@@ -682,6 +689,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			textFieldChanged(false);
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		/**
 		 * 标签尺寸发生改变
@@ -690,6 +698,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			textFieldChanged(true);
 			invalidateSize();
+			invalidateDisplayList();
 		}   
 		/**
 		 * 文字格式发生改变
@@ -698,6 +707,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			textFieldChanged(true);
 			invalidateSize();
+			invalidateDisplayList();
 		}
 	}
 }

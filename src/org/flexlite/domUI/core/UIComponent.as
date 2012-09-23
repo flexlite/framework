@@ -503,7 +503,6 @@ package org.flexlite.domUI.core
 				return;
 			_minWidth = value;
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
 		}
 		
 		private var _maxWidth:Number = 10000;
@@ -521,7 +520,6 @@ package org.flexlite.domUI.core
 				return;
 			_maxWidth = value;
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
 		}
 		
 		
@@ -540,7 +538,6 @@ package org.flexlite.domUI.core
 				return;
 			_minHeight = value;
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
 		}
 		
 		private var _maxHeight:Number = 10000;
@@ -558,7 +555,6 @@ package org.flexlite.domUI.core
 				return;
 			_maxHeight = value;
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
 		}
 		
 		

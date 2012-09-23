@@ -153,6 +153,7 @@ package org.flexlite.domUI.components
 				widthChanged = true;
 				invalidateProperties();
 				invalidateSize();
+				invalidateDisplayList();
 			}
 			
 			super.width = value;
@@ -167,6 +168,7 @@ package org.flexlite.domUI.components
 				widthChanged = true;
 				invalidateProperties();
 				invalidateSize();
+				invalidateDisplayList();
 			}
 			
 			super.maxWidth = value;
@@ -181,6 +183,7 @@ package org.flexlite.domUI.components
 				widthChanged = true;
 				invalidateProperties();
 				invalidateSize();
+				invalidateDisplayList();
 			}
 			
 			super.percentWidth = value;
@@ -407,6 +410,7 @@ package org.flexlite.domUI.components
 			rangeFormatChanged = true;
 			invalidateProperties();
 			invalidateSize();
+			invalidateDisplayList();
 		}
 		
 		/**

@@ -109,7 +109,7 @@ package org.flexlite.domUI.components
 			var newSkin:Object = getCurrentSkin();
 			attachSkin(newSkin);
 			invalidateSize();
-			invalidateParentSizeAndDisplayList();
+			invalidateDisplayList();
 		}
 		/**
 		 * 获取当前的skin对象，当附加的皮肤为非显示对象时，并不存储在skin属性中。返回非显示对象版本skin。

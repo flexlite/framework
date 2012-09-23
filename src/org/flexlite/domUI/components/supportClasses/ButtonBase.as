@@ -470,6 +470,7 @@ package org.flexlite.domUI.components.supportClasses
 					removeFromDisplayList(labelDisplay as DisplayObject);
 					labelDisplay = null;
 					invalidateSize();
+					invalidateDisplayList();
 				}
 				else if(createLabelIfNeed&&!labelDisplay)
 				{
