@@ -1,11 +1,11 @@
-package org.flexlite.domUI.skins
+package org.flexlite.domUI.skins.studio
 {
 	import org.flexlite.domUI.components.PopUpAnchor;
 	import org.flexlite.domUI.components.supportClasses.Skin;
 	
 	[DXML(show="false")]
 	/**
-	 * 弹出框皮肤基类
+	 * 弹出框皮肤基类。此类在FlexLiteStudio中使用。
 	 * @author DOM
 	 */
 	public class PopUpSkin extends Skin

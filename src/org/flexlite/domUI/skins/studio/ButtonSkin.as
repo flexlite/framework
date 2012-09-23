@@ -1,18 +1,25 @@
-package org.flexlite.domUI.skins
+package org.flexlite.domUI.skins.studio
 {
+	import org.flexlite.domUI.components.supportClasses.Skin;
 	import org.flexlite.domUI.core.IMovieClip;
-
+	import org.flexlite.domUI.core.dx_internal;
+	
+	import flash.display.DisplayObject;
+	
+	use namespace dx_internal;
+	
 	[DXML(show="false")]
 	/**
-	 * 有选中状态的皮肤基类
-	 * @author chenglong
+	 * 具有三个状态的按钮皮肤基类。此类在FlexLiteStudio中使用。
+	 * @author DOM
 	 */
-	public class ToggleButtonSkin extends ButtonSkin
+	public class ButtonSkin extends Skin
 	{
-		public function ToggleButtonSkin()
+		public function ButtonSkin()
 		{
 			super();
-			states = ["up","over","down","upAndSelected","overAndSelected","downAndSelected"];
+			states = ["up","over","down"];
+			this.currentState = "up";
 		}
 		
 		override protected function commitCurrentState():void
@@ -23,10 +30,9 @@ package org.flexlite.domUI.skins
 				this["overSkin"]["visible"] = false;
 			if(hasOwnProperty("downSkin"))
 				this["downSkin"]["visible"] = false;
-			if(hasOwnProperty("selectedSkin"))
-				this["selectedSkin"]["visible"] = false;
+			
 			var currentSkin:Object;
-			switch(currentState)
+			switch(_currentState)
 			{
 				case "up":
 					if(hasOwnProperty("upSkin"))
@@ -39,9 +45,6 @@ package org.flexlite.domUI.skins
 						currentSkin = this["upSkin"];
 					break;
 				case "down":
-				case "upAndSelected":
-				case "overAndSelected":
-				case "downAndSelected":
 					if(hasOwnProperty("downSkin"))
 						currentSkin = this["downSkin"];
 					else if(hasOwnProperty("upSkin"))
@@ -62,5 +65,7 @@ package org.flexlite.domUI.skins
 				}
 			}
 		}
+		
+		
 	}
 }
