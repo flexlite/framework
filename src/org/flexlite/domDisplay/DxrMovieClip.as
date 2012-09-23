@@ -93,6 +93,26 @@ package org.flexlite.domDisplay
 				return;
 			}
 			useScale9Grid = (totalFrames==1&&_dxrData._scale9Grid!=null);
+			if(_dxrData.frameLabels.length>0)
+			{
+				frameLabelDic = new Dictionary;
+				for each(var label:FrameLabel in _dxrData.frameLabels)
+				{
+					frameLabelDic[label.name] = label.frame;
+				}
+			}
+			else
+			{
+				frameLabelDic = null;
+			}
+			initContent();
+			applyCurrentFrameData();
+		}
+		/**
+		 * 初始化显示对象实体
+		 */		
+		private function initContent():void
+		{
 			if(useScale9Grid)
 			{
 				if(bitmapContent)
@@ -104,6 +124,8 @@ package org.flexlite.domDisplay
 				{
 					s9gBitmapContent = new Scale9GridBitmap(null,this.graphics);
 				}
+				s9gBitmapContent.width = explicitWidth;
+				s9gBitmapContent.height = explicitHeight;
 			}
 			else
 			{
@@ -117,22 +139,25 @@ package org.flexlite.domDisplay
 					bitmapContent = new Bitmap();
 					addChild(bitmapContent);
 				}
-			}
-			
-			applyCurrentFrameData();
-			if(_dxrData.frameLabels.length>0)
-			{
-				frameLabelDic = new Dictionary;
-				for each(var label:FrameLabel in _dxrData.frameLabels)
+				if(isNaN(explicitWidth))
 				{
-					frameLabelDic[label.name] = label.frame;
+					bitmapContent.scaleX = 1;
+				}
+				else
+				{
+					bitmapContent.scaleX = _width/_dxrData.frameList[0].width;
+				}
+				if(isNaN(explicitHeight))
+				{
+					bitmapContent.scaleY = 1;
+				}
+				else
+				{
+					bitmapContent.scaleY = _height/_dxrData.frameList[0].height;
 				}
 			}
-			else
-			{
-				frameLabelDic = null;
-			}
 		}
+		
 		private var eventListenerAdded:Boolean = false;
 		/**
 		 * 检测是否需要添加事件监听
@@ -169,27 +194,22 @@ package org.flexlite.domDisplay
 		private function applyCurrentFrameData():void
 		{
 			var bitmapData:BitmapData = dxrData.frameList[_currentFrame];
-			if(!widthExplicitSet)
-				_width = bitmapData.width;
-			if(!heightExplicitSet)
-				_height = bitmapData.height;
 			var pos:Point = dxrData.frameOffsetList[_currentFrame];
 			if(useScale9Grid)
 			{
 				s9gBitmapContent.scale9Grid = dxrData._scale9Grid;
 				s9gBitmapContent._offsetPoint = pos;
-				s9gBitmapContent.width = _width;
-				s9gBitmapContent.height = _height;
 				s9gBitmapContent.bitmapData = bitmapData;
-				
+				_height = s9gBitmapContent.height;
+				_width = s9gBitmapContent.width;
 			}
 			else
 			{
 				bitmapContent.x = pos.x;
 				bitmapContent.y = pos.y;
 				bitmapContent.bitmapData = bitmapData;
-				bitmapContent.width = _width;
-				bitmapContent.height = _height;
+				_width = bitmapContent.width;
+				_height = bitmapContent.height;
 			}
 			widthChanged = false;
 			heightChanged = false;
@@ -197,9 +217,9 @@ package org.flexlite.domDisplay
 		
 		private var widthChanged:Boolean = false;
 		/**
-		 * 宽度显式设置标记
+		 * 显式设置的宽度
 		 */		
-		private var widthExplicitSet:Boolean = false;
+		private var explicitWidth:Number;
 		
 		private var _width:Number;
 		
@@ -212,18 +232,32 @@ package org.flexlite.domDisplay
 		{
 			if(value==_width)
 				return;
-			_width = value;
+			explicitWidth = _width = value;
 			
-			widthExplicitSet = !isNaN(value);
+			if(isNaN(explicitWidth))
+			{
+				if(bitmapContent)
+					bitmapContent.scaleX = 1;
+			}
+			else
+			{
+				if(_dxrData&&bitmapContent)
+					bitmapContent.scaleX = _width/_dxrData.frameList[0].width;
+			}
+			if(s9gBitmapContent)
+			{
+				s9gBitmapContent.width = explicitWidth;
+			}
+			
 			widthChanged = true;
 			invalidateProperties();
 		}
 		
 		private var heightChanged:Boolean = false;
 		/**
-		 * 高度显式设置标志
+		 * 显式设置的高度
 		 */		
-		private var heightExplicitSet:Boolean = false;
+		private var explicitHeight:Number;
 		
 		private var _height:Number;
 		
@@ -236,8 +270,21 @@ package org.flexlite.domDisplay
 		{
 			if(_height==value)
 				return;
-			_height = value;
-			heightExplicitSet = !isNaN(value);
+			explicitHeight = _height = value;
+			if(isNaN(explicitHeight))
+			{
+				if(bitmapContent)
+					bitmapContent.scaleY = 1;
+			}
+			else
+			{
+				if(_dxrData&&bitmapContent)
+					bitmapContent.scaleY = _height/_dxrData.frameList[0].height;
+			}
+			if(s9gBitmapContent)
+			{
+				s9gBitmapContent.height = explicitHeight;
+			}
 			widthChanged = true;
 			invalidateProperties();
 		}
