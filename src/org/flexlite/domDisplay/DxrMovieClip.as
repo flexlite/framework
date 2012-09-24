@@ -47,7 +47,7 @@ package org.flexlite.domDisplay
 		/**
 		 * smoothing改变标志
 		 */		
-		private var smoothingChanged:Boolean = false;
+		private var smoothingChanged:Boolean = true;
 		
 		private var _smoothing:Boolean;
 		/**

@@ -1,6 +1,14 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.net.URLRequest;
+	
 	import org.flexlite.domUI.core.ISkinAdapter;
+	import org.flexlite.domUtils.DomLoader;
 	
 	
 	/**
@@ -21,6 +29,29 @@ package org.flexlite.domUI.components.supportClasses
 			if(skinName is Class)
 			{
 				compFunc(new skinName(),skinName);
+			}
+			else if(skinName is String)
+			{
+				var loader:Loader = new Loader;
+				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,function(event:Event):void{
+					compFunc(skinName,skinName);
+				});
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(event:Event):void{
+					if(loader.content is Bitmap)
+					{
+						var bitmapData:BitmapData = (loader.content as Bitmap).bitmapData;
+						compFunc(new Bitmap(bitmapData,"auto",true),skinName);
+					}
+					else
+					{
+						compFunc(loader.content,skinName);
+					}
+				});
+				loader.load(new URLRequest(skinName as String));
+			}
+			else if(skinName is BitmapData)
+			{
+				compFunc(new Bitmap(skinName as BitmapData,"auto",true),skinName);
 			}
 			else
 			{
