@@ -195,6 +195,7 @@ package org.flexlite.domUI.components
 				}
 			}
 			virtualLayoutUnderWay = false;
+			invalidateSize();
 		}
 		
 		override public function getElementIndicesInView():Vector.<int>
