@@ -18,10 +18,11 @@ package org.flexlite.domDisplay
 		/**
 		 * 构造函数
 		 * @param data 被引用的DxrData对象
+		 * @param smoothing 在缩放时是否对位图进行平滑处理。
 		 */
-		public function DxrShape(data:DxrData=null)
+		public function DxrShape(data:DxrData=null,smoothing:Boolean=true)
 		{
-			super();
+			super(null,null,smoothing);
 			if(data)
 				dxrData = data;
 		}

@@ -30,18 +30,42 @@ package org.flexlite.domDisplay
 		/**
 		 * 构造函数
 		 * @param data 被引用的DxrData对象
+		 * @param smoothing 在缩放时是否对位图进行平滑处理。
 		 */
-		public function DxrMovieClip(data:DxrData=null)
+		public function DxrMovieClip(data:DxrData=null,smoothing:Boolean=true)
 		{
 			super();
 			addEventListener(Event.ADDED_TO_STAGE,onAddedOrRemoved);
 			addEventListener(Event.REMOVED_FROM_STAGE,onAddedOrRemoved);
 			mouseEnabled = false;
 			mouseChildren = false;
+			this._smoothing = smoothing;
 			if(data)
 				dxrData = data;
 		}
 		
+		/**
+		 * smoothing改变标志
+		 */		
+		private var smoothingChanged:Boolean = false;
+		
+		private var _smoothing:Boolean;
+		/**
+		 * 在缩放时是否对位图进行平滑处理。
+		 */
+		public function get smoothing():Boolean
+		{
+			return _smoothing;
+		}
+		
+		public function set smoothing(value:Boolean):void
+		{
+			if(_smoothing==value)
+				return;
+			_smoothing = value;
+			smoothingChanged = true;
+			invalidateProperties();
+		}
 		
 		/**
 		 * 被添加到显示列表时
@@ -92,7 +116,7 @@ package org.flexlite.domDisplay
 				}
 				return;
 			}
-			useScale9Grid = (totalFrames==1&&_dxrData._scale9Grid!=null);
+			useScale9Grid = (_dxrData._scale9Grid!=null);
 			if(_dxrData.frameLabels.length>0)
 			{
 				frameLabelDic = new Dictionary;
@@ -109,10 +133,28 @@ package org.flexlite.domDisplay
 			applyCurrentFrameData();
 		}
 		/**
+		 * 当使用九宫格缩放时的x方向缩放值
+		 */		
+		private var s9gScaleX:Number = 1;
+		/**
+		 * 当使用九宫格缩放时的y方向缩放值
+		 */
+		private var s9gScaleY:Number = 1;
+		/**
 		 * 初始化显示对象实体
 		 */		
 		private function initContent():void
 		{
+			s9gScaleX = 1;
+			s9gScaleY = 1;
+			if(isNaN(explicitWidth))
+			{
+				s9gScaleX = _width/_dxrData.frameList[0].width;
+			}
+			if(!isNaN(explicitHeight))
+			{
+				s9gScaleY = _height/_dxrData.frameList[0].height;
+			}
 			if(useScale9Grid)
 			{
 				if(bitmapContent)
@@ -124,8 +166,6 @@ package org.flexlite.domDisplay
 				{
 					s9gBitmapContent = new Scale9GridBitmap(null,this.graphics);
 				}
-				s9gBitmapContent.width = explicitWidth;
-				s9gBitmapContent.height = explicitHeight;
 			}
 			else
 			{
@@ -139,22 +179,8 @@ package org.flexlite.domDisplay
 					bitmapContent = new Bitmap();
 					addChild(bitmapContent);
 				}
-				if(isNaN(explicitWidth))
-				{
-					bitmapContent.scaleX = 1;
-				}
-				else
-				{
-					bitmapContent.scaleX = _width/_dxrData.frameList[0].width;
-				}
-				if(isNaN(explicitHeight))
-				{
-					bitmapContent.scaleY = 1;
-				}
-				else
-				{
-					bitmapContent.scaleY = _height/_dxrData.frameList[0].height;
-				}
+				bitmapContent.scaleX = scaleX;
+				bitmapContent.scaleY = scaleY;
 			}
 		}
 		
@@ -166,12 +192,14 @@ package org.flexlite.domDisplay
 		private function checkEventListener(remove:Boolean=false):void
 		{
 			var needAddEventListener:Boolean = (!remove&&stage&&!isStop&&totalFrames>1);
-			if(eventListenerAdded&&!needAddEventListener)
+			if(eventListenerAdded==needAddEventListener)
+				return;
+			if(eventListenerAdded)
 			{
 				this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
 				eventListenerAdded = false;
 			}
-			else if(!eventListenerAdded&&needAddEventListener)
+			else
 			{
 				this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
 				eventListenerAdded = true;
@@ -199,6 +227,8 @@ package org.flexlite.domDisplay
 			{
 				s9gBitmapContent.scale9Grid = dxrData._scale9Grid;
 				s9gBitmapContent._offsetPoint = pos;
+				s9gBitmapContent.width = explicitWidth*scaleX;
+				s9gBitmapContent.height = explicitHeight*scaleY;
 				s9gBitmapContent.bitmapData = bitmapData;
 				_height = s9gBitmapContent.height;
 				_width = s9gBitmapContent.width;
@@ -208,6 +238,8 @@ package org.flexlite.domDisplay
 				bitmapContent.x = pos.x;
 				bitmapContent.y = pos.y;
 				bitmapContent.bitmapData = bitmapData;
+				if(_smoothing)
+					bitmapContent.smoothing = _smoothing;
 				_width = bitmapContent.width;
 				_height = bitmapContent.height;
 			}
@@ -236,18 +268,14 @@ package org.flexlite.domDisplay
 			
 			if(isNaN(explicitWidth))
 			{
-				if(bitmapContent)
-					bitmapContent.scaleX = 1;
+				s9gScaleX = 1;
 			}
-			else
+			else if(_dxrData)
 			{
-				if(_dxrData&&bitmapContent)
-					bitmapContent.scaleX = _width/_dxrData.frameList[0].width;
+				s9gScaleX = _width/_dxrData.frameList[0].width;
 			}
-			if(s9gBitmapContent)
-			{
-				s9gBitmapContent.width = explicitWidth;
-			}
+			if(bitmapContent)
+				 bitmapContent.scaleX = s9gScaleX;
 			
 			widthChanged = true;
 			invalidateProperties();
@@ -273,18 +301,14 @@ package org.flexlite.domDisplay
 			explicitHeight = _height = value;
 			if(isNaN(explicitHeight))
 			{
-				if(bitmapContent)
-					bitmapContent.scaleY = 1;
+				s9gScaleY = 1;
 			}
-			else
+			else if(_dxrData)
 			{
-				if(_dxrData&&bitmapContent)
-					bitmapContent.scaleY = _height/_dxrData.frameList[0].height;
+				s9gScaleY = _height/_dxrData.frameList[0].height;
 			}
-			if(s9gBitmapContent)
-			{
-				s9gBitmapContent.height = explicitHeight;
-			}
+			if(bitmapContent)
+				bitmapContent.scaleY = s9gScaleY;
 			widthChanged = true;
 			invalidateProperties();
 		}
@@ -335,12 +359,13 @@ package org.flexlite.domDisplay
 		 */
 		protected function commitProperties():void
 		{
-			if(widthChanged||heightChanged)
+			if(widthChanged||heightChanged||smoothingChanged)
 			{
 				if(dxrData)
 				{
 					applyCurrentFrameData();
 				}
+				smoothingChanged = false;
 			}
 		}
 		

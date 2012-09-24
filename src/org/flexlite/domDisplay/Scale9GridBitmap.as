@@ -20,17 +20,41 @@ package org.flexlite.domDisplay
 		 * 构造函数
 		 * @param bitmapData 被引用的BitmapData对象。
 		 * @param target 要绘制到的目标Graphics对象，若不传入，则绘制到自身。
+		 * @param smoothing 在缩放时是否对位图进行平滑处理。
 		 */		
-		public function Scale9GridBitmap(bitmapData:BitmapData=null,target:Graphics=null)
+		public function Scale9GridBitmap(bitmapData:BitmapData=null,target:Graphics=null,smoothing:Boolean=false)
 		{
 			super();
 			if(target)
 				this.target = target;
 			else 
 				this.target = graphics;
+			this._smoothing = smoothing;
 			if(bitmapData)
 				this.bitmapData = bitmapData;
 		}
+		/**
+		 * smoothing改变标志
+		 */		
+		private var smoothingChanged:Boolean = false;
+		
+		private var _smoothing:Boolean;
+		/**
+		 * 在缩放时是否对位图进行平滑处理。
+		 */
+		public function get smoothing():Boolean
+		{
+			return _smoothing;
+		}
+		public function set smoothing(value:Boolean):void
+		{
+			if(_smoothing==value)
+				return;
+			_smoothing = value;
+			smoothingChanged = true;
+			invalidateProperties();
+		}
+
 		
 		/**
 		 * 要绘制到的目标Graphics对象。
@@ -196,10 +220,13 @@ package org.flexlite.domDisplay
 		 */
 		protected function commitProperties():void
 		{
-			if(widthChanged||heightChanged||scale9GridChanged||offsetPointChanged)
+			if(widthChanged||heightChanged||scale9GridChanged||offsetPointChanged||smoothingChanged)
 			{
 				if(bitmapData)
 					applyBitmapData();
+				scale9GridChanged = false;
+				offsetPointChanged = false;
+				smoothingChanged = false;
 			}
 		}
 
@@ -238,7 +265,7 @@ package org.flexlite.domDisplay
 				matrix.scale(_width/_bitmapData.width,_height/_bitmapData.height);
 				matrix.translate(offset.x,offset.y);
 				
-				target.beginBitmapFill(bitmapData,matrix,false);
+				target.beginBitmapFill(bitmapData,matrix,false,_smoothing);
 				target.drawRect(offset.x,offset.x,_width,_height);
 				target.endFill();
 			}
@@ -329,7 +356,7 @@ package org.flexlite.domDisplay
 					matrix.translate(destSection.x - sourceSection.x * matrix.a, destSection.y - sourceSection.y * matrix.d);
 					matrix.translate(roundedDrawX, roundedDrawY);
 					
-					g.beginBitmapFill(bitmapData, matrix,false);
+					g.beginBitmapFill(bitmapData, matrix,false,target._smoothing);
 					g.drawRect(destSection.x + roundedDrawX, destSection.y + roundedDrawY, destSection.width, destSection.height);
 					g.endFill();
 				}
