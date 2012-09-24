@@ -318,7 +318,7 @@ package org.flexlite.domUI.managers
 		{
 			if(!popUps)
 				popUps = [];
-			lastCenterPopUps = popUps;
+			lastCenterPopUps = popUps.concat();
 			centerGap = gap;
 			centerOffsetX = offsetX;
 			centerOffsetY = offsetY;
@@ -342,14 +342,21 @@ package org.flexlite.domUI.managers
 			maxWidth += centerGap*lastCenterPopUps.length-1;
 			var startX:Number = (DomGlobals.stage.stageWidth-maxWidth)*0.5;
 			var layerHeight:Number = DomGlobals.stage.stageHeight;
+			var layerWidth:Number = DomGlobals.stage.stageWidth;
 			
 			for each(popUp in lastCenterPopUps)
 			{
+				var w:Number = popUp.layoutBoundsWidth;
+				var h:Number = popUp.layoutBoundsHeight;
 				popUp.x = startX;
+				if(popUp.x+w>layerWidth)
+					popUp.x = layerWidth-w;
 				if(popUp.x<0)
 					popUp.x = 0;
 				startX += popUp.layoutBoundsWidth+centerGap;
 				popUp.y = (layerHeight-popUp.layoutBoundsHeight)*0.5;
+				if(popUp.y+h>layerHeight)
+					popUp.y = layerHeight-h;
 				if(popUp.y<0)
 					popUp.y = 0;
 			}
