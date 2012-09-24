@@ -24,12 +24,12 @@ package org.flexlite.domDisplay
 		public function Scale9GridBitmap(bitmapData:BitmapData=null,target:Graphics=null)
 		{
 			super();
-			if(bitmapData)
-				this.bitmapData = bitmapData;
 			if(target)
 				this.target = target;
 			else 
 				this.target = graphics;
+			if(bitmapData)
+				this.bitmapData = bitmapData;
 		}
 		
 		/**

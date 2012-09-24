@@ -1157,7 +1157,7 @@ package org.flexlite.domUI.core
 			var w:Number = isNaN(_explicitWidth) ? measuredWidth:_explicitWidth;
 			if(isNaN(w))
 				return 0;
-			return Math.abs(w*scaleX);
+			return w*scaleX;
 		}
 		
 		/**
@@ -1168,7 +1168,7 @@ package org.flexlite.domUI.core
 			var h:Number = isNaN(_explicitHeight) ? measuredHeight : _explicitHeight;
 			if(isNaN(h))
 				return 0;
-			return Math.abs(h*scaleY);
+			return h*scaleY;
 		}
 		
 		/**
@@ -1191,8 +1191,6 @@ package org.flexlite.domUI.core
 		 */	
 		public function get layoutBoundsX():Number
 		{
-			if(scaleX<0)
-				return super.x-layoutBoundsWidth;
 			return super.x;
 		}
 		/**
@@ -1200,8 +1198,6 @@ package org.flexlite.domUI.core
 		 */	
 		public function get layoutBoundsY():Number
 		{
-			if(scaleY<0)
-				return super.y - layoutBoundsHeight;
 			return super.y;
 		}
 		
@@ -1225,7 +1221,7 @@ package org.flexlite.domUI.core
 			}
 			if(isNaN(w))
 				return 0;
-			return Math.abs(w*scaleX);
+			return w*scaleX;
 		}
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
@@ -1248,7 +1244,7 @@ package org.flexlite.domUI.core
 			}
 			if(isNaN(h))
 				return 0;
-			return Math.abs(h*scaleY);
+			return h*scaleY;
 		}
 		
 		/**
