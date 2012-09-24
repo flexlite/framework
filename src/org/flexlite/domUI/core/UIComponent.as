@@ -1191,6 +1191,8 @@ package org.flexlite.domUI.core
 		 */	
 		public function get layoutBoundsX():Number
 		{
+			if(scaleX<0)
+				return super.x-layoutBoundsWidth;
 			return super.x;
 		}
 		/**
@@ -1198,6 +1200,8 @@ package org.flexlite.domUI.core
 		 */	
 		public function get layoutBoundsY():Number
 		{
+			if(scaleY<0)
+				return super.y - layoutBoundsHeight;
 			return super.y;
 		}
 		
