@@ -149,7 +149,13 @@ package org.flexlite.domUI.managers
 		
 		public function set enabled(value:Boolean):void
 		{
+			if(_enabled==value)
+				return;
 			_enabled = value;
+			if(!_enabled&&currentTarget)
+			{
+				checkIfTargetChanged(null);
+			}
 		}
 		
 		private var _hideDelay:Number = 10000; 
