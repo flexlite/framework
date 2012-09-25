@@ -9,6 +9,7 @@ package org.flexlite.domDisplay.codec
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.flash_proxy;
 	
 	import org.flexlite.domDisplay.DxrData;
 	import org.flexlite.domUI.core.dx_internal;
@@ -152,6 +153,12 @@ package org.flexlite.domDisplay.codec
 				var offsetPoint:Point = dxrData.frameOffsetList[index];
 				frmaeInfo = [bitmapIndex,currentX,currentY,offsetRect.width,offsetRect.height,
 					offsetPoint.x+offsetRect.x,offsetPoint.y+offsetRect.y];
+				var filterOffset:Point = dxrData.filterOffsetList[index];
+				if(filterOffset)
+				{
+					frmaeInfo[7] = filterOffset.x;
+					frmaeInfo[8] = filterOffset.y;
+				}
 				data.frameInfo[index] = frmaeInfo;
 				maxHeight = Math.max(maxHeight,offsetRect.height);
 				currentX += offsetRect.width; 
@@ -262,43 +269,26 @@ package org.flexlite.domDisplay.codec
 				dpRect.width = 1;
 			if(dpRect.height<1)
 				dpRect.height = 1;
-			var matrix:Matrix = new Matrix(1,0,0,1,-dpRect.left,-dpRect.top);
-			var tempBmData:BitmapData;
-			var containsFilters:Boolean = dp.filters.length>0;
-			var roundX:Number = 0;
-			var roundY:Number = 0;
-			if(containsFilters)
-			{
-				tempBmData = new BitmapData(dpRect.width*2,dpRect.height*2,true,0); 
-				roundX = Math.round(dpRect.width*0.5);
-				roundY = Math.round(dpRect.height*0.5);
-				matrix.translate(roundX,roundY);
-			}
-			else
-			{
-				tempBmData = new BitmapData(Math.ceil(dpRect.width),Math.ceil(dpRect.height),true,0); 
-			}
-			tempBmData.draw(dp,matrix,null,null,null,true);
+			var offsetX:Number = 100;
+			var offsetY:Number = 100;
+			var matrix:Matrix = new Matrix(1,0,0,1,offsetX-dpRect.left,offsetY-dpRect.top);
+			var tempBmData:BitmapData = new BitmapData(dpRect.width+offsetX*2,dpRect.height+offsetY*2,true,0); 
 			var ct:ColorTransform = drawColorTransfrom(dp);
-			if(ct)
-			{
-				var ctRect:Rectangle = dpRect.clone();
-				ctRect.x += roundX;
-				ctRect.y += roundY;
-				tempBmData.colorTransform(ctRect,ct);
-			}
+			tempBmData.draw(dp,matrix,ct,null,null,true);
 			
 			var colorRect:Rectangle = getColorRect(tempBmData);
 			var frameData:BitmapData = new BitmapData(colorRect.width,colorRect.height,true,0);
 			frameData.copyPixels(tempBmData,colorRect,new Point(),null,null,true);
 			dxrData.frameList.push(frameData);
-			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x,Math.round(dpRect.top)+colorRect.y);
-			if(containsFilters)
-			{
-				offsetPoint.x -= roundX;
-				offsetPoint.y -= roundY;
-			}
+			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x-offsetX,
+				Math.round(dpRect.top)+colorRect.y-offsetY);
 			dxrData.frameOffsetList.push(offsetPoint);
+			var filterOffset:Point = new Point(Math.round(colorRect.width-dpRect.width),
+				Math.round(colorRect.height-dpRect.height));
+			if(filterOffset.x!=0||filterOffset.y!=0)
+			{
+				dxrData.filterOffsetList[dxrData.frameOffsetList.length-1]=filterOffset;
+			}
 		}
 		/**
 		 * 获取指定显示对象的除去alpha值的colorTransform对象。若对象各个属性都是初始状态，则返回null。

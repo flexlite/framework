@@ -18,7 +18,6 @@ package org.flexlite.domDisplay.image
 		/**
 		 * 构造函数
 		 * @param quality 编码质量 1～100,值越高画面质量越好
-		 * @param alphaLv alpha通道分级 16或256
 		 */
 		public function Jpeg32Encoder(quality:int = 80)
 		{
@@ -36,14 +35,14 @@ package org.flexlite.domDisplay.image
 		{
 			var aBlock:ByteArray = getAlphaDataBlock(bitmapData);
 			var aBlockLength:uint = aBlock.length;			
-			var bBlock:ByteArray = new ByteArray; //= encoder.encode(bitmapData);
+			var bBlock:ByteArray = new ByteArray;
 			bitmapData.encode(bitmapData.rect,encodeOptions,bBlock);
 			var fBlock:ByteArray = new ByteArray();
 			
 			fBlock.position = 0;
-			fBlock.writeUnsignedInt(aBlockLength);//写入alpha数据块长度
-			fBlock.writeBytes(aBlock,0,aBlock.length);//写入alpha数据块
-			fBlock.writeBytes(bBlock,0,bBlock.length);//写入bitmap数据块
+			fBlock.writeUnsignedInt(aBlockLength);
+			fBlock.writeBytes(aBlock,0,aBlock.length);
+			fBlock.writeBytes(bBlock,0,bBlock.length);
 			return fBlock;
 		}
 		
@@ -56,7 +55,8 @@ package org.flexlite.domDisplay.image
 		private static function getAlphaDataBlock(source:BitmapData):ByteArray
 		{
 			var alphaBitmapData:BitmapData = new BitmapData(source.width,source.height,true,0);
-			alphaBitmapData.copyChannel(source,source.rect,new Point(),BitmapDataChannel.ALPHA,BitmapDataChannel.ALPHA);
+			alphaBitmapData.copyChannel(source,source.rect,new Point(),
+				BitmapDataChannel.ALPHA,BitmapDataChannel.ALPHA);
 			var bytes:ByteArray = new ByteArray();
 			bytes.position = 0;
 			bytes.writeUTF("alphaBlock");

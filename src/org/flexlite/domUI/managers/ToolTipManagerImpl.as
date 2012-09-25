@@ -154,7 +154,9 @@ package org.flexlite.domUI.managers
 			_enabled = value;
 			if(!_enabled&&currentTarget)
 			{
-				checkIfTargetChanged(null);
+				currentTarget = null;
+				targetChanged();
+				previousTarget = currentTarget;
 			}
 		}
 		
