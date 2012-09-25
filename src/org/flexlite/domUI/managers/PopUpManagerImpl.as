@@ -335,6 +335,8 @@ package org.flexlite.domUI.managers
 			var maxWidth:Number = 0;
 			for each(popUp in lastCenterPopUps)
 			{
+				if(!popUp.parent)
+					continue;
 				if((popUp is IInvalidating)&&(popUp as IInvalidating).invalidateFlag)
 					(popUp as IInvalidating).validateNow();
 				maxWidth += popUp.layoutBoundsWidth;
@@ -346,6 +348,8 @@ package org.flexlite.domUI.managers
 			
 			for each(popUp in lastCenterPopUps)
 			{
+				if(!popUp.parent)
+					continue;
 				var w:Number = popUp.layoutBoundsWidth;
 				var h:Number = popUp.layoutBoundsHeight;
 				popUp.x = startX;
