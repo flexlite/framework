@@ -241,7 +241,7 @@ package org.flexlite.domDisplay.codec
 			{
 				drawDisplayObject(dp,dxrData);
 			}
-			dxrData._scale9Grid = mc.scale9Grid;
+			dxrData._scale9Grid = dp.scale9Grid;
 			return dxrData;
 		}
 		/**
