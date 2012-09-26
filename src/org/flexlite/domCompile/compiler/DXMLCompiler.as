@@ -788,12 +788,22 @@ package org.flexlite.domCompile.compiler
 		 */		
 		private function addAttributesToCodeBlock(cb:CpCodeBlock,varName:String,node:XML):void
 		{
+			var keyList:Array = [];
+			var key:String;
+			var value:String;
 			for each(var item:XML in node.attributes())
 			{
-				if(!isNormalKey(item.localName()))
+				key = item.localName();
+				if(!isNormalKey(key))
 					continue;
-				var key:String = formatKey(item.localName(),item);
-				var value:String  = formatValue(key,item,node.@id);
+				keyList.push(key);
+			}
+			keyList.sort();//排序一下防止出现随机顺序
+			for each(key in keyList)
+			{
+				value = node["@"+key].toString();
+				key = formatKey(key,value);
+				value  = formatValue(key,value,node.@id);
 				cb.addAssignment(varName,value,key);
 			}
 		}

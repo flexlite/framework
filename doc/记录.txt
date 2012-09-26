@@ -14,12 +14,19 @@
 
 备注：
 1.编译器要加上对@Style('styleName')的兼容
-2.FocusManager,DragManager
-3.飘文字组件
-4.聊天用的图文混排组件
 5.用FTE开发一套新的文本组件，采用注入方式与传统文本切换。
 6.考虑下是否让移动版本针对Starling封装，桌面版本由于有较多老PC，无法开启GPU加速，而且很长时间内都无法改变，所以继续保持传统显示列表+位图优化。
 7.持续精简框架，移除绘图元素，和不需要的组件。State和Style或许也可以移除？
 8.为了保持后续版本有持续的向后兼容性，审查每一个public和protected方法，让对外暴露的接口数量最小化。
 9.优化整理Layout类大小。
+4.聊天用的图文混排组件
+3.飘文字组件
+2.FocusManager,DragManager
+53.给ComboBox，DropDownList增加弹出特效，PageNavigator增加翻页动画。
+54.ViewStack,TabNavigator,Alert
+58.文本锯齿和显示效果问题
+61.优化studio皮肤包，改成继承非可视元素.
+7.矢量和位图混用的支持
+12.素材加载管理模块
+11.PopUpManager需重新设计。
 10.完成一套纯代码绘制皮肤，作为默认主题。修改主题注入机制。

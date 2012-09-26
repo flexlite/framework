@@ -379,11 +379,6 @@ package org.flexlite.domUI.managers
 				remove(data);
 				if(data.popUp is IUIComponent)
 					(data.popUp as IUIComponent).isPopUp = false;
-				var parent:DisplayObjectContainer = data.popUp.parent;
-				if(data.popUp.parent==popUpContainer)
-				{
-					popUpContainer.removeElement(data.popUp);
-				}
 				var index:int = lastCenterPopUps.indexOf(data.popUp);
 				if(index!=-1)
 				{
