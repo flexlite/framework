@@ -286,14 +286,8 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			if(_layout==null||!layoutInvalidateSizeFlag)
 				return;
-			var oldMeasuredWidth:Number = measuredWidth;
-			var oldMeasuredHeight:Number = measuredHeight;
-			
 			super.measure();
-			
 			_layout.measure();
-			if ((measuredWidth != oldMeasuredWidth || measuredHeight != oldMeasuredHeight))
-				invalidateDisplayList();
 		}
 		
 		/**
