@@ -5,6 +5,9 @@ package org.flexlite.domUI.components
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
 	
+	import mx.controls.Label;
+	import mx.controls.Text;
+	
 	import org.flexlite.domUI.components.supportClasses.TextBase;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
@@ -306,6 +309,11 @@ package org.flexlite.domUI.components
 				{
 					measureUsingWidth(lastUnscaledWidth);
 				}
+				else
+				{
+					oldPreferWidth = NaN;
+					oldPreferHeight = NaN;
+				}
 				return;
 			}
 			
@@ -324,7 +332,8 @@ package org.flexlite.domUI.components
 		 */		
 		private function isSpecialCase():Boolean
 		{
-			return (!isNaN(percentWidth) || (!isNaN(left) && !isNaN(right))) &&
+			return _maxDisplayedLines!=1&&
+				(!isNaN(percentWidth) || (!isNaN(left) && !isNaN(right))) &&
 				isNaN(explicitHeight) &&
 				isNaN(percentHeight);
 		}
@@ -477,6 +486,8 @@ package org.flexlite.domUI.components
 				lastUnscaledWidth = unscaledWidth;
 				if (firstTime)
 				{
+					oldPreferWidth = NaN;
+					oldPreferHeight = NaN;
 					invalidateSize();
 					return;
 				}
