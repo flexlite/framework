@@ -499,6 +499,7 @@ package org.flexlite.domUI.layouts
 			var x:Number = 0;
 			var y:Number = 0;
 			var contentHeight:Number = 0;
+			var needInvalidateSize:Boolean = false;
 			//对可见区域进行布局
 			for(var i:int=startIndex;i<=endIndex;i++)
 			{
@@ -527,6 +528,8 @@ package org.flexlite.domUI.layouts
 				if(!contentJustify)
 					maxElementHeight = Math.max(maxElementHeight,layoutElement.preferredHeight);
 				contentHeight = Math.max(contentHeight,layoutElement.layoutBoundsHeight);
+				if(!needInvalidateSize&&elementSizeTable[i]!=layoutElement.layoutBoundsHeight)
+					needInvalidateSize = true;
 				elementSizeTable[i] = layoutElement.layoutBoundsWidth;
 				x = getStartPosition(i);
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
@@ -537,6 +540,8 @@ package org.flexlite.domUI.layouts
 				elementSizeTable[numElements-1]+paddingRight;	
 			target.setContentSize(Math.ceil(contentWidth),
 				Math.ceil(contentHeight));
+			if(needInvalidateSize)
+				target.invalidateSize();
 		}
 		
 		

@@ -2,6 +2,7 @@ package org.flexlite.domUI.managers
 {
 	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.managers.impl.PopUpManagerImpl;
 	
 	/**
 	 * 窗口弹出管理器

@@ -1,4 +1,4 @@
-package org.flexlite.domUI.managers
+package org.flexlite.domUI.managers.impl
 {
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;

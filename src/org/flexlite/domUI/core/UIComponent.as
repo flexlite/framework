@@ -714,11 +714,11 @@ package org.flexlite.domUI.core
 		/**
 		 * 上一次测量的首选宽度
 		 */		
-		private var oldPreferWidth:Number;
+		dx_internal var oldPreferWidth:Number;
 		/**
 		 * 上一次测量的首选高度
 		 */		
-		private var oldPreferHeight:Number;
+		dx_internal var oldPreferHeight:Number;
 		/**
 		 * 测量组件尺寸，返回尺寸是否发生变化
 		 */		
@@ -949,9 +949,8 @@ package org.flexlite.domUI.core
 		{
 			if(_includeInLayout==value)
 				return;
-			_includeInLayout = true;
-			invalidateParentSizeAndDisplayList();
 			_includeInLayout = value;
+			invalidateParentSizeAndDisplayList();
 		}
 
 		

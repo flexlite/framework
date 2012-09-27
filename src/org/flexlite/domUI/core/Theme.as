@@ -1,15 +1,19 @@
-package org.flexlite.domUI.managers.injectorClass
+package org.flexlite.domUI.core
 {
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
-	
+
 	/**
-	 * 皮肤注入配置类
+	 * 主题管理类。
+	 * 在子类调用mapSkin()方法为每个组件映射默认的皮肤。
 	 * @author DOM
 	 */
-	public class SkinInjector
+	public class Theme
 	{
-		public function SkinInjector()
+		/**
+		 * 构造函数
+		 */		
+		public function Theme()
 		{
 		}
 		
@@ -24,7 +28,7 @@ package org.flexlite.domUI.managers.injectorClass
 		 * @param skinClass 传递类定义作为需要映射的皮肤，它的构造函数必须为空。
 		 * @param named 可选参数，当需要为同一个组件映射多个皮肤时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */		
-		public function mapSkin(hostComponentKey:Object,skinName:Object,named:String=""):void
+		protected function mapSkin(hostComponentKey:Object,skinName:Object,named:String=""):void
 		{
 			var requestName:String = getKey(hostComponentKey)+"#"+named;;
 			

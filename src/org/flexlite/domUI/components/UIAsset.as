@@ -12,7 +12,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
-	import org.flexlite.domUI.managers.InjectorManager;
+	import org.flexlite.domUI.managers.InjectManager;
 
 	use namespace dx_internal;
 	
@@ -125,7 +125,7 @@ package org.flexlite.domUI.components
 			{
 				try
 				{
-					skinAdapter = InjectorManager.singletonInjector.getInstance(ISkinAdapter);
+					skinAdapter = InjectManager.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{

@@ -6,7 +6,7 @@ package org.flexlite.domUI.skins
 	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.dx_internal;
-	import org.flexlite.domUI.managers.InjectorManager;
+	import org.flexlite.domUI.managers.InjectManager;
 	
 	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
@@ -37,7 +37,7 @@ package org.flexlite.domUI.skins
 			{
 				try
 				{
-					skinAdapter = InjectorManager.singletonInjector.getInstance(ISkinAdapter);
+					skinAdapter = InjectManager.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{

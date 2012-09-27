@@ -1,7 +1,6 @@
 package org.flexlite.domUI.skins.themes
 {
-	import org.flexlite.domUI.managers.InjectorManager;
-	import org.flexlite.domUI.managers.injectorClass.SkinInjector;
+	import org.flexlite.domUI.core.Theme;
 	import org.flexlite.domUI.skins.spark.ButtonSkin;
 	import org.flexlite.domUI.skins.spark.CheckBoxSkin;
 	import org.flexlite.domUI.skins.spark.ComboBoxSkin;
@@ -29,37 +28,38 @@ package org.flexlite.domUI.skins.themes
 	 * Spark主题皮肤默认配置
 	 * @author DOM
 	 */
-	public class SparkTheme
+	public class SparkTheme extends Theme
 	{
 		public function SparkTheme()
 		{
+			super();
+			apply();
 		}
 		
-		public static function apply():void
+		public function apply():void
 		{
-			var injector:SkinInjector = InjectorManager.skinInjector;
-			injector.mapSkin("org.flexlite.domUI.components::Button",ButtonSkin);
-			injector.mapSkin("org.flexlite.domUI.components::HScrollBar",HScrollBarSkin);
-			injector.mapSkin("org.flexlite.domUI.components::Image",ImageSkin);
-			injector.mapSkin("org.flexlite.domUI.components::List",ListSkin);
-			injector.mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
-			injector.mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TextArea",TextAreaSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
-			injector.mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);
-			injector.mapSkin("org.flexlite.domUI.components::ComboBox",ComboBoxSkin);
-			injector.mapSkin("org.flexlite.domUI.components::DropDownList",DropDownListSkin);
-			injector.mapSkin("org.flexlite.domUI.components::HSlider",HSliderSkin);
-			injector.mapSkin("org.flexlite.domUI.components::VSlider",VSliderSkin);
-			injector.mapSkin("org.flexlite.domUI.components::Spinner",SpinnerSkin);
-			injector.mapSkin("org.flexlite.domUI.components::NumericStepper",NumericStepperSkin);
-			injector.mapSkin("org.flexlite.domUI.components.supportClasses::ItemRenderer",ItemRendererSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);
-			injector.mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
-			injector.mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
-			injector.mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
-			injector.mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
+			mapSkin("org.flexlite.domUI.components::Button",ButtonSkin);
+			mapSkin("org.flexlite.domUI.components::HScrollBar",HScrollBarSkin);
+			mapSkin("org.flexlite.domUI.components::Image",ImageSkin);
+			mapSkin("org.flexlite.domUI.components::List",ListSkin);
+			mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
+			mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
+			mapSkin("org.flexlite.domUI.components::TextArea",TextAreaSkin);
+			mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
+			mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);
+			mapSkin("org.flexlite.domUI.components::ComboBox",ComboBoxSkin);
+			mapSkin("org.flexlite.domUI.components::DropDownList",DropDownListSkin);
+			mapSkin("org.flexlite.domUI.components::HSlider",HSliderSkin);
+			mapSkin("org.flexlite.domUI.components::VSlider",VSliderSkin);
+			mapSkin("org.flexlite.domUI.components::Spinner",SpinnerSkin);
+			mapSkin("org.flexlite.domUI.components::NumericStepper",NumericStepperSkin);
+			mapSkin("org.flexlite.domUI.components.supportClasses::ItemRenderer",ItemRendererSkin);
+			mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);
+			mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
+			mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
+			mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
+			mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
+			mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
 		}
 	}
 }

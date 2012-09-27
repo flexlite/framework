@@ -1,4 +1,4 @@
-package org.flexlite.domUI.managers
+package org.flexlite.domUI.managers.impl
 {
 	
 	import flash.display.DisplayObject;
@@ -19,6 +19,8 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.ToolTipEvent;
+	import org.flexlite.domUI.managers.ILayoutManagerClient;
+	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	
 	use namespace dx_internal;
 	

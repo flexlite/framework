@@ -14,9 +14,10 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.IStyleClient;
+	import org.flexlite.domUI.core.Theme;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.SkinPartEvent;
-	import org.flexlite.domUI.managers.InjectorManager;
+	import org.flexlite.domUI.managers.InjectManager;
 	
 	use namespace dx_internal;
 	
@@ -51,15 +52,37 @@ package org.flexlite.domUI.components
 		
 		override protected function createChildren():void
 		{
+			if(!defaultTheme)
+			{
+				getDefaultTheme();
+			}
 			if(skinName==null)
 			{
-				skinName = InjectorManager.skinInjector.getSkinName(hostComponentKey);
+				skinName = defaultTheme.getSkinName(hostComponentKey);
 			}
 			if(skinName==null)
 			{//让部分组件在没有皮肤的情况下创建默认的子部件。
 				onGetSkin(null,null);
 			}
 			super.createChildren();
+		}
+		/**
+		 * 皮肤解析适配器
+		 */		
+		private static var defaultTheme:Theme;
+		/**
+		 * 获取默认主题
+		 */		
+		private static function getDefaultTheme():void
+		{
+			try
+			{
+				defaultTheme = InjectManager.getInstance(Theme);
+			}
+			catch(e:Error)
+			{
+				defaultTheme = new Theme();
+			}
 		}
 		
 		/**
