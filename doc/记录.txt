@@ -12,7 +12,7 @@
 这样，比如Button等小型的元件，直接设置一个影片剪辑即可。扩展性更强，同样也优化了嵌套过多层级的问题。
 
 注意:
-1.为了防止失效验证进入死循环，写组件要遵循以下规则：updateDisplayList()坚决不能调用invalidateSize().或者在updateDisplayList()线程里显式修改size等间接造成invalidateSize();
+1.为了防止失效验证进入死循环，写组件要遵循以下规则：updateDisplayList()避免调用invalidateSize().或者在updateDisplayList()线程里显式修改size等间接造成invalidateSize();
 
 备注：
 1.编译器要加上对@Style('styleName')的兼容
