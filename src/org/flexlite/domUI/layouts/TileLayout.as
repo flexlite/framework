@@ -3,6 +3,7 @@ package org.flexlite.domUI.layouts
 	import flash.geom.Rectangle;
 	
 	import org.flexlite.domUI.core.ILayoutElement;
+	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	[DXML(show="false")]
@@ -395,7 +396,6 @@ package org.flexlite.domUI.layouts
 			if(isNaN(explicitColumnWidth))
 			{
 				_columnWidth = maxElementWidth;
-				
 			}
 			else
 			{
@@ -483,6 +483,39 @@ package org.flexlite.domUI.layouts
 		{
 			if(target==null)
 				return;
+			if(useVirtualLayout)
+				updateMaxElementSizeVirtual();
+			else 
+				updateMaxElementSizeReal();
+		}
+		/**
+		 * 更新虚拟布局的最大子对象尺寸
+		 */		
+		private function updateMaxElementSizeVirtual():void
+		{
+			if(typicalLayoutRect)
+			{
+				maxElementWidth = Math.max(maxElementWidth,typicalLayoutRect.width);
+				maxElementHeight = Math.max(maxElementHeight,typicalLayoutRect.height);
+			}
+			if ((startIndex != -1) && (endIndex != -1))
+			{
+				for (var index:int = startIndex; index <= endIndex; index++)
+				{
+					var elt:ILayoutElement = target.getVirtualElementAt(index) as ILayoutElement;
+					if(elt==null||!elt.includeInLayout)
+						continue;
+					maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
+					maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
+				}
+			}
+				
+		}
+		/**
+		 * 更新真实布局的最大子对象尺寸
+		 */		
+		private function updateMaxElementSizeReal():void
+		{
 			var numElements:int = target.numElements;
 			for(var index:int = 0;index<numElements;index++)
 			{
@@ -493,6 +526,7 @@ package org.flexlite.domUI.layouts
 				maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
 			}
 		}
+		
 		override public function clearVirtualLayoutCache():void
 		{
 			super.clearVirtualLayoutCache();
@@ -620,6 +654,11 @@ package org.flexlite.domUI.layouts
 				adjustForJustify(width,height);
 				getIndexInView();
 			}
+			if(useVirtualLayout)
+			{
+				calculateRowAndColumn(width,height);
+			}
+			
 			if(startIndex == -1||endIndex==-1)
 			{
 				target.setContentSize(0,0);
@@ -640,9 +679,6 @@ package org.flexlite.domUI.layouts
 					elt = target.getElementAt(index) as ILayoutElement;
 				if(elt == null||!elt.includeInLayout)
 					continue;
-				
-				maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
-				maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
 				
 				if(orientedByColumns)
 				{
@@ -669,6 +705,7 @@ package org.flexlite.domUI.layouts
 			var contentHeight:Number = (_rowHeight+verticalGap)*_rowCount-verticalGap;
 			target.setContentSize(Math.ceil(contentWidth+hPadding),Math.ceil(contentHeight+vPadding));
 		}
+
 		/**
 		 * 为单个元素布局
 		 */		
