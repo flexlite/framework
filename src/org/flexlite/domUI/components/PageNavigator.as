@@ -2,7 +2,6 @@ package org.flexlite.domUI.components
 {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Orientation3D;
 	
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IDisplayText;
@@ -13,11 +12,9 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
-	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
 	import org.flexlite.domUI.layouts.TileLayout;
 	import org.flexlite.domUI.layouts.TileOrientation;
-	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	use namespace dx_internal;
@@ -214,7 +211,7 @@ package org.flexlite.domUI.components
 				return true;
 			var layout:LayoutBase = (_viewport as GroupBase).layout;
 			var direction:Boolean = true;
-			if(layout is HorizontalAlign)
+			if(layout is HorizontalLayout)
 			{
 				direction = false;
 			}

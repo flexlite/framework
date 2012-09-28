@@ -816,36 +816,89 @@ package org.flexlite.domUI.layouts
 		override protected function getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			var column:int = Math.floor((scrollRect.left - 1 - paddingLeft) / (_columnWidth + _horizontalGap));
-			bounds.left = leftEdge(column);
-			bounds.right = rightEdge(column);
+			if(scrollRect.left>target.contentWidth - _paddingRight)
+			{
+				bounds.left = target.contentWidth - _paddingRight;
+				bounds.right = target.contentWidth;
+			}
+			else if(scrollRect.left>_paddingLeft)
+			{
+				var column:int = Math.floor((scrollRect.left - 1 - paddingLeft) / (_columnWidth + _horizontalGap));
+				bounds.left = leftEdge(column);
+				bounds.right = rightEdge(column);
+			}
+			else
+			{
+				bounds.left = 0;
+				bounds.right = _paddingLeft;
+			}
 			return bounds;
 		}
 		
 		override protected function getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			var column:int = Math.floor(((scrollRect.right + 1 + _horizontalGap) - paddingLeft) / (_columnWidth + _horizontalGap));
-			bounds.left = leftEdge(column);
-			bounds.right = rightEdge(column);
+			if(scrollRect.right<_paddingLeft)
+			{
+				bounds.left = 0;
+				bounds.right = _paddingLeft;
+			}
+			else if(scrollRect.right<target.contentWidth - _paddingRight)
+			{
+				var column:int = Math.floor(((scrollRect.right + 1 + _horizontalGap) - paddingLeft) / (_columnWidth + _horizontalGap));
+				bounds.left = leftEdge(column);
+				bounds.right = rightEdge(column);
+			}
+			else
+			{
+				bounds.left = target.contentWidth - _paddingRight;
+				bounds.right = target.contentWidth;
+			}
 			return bounds;
 		}
 		
 		override protected function getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			var row:int = Math.floor((scrollRect.top - 1 - paddingTop) / (_rowHeight + _verticalGap));
-			bounds.top = topEdge(row);
-			bounds.bottom = bottomEdge(row);
+			if(scrollRect.top>target.contentHeight - _paddingBottom)
+			{
+				bounds.top = target.contentHeight - _paddingBottom;
+				bounds.bottom = target.contentHeight;
+			}
+			else if(scrollRect.top>_paddingTop)
+			{
+				var row:int = Math.floor((scrollRect.top - 1 - paddingTop) / (_rowHeight + _verticalGap));
+				bounds.top = topEdge(row);
+				bounds.bottom = bottomEdge(row);
+			}
+			else
+			{
+				bounds.top = 0;
+				bounds.bottom = _paddingTop;
+			}
 			return bounds;
 		}
 		
 		override protected function getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			var row:int = Math.floor(((scrollRect.bottom + 1 + _verticalGap) - paddingTop) / (_rowHeight + _verticalGap));
-			bounds.top = topEdge(row);
-			bounds.bottom = bottomEdge(row);
+			if(scrollRect.bottom<_paddingTop)
+			{
+				bounds.top = 0;
+				bounds.bottom = _paddingTop;
+			}
+			else if(scrollRect.bottom<target.contentHeight - _paddingBottom)
+			{
+				var row:int = Math.floor(((scrollRect.bottom + 1 + _verticalGap) - paddingTop) / (_rowHeight + _verticalGap));
+				bounds.top = topEdge(row);
+				bounds.bottom = bottomEdge(row);
+			}
+			else
+			{
+				bounds.top = target.contentHeight - _paddingBottom;
+				bounds.bottom = target.contentHeight;
+			}
+			
 			return bounds;
 		}
 		

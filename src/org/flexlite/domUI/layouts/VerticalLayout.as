@@ -449,9 +449,12 @@ package org.flexlite.domUI.layouts
 			else
 				getIndexInView();
 		
+			var contentHeight:Number;
+			var numElements:int = target.numElements;
 			if(startIndex == -1||endIndex==-1)
 			{
-				target.setContentSize(0,0);
+				contentHeight = getStartPosition(numElements)-_gap+_paddingBottom;
+				target.setContentSize(target.contentWidth,Math.ceil(contentHeight));
 				return;
 			}
 			//获取水平布局参数
@@ -524,9 +527,8 @@ package org.flexlite.domUI.layouts
 				y = getStartPosition(i);
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 			}
-			var numElements:int = target.numElements;
 			contentWidth += paddingLeft+_paddingRight;
-			var contentHeight:Number = getStartPosition(numElements-1)+elementSizeTable[numElements-1]+paddingBottom;	
+			contentHeight = getStartPosition(numElements)-_gap+_paddingBottom;	
 			target.setContentSize(Math.ceil(contentWidth),Math.ceil(contentHeight));
 			if(needInvalidateSize)
 			{
@@ -754,29 +756,36 @@ package org.flexlite.domUI.layouts
 			if(target==null)
 				return rect;
 			var firstIndex:int = findIndexAt(scrollRect.top,0,target.numElements-1);
-			if(firstIndex!=-1)
+			if(firstIndex==-1)
 			{
-				rect.top = getStartPosition(firstIndex);
-				rect.bottom = getElementSize(firstIndex)+rect.top;
-				if(rect.top==scrollRect.top)
+				if(scrollRect.top>target.contentHeight - _paddingBottom)
 				{
-					firstIndex--;
-					if(firstIndex!=-1)
-					{
-						rect.top = getStartPosition(firstIndex);
-						rect.bottom = getElementSize(firstIndex)+rect.top;
-					}
-					else
-					{
-						rect.top = 0;
-						rect.bottom = _paddingTop;
-					}
+					rect.top = target.contentHeight - _paddingBottom;
+					rect.bottom = target.contentHeight;
+				}
+				else
+				{
+					rect.top = 0;
+					rect.bottom = _paddingTop;
 				}
 				return rect;
 			}
-			
-			rect.top = 0;
-			rect.bottom = _paddingTop;
+			rect.top = getStartPosition(firstIndex);
+			rect.bottom = getElementSize(firstIndex)+rect.top;
+			if(rect.top==scrollRect.top)
+			{
+				firstIndex--;
+				if(firstIndex!=-1)
+				{
+					rect.top = getStartPosition(firstIndex);
+					rect.bottom = getElementSize(firstIndex)+rect.top;
+				}
+				else
+				{
+					rect.top = 0;
+					rect.bottom = _paddingTop;
+				}
+			}
 			return rect;
 		}
 		
@@ -787,29 +796,36 @@ package org.flexlite.domUI.layouts
 				return rect;
 			var numElements:int = target.numElements;
 			var lastIndex:int = findIndexAt(scrollRect.bottom,0,numElements-1);
-			if(lastIndex!=-1)
+			if(lastIndex==-1)
 			{
-				rect.top = getStartPosition(lastIndex);
-				rect.bottom = getElementSize(lastIndex)+rect.top;
-				if(rect.bottom<=scrollRect.bottom)
+				if(scrollRect.right<_paddingTop)
 				{
-					lastIndex++;
-					if(lastIndex<numElements)
-					{
-						rect.top = getStartPosition(lastIndex);
-						rect.bottom = getElementSize(lastIndex)+rect.top;
-					}
-					else
-					{
-						rect.top = target.contentHeight - _paddingBottom;
-						rect.bottom = target.contentHeight;
-					}
+					rect.top = 0;
+					rect.bottom = _paddingTop;
+				}
+				else
+				{
+					rect.top = target.contentHeight - _paddingBottom;
+					rect.bottom = target.contentHeight;
 				}
 				return rect;
 			}
-			
-			rect.top = target.contentHeight - _paddingBottom;
-			rect.bottom = target.contentHeight;
+			rect.top = getStartPosition(lastIndex);
+			rect.bottom = getElementSize(lastIndex)+rect.top;
+			if(rect.bottom<=scrollRect.bottom)
+			{
+				lastIndex++;
+				if(lastIndex<numElements)
+				{
+					rect.top = getStartPosition(lastIndex);
+					rect.bottom = getElementSize(lastIndex)+rect.top;
+				}
+				else
+				{
+					rect.top = target.contentHeight - _paddingBottom;
+					rect.bottom = target.contentHeight;
+				}
+			}
 			return rect;
 		}
 	}
