@@ -10,6 +10,10 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.NavigationUnit;
 	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.effects.animation.Animation;
+	import org.flexlite.domUI.effects.animation.MotionPath;
+	import org.flexlite.domUI.effects.easing.IEaser;
+	import org.flexlite.domUI.effects.easing.Sine;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
@@ -41,20 +45,20 @@ package org.flexlite.domUI.components
 		/**
 		 * [SkinPart]上一页按钮
 		 */	
-		public var prevPage:Button;
+		public var prevPageButton:Button;
 		/**
 		 * [SkinPart]下一页按钮
 		 */	
-		public var nextPage:Button;
+		public var nextPageButton:Button;
 		
 		/**
 		 * [SkinPart]第一页按钮
 		 */	
-		public var firstPage:Button;
+		public var firstPageButton:Button;
 		/**
 		 * [SkinPart]最后一页按钮
 		 */	
-		public var lastPage:Button;
+		public var lastPageButton:Button;
 		/**
 		 * [SkinPart]页码文本显示对象
 		 */		
@@ -63,6 +67,94 @@ package org.flexlite.domUI.components
 		 * [SkinPart]装载目标viewport的容器
 		 */		
 		public var contentGroup:Group;
+		
+		private var _pageDuration:Number = 500;
+		
+		/**
+		 * 翻页缓动动画时间，单位毫秒。设置为0则不执行缓动。默认值500。
+		 */		
+		public function get pageDuration():Number
+		{
+			return _pageDuration;
+		}
+		
+		public function set pageDuration(value:Number):void
+		{
+			_pageDuration = value;
+		}
+		
+		private static var sineEaser:IEaser = new Sine(0);
+		private var _animator:Animation = null;
+		/**
+		 * 动画类实例
+		 */		
+		private function get animator():Animation
+		{
+			if (_animator)
+				return _animator;
+			_animator = new Animation(animationUpdateHandler);
+			_animator.endFunction = animationEndHandler;
+			animator.easer = sineEaser;
+			return _animator;
+		}
+		
+		/**
+		 * 动画播放过程中触发的更新数值函数
+		 */		
+		private function animationUpdateHandler(animation:Animation):void
+		{
+			if(!_viewport)
+				return;
+			var value:Number = animation.currentValue["scrollPosition"];
+			if(pageDirectionIsVertical)
+				_viewport.verticalScrollPosition = value;
+			else
+				_viewport.horizontalScrollPosition = value;
+		}
+		/**
+		 * 动画播放结束时到达的滚动位置
+		 */		
+		private var destScrollPostion:Number;
+		/**
+		 * 动画播放完成触发的函数
+		 */		
+		private function animationEndHandler(animation:Animation):void
+		{
+			if(!_viewport)
+				return;
+			if(pageDirectionIsVertical)
+			{
+				if(destScrollPostion>_viewport.contentHeight-_viewport.height)
+				{
+					destScrollPostion = _viewport.contentHeight-_viewport.height;
+				}
+				_viewport.verticalScrollPosition = destScrollPostion;
+			}
+			else
+			{
+				if(destScrollPostion>_viewport.contentWidth-_viewport.width)
+				{
+					destScrollPostion = _viewport.contentWidth-_viewport.width;
+				}
+				_viewport.horizontalScrollPosition = destScrollPostion;
+			}
+		}
+		/**
+		 * 立即开始动画的播放
+		 */		
+		private function startAnimation(valueFrom:Number,valueTo:Number):void
+		{
+			if(animator.isPlaying)
+			{
+				animationEndHandler(animator);
+				animator.stop();
+			}
+			animator.duration = _pageDuration;
+			animator.motionPaths = new <MotionPath>[
+				new MotionPath("scrollPosition", valueFrom, valueTo)];
+			animator.play();
+		}
+		
 		
 		/**
 		 * 页码文本格式化回调函数，示例：labelFunction(pageIndex:int,totalPages:int):String;
@@ -87,12 +179,12 @@ package org.flexlite.domUI.components
 		{
 			return _currentPage;
 		}
-
+		
 		public function set currentPage(value:int):void
 		{
 			gotoPage(value);
 		}
-
+		
 		private var _totalPages:int = 0;
 		/**
 		 * 总页数。
@@ -278,7 +370,7 @@ package org.flexlite.domUI.components
 		private function updateaTotalPages():void
 		{
 			totalPagesChanged = false;
-			if(!_viewport)
+			if(!_viewport||(_animator&&_animator.isPlaying))
 				return;
 			_totalPages = 1;
 			var oldScrollPostion:Number;
@@ -349,8 +441,10 @@ package org.flexlite.domUI.components
 			var length:int = Math.abs(_currentPage-index);
 			var i:int;
 			var navigatorUint:uint;
+			var oldScrollPostion:Number;
 			if(pageDirectionIsVertical)
 			{
+				oldScrollPostion = _viewport.verticalScrollPosition;
 				if(index==0)
 				{
 					_viewport.verticalScrollPosition += 
@@ -373,6 +467,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
+				oldScrollPostion = _viewport.horizontalScrollPosition;
 				if(index==0)
 				{
 					_viewport.horizontalScrollPosition += 
@@ -400,6 +495,20 @@ package org.flexlite.domUI.components
 			}
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+			if(_pageDuration>0&&stage)
+			{
+				if(pageDirectionIsVertical)
+				{
+					destScrollPostion = _viewport.verticalScrollPosition;
+					_viewport.verticalScrollPosition = oldScrollPostion;
+				}
+				else
+				{
+					destScrollPostion = _viewport.horizontalScrollPosition;
+					_viewport.horizontalScrollPosition = oldScrollPostion;
+				}
+				startAnimation(oldScrollPostion,destScrollPostion);
+			}
 		}
 		/**
 		 * 检查页码并设置按钮禁用状态
@@ -421,14 +530,14 @@ package org.flexlite.domUI.components
 					first = prev = true;
 				}
 			}
-			if(prevPage)
-				prevPage.enabled = prev;
-			if(nextPage)
-				nextPage.enabled = next;
-			if(firstPage)
-				firstPage.enabled = first;
-			if(lastPage)
-				lastPage.enabled = last;
+			if(prevPageButton)
+				prevPageButton.enabled = prev;
+			if(nextPageButton)
+				nextPageButton.enabled = next;
+			if(firstPageButton)
+				firstPageButton.enabled = first;
+			if(lastPageButton)
+				lastPageButton.enabled = last;
 		}
 		
 		override protected function attachSkin(skin:Object):void
@@ -446,21 +555,21 @@ package org.flexlite.domUI.components
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
-			if(instance==prevPage)
+			if(instance==prevPageButton)
 			{
-				prevPage.addEventListener(MouseEvent.CLICK,onPrevPageClick);
+				prevPageButton.addEventListener(MouseEvent.CLICK,onPrevPageClick);
 			}
-			else if(instance==nextPage)
+			else if(instance==nextPageButton)
 			{
-				nextPage.addEventListener(MouseEvent.CLICK,onNextPageClick);
+				nextPageButton.addEventListener(MouseEvent.CLICK,onNextPageClick);
 			}
-			else if(instance==firstPage)
+			else if(instance==firstPageButton)
 			{
-				firstPage.addEventListener(MouseEvent.CLICK,onFirstPageClick);
+				firstPageButton.addEventListener(MouseEvent.CLICK,onFirstPageClick);
 			}
-			else if(instance==lastPage)
+			else if(instance==lastPageButton)
 			{
-				lastPage.addEventListener(MouseEvent.CLICK,onLastPageClick);
+				lastPageButton.addEventListener(MouseEvent.CLICK,onLastPageClick);
 			}
 			else if(instance==labelDisplay)
 			{
@@ -471,21 +580,21 @@ package org.flexlite.domUI.components
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);
-			if(instance==prevPage)
+			if(instance==prevPageButton)
 			{
-				prevPage.removeEventListener(MouseEvent.CLICK,onPrevPageClick);
+				prevPageButton.removeEventListener(MouseEvent.CLICK,onPrevPageClick);
 			}
-			else if(instance==nextPage)
+			else if(instance==nextPageButton)
 			{
-				nextPage.removeEventListener(MouseEvent.CLICK,onNextPageClick);
+				nextPageButton.removeEventListener(MouseEvent.CLICK,onNextPageClick);
 			}
-			else if(instance==firstPage)
+			else if(instance==firstPageButton)
 			{
-				firstPage.removeEventListener(MouseEvent.CLICK,onFirstPageClick);
+				firstPageButton.removeEventListener(MouseEvent.CLICK,onFirstPageClick);
 			}
-			else if(instance==lastPage)
+			else if(instance==lastPageButton)
 			{
-				lastPage.removeEventListener(MouseEvent.CLICK,onLastPageClick);
+				lastPageButton.removeEventListener(MouseEvent.CLICK,onLastPageClick);
 			}
 		}
 		/**

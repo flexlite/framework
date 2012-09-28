@@ -27,20 +27,20 @@ package org.flexlite.domUI.skins.vector
 		/**
 		 * [SkinPart]上一页按钮
 		 */	
-		public var prevPage:Button;
+		public var prevPageButton:Button;
 		/**
 		 * [SkinPart]下一页按钮
 		 */	
-		public var nextPage:Button;
+		public var nextPageButton:Button;
 		
 		/**
 		 * [SkinPart]第一页按钮
 		 */	
-		public var firstPage:Button;
+		public var firstPageButton:Button;
 		/**
 		 * [SkinPart]最后一页按钮
 		 */	
-		public var lastPage:Button;
+		public var lastPageButton:Button;
 		/**
 		 * [SkinPart]页码文本显示对象
 		 */		
@@ -74,29 +74,29 @@ package org.flexlite.domUI.skins.vector
 			contentGroup.bottom = 30;
 			addElement(contentGroup);
 			
-			firstPage = new Button;
-			firstPage.label = "<<";
-			firstPage.x = 2;
-			firstPage.bottom = 2;
-			addElement(firstPage);
+			firstPageButton = new Button;
+			firstPageButton.label = "<<";
+			firstPageButton.x = 2;
+			firstPageButton.bottom = 2;
+			addElement(firstPageButton);
 			
-			prevPage = new Button;
-			prevPage.label = "<";
-			prevPage.x = 31;
-			prevPage.bottom = 2;
-			addElement(prevPage);
+			prevPageButton = new Button;
+			prevPageButton.label = "<";
+			prevPageButton.x = 31;
+			prevPageButton.bottom = 2;
+			addElement(prevPageButton);
 			
-			nextPage = new Button;
-			nextPage.label = ">";
-			nextPage.right = 31;
-			nextPage.bottom = 2;
-			addElement(nextPage);
+			nextPageButton = new Button;
+			nextPageButton.label = ">";
+			nextPageButton.right = 31;
+			nextPageButton.bottom = 2;
+			addElement(nextPageButton);
 			
-			lastPage = new Button;
-			lastPage.label = ">>";
-			lastPage.right = 2;
-			lastPage.bottom = 2;
-			addElement(lastPage);
+			lastPageButton = new Button;
+			lastPageButton.label = ">>";
+			lastPageButton.right = 2;
+			lastPageButton.bottom = 2;
+			addElement(lastPageButton);
 			
 			labelDisplay = new Label();
 			labelDisplay.horizontalCenter = 0;

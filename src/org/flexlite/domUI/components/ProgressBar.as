@@ -6,6 +6,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.Range;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
+	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.effects.easing.Sine;
 	
 	[DXML(show="true")]
@@ -84,6 +85,7 @@ package org.flexlite.domUI.components
 			_slideDuration = value;
 		}
 		
+		private static var sineEaser:IEaser = new Sine(0);
 		/**
 		 * 动画实例
 		 */	
@@ -110,7 +112,7 @@ package org.flexlite.domUI.components
 					animator = new Animation(animationUpdateHandler);
 					animator.endFunction = animationEndHandler;
 					
-					animator.easer = new Sine(0);
+					animator.easer = sineEaser;
 				}
 				if (animator.isPlaying)
 					animator.stop();

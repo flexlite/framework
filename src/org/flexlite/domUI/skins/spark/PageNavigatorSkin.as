@@ -22,20 +22,20 @@ package org.flexlite.domUI.skins.spark
 		/**
 		 * [SkinPart]上一页按钮
 		 */	
-		public var prevPage:Button;
+		public var prevPageButton:Button;
 		/**
 		 * [SkinPart]下一页按钮
 		 */	
-		public var nextPage:Button;
+		public var nextPageButton:Button;
 		
 		/**
 		 * [SkinPart]第一页按钮
 		 */	
-		public var firstPage:Button;
+		public var firstPageButton:Button;
 		/**
 		 * [SkinPart]最后一页按钮
 		 */	
-		public var lastPage:Button;
+		public var lastPageButton:Button;
 		/**
 		 * [SkinPart]页码文本显示对象
 		 */		
@@ -55,25 +55,25 @@ package org.flexlite.domUI.skins.spark
 			contentGroup.bottom = 0;
 			addElement(contentGroup);
 			
-			firstPage = new Button;
-			firstPage.label = "首页";
-			firstPage.x = 0;
-			addElement(firstPage);
+			firstPageButton = new Button;
+			firstPageButton.label = "首页";
+			firstPageButton.x = 0;
+			addElement(firstPageButton);
 			
-			prevPage = new Button;
-			prevPage.label = "上一页";
-			prevPage.x = 75;
-			addElement(prevPage);
+			prevPageButton = new Button;
+			prevPageButton.label = "上一页";
+			prevPageButton.x = 75;
+			addElement(prevPageButton);
 			
-			nextPage = new Button;
-			nextPage.label = "下一页";
-			nextPage.right = 75;
-			addElement(nextPage);
+			nextPageButton = new Button;
+			nextPageButton.label = "下一页";
+			nextPageButton.right = 75;
+			addElement(nextPageButton);
 			
-			lastPage = new Button;
-			lastPage.label = "尾页";
-			lastPage.right = 0;
-			addElement(lastPage);
+			lastPageButton = new Button;
+			lastPageButton.label = "尾页";
+			lastPageButton.right = 0;
+			addElement(lastPageButton);
 			
 			labelDisplay = new Label();
 			labelDisplay.horizontalCenter = 0;
