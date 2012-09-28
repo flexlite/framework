@@ -1,11 +1,16 @@
 package org.flexlite.domUI.skins.vector
 {
+	import flash.display.GradientType;
+	import flash.display.Graphics;
+	
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
+	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domUI.primitives.RectangularDropShadow;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
-	
+	use namespace dx_internal;
 	/**
 	 * PageNavigator默认皮肤
 	 * @author DOM
@@ -15,7 +20,7 @@ package org.flexlite.domUI.skins.vector
 		public function PageNavigatorSkin()
 		{
 			super();
-			this.minWidth = 375;
+			this.minWidth = 150;
 			this.minHeight = 30;
 		}
 		
@@ -48,36 +53,77 @@ package org.flexlite.domUI.skins.vector
 		override protected function createChildren():void
 		{
 			super.createChildren();
+			var dropShadow:RectangularDropShadow = new RectangularDropShadow();
+			dropShadow.tlRadius=dropShadow.tlRadius=dropShadow.trRadius=dropShadow.blRadius=dropShadow.brRadius = cornerRadius;
+			dropShadow.blurX = 10;
+			dropShadow.blurY = 10;
+			dropShadow.alpha = 0.45;
+			dropShadow.distance = 3;
+			dropShadow.angle = 90;
+			dropShadow.color = 0x000000;
+			dropShadow.left = 0;
+			dropShadow.top = 0;
+			dropShadow.right = 0;
+			dropShadow.bottom = 0;
+			addElement(dropShadow);
+			
 			contentGroup = new Group;
-			contentGroup.left = 0;
-			contentGroup.right = 0;
-			contentGroup.top = 22;
-			contentGroup.bottom = 0;
+			contentGroup.left = 1;
+			contentGroup.right = 1;
+			contentGroup.top = 1;
+			contentGroup.bottom = 30;
 			addElement(contentGroup);
 			
 			firstPage = new Button;
 			firstPage.label = "<<";
-			firstPage.x = 0;
+			firstPage.x = 2;
+			firstPage.bottom = 2;
 			addElement(firstPage);
 			
 			prevPage = new Button;
 			prevPage.label = "<";
-			prevPage.x = 75;
+			prevPage.x = 31;
+			prevPage.bottom = 2;
 			addElement(prevPage);
 			
 			nextPage = new Button;
 			nextPage.label = ">";
-			nextPage.right = 75;
+			nextPage.right = 31;
+			nextPage.bottom = 2;
 			addElement(nextPage);
 			
 			lastPage = new Button;
 			lastPage.label = ">>";
-			lastPage.right = 0;
+			lastPage.right = 2;
+			lastPage.bottom = 2;
 			addElement(lastPage);
 			
 			labelDisplay = new Label();
 			labelDisplay.horizontalCenter = 0;
+			labelDisplay.bottom = 4;
 			addElement(labelDisplay);
+		}
+		
+		override protected function updateDisplayList(w:Number, h:Number):void
+		{
+			super.updateDisplayList(w,h);
+			var g:Graphics = graphics;
+			g.clear();
+			drawRoundRect(
+				0, 0, w, h, cornerRadius,
+				borderColors[0], 1,
+				verticalGradientMatrix(0, 0, w, h ),
+				GradientType.LINEAR, null, 
+				{ x: 1, y: 1, w: w - 2, h: h - 2, r: cornerRadius-1}); 
+			drawRoundRect(
+				1, 1, w - 2, h-2, cornerRadius-1,
+				0xFFFFFF, 1,
+				horizontalGradientMatrix(1, 1, w - 2, h-2));
+			drawRoundRect(
+				1, h-29, w - 2, 28, {tl:0,tr:0,bl:cornerRadius-1,br:cornerRadius-1},
+				0xf8f8f8, 1,
+				horizontalGradientMatrix(1, h-29, w - 2, 28)); 
+			drawLine(1,h-29,w-1,h-29,borderColors[0]);
 		}
 	}
 }

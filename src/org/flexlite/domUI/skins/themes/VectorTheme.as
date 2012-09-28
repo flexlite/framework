@@ -37,24 +37,24 @@ package org.flexlite.domUI.skins.themes
 		private function apply():void
 		{
 			mapSkin("org.flexlite.domUI.components::Button",ButtonSkin);
-			mapSkin("org.flexlite.domUI.components::HScrollBar",HScrollBarSkin);
-			mapSkin("org.flexlite.domUI.components::List",ListSkin);
-			mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
-			mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
-			mapSkin("org.flexlite.domUI.components::TextArea",TextAreaSkin);
-			mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
-			mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);
+			mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
 			mapSkin("org.flexlite.domUI.components::ComboBox",ComboBoxSkin);
 			mapSkin("org.flexlite.domUI.components::DropDownList",DropDownListSkin);
+			mapSkin("org.flexlite.domUI.components::HScrollBar",HScrollBarSkin);
 			mapSkin("org.flexlite.domUI.components::HSlider",HSliderSkin);
+			mapSkin("org.flexlite.domUI.components::List",ListSkin);
+			mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
+			mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
+			mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
+			mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
+			mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);
+			mapSkin("org.flexlite.domUI.components::TextArea",TextAreaSkin);
+			mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
+			mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
+			mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
+			mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);
 			mapSkin("org.flexlite.domUI.components::VSlider",VSliderSkin);
 			mapSkin("org.flexlite.domUI.components.supportClasses::ItemRenderer",ItemRendererSkin);
-			mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);
-			mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
-			mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
-			mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
-			mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
-			mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
 		}
 	}
 }

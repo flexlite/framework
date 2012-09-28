@@ -1,5 +1,6 @@
 package org.flexlite.domUI.layouts
 {
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -71,6 +72,8 @@ package org.flexlite.domUI.layouts
 				return;
 			_gap = value;
 			invalidateTargetSizeAndDisplayList();
+			if(hasEventListener("gapChanged"))
+				dispatchEvent(new Event("gapChanged"));
 		}
 		
 		private var _paddingLeft:Number = 0;

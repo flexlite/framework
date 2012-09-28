@@ -2,6 +2,7 @@ package org.flexlite.domUI.components
 {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Orientation3D;
 	
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IDisplayText;
@@ -11,9 +12,12 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.NavigationUnit;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
+	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.layouts.HorizontalAlign;
+	import org.flexlite.domUI.layouts.HorizontalLayout;
 	import org.flexlite.domUI.layouts.TileLayout;
 	import org.flexlite.domUI.layouts.TileOrientation;
+	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	use namespace dx_internal;
@@ -134,13 +138,27 @@ package org.flexlite.domUI.components
 				contentGroup.addElementAt(_viewport, 0);
 				_viewport.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
+				_viewport.addEventListener(ResizeEvent.RESIZE,onViewPortResized);
+				pageDirectionIsVertical = updateDirection();
 				if(_viewport is GroupBase)
 				{
 					_viewport.addEventListener("layoutChanged",onLayoutChanged);
-					pageDirection = updateDirection();
+					var layout:LayoutBase = (_viewport as GroupBase).layout;
+					if(layout)
+					{
+						layout.addEventListener("orientationChanged",onLayoutChanged,false,0,true);
+					}
 				}
 				updateaTotalPages();
 			}
+		}
+		/**
+		 * viewPort尺寸改变
+		 */		
+		private function onViewPortResized(event:ResizeEvent):void
+		{
+			totalPagesChanged = true;
+			invalidateProperties();
 		}
 		
 		/**
@@ -155,9 +173,15 @@ package org.flexlite.domUI.components
 				contentGroup.removeElement(_viewport);
 				_viewport.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);	
+				_viewport.removeEventListener(ResizeEvent.RESIZE,onViewPortResized);
 				if(_viewport is GroupBase)
 				{
 					_viewport.removeEventListener("layoutChanged",onLayoutChanged);
+					var layout:LayoutBase = (_viewport as GroupBase).layout;
+					if(layout)
+					{
+						layout.removeEventListener("orientationChanged",onLayoutChanged);
+					}
 				}
 			}
 		}
@@ -166,18 +190,28 @@ package org.flexlite.domUI.components
 		 */		
 		private function onLayoutChanged(event:Event=null):void
 		{
-			pageDirection = updateDirection();
+			pageDirectionIsVertical = updateDirection();
+			if(event.type=="layoutChanged"&&_viewport is GroupBase)
+			{
+				var layout:LayoutBase = (_viewport as GroupBase).layout;
+				if(layout&&!layout.hasEventListener("gapChanged"))
+				{
+					layout.addEventListener("orientationChanged",onLayoutChanged,false,0,true);
+				}
+			}
 		}
 		
 		/**
 		 * 翻页朝向，true代表垂直翻页，false代表水平翻页。
 		 */		
-		private var pageDirection:Boolean = true;
+		private var pageDirectionIsVertical:Boolean = true;
 		/**
 		 * 安装viewport时调用此方法，返回当前的翻页方向，true代表垂直翻页，反之水平翻页。
 		 */		
-		protected function updateDirection():Boolean
+		dx_internal function updateDirection():Boolean
 		{
+			if(!(_viewport is GroupBase))
+				return true;
 			var layout:LayoutBase = (_viewport as GroupBase).layout;
 			var direction:Boolean = true;
 			if(layout is HorizontalAlign)
@@ -195,7 +229,10 @@ package org.flexlite.domUI.components
 			}
 			return direction;
 		}
-		
+		/**
+		 * 总页数改变
+		 */		
+		private var totalPagesChanged:Boolean = false;
 		/**
 		 * 视域组件的属性改变
 		 */		
@@ -205,8 +242,18 @@ package org.flexlite.domUI.components
 			{
 				case "contentWidth": 
 				case "contentHeight": 
-					updateaTotalPages();
+					totalPagesChanged = true;
+					invalidateProperties();
 					break;
+			}
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(totalPagesChanged)
+			{
+				updateaTotalPages();
 			}
 		}
 		
@@ -233,12 +280,13 @@ package org.flexlite.domUI.components
 		 */		
 		private function updateaTotalPages():void
 		{
+			totalPagesChanged = false;
 			if(!_viewport)
 				return;
-			if(pageDirection)
+			if(pageDirectionIsVertical)
 			{
 				_totalPages = Math.ceil(_viewport.contentHeight/_viewport.height);
-				if(isNaN(_totalPages))
+				if(isNaN(_totalPages)||_totalPages<0)
 					_totalPages = 0;
 				_currentPage = Math.ceil(_viewport.verticalScrollPosition/_viewport.height);
 				if(isNaN(_currentPage))
@@ -247,7 +295,7 @@ package org.flexlite.domUI.components
 			else
 			{
 				_totalPages = Math.ceil(_viewport.contentWidth/_viewport.width);
-				if(isNaN(_totalPages))
+				if(isNaN(_totalPages)||_totalPages<0)
 					_totalPages = 0;
 				_currentPage = Math.ceil(_viewport.horizontalScrollPosition/_viewport.width);
 				if(isNaN(_currentPage))
@@ -277,7 +325,7 @@ package org.flexlite.domUI.components
 			var length:int = Math.abs(_currentPage-index);
 			var i:int;
 			var navigatorUint:uint;
-			if(pageDirection)
+			if(pageDirectionIsVertical)
 			{
 				if(index==0)
 				{

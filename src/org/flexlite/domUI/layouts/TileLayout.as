@@ -1,5 +1,6 @@
 package org.flexlite.domUI.layouts
 {
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
 	import org.flexlite.domUI.core.ILayoutElement;
@@ -40,6 +41,8 @@ package org.flexlite.domUI.layouts
 				
 			_horizontalGap = value;
 			invalidateTargetSizeAndDisplayList();
+			if(hasEventListener("gapChanged"))
+				dispatchEvent(new Event("gapChanged"));
 		}
 		
 		/**
@@ -65,6 +68,8 @@ package org.flexlite.domUI.layouts
 			
 			_verticalGap = value;
 			invalidateTargetSizeAndDisplayList();
+			if(hasEventListener("gapChanged"))
+				dispatchEvent(new Event("gapChanged"));
 		}
 		
 		
@@ -327,6 +332,8 @@ package org.flexlite.domUI.layouts
 			
 			_orientation = value;
 			invalidateTargetSizeAndDisplayList();
+			if(hasEventListener("orientationChanged"))
+				dispatchEvent(new Event("orientationChanged"));
 		}
 		
 		/**
