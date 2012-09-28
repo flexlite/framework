@@ -280,23 +280,50 @@ package org.flexlite.domUI.components
 			totalPagesChanged = false;
 			if(!_viewport)
 				return;
+			_totalPages = 1;
+			var oldScrollPostion:Number;
+			var maxScrollPostion:Number;
+			var currentPageFoud:Boolean = false;
 			if(pageDirectionIsVertical)
 			{
-				_totalPages = Math.ceil(_viewport.contentHeight/_viewport.height);
-				if(isNaN(_totalPages)||_totalPages<0)
-					_totalPages = 0;
-				_currentPage = Math.ceil(_viewport.verticalScrollPosition/_viewport.height);
-				if(isNaN(_currentPage))
-					_currentPage = -1;
+				oldScrollPostion = _viewport.verticalScrollPosition;
+				_viewport.verticalScrollPosition = 0;
+				maxScrollPostion = _viewport.contentHeight-_viewport.height;
+				while(_viewport.verticalScrollPosition<maxScrollPostion)
+				{
+					_viewport.verticalScrollPosition += 
+						_viewport.getVerticalScrollPositionDelta(NavigationUnit.PAGE_DOWN);
+					if(!currentPageFoud&&_viewport.verticalScrollPosition>oldScrollPostion)
+					{
+						currentPageFoud = true;
+						_currentPage = _totalPages-1;
+					}
+					_totalPages++;
+				}
+				_viewport.verticalScrollPosition = oldScrollPostion;
 			}
 			else
 			{
-				_totalPages = Math.ceil(_viewport.contentWidth/_viewport.width);
-				if(isNaN(_totalPages)||_totalPages<0)
-					_totalPages = 0;
-				_currentPage = Math.ceil(_viewport.horizontalScrollPosition/_viewport.width);
-				if(isNaN(_currentPage))
-					_currentPage = -1;
+				oldScrollPostion = _viewport.horizontalScrollPosition;
+				_viewport.horizontalScrollPosition = 0;
+				maxScrollPostion = _viewport.contentWidth-_viewport.width;
+				while(_viewport.horizontalScrollPosition<maxScrollPostion)
+				{
+					_viewport.horizontalScrollPosition += 
+						_viewport.getHorizontalScrollPositionDelta(NavigationUnit.PAGE_RIGHT);
+					if(!currentPageFoud&&_viewport.horizontalScrollPosition>oldScrollPostion)
+					{
+						currentPageFoud = true;
+						_currentPage = _totalPages-1;
+					}
+					_totalPages++;
+				}
+				
+				_viewport.horizontalScrollPosition = oldScrollPostion;
+			}
+			if(!currentPageFoud)
+			{
+				_currentPage = totalPages-1;
 			}
 			if(_autoButtonEnabled)
 			{
