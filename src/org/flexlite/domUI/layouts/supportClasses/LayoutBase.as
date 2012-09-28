@@ -38,6 +38,7 @@ package org.flexlite.domUI.layouts.supportClasses
 			if (_target == value)
 				return;
 			_target = value;
+			clearVirtualLayoutCache();
 		}
 		
 		private var _horizontalScrollPosition:Number = 0;
@@ -400,28 +401,30 @@ package org.flexlite.domUI.layouts.supportClasses
 			
 			_useVirtualLayout = value;
 			dispatchEvent(new Event("useVirtualLayoutChanged"));
+			
+			if (_useVirtualLayout && !value) 
+				clearVirtualLayoutCache();
+			if (target)
+				target.invalidateDisplayList();
 		}
 		
 		private var _typicalLayoutRect:Rectangle;
 		
-		private var defaultTypicalRect:Rectangle;
 		/**
 		 * 由虚拟布局所使用，以估计尚未滚动到视图中的布局元素的大小。 
 		 */
 		public function get typicalLayoutRect():Rectangle
 		{
-			if(_typicalLayoutRect==null)
-			{
-				if(defaultTypicalRect==null)
-					defaultTypicalRect = new Rectangle(0,0,71,22);
-				return defaultTypicalRect;
-			}
 			return _typicalLayoutRect;
 		}
 		
 		public function set typicalLayoutRect(value:Rectangle):void
 		{
+			if(typicalLayoutRect==value)
+				return;
 			_typicalLayoutRect = value;
+			if (target)
+				target.invalidateSize();
 		}
 		
 		

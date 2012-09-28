@@ -28,7 +28,7 @@ package org.flexlite.domUI.core
 		 * @param skinClass 传递类定义作为需要映射的皮肤，它的构造函数必须为空。
 		 * @param named 可选参数，当需要为同一个组件映射多个皮肤时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */		
-		protected function mapSkin(hostComponentKey:Object,skinName:Object,named:String=""):void
+		public function mapSkin(hostComponentKey:Object,skinName:Object,named:String=""):void
 		{
 			var requestName:String = getKey(hostComponentKey)+"#"+named;;
 			

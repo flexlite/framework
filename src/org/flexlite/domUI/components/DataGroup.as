@@ -399,6 +399,7 @@ package org.flexlite.domUI.components
 				return;
 			_itemRenderer = value;
 			itemRendererChanged = true;
+			typicalItemChanged = true;
 			removeDataProviderListener();
 			invalidateProperties();
 		}
@@ -418,9 +419,12 @@ package org.flexlite.domUI.components
 		
 		public function set itemRendererFunction(value:Function):void
 		{
+			if(_itemRendererFunction==value)
+				return;
 			_itemRendererFunction = value;
 			
 			itemRendererChanged = true;
+			typicalItemChanged = true;
 			removeDataProviderListener();
 			invalidateProperties();
 		}
@@ -459,25 +463,15 @@ package org.flexlite.domUI.components
 		
 		override protected function commitProperties():void
 		{
-			super.commitProperties();
 			if(itemRendererChanged||dataProviderChanged||useVirtualLayoutChanged)
 			{
 				removeAllRenderers();
 				if(layout!=null)
 					layout.clearVirtualLayoutCache();
 				useVirtualLayoutChanged = false;
+				itemRendererChanged = false;
 				if(_dataProvider!=null)
 					_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGE,onCollectionChange);
-				if(itemRendererChanged)
-				{
-					var success:Boolean = measureRendererSize();
-					if(!success)
-					{
-						invalidateProperties();
-						return;
-					}
-					itemRendererChanged = false;
-				}
 				if(layout!=null&&layout.useVirtualLayout)
 				{
 					invalidateSize();
@@ -493,7 +487,26 @@ package org.flexlite.domUI.components
 					verticalScrollPosition = horizontalScrollPosition = 0;
 				}
 			}
+			
+			super.commitProperties();
+			
+			if(typicalItemChanged)
+			{
+				typicalItemChanged = false;
+				measureRendererSize();
+			}
+
 		}
+		
+		override protected function measure():void
+		{
+			if(layout&&layout.useVirtualLayout)
+			{
+				ensureTypicalLayoutElement();	
+			}
+			super.measure();
+		}
+		
 		/**
 		 * 正在进行虚拟布局阶段 
 		 */		
@@ -505,6 +518,7 @@ package org.flexlite.domUI.components
 			{
 				virtualLayoutUnderWay = true;
 				virtualRendererIndices = new Vector.<int>();
+				ensureTypicalLayoutElement();
 			}
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			if(virtualLayoutUnderWay)
@@ -512,36 +526,69 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
+		 * 用于测试默认大小的数据
+		 */
+		private var typicalItem:Object
+
+		private var typicalItemChanged:Boolean = false;
+		/**
+		 * 确保测量过默认条目大小。
+		 */
+		private function ensureTypicalLayoutElement():void
+		{
+			if (layout.typicalLayoutRect)
+				return;
+			
+			if (_dataProvider&&_dataProvider.length > 0)
+			{
+				typicalItem = _dataProvider.getItemAt(0);
+				measureRendererSize();
+			}
+		}
+		
+		/**
+		 * 测量项呈示器默认尺寸
+		 */		
+		private function measureRendererSize():void
+		{
+			if(!typicalItem)
+			{
+				setTypicalLayoutRect(null);
+				return;
+			}
+			var rendererClass:Class = itemToRendererClass(typicalItem);
+			var typicalRenderer:IItemRenderer = new rendererClass() as IItemRenderer;
+			if(typicalRenderer==null||!(typicalRenderer is DisplayObject))
+			{
+				setTypicalLayoutRect(null);
+				return;
+			}
+			var displayObj:DisplayObject = typicalRenderer as DisplayObject;
+			super.addChild(displayObj);
+			updateRenderer(typicalRenderer,0,typicalItem);
+			if(typicalRenderer is IInvalidating)
+				(typicalRenderer as IInvalidating).validateNow();
+			var w:Number = isNaN(displayObj.width)?0:displayObj.width;
+			var h:Number = isNaN(displayObj.height)?0:displayObj.height;
+			var rect:Rectangle = new Rectangle(0,0,
+				Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
+			super.removeChild(displayObj);
+			setTypicalLayoutRect(rect);
+		} 
+		
+		/**
 		 * 项呈示器的默认尺寸
 		 */		
 		private var typicalLayoutRect:Rectangle;
-		
 		/**
-		 * 测量项呈示器默认尺寸,返回是否测量成功
+		 * 设置项目默认大小
 		 */		
-		private function measureRendererSize():Boolean
+		private function setTypicalLayoutRect(rect:Rectangle):void
 		{
-			var firstData:Object = _dataProvider?_dataProvider[0]:null;
-			if(!firstData)
-				return false;
-			var rendererClass:Class = itemToRendererClass(firstData);
-			var typicalItem:IItemRenderer = new rendererClass() as IItemRenderer;
-			if(typicalItem==null||!(typicalItem is DisplayObject))
-				return false;
-			var displayObj:DisplayObject = typicalItem as DisplayObject;
-			super.addChild(displayObj);
-			updateRenderer(typicalItem,0,firstData);
-			if(typicalItem is IInvalidating)
-				(typicalItem as IInvalidating).validateNow();
-			typicalLayoutRect = new Rectangle(0,0,displayObj.width,displayObj.height);
-			if(layout!=null)
-			{
-				layout.typicalLayoutRect = typicalLayoutRect;
-			}
-			super.removeChild(displayObj);
-			return true;
-		} 
-		
+			typicalLayoutRect = rect;
+			if(layout)
+				layout.typicalLayoutRect = rect;
+		}
 		
 		
 		/**

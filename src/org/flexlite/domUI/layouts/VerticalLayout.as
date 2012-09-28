@@ -180,14 +180,9 @@ package org.flexlite.domUI.layouts
 		private function measureVirtual():void
 		{
 			var numElements:int = target.numElements;
-			
-			var typicalHeight:Number = typicalLayoutRect.height;
-			if(isNaN(typicalHeight))
-				typicalHeight = 22;
-			
-			var measuredWidth:Number = maxElementWidth;
-			if(measuredWidth==0)
-				measuredWidth = 71;
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
+			var typicalWidth:Number = typicalLayoutRect?typicalLayoutRect.width:71;
+			var measuredWidth:Number = Math.max(maxElementWidth,typicalWidth);
 			var measuredHeight:Number = getElementTotalSize();
 			
 			var visibleIndices:Vector.<int> = target.getElementIndicesInView();
@@ -273,9 +268,7 @@ package org.flexlite.domUI.layouts
 				}
 				return _paddingTop;
 			}
-			var typicalHeight:Number = typicalLayoutRect.height;		
-			if(isNaN(typicalHeight))
-				typicalHeight = 22;
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
 			var startPos:Number = paddingTop;
 			for(var i:int = 0;i<index;i++)
 			{
@@ -310,9 +303,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function getElementTotalSize():Number
 		{
-			var typicalHeight:Number = typicalLayoutRect.height;		
-			if(isNaN(typicalHeight))
-				typicalHeight = 22;
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
 			var totalSize:Number = 0;
 			var length:int = target.numElements;
 			for(var i:int = 0; i<length; i++)
@@ -330,9 +321,7 @@ package org.flexlite.domUI.layouts
 		override public function elementAdded(index:int):void
 		{
 			super.elementAdded(index);
-			var typicalHeight:Number = typicalLayoutRect.height;		
-			if(isNaN(typicalHeight))
-				typicalHeight = 22;
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
 			elementSizeTable.splice(index,0,typicalHeight);
 		}
 		
@@ -526,6 +515,8 @@ package org.flexlite.domUI.layouts
 				contentWidth = Math.max(contentWidth,layoutElement.layoutBoundsWidth);
 				if(!needInvalidateSize&&elementSizeTable[i]!=layoutElement.layoutBoundsHeight)
 					needInvalidateSize = true;
+				if(i==0&&elementSizeTable[i]!=layoutElement.layoutBoundsHeight)
+					typicalLayoutRect = null;
 				elementSizeTable[i] = layoutElement.layoutBoundsHeight;
 				y = getStartPosition(i);
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
@@ -535,7 +526,9 @@ package org.flexlite.domUI.layouts
 			var contentHeight:Number = getStartPosition(numElements-1)+elementSizeTable[numElements-1]+paddingBottom;	
 			target.setContentSize(Math.ceil(contentWidth),Math.ceil(contentHeight));
 			if(needInvalidateSize)
+			{
 				target.invalidateSize();
+			}
 		}
 		
 		
