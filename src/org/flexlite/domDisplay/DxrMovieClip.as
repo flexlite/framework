@@ -11,14 +11,14 @@ package org.flexlite.domDisplay
 	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.IMovieClip;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.events.MoveClipPlayEvent;
+	import org.flexlite.domDisplay.events.MoveClipPlayEvent;
 	
 	use namespace dx_internal;
 	
 	/**
 	 * 一次播放完成事件
 	 */	
-	[Event(name="playComplete", type="org.flexlite.domUI.events.MoveClipPlayEvent")]
+	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MoveClipPlayEvent")]
 	
 	/**
 	 * DXR影片剪辑
