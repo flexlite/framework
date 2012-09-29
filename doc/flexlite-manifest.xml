@@ -1,6 +1,5 @@
 <componentPackage>
   <component id="BasicLayout" p="org.flexlite.domUI.layouts.BasicLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
-  <component id="BitmapImage" p="org.flexlite.domUI.primitives.BitmapImage" s="org.flexlite.domUI.primitives.supportClasses.GraphicElement"/>
   <component id="Button" p="org.flexlite.domUI.components.Button" show="true" s="org.flexlite.domUI.components.supportClasses.ButtonBase"/>
   <component id="ButtonBase" p="org.flexlite.domUI.components.supportClasses.ButtonBase" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="ButtonSkin" p="org.flexlite.domUI.skins.studio.ButtonSkin" s="org.flexlite.domUI.components.supportClasses.Skin"/>
@@ -10,38 +9,24 @@
   <component id="DropDownList" p="org.flexlite.domUI.components.DropDownList" show="true" s="org.flexlite.domUI.components.supportClasses.DropDownListBase"/>
   <component id="DropDownListBase" p="org.flexlite.domUI.components.supportClasses.DropDownListBase" s="org.flexlite.domUI.components.List"/>
   <component id="EditableText" p="org.flexlite.domUI.components.EditableText" show="true" s="org.flexlite.domUI.components.supportClasses.TextBase"/>
-  <component id="Ellipse" p="org.flexlite.domUI.primitives.Ellipse" s="org.flexlite.domUI.primitives.supportClasses.FilledElement"/>
-  <component id="FilledElement" p="org.flexlite.domUI.primitives.supportClasses.FilledElement" s="org.flexlite.domUI.primitives.supportClasses.StrokedElement"/>
-  <component id="GradientBase" p="org.flexlite.domUI.primitives.graphic.GradientBase" d="entries" array="true" s="flash.events.EventDispatcher"/>
-  <component id="GradientEntry" p="org.flexlite.domUI.primitives.graphic.GradientEntry" s="flash.events.EventDispatcher"/>
-  <component id="GradientStroke" p="org.flexlite.domUI.primitives.graphic.GradientStroke" s="org.flexlite.domUI.primitives.graphic.GradientBase"/>
-  <component id="GraphicElement" p="org.flexlite.domUI.primitives.supportClasses.GraphicElement" s="flash.events.EventDispatcher"/>
   <component id="Group" p="org.flexlite.domUI.components.Group" show="true" d="elementsContent" array="true" s="org.flexlite.domUI.components.supportClasses.GroupBase"/>
   <component id="GroupBase" p="org.flexlite.domUI.components.supportClasses.GroupBase" s="org.flexlite.domUI.core.UIComponent"/>
   <component id="HScrollBar" p="org.flexlite.domUI.components.HScrollBar" show="true" s="org.flexlite.domUI.components.supportClasses.ScrollBarBase"/>
   <component id="HSlider" p="org.flexlite.domUI.components.HSlider" show="true" s="org.flexlite.domUI.components.supportClasses.SliderBase"/>
   <component id="HorizontalLayout" p="org.flexlite.domUI.layouts.HorizontalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
-  <component id="Image" p="org.flexlite.domUI.components.Image" show="true" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="InvisibleSkin" p="org.flexlite.domUI.skins.InvisibleSkin"/>
   <component id="ItemRenderer" p="org.flexlite.domUI.components.supportClasses.ItemRenderer" s="org.flexlite.domUI.components.supportClasses.ButtonBase"/>
   <component id="Label" p="org.flexlite.domUI.components.Label" show="true" s="org.flexlite.domUI.components.supportClasses.TextBase"/>
   <component id="LayoutBase" p="org.flexlite.domUI.layouts.supportClasses.LayoutBase" s="org.flexlite.domUI.utils.OnDemandEventDispatcher"/>
-  <component id="Line" p="org.flexlite.domUI.primitives.Line" s="org.flexlite.domUI.primitives.supportClasses.StrokedElement"/>
-  <component id="LinearGradient" p="org.flexlite.domUI.primitives.graphic.LinearGradient" s="org.flexlite.domUI.primitives.graphic.GradientBase"/>
-  <component id="LinearGradientStroke" p="org.flexlite.domUI.primitives.graphic.LinearGradientStroke" s="org.flexlite.domUI.primitives.graphic.GradientStroke"/>
   <component id="List" p="org.flexlite.domUI.components.List" show="true" s="org.flexlite.domUI.components.supportClasses.ListBase"/>
   <component id="ListBase" p="org.flexlite.domUI.components.supportClasses.ListBase" s="org.flexlite.domUI.components.SkinnableDataContainer"/>
   <component id="PageNavigator" p="org.flexlite.domUI.components.PageNavigator" show="true" d="viewport" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="Panel" p="org.flexlite.domUI.components.Panel" show="true" s="org.flexlite.domUI.components.SkinnableContainer"/>
-  <component id="Path" p="org.flexlite.domUI.primitives.Path" s="org.flexlite.domUI.primitives.supportClasses.FilledElement"/>
   <component id="PopUpAnchor" p="org.flexlite.domUI.components.PopUpAnchor" show="true" d="popUp" s="org.flexlite.domUI.core.UIComponent"/>
   <component id="PopUpSkin" p="org.flexlite.domUI.skins.studio.PopUpSkin" s="org.flexlite.domUI.components.supportClasses.Skin"/>
   <component id="ProgressBar" p="org.flexlite.domUI.components.ProgressBar" show="true" s="org.flexlite.domUI.components.supportClasses.Range"/>
-  <component id="RadialGradient" p="org.flexlite.domUI.primitives.graphic.RadialGradient" s="org.flexlite.domUI.primitives.graphic.GradientBase"/>
-  <component id="RadialGradientStroke" p="org.flexlite.domUI.primitives.graphic.RadialGradientStroke" s="org.flexlite.domUI.primitives.graphic.GradientStroke"/>
   <component id="Range" p="org.flexlite.domUI.components.supportClasses.Range" s="org.flexlite.domUI.components.SkinnableComponent"/>
-  <component id="Rect" p="org.flexlite.domUI.primitives.Rect" s="org.flexlite.domUI.primitives.supportClasses.FilledElement"/>
-  <component id="RectangularDropShadow" p="org.flexlite.domUI.primitives.RectangularDropShadow" s="org.flexlite.domUI.core.UIComponent"/>
+  <component id="RectangularDropShadow" p="org.flexlite.domUI.components.RectangularDropShadow" s="org.flexlite.domUI.core.UIComponent"/>
   <component id="ScrollBarBase" p="org.flexlite.domUI.components.supportClasses.ScrollBarBase" d="viewport" s="org.flexlite.domUI.components.supportClasses.TrackBase"/>
   <component id="Scroller" p="org.flexlite.domUI.components.Scroller" show="true" d="viewport" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="Skin" p="org.flexlite.domUI.components.supportClasses.Skin" s="org.flexlite.domUI.components.Group"/>
@@ -50,12 +35,7 @@
   <component id="SkinnableDataContainer" p="org.flexlite.domUI.components.SkinnableDataContainer" show="true" d="dataProvider" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="SkinnableTextBase" p="org.flexlite.domUI.components.supportClasses.SkinnableTextBase" s="org.flexlite.domUI.components.SkinnableComponent"/>
   <component id="SliderBase" p="org.flexlite.domUI.components.supportClasses.SliderBase" s="org.flexlite.domUI.components.supportClasses.TrackBase"/>
-  <component id="SolidColor" p="org.flexlite.domUI.primitives.graphic.SolidColor" d="color" s="flash.events.EventDispatcher"/>
-  <component id="SolidColorStroke" p="org.flexlite.domUI.primitives.graphic.SolidColorStroke" s="flash.events.EventDispatcher"/>
   <component id="Spacer" p="org.flexlite.domUI.components.Spacer" show="true" s="org.flexlite.domUI.core.UIComponent"/>
-  <component id="SparkSkin" p="org.flexlite.domUI.skins.SparkSkin" s="org.flexlite.domUI.components.supportClasses.Skin"/>
-  <component id="State" p="org.flexlite.domUI.states.State" d="overrides" array="true" s="flash.events.EventDispatcher"/>
-  <component id="StrokedElement" p="org.flexlite.domUI.primitives.supportClasses.StrokedElement" s="org.flexlite.domUI.primitives.supportClasses.GraphicElement"/>
   <component id="TabBar" p="org.flexlite.domUI.components.TabBar" show="true" s="org.flexlite.domUI.components.supportClasses.ListBase"/>
   <component id="TabBarButton" p="org.flexlite.domUI.components.TabBarButton" s="org.flexlite.domUI.components.supportClasses.ToggleButtonBase"/>
   <component id="TabBarHorizontalLayout" p="org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
@@ -72,17 +52,4 @@
   <component id="VScrollBar" p="org.flexlite.domUI.components.VScrollBar" show="true" s="org.flexlite.domUI.components.supportClasses.ScrollBarBase"/>
   <component id="VSlider" p="org.flexlite.domUI.components.VSlider" show="true" s="org.flexlite.domUI.components.supportClasses.SliderBase"/>
   <component id="VerticalLayout" p="org.flexlite.domUI.layouts.VerticalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
-  <component id="BevelFilter" p="flash.filters.BevelFilter" s="flash.filters.BitmapFilter"/>
-  <component id="BlurFilter" p="flash.filters.BlurFilter" s="flash.filters.BitmapFilter"/>
-  <component id="ColorMatrixFilter" p="flash.filters.ColorMatrixFilter" s="flash.filters.BitmapFilter"/>
-  <component id="ConvolutionFilter" p="flash.filters.ConvolutionFilter" s="flash.filters.BitmapFilter"/>
-  <component id="DropShadowFilter" p="flash.filters.DropShadowFilter" s="flash.filters.BitmapFilter"/>
-  <component id="GlowFilter" p="flash.filters.GlowFilter" s="flash.filters.BitmapFilter"/>
-  <component id="GradientBevelFilter" p="flash.filters.GradientBevelFilter" s="flash.filters.BitmapFilter"/>
-  <component id="GradientGlowFilter" p="flash.filters.GradientGlowFilter" s="flash.filters.BitmapFilter"/>
-  <component id="Transform" p="flash.geom.Transform" s="Object"/>
-  <component id="ColorTransform" p="flash.geom.ColorTransform" s="Object"/>
-  <component id="Matrix" p="flash.geom.Matrix" s="Object"/>
-  <component id="Matrix3D" p="flash.geom.Matrix3D" s="Object"/>
-  <component id="Point" p="flash.geom.Point" s="Object"/>
 </componentPackage>

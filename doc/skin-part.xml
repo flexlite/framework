@@ -45,11 +45,6 @@
 		<skinpart type="Scroller">scroller</skinpart>
 		<skinpart>dataGroup</skinpart>
 	</component>
-	<component id="NumericStepper">
-		<skinpart >textDisplay</skinpart>
-		<skinpart type="Button">decrementButton</skinpart>
-		<skinpart type="Button">incrementButton</skinpart>
-	</component>
 	<component id="Panel">
 		<skinpart >titleDisplay</skinpart>
 		<skinpart type="Group">contentGroup</skinpart>
@@ -63,10 +58,6 @@
 	</component>
 	<component id="SkinnableDataContainer">
 		<skinpart>dataGroup</skinpart>
-	</component>
-	<component id="Spinner">
-		<skinpart type="Button">decrementButton</skinpart>
-		<skinpart type="Button">incrementButton</skinpart>
 	</component>
 	<component id="TabBar">
 		<skinpart type="Scroller">scroller</skinpart>
