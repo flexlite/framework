@@ -9,7 +9,7 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.utils.Timer;
 	
 	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	

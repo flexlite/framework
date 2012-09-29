@@ -2,7 +2,7 @@ package org.flexlite.domUI.skins.vector
 {
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.components.Group;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

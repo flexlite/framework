@@ -1,4 +1,4 @@
-package org.flexlite.domUI.core
+package org.flexlite.domCore
 {
 	/**
 	 * DXML相关常量声明类

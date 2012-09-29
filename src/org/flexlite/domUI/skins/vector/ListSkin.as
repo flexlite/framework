@@ -5,7 +5,7 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.components.DataGroup;
 	import org.flexlite.domUI.components.Scroller;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.skins.VectorSkin;

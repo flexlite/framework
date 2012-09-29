@@ -9,7 +9,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.IEditableText;
 	import org.flexlite.domUI.core.ISkinPartHost;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

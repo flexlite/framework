@@ -17,7 +17,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IToolTip;
 	import org.flexlite.domUI.core.PopUpPosition;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;

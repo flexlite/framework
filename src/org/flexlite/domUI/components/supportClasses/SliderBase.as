@@ -8,7 +8,7 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.geom.Point;
 	
 	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.Sine;

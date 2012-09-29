@@ -3,7 +3,7 @@ package org.flexlite.domUI.skins.vector
 	import flash.display.CapsStyle;
 	import flash.display.Graphics;
 	
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;

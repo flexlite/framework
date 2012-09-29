@@ -5,7 +5,7 @@ package org.flexlite.domDisplay
 	
 	import org.flexlite.domDisplay.codec.DxrDecoder;
 	import org.flexlite.domDisplay.codec.IBitmapDecoder;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 
 	use namespace dx_internal;
 	/**

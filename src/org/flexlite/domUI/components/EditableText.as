@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IEditableText;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.NavigationUnit;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

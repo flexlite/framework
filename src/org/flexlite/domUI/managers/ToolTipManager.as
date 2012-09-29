@@ -5,7 +5,7 @@ package org.flexlite.domUI.managers
 	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domUI.core.IToolTip;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.managers.impl.ToolTipManagerImpl;
 	
 	use namespace dx_internal;

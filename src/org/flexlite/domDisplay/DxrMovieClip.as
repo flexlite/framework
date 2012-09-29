@@ -8,9 +8,9 @@ package org.flexlite.domDisplay
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
-	import org.flexlite.domUI.core.IBitmapAsset;
-	import org.flexlite.domUI.core.IMovieClip;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.IBitmapAsset;
+	import org.flexlite.domCore.IMovieClip;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.MoveClipPlayEvent;
 	
 	use namespace dx_internal;

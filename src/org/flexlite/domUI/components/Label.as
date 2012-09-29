@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	import mx.controls.Text;
 	
 	import org.flexlite.domUI.components.supportClasses.TextBase;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	

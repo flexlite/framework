@@ -7,7 +7,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.TrackBaseEvent;
 	import org.flexlite.domUI.events.UIEvent;

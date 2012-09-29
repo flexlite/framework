@@ -9,7 +9,7 @@ package org.flexlite.domDisplay.codec
 	import flash.utils.ByteArray;
 	
 	import org.flexlite.domDisplay.DxrData;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.managers.InjectManager;
 	
 	use namespace dx_internal;

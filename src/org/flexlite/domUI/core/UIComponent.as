@@ -14,6 +14,7 @@ package org.flexlite.domUI.core
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUI.managers.ToolTipManager;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

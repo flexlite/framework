@@ -6,7 +6,7 @@ package org.flexlite.domUI.skins
 	import flash.geom.Matrix;
 	
 	import org.flexlite.domUI.components.supportClasses.Skin;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	/**
 	 * Vector主题皮肤基类

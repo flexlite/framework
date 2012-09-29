@@ -3,7 +3,7 @@ package org.flexlite.domUI.effects
 	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domUI.core.IEffect;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;

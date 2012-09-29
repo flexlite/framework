@@ -14,7 +14,7 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 
 	use namespace dx_internal;
 	

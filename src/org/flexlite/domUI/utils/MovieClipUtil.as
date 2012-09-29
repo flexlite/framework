@@ -4,7 +4,7 @@ package org.flexlite.domUI.utils
 	import flash.display.MovieClip;
 	import flash.utils.Dictionary;
 	
-	import org.flexlite.domUI.core.IMovieClip;
+	import org.flexlite.domCore.IMovieClip;
 	
 	/**
 	 * 影片剪辑工具类

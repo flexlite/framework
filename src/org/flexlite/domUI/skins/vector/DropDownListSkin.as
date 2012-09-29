@@ -17,7 +17,7 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;

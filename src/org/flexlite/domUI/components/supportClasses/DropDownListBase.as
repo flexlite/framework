@@ -7,7 +7,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.List;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	

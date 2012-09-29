@@ -10,7 +10,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.SkinnableDataContainer;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.IndexChangeEvent;

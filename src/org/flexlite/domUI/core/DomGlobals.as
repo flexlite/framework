@@ -4,6 +4,7 @@ package org.flexlite.domUI.core
 	
 	import org.flexlite.domUI.managers.LayoutManager;
 	import org.flexlite.domUI.managers.SystemManager;
+	import org.flexlite.domCore.dx_internal;
 
 	use namespace dx_internal;
 	

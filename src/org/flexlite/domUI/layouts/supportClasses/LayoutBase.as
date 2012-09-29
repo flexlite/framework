@@ -5,7 +5,7 @@ package org.flexlite.domUI.layouts.supportClasses
 	
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.NavigationUnit;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.utils.OnDemandEventDispatcher;
 	

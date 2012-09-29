@@ -3,7 +3,7 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	
 	import org.flexlite.domUI.components.supportClasses.ToggleButtonBase;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

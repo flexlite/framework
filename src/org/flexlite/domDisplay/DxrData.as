@@ -4,7 +4,7 @@ package org.flexlite.domDisplay
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 

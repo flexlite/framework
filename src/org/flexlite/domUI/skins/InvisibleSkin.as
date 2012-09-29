@@ -5,7 +5,7 @@ package org.flexlite.domUI.skins
 	import org.flexlite.domUI.core.IInvisibleSkin;
 	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.IStateClient;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.managers.InjectManager;
 	
 	import flash.display.DisplayObject;

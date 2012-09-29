@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	import flash.geom.Rectangle;
 	
 	import org.flexlite.domUI.core.DomGlobals;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.CloseEvent;
 	
 	use namespace dx_internal;

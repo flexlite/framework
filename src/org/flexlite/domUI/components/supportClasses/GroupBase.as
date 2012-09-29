@@ -7,7 +7,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.layouts.BasicLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;

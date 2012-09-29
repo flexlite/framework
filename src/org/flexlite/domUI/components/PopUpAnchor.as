@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.managers.PopUpManager;
 	
 	use namespace dx_internal;

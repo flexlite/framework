@@ -2,8 +2,8 @@ package org.flexlite.domUI.skins.studio
 {
 	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.components.supportClasses.Skin;
-	import org.flexlite.domUI.core.IMovieClip;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.IMovieClip;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

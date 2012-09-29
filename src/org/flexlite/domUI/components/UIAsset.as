@@ -5,12 +5,12 @@ package org.flexlite.domUI.components
 	import flash.text.TextField;
 	
 	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
-	import org.flexlite.domUI.core.IBitmapAsset;
+	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.managers.InjectManager;
 

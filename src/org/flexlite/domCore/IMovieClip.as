@@ -1,4 +1,4 @@
-package org.flexlite.domUI.core
+package org.flexlite.domCore
 {
 	import flash.events.IEventDispatcher;
 	

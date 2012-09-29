@@ -1,6 +1,6 @@
 package org.flexlite.domUI.skins.studio
 {
-	import org.flexlite.domUI.core.IMovieClip;
+	import org.flexlite.domCore.IMovieClip;
 
 	[DXML(show="false")]
 	/**

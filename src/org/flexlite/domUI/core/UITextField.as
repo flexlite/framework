@@ -3,6 +3,7 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

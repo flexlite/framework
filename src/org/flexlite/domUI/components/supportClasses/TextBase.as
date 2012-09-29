@@ -10,7 +10,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	

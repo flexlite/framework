@@ -2,7 +2,7 @@ package org.flexlite.domUI.components
 {
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 

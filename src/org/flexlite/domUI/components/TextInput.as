@@ -5,7 +5,7 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domUI.components.supportClasses.SkinnableTextBase;
 	import org.flexlite.domUI.core.IViewport;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 

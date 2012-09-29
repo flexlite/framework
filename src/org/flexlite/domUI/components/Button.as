@@ -4,7 +4,7 @@ package org.flexlite.domUI.components
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domUI.components.supportClasses.ButtonBase;
-	import org.flexlite.domUI.core.IMovieClip;
+	import org.flexlite.domCore.IMovieClip;
 	import org.flexlite.domUI.utils.MovieClipUtil;
 	
 	[DXML(show="true")]

@@ -4,7 +4,7 @@ package org.flexlite.domUI.skins.vector
 	
 	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domUI.components.Scroller;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;

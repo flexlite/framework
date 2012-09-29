@@ -12,7 +12,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.Theme;
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.SkinPartEvent;
 	import org.flexlite.domUI.managers.InjectManager;
 	

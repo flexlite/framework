@@ -3,7 +3,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import flash.events.Event;
 	
-	import org.flexlite.domUI.core.dx_internal;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
