@@ -2,13 +2,8 @@ package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 	
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
-	import org.flexlite.domUI.core.DisplayObjectSharingMode;
-	import org.flexlite.domUI.core.IGraphicElement;
-	import org.flexlite.domUI.core.IGraphicElementContainer;
-	import org.flexlite.domUI.core.ISharedDisplayObject;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.dx_internal;
@@ -35,56 +30,11 @@ package org.flexlite.domUI.components
 	 * 自动布局容器
 	 * @author DOM
 	 */
-	public class Group extends GroupBase implements 
-		IVisualElementContainer,IGraphicElementContainer,ISharedDisplayObject
+	public class Group extends GroupBase implements IVisualElementContainer
 	{
 		public function Group()
 		{
 			super();
-		}
-		
-		override public function set width(value:Number):void
-		{
-			if (width != value)
-			{
-				if (mouseEnabledWhereTransparent && _hasMouseListeners)
-				{        
-					redrawRequested = true;
-					invalidateDisplayListExceptLayout();
-				}
-			}
-			super.width = value;
-		}
-		
-		override public function set height(value:Number):void
-		{
-			if (height != value)
-			{
-				if (mouseEnabledWhereTransparent && _hasMouseListeners)
-				{        
-					redrawRequested = true;
-					invalidateDisplayListExceptLayout();
-				}
-			}
-			super.height = value;
-		}
-		
-		override public function set alpha(value:Number):void
-		{
-			if (super.alpha == value)
-				return;
-			
-			if (blendMode == "auto")
-			{
-				if ((value > 0 && value < 1 && (super.alpha == 0 || super.alpha == 1)) ||
-					((value == 0 || value == 1) && (super.alpha > 0 && super.alpha < 1)))
-				{
-					invalidateDisplayObjectOrdering();
-					invalidateProperties();
-				}
-			}
-			
-			super.alpha = value;
 		}
 		
 		private var _hasMouseListeners:Boolean = false;
@@ -96,7 +46,6 @@ package org.flexlite.domUI.components
 		{
 			if (_mouseEnabledWhereTransparent)
 			{
-				redrawRequested = true;
 				invalidateDisplayListExceptLayout();
 			}
 			_hasMouseListeners = value;
@@ -175,114 +124,12 @@ package org.flexlite.domUI.components
 			}
 		}
 		
-		override public function validateProperties():void
-		{
-			super.validateProperties();
-			
-			if (numGraphicElements > 0)
-			{
-				var length:int = numElements;
-				for (var i:int = 0; i < length; i++)
-				{
-					var element:IGraphicElement = getElementAt(i) as IGraphicElement;
-					if (element)
-						element.validateProperties();
-				}
-			}
-		}
-		
-		override protected function commitProperties():void
-		{
-			super.commitProperties();
-			invalidatePropertiesFlag = false;
-			
-			if (invalidatePropertiesFlag)
-			{
-				super.commitProperties();
-				invalidatePropertiesFlag = false;
-			}
-			
-			if (needsDisplayObjectAssignment)
-			{
-				needsDisplayObjectAssignment = false;
-				assignDisplayObjects();
-			}
-			
-		}
-		
-		override public function validateSize(recursive:Boolean = false):void
-		{
-			if (numGraphicElements > 0)
-			{
-				var length:int = numElements;
-				for (var i:int = 0; i < length; i++)
-				{
-					var element:IGraphicElement = getElementAt(i) as IGraphicElement;
-					if (element)
-						element.validateSize();
-				}
-			}
-			
-			super.validateSize(recursive);
-		}   
-		
-		override public function setActualSize(w:Number, h:Number):void
-		{
-			if (width != w || height != h)
-			{
-				if (mouseEnabledWhereTransparent && _hasMouseListeners)
-				{        
-					redrawRequested = true;
-					invalidateDisplayListExceptLayout();
-				}
-			}
-			super.setActualSize(w, h);
-		}
-		
-		override public function validateDisplayList():void
-		{
-			super.validateDisplayList();
-			
-			if (needsDisplayObjectAssignment && invalidatePropertiesFlag)
-				return;
-			
-			var sharedDisplayObject:ISharedDisplayObject = this;
-			if (numGraphicElements > 0)
-			{
-				var length:int = numElements;
-				for (var i:int = 0; i < length; i++)
-				{
-					var element:IGraphicElement = getElementAt(i) as IGraphicElement;
-					if (!element)
-						continue;
-					
-					if (element.displayObjectSharingMode != DisplayObjectSharingMode.USES_SHARED_OBJECT)
-					{
-						if (sharedDisplayObject)
-							sharedDisplayObject.redrawRequested = false;
-						
-						sharedDisplayObject = element.displayObject as ISharedDisplayObject;
-					}
-					
-					if (!sharedDisplayObject || sharedDisplayObject.redrawRequested) 
-						element.validateDisplayList();
-				}
-			}
-			
-			if (sharedDisplayObject)
-				sharedDisplayObject.redrawRequested = false;
-		}
-		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			
-			var sharedDisplayObject:ISharedDisplayObject = this;
-			if (sharedDisplayObject.redrawRequested)
-			{
-				graphics.clear();
-				drawBackground();
-			}
+			graphics.clear();
+			drawBackground();
 		}
 		/**
 		 * 绘制鼠标点击区域
@@ -311,34 +158,6 @@ package org.flexlite.domUI.components
 			graphics.endFill();
 		}	
 		
-		private var needsDisplayObjectAssignment:Boolean = false;
-		
-		private var numGraphicElements:uint = 0;
-		
-		private static const ITEM_ORDERED_LAYERING:uint = 0;
-		private static const SPARSE_LAYERING:uint = 1;    
-		
-		override public function set scrollRect(value:Rectangle):void
-		{
-			var previous:Boolean = canShareDisplayObject;
-			super.scrollRect = value;
-			
-			if (numGraphicElements > 0 && previous != canShareDisplayObject)
-				invalidateDisplayObjectOrdering(); 
-			
-			if (mouseEnabledWhereTransparent && _hasMouseListeners)
-			{        
-				redrawRequested = true;
-				invalidateDisplayListExceptLayout();
-			}
-		}
-		
-		private function get canShareDisplayObject():Boolean
-		{
-			if (scrollRect)
-				return false;
-			return (blendMode == "normal" || blendMode == "auto" && (alpha == 0 || alpha == 1));
-		}
 
 		/**
 		 * createChildren()方法已经执行过的标志
@@ -571,23 +390,8 @@ package org.flexlite.domUI.components
 		 */		
 		dx_internal function elementAdded(element:IVisualElement, index:int, notifyListeners:Boolean = true):void
 		{
-			if (element is IGraphicElement) 
-			{
-				numGraphicElements++;
-				addingGraphicElementChild(element as IGraphicElement);
-				invalidateDisplayObjectOrdering();
-			}   
-			else
-			{
-				if (invalidateDisplayObjectOrdering())
-				{
-					addDisplayObjectToDisplayList(DisplayObject(element));
-				}
-				else
-				{
-					addDisplayObjectToDisplayList(DisplayObject(element), index);
-				}
-			}
+			if(element is DisplayObject)
+				addDisplayObjectToDisplayList(DisplayObject(element), index);
 			
 			if (notifyListeners)
 			{
@@ -604,8 +408,6 @@ package org.flexlite.domUI.components
 		 */		
 		dx_internal function elementRemoved(element:IVisualElement, index:int, notifyListeners:Boolean = true):void
 		{
-			var childDO:DisplayObject = element as DisplayObject;   
-			
 			if (notifyListeners)
 			{        
 				if (hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
@@ -613,167 +415,14 @@ package org.flexlite.domUI.components
 						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
 			}
 			
-			if (element && (element is IGraphicElement))
-			{
-				numGraphicElements--;
-				removingGraphicElementChild(element as IGraphicElement);
-			}
-			else if (childDO && childDO.parent == this)
+			var childDO:DisplayObject = element as DisplayObject; 
+			if (childDO && childDO.parent == this)
 			{
 				super.removeChild(childDO);
 			}
 			
-			invalidateDisplayObjectOrdering();
 			invalidateSize();
 			invalidateDisplayList();
-		}
-		/**
-		 * 添加绘图元素对象
-		 */		
-		dx_internal function addingGraphicElementChild(child:IGraphicElement):void
-		{
-			if (child.displayObject && child.displayObjectSharingMode == DisplayObjectSharingMode.USES_SHARED_OBJECT)
-				invalidateGraphicElementDisplayList(child);
-			
-			child.parentChanged(this);
-		}
-		/**
-		 * 移除绘图元素对象
-		 */		
-		dx_internal function removingGraphicElementChild(child:IGraphicElement):void
-		{
-			discardDisplayObject(child);        
-			child.parentChanged(null);
-		}
-		/**
-		 * 移除显示对象
-		 */		
-		dx_internal function discardDisplayObject(element:IGraphicElement):void
-		{
-			var oldDisplayObject:DisplayObject = element.displayObject;
-			if (!oldDisplayObject)
-				return;
-			
-			if (element.displayObjectSharingMode != DisplayObjectSharingMode.USES_SHARED_OBJECT &&
-				oldDisplayObject.parent == this)
-			{
-				super.removeChild(oldDisplayObject);
-				
-				invalidateDisplayObjectOrdering();
-			}
-			else if (oldDisplayObject is ISharedDisplayObject)
-			{
-				ISharedDisplayObject(oldDisplayObject).redrawRequested = true;
-				
-				invalidateDisplayListExceptLayout();
-			}
-		}
-		/**
-		 * 标记需要重新分配显示对象
-		 */		
-		private function invalidateDisplayObjectOrdering():Boolean
-		{
-			if (numGraphicElements > 0)
-			{
-				needsDisplayObjectAssignment = true;
-				invalidateProperties();
-				return true;
-			}
-			return false;
-		}
-		/**
-		 * 分配显示对象
-		 */		
-		private function assignDisplayObjects():void
-		{
-			var topLayerItems:Vector.<IVisualElement>;
-			var bottomLayerItems:Vector.<IVisualElement>;        
-			var keepLayeringEnabled:Boolean = false;
-			var insertIndex:int = 0;
-			
-			var prevItem:IVisualElement;
-			if (canShareDisplayObject)
-				prevItem = this;
-			
-			var len:int = numElements; 
-			for (var i:int = 0; i < len; i++)
-			{  
-				var item:IVisualElement = getElementAt(i);
-				insertIndex = assignDisplayObjectTo(item, prevItem, insertIndex);
-				prevItem = item;
-			}
-			
-			invalidateDisplayListExceptLayout();
-		}
-		
-		/**
-		 * 为元素分配显示对象
-		 */		
-		private function assignDisplayObjectTo(curElement:IVisualElement,
-											   prevElement:IVisualElement,
-											   insertIndex:int):int
-		{
-			if (curElement is DisplayObject)
-			{
-				super.setChildIndex(curElement as DisplayObject, insertIndex++);
-			}
-			else if (curElement is IGraphicElement)
-			{
-				var current:IGraphicElement = IGraphicElement(curElement);
-				var previous:IGraphicElement = prevElement as IGraphicElement;
-				
-				var oldDisplayObject:DisplayObject = current.displayObject;
-				var oldSharingMode:String = current.displayObjectSharingMode;
-				
-				if (previous && previous.canShareWithNext(current) && current.canShareWithPrevious(previous) &&
-					current.setSharedDisplayObject(previous.displayObject))
-				{
-					if (previous.displayObjectSharingMode == DisplayObjectSharingMode.OWNS_UNSHARED_OBJECT)
-						previous.displayObjectSharingMode = DisplayObjectSharingMode.OWNS_SHARED_OBJECT;
-					
-					current.displayObjectSharingMode = DisplayObjectSharingMode.USES_SHARED_OBJECT;
-				}
-				else if (prevElement == this && current.setSharedDisplayObject(this))
-				{
-					current.displayObjectSharingMode = DisplayObjectSharingMode.USES_SHARED_OBJECT;
-				}
-				else
-				{
-					var ownsDisplayObject:Boolean = oldSharingMode != DisplayObjectSharingMode.USES_SHARED_OBJECT;
-					
-					var displayObject:DisplayObject = oldDisplayObject;
-					if (!ownsDisplayObject || !displayObject)
-						displayObject = current.createDisplayObject();
-					
-					if (displayObject)
-						addDisplayObjectToDisplayList(displayObject, insertIndex++);
-					
-					current.displayObjectSharingMode = DisplayObjectSharingMode.OWNS_UNSHARED_OBJECT;
-				}
-				invalidateAfterAssignment(current, oldSharingMode, oldDisplayObject);
-			}
-			return insertIndex;
-		}
-		
-		private function invalidateAfterAssignment(element:IGraphicElement,
-												   oldSharingMode:String,
-												   oldDisplayObject:DisplayObject):void
-		{
-			var displayObject:DisplayObject = element.displayObject;
-			var sharingMode:String = element.displayObjectSharingMode;
-			
-			if (oldDisplayObject == displayObject && sharingMode == oldSharingMode)
-				return;
-			
-			if (displayObject is ISharedDisplayObject)
-				ISharedDisplayObject(displayObject).redrawRequested = true;
-			
-			if (oldDisplayObject is ISharedDisplayObject)
-				ISharedDisplayObject(oldDisplayObject).redrawRequested = true;
-			
-			if (oldDisplayObject && oldDisplayObject.parent == this &&
-				oldDisplayObject != displayObject && oldSharingMode != DisplayObjectSharingMode.USES_SHARED_OBJECT)
-				super.removeChild(oldDisplayObject);
 		}
 
 		/**
@@ -786,43 +435,6 @@ package org.flexlite.domUI.components
 			else
 				super.addChildAt(child, index != -1 ? index : super.numChildren);
 		}
-		
-		public function invalidateGraphicElementDisplayList(element:IGraphicElement):void
-		{
-			if (element.displayObject is ISharedDisplayObject)
-				ISharedDisplayObject(element.displayObject).redrawRequested = true;
-			
-			invalidateDisplayListExceptLayout();
-		}
-		
-		public function invalidateGraphicElementProperties(element:IGraphicElement):void
-		{
-			invalidateProperties();        
-		}
-		
-		public function invalidateGraphicElementSize(element:IGraphicElement):void
-		{
-			invalidateSizeExceptLayout();
-		}
-		
-		public function invalidateGraphicElementSharing(element:IGraphicElement):void
-		{
-			invalidateDisplayObjectOrdering();
-		}
-		
-		private var _redrawRequested:Boolean = false;
-		
-		public function get redrawRequested():Boolean
-		{
-			return _redrawRequested;
-		}
-		
-		public function set redrawRequested(value:Boolean):void
-		{
-			_redrawRequested = value;
-		}
-		
-		
 		
 		private static const errorStr:String = "在此组件中不可用，若此组件为容器类，请使用";
 		[Deprecated] 
