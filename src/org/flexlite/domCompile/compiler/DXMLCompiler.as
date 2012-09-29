@@ -15,7 +15,6 @@ package org.flexlite.domCompile.compiler
 	import org.flexlite.domCompile.core.CpVariable;
 	import org.flexlite.domCompile.events.CompileEvent;
 	import org.flexlite.domUI.core.DXML;
-	import org.flexlite.domUI.states.AddItems;
 	import org.flexlite.domUtils.DomLoader;
 	import org.flexlite.domUtils.StringUtil;
 	
@@ -1268,16 +1267,16 @@ package org.flexlite.domCompile.compiler
 			var index:int = node.childIndex();
 			if(index==0)
 			{
-				postion = AddItems.FIRST;
+				postion = "first";
 				return {position:postion,relativeTo:targetId};
 			}
 			if(index==parentNode.children().length()-1)
 			{
-				postion = AddItems.LAST;
+				postion = "last";
 				return {position:postion,relativeTo:targetId};
 			}
 			
-			postion = AddItems.AFTER;
+			postion = "after";
 			index--;
 			while(index>=0)
 			{
@@ -1295,7 +1294,7 @@ package org.flexlite.domCompile.compiler
 				return {position:postion,relativeTo:targetId};
 			}
 			
-			postion = AddItems.BEFORE;
+			postion = "before";
 			index = node.childIndex();
 			index++;
 			while(index<parentNode.children().length())
@@ -1315,7 +1314,7 @@ package org.flexlite.domCompile.compiler
 			}
 			else
 			{
-				return {position:AddItems.LAST,relativeTo:targetId};
+				return {position:"last",relativeTo:targetId};
 			}
 		}
 		
@@ -1325,7 +1324,6 @@ package org.flexlite.domCompile.compiler
 
 import org.flexlite.domCompile.core.CodeBase;
 import org.flexlite.domCompile.core.ICode;
-import org.flexlite.domUI.states.AddItems;
 
 /**
  * 状态类代码块

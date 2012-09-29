@@ -11,6 +11,7 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.PopUpAnchor;
+	import org.flexlite.domUI.components.RectangularDropShadow;
 	import org.flexlite.domUI.components.Scroller;
 	import org.flexlite.domUI.components.supportClasses.Skin;
 	import org.flexlite.domUI.core.IStateClient;
@@ -20,7 +21,6 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;
-	import org.flexlite.domUI.primitives.RectangularDropShadow;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;

@@ -24,11 +24,10 @@
 4.聊天用的图文混排组件
 3.飘文字组件
 2.FocusManager,DragManager
-53.给ComboBox，DropDownList增加弹出特效，PageNavigator增加翻页动画。
+53.给ComboBox，DropDownList增加弹出特效
 54.ViewStack,TabNavigator,Alert
 58.文本锯齿和显示效果问题
 61.优化studio皮肤包，改成继承非可视元素.
 7.矢量和位图混用的支持
 12.素材加载管理模块
 11.PopUpManager需重新设计。
-10.完成一套纯代码绘制皮肤，作为默认主题。修改主题注入机制。

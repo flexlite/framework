@@ -8,9 +8,9 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
+	import org.flexlite.domUI.components.RectangularDropShadow;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.layouts.VerticalAlign;
-	import org.flexlite.domUI.primitives.RectangularDropShadow;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;
