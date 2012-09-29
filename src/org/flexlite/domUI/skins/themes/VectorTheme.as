@@ -11,6 +11,7 @@ package org.flexlite.domUI.skins.themes
 	import org.flexlite.domUI.skins.vector.ListSkin;
 	import org.flexlite.domUI.skins.vector.PageNavigatorSkin;
 	import org.flexlite.domUI.skins.vector.PanelSkin;
+	import org.flexlite.domUI.skins.vector.ProgressBarSkin;
 	import org.flexlite.domUI.skins.vector.ScrollerSkin;
 	import org.flexlite.domUI.skins.vector.TabBarButtonSkin;
 	import org.flexlite.domUI.skins.vector.TabBarSkin;
@@ -45,6 +46,7 @@ package org.flexlite.domUI.skins.themes
 			mapSkin("org.flexlite.domUI.components::List",ListSkin);
 			mapSkin("org.flexlite.domUI.components::PageNavigator",PageNavigatorSkin);
 			mapSkin("org.flexlite.domUI.components::Panel",PanelSkin);
+			mapSkin("org.flexlite.domUI.components::ProgressBar",ProgressBarSkin);
 			mapSkin("org.flexlite.domUI.components::Scroller",ScrollerSkin);
 			mapSkin("org.flexlite.domUI.components::TabBar",TabBarSkin);
 			mapSkin("org.flexlite.domUI.components::TabBarButton",TabBarButtonSkin);

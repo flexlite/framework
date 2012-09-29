@@ -101,10 +101,10 @@
 		<skinpart>labelDisplay</skinpart>
 	</component>
 	<component id="PageNavigator">
-		<skinpart type="Button">prevPage</skinpart>
-		<skinpart type="Button">nextPage</skinpart>
-		<skinpart type="Button">firstPage</skinpart>
-		<skinpart type="Button">lastPage</skinpart>
+		<skinpart type="Button">prevPageButton</skinpart>
+		<skinpart type="Button">nextPageButton</skinpart>
+		<skinpart type="Button">firstPageButton</skinpart>
+		<skinpart type="Button">lastPageButton</skinpart>
 		<skinpart >labelDisplay</skinpart>
 		<skinpart >contentGroup</skinpart>
 	</component>

@@ -30,7 +30,7 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * [SkinPart]滑块显示对象。
+		 * [SkinPart]进度高亮显示对象。
 		 */		
 		public var thumb:DisplayObject;
 		/**
