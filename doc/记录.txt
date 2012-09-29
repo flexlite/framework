@@ -2,9 +2,7 @@
 与Flex区别的地方
 0.针对游戏开发的需求，为了达到性能最优化，去除了绑定机制，绘图元素,全局样式表等比较损耗性能模块的支持。其中List等组件的数据源绑定刷新功能，仍然可以通过ArrayCollection类来实现。
 1.可视化编辑器限制为只能编辑Skin及其基类，为了更好地与原生的纯as项目无缝集成，不允许xml和as代码混排，防止混乱地嵌套影响模块解耦和代码管理。as代码只在项目里编写，xml布局代码只在编辑器里编辑。
-2.配合第1条，setStyle()和getStyle()只在SkinnableComponent里提供，起到共享属性并在附加皮肤时延迟应用的作用。并在xml代码里提供@Style('styleName')样式绑定标签。
-3.配合第1条，ItemRenderer改为继承SkinnableComponent，同样实现Skin分离机制,因为ItemRenderer内通常含有as代码。
-4.Image直接继承UIComponent而不是SkinnableComponent，因为在实际项目中，它自定义皮肤的几率很小，作为原子组件更加合适。全都使用皮肤分离机制将导致显示对象嵌套层级过多，影响性能。
+3.配合第1条，ItemRenderer改为继承自SkinnableComponent的子类，同样实现Skin分离机制,因为ItemRenderer内通常含有as代码。
 5.callLater()方法修改为在组件三阶段延迟渲染结束后回调。为了配合在延迟渲染机制中方便地获取正确的组件尺寸。Flex里的这个方法只是延迟，不一定保证组件尺寸渲染完成。
 6.考虑到游戏中对特殊文本的需求很少,而且对FP版本兼容性也有要求，Label和EditableText的核心文本对象改用TextFiled重新实现而非TLF，但是实现了与TLF文本组件几乎一致的外部功能接口。不需要额外编译tlf库。也降低了FP的版本需求。
 7.SkinnableComponent和Skin之间定义的共享组件实例，不需要显式声明[SkinPart]标签，只要两边定义了同名的引用型公开变量，框架底层在附加皮肤的时候就会自动完成实例的注入。
@@ -14,11 +12,10 @@
 注意:
 1.为了防止失效验证进入死循环，写组件要遵循以下规则：updateDisplayList()避免调用invalidateSize().或者在updateDisplayList()线程里显式修改size等间接造成invalidateSize();
 
-备注：
-1.编译器要加上对@Style('styleName')的兼容
+备注： 
+
 5.用FTE开发一套新的文本组件，采用注入方式与传统文本切换。
 6.考虑下是否让移动版本针对Starling封装，桌面版本由于有较多老PC，无法开启GPU加速，而且很长时间内都无法改变，所以继续保持传统显示列表+位图优化。
-7.持续精简框架，移除绘图元素，和不需要的组件。State和Style或许也可以移除？
 8.为了保持后续版本有持续的向后兼容性，审查每一个public和protected方法，让对外暴露的接口数量最小化。
 9.优化整理Layout类大小。
 4.聊天用的图文混排组件
