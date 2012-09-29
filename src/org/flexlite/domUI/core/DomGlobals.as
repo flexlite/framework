@@ -2,7 +2,6 @@ package org.flexlite.domUI.core
 {
 	import flash.display.Stage;
 	
-	import org.flexlite.domUI.managers.ILanguageManager;
 	import org.flexlite.domUI.managers.LayoutManager;
 	import org.flexlite.domUI.managers.SystemManager;
 
@@ -41,19 +40,6 @@ package org.flexlite.domUI.core
 		 * 延迟渲染布局管理器 
 		 */		
 		dx_internal static var layoutManager:LayoutManager;
-		
-		/**
-		 * 多语言管理器 
-		 */
-		dx_internal static var languageManager:ILanguageManager;
-
-		/**
-		 * 设置多语言管理器
-		 */
-		public static function setLanguageManager(value:ILanguageManager):void
-		{
-			languageManager = value;
-		}
 		
 		/**
 		 * 顶级应用容器

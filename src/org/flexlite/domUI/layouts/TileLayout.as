@@ -4,7 +4,6 @@ package org.flexlite.domUI.layouts
 	import flash.geom.Rectangle;
 	
 	import org.flexlite.domUI.core.ILayoutElement;
-	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	[DXML(show="false")]

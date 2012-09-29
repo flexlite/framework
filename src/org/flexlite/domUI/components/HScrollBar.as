@@ -4,7 +4,6 @@ package org.flexlite.domUI.components
 	import flash.geom.Point;
 	
 	import org.flexlite.domUI.components.supportClasses.ScrollBarBase;
-	import org.flexlite.domUI.core.EventPriority;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.NavigationUnit;
@@ -67,7 +66,7 @@ package org.flexlite.domUI.components
 			{
 				updateMaximumAndPageSize()
 				value = newViewport.horizontalScrollPosition;
-				newViewport.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler, false, EventPriority.DEFAULT_HANDLER);
+				newViewport.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler, false, -50);
 				addEventListener(MouseEvent.MOUSE_WHEEL, hsb_mouseWheelHandler, true); 
 			}
 		}    

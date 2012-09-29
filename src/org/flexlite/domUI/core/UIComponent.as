@@ -7,8 +7,6 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	import mx.core.UIComponent;
-	
 	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
@@ -1256,22 +1254,6 @@ package org.flexlite.domUI.core
 				DomGlobals.stage.focus = this;
 			}
 		}
-		
-		/**
-		 * 全局多语言字符串翻译 
-		 * 使用这个方法需要在程序初始化时手动用DomGlobals.setLanguageManager()注入一个管理器处理实例
-		 * @param resourceName 文字索引，如果库中找不到这个索引则直接使用resourceName
-		 * @param parameters 替换的参数，用于替换{}中的内容
-		 */		
-		public static function tr(resourceName:String,parameters:Array = null):String
-		{
-			if(DomGlobals.languageManager != null)
-			{
-				return DomGlobals.languageManager.getText(resourceName,parameters);
-			}
-			return resourceName;
-		}
-		
 		
 		/**
 		 * 延迟函数队列 

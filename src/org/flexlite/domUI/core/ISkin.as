@@ -19,10 +19,5 @@ package org.flexlite.domUI.core
 		 */		
 		function get layout():LayoutBase;
 		function set layout(value:LayoutBase):void;
-		
-		/**
-		 * 标记某个样式属性已经改变
-		 */	
-		function invalidateStyle(styleName:String):void;
 	}
 }

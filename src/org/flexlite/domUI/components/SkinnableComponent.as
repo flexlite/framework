@@ -8,12 +8,9 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.SkinBasicLayout;
 	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.IInvisibleSkin;
-	import org.flexlite.domUI.core.IMovieClip;
 	import org.flexlite.domUI.core.ISkin;
-	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
-	import org.flexlite.domUI.core.IStyleClient;
 	import org.flexlite.domUI.core.Theme;
 	import org.flexlite.domUI.core.dx_internal;
 	import org.flexlite.domUI.events.SkinPartEvent;
@@ -41,7 +38,7 @@ package org.flexlite.domUI.components
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @author DOM
 	 */
-	public class SkinnableComponent extends UIAsset implements IStyleClient,IHostComponent
+	public class SkinnableComponent extends UIAsset implements IHostComponent
 	{
 		public function SkinnableComponent()
 		{
@@ -155,11 +152,6 @@ package org.flexlite.domUI.components
 			{
 				var newSkin:ISkin = skin as ISkin;
 				newSkin.hostComponent = this;
-			
-				for(var styleName:String in styleDic)
-				{
-					newSkin.invalidateStyle(styleName);
-				}
 			}
 			
 			if(skin is ISkinPartHost)
@@ -335,41 +327,6 @@ package org.flexlite.domUI.components
 		}
 		
 		//========================皮肤视图状态===================end========================
-		
-		
-		
-		//=========================样式绑定====================start=======================
-		
-		private var styleDic:Dictionary;
-		
-		public function getStyle(styleName:String):*
-		{
-			if(styleName==null||styleName=="")
-				return null;
-			if(styleDic!=null)
-			{
-				return styleDic[styleName];
-			}
-			return null;
-		}
-		
-		public function setStyle(styleName:String,value:*):void
-		{
-			if(styleName==null||styleName=="")
-				return;
-			if(styleDic==null)
-			{
-				styleDic = new Dictionary;
-			}
-			var changed:Boolean = styleDic[styleName] != value;
-			styleDic[styleName] = value;
-			if(changed&&_skin&&_skin is ISkin)
-			{
-				(_skin as ISkin).invalidateStyle(styleName);
-			}
-		}
-		
-		//=========================样式绑定====================start=======================
 		
 		override protected function commitProperties():void
 		{

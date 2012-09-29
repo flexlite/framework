@@ -1,7 +1,5 @@
 package org.flexlite.domUI.components.supportClasses
 {
-	import flash.utils.Dictionary;
-	
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.ISkin;
@@ -60,14 +58,6 @@ package org.flexlite.domUI.components.supportClasses
 				{
 					hostComponent.findSkinParts();
 				}
-			}
-			if(styleChangedKeys!=null&&styleChangedKeys.length>0)
-			{
-				for each(var styleName:String in styleChangedKeys)
-				{
-					styleChanged(styleName);
-				}
-				styleChangedKeys = [];
 			}
 		}
 		
@@ -148,132 +138,5 @@ package org.flexlite.domUI.components.supportClasses
 		
 		//========================state相关函数===============end=========================
 		
-		
-		//=========================样式绑定====================start=======================
-				
-		/**
-		 * 获取样式属性值
-		 * @param styleName 样式名
-		 */		
-		protected function getStyle(styleName:String):*
-		{
-			if(_hostComponent)
-				return _hostComponent.getStyle(styleName);
-			return null;
-		}
-		
-		private var styleChangedKeys:Array;
-		
-		/**
-		 * 标记某个样式属性已经改变
-		 */		
-		public function invalidateStyle(styleName:String):void
-		{
-			if(styleChangedKeys==null)
-			{
-				styleChangedKeys = [];
-			}
-			if(styleChangedKeys.indexOf(styleName)==-1)
-			{
-				styleChangedKeys.push(styleName);
-				invalidateProperties();
-			}
-			
-		}
-		
-		private var styleBindDic:Dictionary;
-		/**
-		 * 绑定样式属性的一个简便方法。使用这个方法能在调用setStyle()方法时主动通知指定的组件更新属性值。
-		 * @param styleName 样式名
-		 * @param prop 组件上要赋值的属性名
-		 * @param host 宿主组件相对于this的变量名:this[host][prop],若不设置，则直接使用this[prop]访问属性。
-		 * 
-		 */		
-		protected final function bindStyle(styleName:String,prop:String,host:String=""):void
-		{
-			if(styleName==null||styleName==""||prop==null||prop=="")
-				return;
-			if(styleBindDic==null)
-				styleBindDic = new Dictionary;
-			if(styleBindDic[styleName] == null)
-				styleBindDic[styleName] = [];
-			for each(var info:StyleBindInfo in styleBindDic[styleName])
-			{
-				if(info.host==host&&info.prop==prop)
-					return;
-			}
-			styleBindDic[styleName].push(new StyleBindInfo(prop,host));
-		}
-		/**
-		 * 取消绑定过的样式属性
-		 * @param styleName 样式名
-		 * @param prop 组件上要赋值的属性名
-		 * @param host 宿主组件相对于this的变量名:this[host][prop],若不设置，则直接使用this[prop]访问属性。
-		 */		
-		protected final function unbindStyle(styleName:String,prop:String,host:String=""):Boolean
-		{
-			if(styleBindDic==null||styleName==null||styleName==""||prop==null||prop=="")
-				return false;
-			var index:int = 0;
-			for each(var info:StyleBindInfo in styleBindDic[styleName])
-			{
-				if(info.host==host&&info.prop==prop)
-				{
-					(styleBindDic[styleName] as Array).splice(index,1);
-					break;
-				}
-				index++;
-			}
-			return false;
-		}
-		
-		/**
-		 * 样式属性值改变
-		 * @param styleName 样式名
-		 */		
-		protected function styleChanged(styleName:String):void
-		{
-			if(styleBindDic==null||_hostComponent==null)
-				return;
-			for each(var info:StyleBindInfo in styleBindDic[styleName])
-			{
-				if(info==null)
-					continue;
-				var host:Object = this;
-				if(info.host!=null&&info.host!="")
-				{
-					try
-					{
-						host = this[info.host];
-					}
-					catch(e:Error)
-					{
-						continue;
-					}
-				}
-				try
-				{
-					host[info.prop] = getStyle(styleName);
-				}
-				catch(e:Error)
-				{
-				}
-			}
-		}
-		
-		//=========================样式绑定====================start=======================
 	}
-}
-
-class StyleBindInfo
-{
-	public function StyleBindInfo(prop:String,host:String="")
-	{
-		this.prop = prop;
-		this.host = host;
-	}
-	
-	public var prop:String;
-	
-	public var host:String;
 }

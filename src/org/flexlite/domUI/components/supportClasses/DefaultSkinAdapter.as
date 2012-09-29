@@ -8,7 +8,6 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.net.URLRequest;
 	
 	import org.flexlite.domUI.core.ISkinAdapter;
-	import org.flexlite.domUtils.DomLoader;
 	
 	
 	/**
