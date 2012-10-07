@@ -4,15 +4,15 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.text.TextField;
 	
-	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
 	import org.flexlite.domCore.IBitmapAsset;
+	import org.flexlite.domCore.Injector;
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
-	import org.flexlite.domUI.managers.InjectManager;
 
 	use namespace dx_internal;
 	
@@ -125,7 +125,7 @@ package org.flexlite.domUI.components
 			{
 				try
 				{
-					skinAdapter = InjectManager.getInstance(ISkinAdapter);
+					skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{

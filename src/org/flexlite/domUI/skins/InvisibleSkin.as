@@ -1,15 +1,12 @@
 package org.flexlite.domUI.skins
 {
-	import org.flexlite.domUI.components.UIAsset;
+	import flash.utils.Dictionary;
+	
+	import org.flexlite.domCore.Injector;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
 	import org.flexlite.domUI.core.IInvisibleSkin;
 	import org.flexlite.domUI.core.ISkinAdapter;
-	import org.flexlite.domUI.core.IStateClient;
-	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.managers.InjectManager;
-	
-	import flash.display.DisplayObject;
-	import flash.utils.Dictionary;
 	 
 	use namespace dx_internal;
 	
@@ -37,7 +34,7 @@ package org.flexlite.domUI.skins
 			{
 				try
 				{
-					skinAdapter = InjectManager.getInstance(ISkinAdapter);
+					skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{

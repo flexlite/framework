@@ -8,9 +8,9 @@ package org.flexlite.domDisplay.codec
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
-	import org.flexlite.domDisplay.DxrData;
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.managers.InjectManager;
+	import org.flexlite.domDisplay.DxrData;
 	
 	use namespace dx_internal;
 	
@@ -61,7 +61,7 @@ package org.flexlite.domDisplay.codec
 			currentIndex = 0;
 			dxrSourceData = data;
 			bitmapDataList = new Vector.<BitmapData>();
-			this.bitmapDecoder =InjectManager.getInstance(IBitmapDecoder,dxrData.codecKey);
+			this.bitmapDecoder =Injector.getInstance(IBitmapDecoder,dxrData.codecKey);
 			addToDecodeList(this);
 		}
 		/**

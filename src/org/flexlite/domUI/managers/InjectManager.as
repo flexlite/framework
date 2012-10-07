@@ -1,6 +1,6 @@
 package org.flexlite.domUI.managers
 {
-	import org.flexlite.domUI.managers.impl.InjectManagerImpl;
+	import org.flexlite.domCore.Injector;
 	
 	/**
 	 * 单例注入管理器<br/>
@@ -13,18 +13,6 @@ package org.flexlite.domUI.managers
 	 */
 	public class InjectManager
 	{
-		private static var _impl:InjectManagerImpl;
-		/**
-		 * 获取单例
-		 */		
-		private static function get impl():InjectManagerImpl
-		{
-			if (!_impl)
-			{
-				_impl = new InjectManagerImpl();
-			}
-			return _impl;
-		}
 		
 		/**
 		 * 以类定义为值进行映射注入，只有第一次请求它的单例时才会被实例化。
@@ -34,7 +22,7 @@ package org.flexlite.domUI.managers
 		 */		
 		public static function mapClass(whenAskedFor:Class,instantiateClass:Class,named:String=""):void
 		{
-			impl.mapClass(whenAskedFor,instantiateClass,named);
+			Injector.mapClass(whenAskedFor,instantiateClass,named);
 		}
 		/**
 		 * 以实例为值进行映射注入,当请求单例时始终返回注入的这个实例。
@@ -44,7 +32,7 @@ package org.flexlite.domUI.managers
 		 */		
 		public static function mapValue(whenAskedFor:Class,useValue:Object,named:String=""):void
 		{
-			impl.mapValue(whenAskedFor,useValue,named);
+			Injector.mapValue(whenAskedFor,useValue,named);
 		}
 		/**
 		 * 获取指定类映射的单例
@@ -53,7 +41,7 @@ package org.flexlite.domUI.managers
 		 */	
 		public static function getInstance(clazz:Class,named:String=""):*
 		{	
-			return impl.getInstance(clazz,named);
+			return Injector.getInstance(clazz,named);
 		}
 	}
 }

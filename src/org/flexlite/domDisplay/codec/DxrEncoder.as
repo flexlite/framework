@@ -9,11 +9,10 @@ package org.flexlite.domDisplay.codec
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-	import flash.utils.flash_proxy;
 	
-	import org.flexlite.domDisplay.DxrData;
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.managers.InjectManager;
+	import org.flexlite.domDisplay.DxrData;
 	import org.flexlite.domUtils.CRC32Util;
 	
 	use namespace dx_internal;
@@ -112,7 +111,7 @@ package org.flexlite.domDisplay.codec
 		 */		
 		private function encodeDxrData(dxrData:DxrData,maxBitmapWidth:Number=4000,maxBitmapHeight:Number=4000):Object
 		{
-			var bitmapEncoder:IBitmapEncoder = InjectManager.getInstance(IBitmapEncoder,dxrData.codecKey);
+			var bitmapEncoder:IBitmapEncoder = Injector.getInstance(IBitmapEncoder,dxrData.codecKey);
 			var data:Object = {codec:bitmapEncoder.codecKey,bitmapList:[],frameInfo:[]};
 			var frmaeInfo:Array;
 			var tempBmData:BitmapData = new BitmapData(maxBitmapWidth,maxBitmapHeight,true,0);

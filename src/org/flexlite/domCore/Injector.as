@@ -1,45 +1,38 @@
-package org.flexlite.domUI.managers.impl
+package org.flexlite.domCore
 {
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 	
-	[ExcludeClass]
-	
 	/**
-	 * 单例注入管理器实现类<br>
+	 * 全局注入管理器，在项目中可以通过此类向框架内部注入指定的类，从而定制或者扩展部分模块的功能。<p/>
 	 * 以下类若有调用，需要显式注入：<br>
-	 * IBitmapDecoder:DXR位图动画所用的解码器实例,可选值：JpegXRDecoder,Jpeg32Decoder,PngDecoder<br>
-	 * IBitmapEncoder:DXR位图动画所用的编码器实例,可选值：JpegXREncoder,Jpeg32Encoder,PngEncoder<br>
-	 * ISkinAdapter:皮肤解析适配器实例。通过解析UIAsset.skinName属性，返回特定显示对象作为皮肤。
+	 * IBitmapDecoder:DXR位图动画所用的解码器实例<br>
+	 * IBitmapEncoder:DXR位图动画所用的编码器实例<br>
+	 * ISkinAdapter:皮肤解析适配器实例。<br>
+	 * Theme:皮肤默认主题。<br>
+	 * IAnalyze:资源管理器调用的文件解析类实例。
 	 * @author DOM
 	 */
-	public class InjectManagerImpl
+	public class Injector
 	{
-		/**
-		 * 构造函数
-		 */		
-		public function InjectManagerImpl()
-		{
-		}
-		
 		/**
 		 * 储存类的映射规则
 		 */		
-		private var mapClassDic:Dictionary = new Dictionary;
+		private static var mapClassDic:Dictionary = new Dictionary;
 		
 		/**
 		 * 以类定义为值进行映射注入，只有第一次请求它的单例时才会被实例化。
 		 * @param whenAskedFor 传递类或接口作为需要映射的键。
-		 * @param instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。
+		 * @param instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
 		 * @param named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */		
-		public function mapClass(whenAskedFor:Class,instantiateClass:Class,named:String=""):void
+		public static function mapClass(whenAskedFor:Class,instantiateClass:Class,named:String=""):void
 		{
 			var requestName:String = getQualifiedClassName(whenAskedFor)+"#"+named;
 			mapClassDic[requestName] = instantiateClass;
 		}
 		
-		private var mapValueDic:Dictionary = new Dictionary;
+		private static var mapValueDic:Dictionary = new Dictionary;
 		
 		/**
 		 * 以实例为值进行映射注入,当请求单例时始终返回注入的这个实例。
@@ -47,7 +40,7 @@ package org.flexlite.domUI.managers.impl
 		 * @param useValue 传递对象实例作为需要映射的值。
 		 * @param named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */		
-		public function mapValue(whenAskedFor:Class,useValue:Object,named:String=""):void
+		public static function mapValue(whenAskedFor:Class,useValue:Object,named:String=""):void
 		{
 			var requestName:String = getQualifiedClassName(whenAskedFor)+"#"+named;
 			mapValueDic[requestName] = useValue;
@@ -59,7 +52,7 @@ package org.flexlite.domUI.managers.impl
 		 * @param clazz 类定义
 		 * @param named 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
 		 */		
-		public function getInstance(clazz:Class,named:String=""):*
+		public static function getInstance(clazz:Class,named:String=""):*
 		{
 			var requestName:String = getQualifiedClassName(clazz)+"#"+named;
 			if(mapValueDic)

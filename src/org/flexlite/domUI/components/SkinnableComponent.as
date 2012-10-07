@@ -3,8 +3,9 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.filters.ColorMatrixFilter;
-	import flash.utils.Dictionary;
 	
+	import org.flexlite.domCore.Injector;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.SkinBasicLayout;
 	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.IInvisibleSkin;
@@ -12,9 +13,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.Theme;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.SkinPartEvent;
-	import org.flexlite.domUI.managers.InjectManager;
 	
 	use namespace dx_internal;
 	
@@ -74,7 +73,7 @@ package org.flexlite.domUI.components
 		{
 			try
 			{
-				defaultTheme = InjectManager.getInstance(Theme);
+				defaultTheme = Injector.getInstance(Theme);
 			}
 			catch(e:Error)
 			{
