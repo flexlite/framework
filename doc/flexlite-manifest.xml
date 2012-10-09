@@ -52,4 +52,17 @@
   <component id="VScrollBar" p="org.flexlite.domUI.components.VScrollBar" show="true" s="org.flexlite.domUI.components.supportClasses.ScrollBarBase"/>
   <component id="VSlider" p="org.flexlite.domUI.components.VSlider" show="true" s="org.flexlite.domUI.components.supportClasses.SliderBase"/>
   <component id="VerticalLayout" p="org.flexlite.domUI.layouts.VerticalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
+  <component id="BevelFilter" p="flash.filters.BevelFilter" s="flash.filters.BitmapFilter"/>
+  <component id="BlurFilter" p="flash.filters.BlurFilter" s="flash.filters.BitmapFilter"/>
+  <component id="ColorMatrixFilter" p="flash.filters.ColorMatrixFilter" s="flash.filters.BitmapFilter"/>
+  <component id="ConvolutionFilter" p="flash.filters.ConvolutionFilter" s="flash.filters.BitmapFilter"/>
+  <component id="DropShadowFilter" p="flash.filters.DropShadowFilter" s="flash.filters.BitmapFilter"/>
+  <component id="GlowFilter" p="flash.filters.GlowFilter" s="flash.filters.BitmapFilter"/>
+  <component id="GradientBevelFilter" p="flash.filters.GradientBevelFilter" s="flash.filters.BitmapFilter"/>
+  <component id="GradientGlowFilter" p="flash.filters.GradientGlowFilter" s="flash.filters.BitmapFilter"/>
+  <component id="Transform" p="flash.geom.Transform" s="Object"/>
+  <component id="ColorTransform" p="flash.geom.ColorTransform" s="Object"/>
+  <component id="Matrix" p="flash.geom.Matrix" s="Object"/>
+  <component id="Matrix3D" p="flash.geom.Matrix3D" s="Object"/>
+  <component id="Point" p="flash.geom.Point" s="Object"/>
 </componentPackage>
