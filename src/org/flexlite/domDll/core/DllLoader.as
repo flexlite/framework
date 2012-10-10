@@ -152,12 +152,12 @@ package org.flexlite.domDll.core
 			delete dllItemDic[loader];
 			var data:ByteArray = loader.data as ByteArray;
 			dllItemDic[data] = dllItem;
-			var analyze:IAssetLib = analyzeDic[dllItem.type];
+			var analyze:IFileLib = analyzeDic[dllItem.type];
 			if(!analyze)
 			{
-				analyze = analyzeDic[dllItem.type] = Injector.getInstance(IAssetLib,dllItem.type);
+				analyze = analyzeDic[dllItem.type] = Injector.getInstance(IFileLib,dllItem.type);
 			}
-			analyze.analyze(data,dllItem.name,onAnalyzeComp);
+			analyze.addFileBytes(data,dllItem.name,onAnalyzeComp);
 		}
 		/**
 		 * 加载失败

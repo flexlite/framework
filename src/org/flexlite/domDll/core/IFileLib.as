@@ -4,10 +4,10 @@ package org.flexlite.domDll.core
 	import flash.utils.Dictionary;
 	
 	/**
-	 * 素材文件解析库接口
+	 * 文件解析缓存库接口
 	 * @author DOM
 	 */
-	public interface IAssetLib
+	public interface IFileLib
 	{
 		/**
 		 * 解析字节流数据并添加到缓存。若name已经存在于缓存中，则以已经解析的为准，放弃当前解析。
@@ -15,7 +15,7 @@ package org.flexlite.domDll.core
 		 * @param name 文件的唯一标识符
 		 * @param compFunc 解析完成回调函数,参数为传入的bytes对象,示例：compFunc(bytes);
 		 */		
-		function analyze(bytes:ByteArray,name:String,compFunc:Function):void;
+		function addFileBytes(bytes:ByteArray,name:String,compFunc:Function):void;
 		/**
 		 * 获取解析完成的数据
 		 * @param key 通常对应配置文件里的name属性。

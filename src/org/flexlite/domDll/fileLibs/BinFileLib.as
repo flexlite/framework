@@ -1,20 +1,20 @@
-package org.flexlite.domDll.assetLibs
+package org.flexlite.domDll.fileLibs
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import org.flexlite.domDll.core.IAssetLib;
+	import org.flexlite.domDll.core.IFileLib;
 	
 	
 	/**
 	 * 二进制文件解析器
 	 * @author DOM
 	 */
-	public class BinAssetLib implements IAssetLib
+	public class BinFileLib implements IFileLib
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function BinAssetLib()
+		public function BinFileLib()
 		{
 		}
 		/**
@@ -22,7 +22,7 @@ package org.flexlite.domDll.assetLibs
 		 */		
 		private var cacheDic:Dictionary = new Dictionary;
 		
-		public function analyze(bytes:ByteArray, name:String, compFunc:Function):void
+		public function addFileBytes(bytes:ByteArray, name:String, compFunc:Function):void
 		{
 			if(cacheDic[name]!=null)
 			{
