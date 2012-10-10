@@ -22,7 +22,6 @@
 3.飘文字组件
 2.FocusManager,DragManager
 53.给ComboBox，DropDownList增加弹出特效
-54.ViewStack,TabNavigator,Alert
 58.文本锯齿和显示效果问题
 61.优化studio皮肤包，改成继承非可视元素.
 7.矢量和位图混用的支持
@@ -30,3 +29,4 @@
 11.PopUpManager需重新设计。
 12.各种Manager都改成可以由项目注入的。
 13.DXR格式需要修改，要记录二进制压缩格式字符串。
+54.ViewStack,TabNavigator,Alert,Tree
