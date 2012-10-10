@@ -8,6 +8,9 @@
 	</component>
 	<component id="CheckBox">
 		<skinpart >labelDisplay</skinpart>
+		<skinpart>upSkin</skinpart>
+		<skinpart>overSkin</skinpart>
+		<skinpart>downSkin</skinpart>
 	</component>
 	<component id="ComboBox">
 		<skinpart>popUp</skinpart>
@@ -65,6 +68,9 @@
 	</component>
 	<component id="TabBarButton">
 		<skinpart >labelDisplay</skinpart>
+		<skinpart>upSkin</skinpart>
+		<skinpart>overSkin</skinpart>
+		<skinpart>downSkin</skinpart>
 	</component>
 	<component id="TextArea">
 		<skinpart type="Scroller">scroller</skinpart>
@@ -75,6 +81,9 @@
 	</component>
 	<component id="ToggleButton">
 		<skinpart >labelDisplay</skinpart>
+		<skinpart>upSkin</skinpart>
+		<skinpart>overSkin</skinpart>
+		<skinpart>downSkin</skinpart>
 	</component>
 	<component id="VScrollBar">
 		<skinpart type="Button">decrementButton</skinpart>

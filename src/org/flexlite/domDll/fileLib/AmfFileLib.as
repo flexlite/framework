@@ -1,4 +1,4 @@
-package org.flexlite.domDll.fileLibs
+package org.flexlite.domDll.fileLib
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -6,17 +6,15 @@ package org.flexlite.domDll.fileLibs
 	
 	
 	/**
-	 * 二进制文件解析器
+	 * 二进制序列化对象文件解析器
 	 * @author DOM
 	 */
-	public class BinFileLib implements IFileLib
+	public class AmfFileLib implements IFileLib
 	{
-		/**
-		 * 构造函数
-		 */		
-		public function BinFileLib()
+		public function AmfFileLib()
 		{
 		}
+		
 		/**
 		 * 数据缓存字典
 		 */		
@@ -35,10 +33,24 @@ package org.flexlite.domDll.fileLibs
 		
 		public function getData(key:String, subKey:String=""):*
 		{
-			return cacheDic[key];
+			var byte:ByteArray = cacheDic[key];
+			if(byte)
+			{
+				try
+				{
+					byte.uncompress();
+				}
+				catch(e:Error){}
+				try
+				{
+					return byte.readObject();
+				}
+				catch(e:Error){}
+			}
+			return null;
 		}
 		
-		public function destoryData(key:String):void
+		public function destoryCache(key:String):void
 		{
 			if(cacheDic[key])
 				delete cacheDic[key];

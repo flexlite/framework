@@ -251,7 +251,7 @@ package org.flexlite.domUI.managers.impl
 										oldToolTip:Object,
 										newToolTip:Object):void
 		{
-			if (!oldToolTip && newToolTip)
+			if (oldToolTip==null && newToolTip!=null)
 			{
 				target.addEventListener(MouseEvent.MOUSE_OVER,
 					toolTipMouseOverHandler);
@@ -260,7 +260,7 @@ package org.flexlite.domUI.managers.impl
 				if (mouseIsOver(target))
 					showImmediately(target);
 			}
-			else if (oldToolTip && !newToolTip)
+			else if (oldToolTip!=null && newToolTip==null)
 			{
 				target.removeEventListener(MouseEvent.MOUSE_OVER,
 					toolTipMouseOverHandler);

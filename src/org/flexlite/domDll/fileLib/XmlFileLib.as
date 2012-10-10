@@ -1,4 +1,4 @@
-package org.flexlite.domDll.fileLibs
+package org.flexlite.domDll.fileLib
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -51,7 +51,7 @@ package org.flexlite.domDll.fileLibs
 			return xml;
 		}
 		
-		public function destoryData(key:String):void
+		public function destoryCache(key:String):void
 		{
 			if(cacheDic[key])
 				delete cacheDic[key];

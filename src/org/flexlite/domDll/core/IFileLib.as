@@ -19,7 +19,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 获取解析完成的数据
 		 * @param key 通常对应配置文件里的name属性。
-		 * @param subKey 二级键名(可选)，例如swf里的导出类名。
+		 * @param subKey 二级键名(可选)，通常对应swf里的导出类名。
 		 * 
 		 */
 		function getData(key:String,subKey:String=""):*;
@@ -27,6 +27,6 @@ package org.flexlite.domDll.core
 		 * 销毁指定key对应文件的缓存数据。
 		 * @param key 通常对应配置文件里的name属性
 		 */		
-		function destoryData(key:String):void;
+		function destoryCache(key:String):void;
 	}
 }
