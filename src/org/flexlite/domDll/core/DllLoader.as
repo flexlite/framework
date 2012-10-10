@@ -13,7 +13,6 @@ package org.flexlite.domDll.core
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domDll.analyze.IAnalyze;
 	
 	use namespace dx_internal;
 	/**
@@ -153,10 +152,10 @@ package org.flexlite.domDll.core
 			delete dllItemDic[loader];
 			var data:ByteArray = loader.data as ByteArray;
 			dllItemDic[data] = dllItem;
-			var analyze:IAnalyze = analyzeDic[dllItem.type];
+			var analyze:IAssetLib = analyzeDic[dllItem.type];
 			if(!analyze)
 			{
-				analyze = analyzeDic[dllItem.type] = Injector.getInstance(IAnalyze,dllItem.type);
+				analyze = analyzeDic[dllItem.type] = Injector.getInstance(IAssetLib,dllItem.type);
 			}
 			analyze.analyze(data,dllItem.name,onAnalyzeComp);
 		}

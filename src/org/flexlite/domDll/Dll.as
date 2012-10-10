@@ -6,10 +6,10 @@ package org.flexlite.domDll
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.Injector;
-	import org.flexlite.domDll.analyze.AmfAnalyze;
-	import org.flexlite.domDll.analyze.BinAnalyze;
-	import org.flexlite.domDll.analyze.IAnalyze;
-	import org.flexlite.domDll.analyze.XmlAnalyze;
+	import org.flexlite.domDll.assetLibs.AmfAssetLib;
+	import org.flexlite.domDll.assetLibs.BinAssetLib;
+	import org.flexlite.domDll.core.IAssetLib;
+	import org.flexlite.domDll.assetLibs.XmlAssetLib;
 	import org.flexlite.domDll.core.DllConfig;
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.DllLoader;
@@ -89,9 +89,9 @@ package org.flexlite.domDll
 		 */		
 		private function init():void
 		{
-			Injector.mapClass(IAnalyze,XmlAnalyze,DllItem.TYPE_XML);
-			Injector.mapClass(IAnalyze,BinAnalyze,DllItem.TYPE_BIN);
-			Injector.mapClass(IAnalyze,AmfAnalyze,DllItem.TYPE_AMF);
+			Injector.mapClass(IAssetLib,XmlAssetLib,DllItem.TYPE_XML);
+			Injector.mapClass(IAssetLib,BinAssetLib,DllItem.TYPE_BIN);
+			Injector.mapClass(IAssetLib,AmfAssetLib,DllItem.TYPE_AMF);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
@@ -175,10 +175,10 @@ package org.flexlite.domDll
 		private function onConfigComp():void
 		{
 			dllConfig = new DllConfig(language);
-			var analyze:IAnalyze = analyzeDic[configType];
+			var analyze:IAssetLib = analyzeDic[configType];
 			if(!analyze)
 			{
-				analyze = analyzeDic[configType] = Injector.getInstance(IAnalyze,configType);
+				analyze = analyzeDic[configType] = Injector.getInstance(IAssetLib,configType);
 			}
 			for each(var name:String in configNameList)
 			{

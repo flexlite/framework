@@ -1,21 +1,20 @@
-package org.flexlite.domDll.analyze
+package org.flexlite.domDll.assetLibs
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import org.flexlite.domDll.core.IAssetLib;
 	
 	
 	/**
-	 * 二进制文件解析器
+	 * 二进制序列化对象文件解析器
 	 * @author DOM
 	 */
-	public class BinAnalyze implements IAnalyze
+	public class AmfAssetLib implements IAssetLib
 	{
-		/**
-		 * 构造函数
-		 */		
-		public function BinAnalyze()
+		public function AmfAssetLib()
 		{
 		}
+		
 		/**
 		 * 数据缓存字典
 		 */		
@@ -34,7 +33,21 @@ package org.flexlite.domDll.analyze
 		
 		public function getData(key:String, subKey:String=""):*
 		{
-			return cacheDic[key];
+			var byte:ByteArray = cacheDic[key];
+			if(byte)
+			{
+				try
+				{
+					byte.uncompress();
+				}
+				catch(e:Error){}
+				try
+				{
+					return byte.readObject();
+				}
+				catch(e:Error){}
+			}
+			return null;
 		}
 		
 		public function destoryData(key:String):void

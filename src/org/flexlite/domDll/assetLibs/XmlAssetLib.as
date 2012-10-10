@@ -1,19 +1,20 @@
-package org.flexlite.domDll.analyze
+package org.flexlite.domDll.assetLibs
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import org.flexlite.domDll.core.IAssetLib;
 	
 	
 	/**
 	 * XML文件解析器
 	 * @author DOM
 	 */
-	public class XmlAnalyze implements IAnalyze
+	public class XmlAssetLib implements IAssetLib
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function XmlAnalyze()
+		public function XmlAssetLib()
 		{
 		}
 		/**

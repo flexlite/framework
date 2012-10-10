@@ -1,13 +1,13 @@
-package org.flexlite.domDll.analyze
+package org.flexlite.domDll.core
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	/**
-	 * 资源解析类接口
+	 * 素材文件解析库接口
 	 * @author DOM
 	 */
-	public interface IAnalyze
+	public interface IAssetLib
 	{
 		/**
 		 * 解析字节流数据并添加到缓存。若name已经存在于缓存中，则以已经解析的为准，放弃当前解析。
