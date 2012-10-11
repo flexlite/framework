@@ -1,83 +1,163 @@
 package org.flexlite.domUtils
 {
 	import flash.utils.Dictionary;
-	import flash.utils.Proxy;
-	import flash.utils.flash_proxy;
 	
 	/**
 	 * 具有动态内存管理功能的哈希表。<br/>
 	 * 此类通常用于动态共享高内存占用的数据对象，比如BitmapData。
-	 * 它类似Dictionary，使用key(String|int)-value(Object)形式来存储数据。
-	 * 但当外部对value的所有引用都断开时，value会被GC强制回收，并从哈希表移除。
+	 * 它类似Dictionary，使用key-value形式来存储数据。
+	 * 但当外部对value的所有引用都断开时，value会被GC标记为可回收对象，并从哈希表移除。<br/>
+	 * <b>注意：</b>
+	 * 若value是基本数据类型(例如String,int等)时,value的动态内存管理功能失效，需手动remove()它。
 	 * @author DOM
 	 */
-	public class SharedMap extends Proxy
+	public class SharedMap
 	{
-		public function SharedMap()
+		/**
+		 * 构造函数
+		 * @param groupSize 分组大小,数字越小查询效率越高，但内存占用越高。
+		 */		
+		public function SharedMap(groupSize:int=200)
 		{
-			var cache:Dictionary = new Dictionary();
+			if(groupSize<1)
+				groupSize = 1;
+			this.groupSize = groupSize;
 		}
 		
-		override flash_proxy function getProperty(name:*):*
+		/**
+		 * key缓存字典
+		 */		
+		private var keyDic:Dictionary = new Dictionary();
+		/**
+		 * 上一次的value缓存字典
+		 */		
+		private var lastValueDic:Dictionary;
+		/**
+		 * 通过值获取键
+		 * @param value
+		 */		
+		private function getValueByKey(key:String):*
 		{
-			
+			var valueDic:Dictionary = keyDic[key];
+			if(!valueDic)
+				return null;
+			var value:*;
+			for(value in valueDic)
+			{
+				if(valueDic[value]===key)
+					break;
+			}
+			if(!value)
+				delete keyDic[key];
+			return value;
+		}
+		
+		/**
+		 * 分组大小
+		 */		
+		private var groupSize:int = 200;
+		/**
+		 * 添加过的key的总数
+		 */		
+		private var totalKeys:int = 0;
+		/**
+		 * 设置键值映射
+		 * @param key 键
+		 * @param value 值
+		 */		
+		public function set(key:String,value:*):void
+		{
+			var valueDic:Dictionary = keyDic[key];
+			if(valueDic)
+			{
+				var oldValue:* = getValueByKey(key);
+				if(oldValue!=null)
+					delete valueDic[oldValue];
+			}
+			else
+			{
+				if(totalKeys%groupSize==0)
+					lastValueDic = new Dictionary(true);
+				valueDic = lastValueDic;
+				totalKeys++;
+			}
+			keyDic[key] = valueDic;
+			valueDic[value] = key;
 		}
 		/**
-		 * 转换属性名为索引
+		 * 获取指定键的值
+		 * @param key
 		 */		
-		private function convertToIndex(name:*):int
+		public function get(key:String):*
 		{
-			if (name is QName)
-				name = name.localName;
-			
-			var index:int = -1;
-			try
-			{
-				var n:Number = parseInt(String(name));
-				if (!isNaN(n))
-					index = int(n);
-			}
-			catch(e:Error)
-			{
-			}
-			return index;
+			return getValueByKey(key);
 		}
-		
-		override flash_proxy function setProperty(name:*, value:*):void
+		/**
+		 * 移除指定的键
+		 * @param key 要移除的键
+		 * @return 是否移除成功
+		 */		
+		public function remove(key:String):Boolean
 		{
-			
-		}
-		
-		override flash_proxy function deleteProperty(name:*):Boolean
-		{
+			var value:* = getValueByKey(key);
+			if(value==null)
+				return false;
+			var valueDic:Dictionary = keyDic[key];
+			delete keyDic[key];
+			delete valueDic[value];
 			return true;
 		}
-		
-		override flash_proxy function hasProperty(name:*):Boolean
+		/**
+		 * 获取键名列表
+		 */		
+		public function get keys():Vector.<String>
 		{
-			var index:int = convertToIndex(name);
-			if (index == -1)
-				return false;
-			return index >= 0 && index < length;
+			var keyList:Vector.<String> = new Vector.<String>();
+			var cacheDic:Dictionary = new Dictionary();
+			for(var key:String in keyDic)
+			{
+				var valueDic:Dictionary = keyDic[key];
+				if(cacheDic[valueDic])
+					continue;
+				cacheDic[valueDic] = true;
+				for each(var validKey:String in valueDic)
+				{
+					keyList.push(validKey);
+				}
+			}
+			return keyList;
 		}
-		
-		override flash_proxy function nextNameIndex(index:int):int
+		/**
+		 * 获取值列表
+		 */		
+		public function get values():Array
 		{
-			return index < length ? index + 1 : 0;
+			var valueList:Array = [];
+			var cacheDic:Dictionary = new Dictionary();
+			for(var key:String in keyDic)
+			{
+				var valueDic:Dictionary = keyDic[key];
+				if(cacheDic[valueDic])
+					continue;
+				cacheDic[valueDic] = true;
+				for(var value:* in valueDic)
+				{
+					valueList.push(value);
+				}
+			}
+			return valueList;
 		}
-		
-		override flash_proxy function nextName(index:int):String
+		/**
+		 * 刷新缓存并删除所有失效的键值。
+		 */		
+		public function refresh():void
 		{
-			return (index - 1).toString();
-		}
-		
-		override flash_proxy function nextValue(index:int):*
-		{
-		}    
-		
-		override flash_proxy function callProperty(name:*, ... rest):*
-		{
-			return null;
+			var keyList:Vector.<String> = keys;
+			for(var key:String in keyDic)
+			{
+				if(keyList.indexOf(key)==-1)
+					delete keyDic[key];
+			}
 		}
 	}
 }
