@@ -35,16 +35,21 @@ package org.flexlite.domDll.fileLib
 			bytesDic[name] = bytes;
 		}
 		
-		public function getRes(key:String,subKey:String=""):*
+		public function getRes(key:String,subKey:String):*
 		{
 			return null;
 		}
 		
-		public function getResAsync(key:String,compFunc:Function,subKey:String=""):void
+		public function getResAsync(key:String,subKey:String,compFunc:Function):void
 		{
 			var res:* = getRes(key,subKey);
 			if(compFunc!=null)
 				compFunc(res);
+		}
+		
+		public function hasRes(key:String):Boolean
+		{
+			return bytesDic[key]!=null;
 		}
 		
 		public function destoryRes(key:String):void

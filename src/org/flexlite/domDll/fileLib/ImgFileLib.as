@@ -19,7 +19,7 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String, subKey:String=""):*
+		override public function getRes(key:String,subKey:String):*
 		{
 			if(sharedMap.has(key))
 				return sharedMap.get(key);
@@ -35,7 +35,7 @@ package org.flexlite.domDll.fileLib
 		 */		
 		private var keyDic:Dictionary;
 		
-		override public function getResAsync(key:String, compFunc:Function, subKey:String=""):void
+		override public function getResAsync(key:String,subKey:String,compFunc:Function):void
 		{
 			if(sharedMap.has(key))
 			{

@@ -38,6 +38,7 @@ package org.flexlite.domDll.core
 			super();
 			this.thread = thread;
 			initLoaders();
+			currentLoadList = lazyLoadList;
 		}
 		/**
 		 * 最大并发加载数 
@@ -68,14 +69,6 @@ package org.flexlite.domDll.core
 		 */		
 		private var currentLoadList:Vector.<DllItem>;
 		/**
-		 * 当前队列加载项的个数
-		 */		
-		private var groupTotal:int;
-		/**
-		 * 已经加载完成的项个数
-		 */		
-		private var loadedIndex:int;
-		/**
 		 * 当前队列总文件大小
 		 */		
 		private var totalSize:int;
@@ -88,7 +81,11 @@ package org.flexlite.domDll.core
 		public function loadGroup(list:Vector.<DllItem>):void
 		{
 			if(!list||list.length==0)
+			{
+				var event:Event = new Event(Event.COMPLETE);
+				dispatchEvent(event);
 				return;
+			}
 			totalSize = 0;
 			loadedSize = 0;
 			for each(var dllItem:DllItem in list)
@@ -97,21 +94,19 @@ package org.flexlite.domDll.core
 				totalSize += dllItem.size;
 			}
 			currentLoadList = list;
-			groupTotal = list.length;
-			loadedIndex = 0;
 			next();
 		}
 		/**
-		 * 当前的项加载队列
+		 * 延迟加载队列
 		 */		
-		private var itemLoadList:Vector.<DllItem> = new Vector.<DllItem>();
+		private var lazyLoadList:Vector.<DllItem> = new Vector.<DllItem>();
 		/**
 		 * 加载一个文件
 		 * @param dllItem 要加载的项
 		 */		
 		public function loadItem(dllItem:DllItem):void
 		{
-			itemLoadList.push(dllItem);
+			lazyLoadList.push(dllItem);
 			next();
 		}
 		/**
@@ -123,8 +118,12 @@ package org.flexlite.domDll.core
 		 */		
 		private function next():void
 		{
-			if(!currentLoadList||currentLoadList.length==0)
-				currentLoadList = itemLoadList;
+			if(currentLoadList!=lazyLoadList&&currentLoadList.length==0)
+			{
+				var event:Event = new Event(Event.COMPLETE);
+				dispatchEvent(event);
+				currentLoadList = lazyLoadList;
+			}
 			if(currentLoadList.length==0)
 				return;
 			while(freeLoaders.length>0)
@@ -140,7 +139,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 解析器字典类
 		 */		
-		private var analyzeDic:Dictionary = new Dictionary;
+		private var fileLibDic:Dictionary = new Dictionary;
 		/**
 		 * 一项加载完成
 		 */		
@@ -151,13 +150,13 @@ package org.flexlite.domDll.core
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
 			var data:ByteArray = loader.data as ByteArray;
-			var analyze:IFileLib = analyzeDic[dllItem.type];
-			if(!analyze)
+			var fileLib:IFileLib = fileLibDic[dllItem.type];
+			if(!fileLib)
 			{
-				analyze = analyzeDic[dllItem.type] = Injector.getInstance(IFileLib,dllItem.type);
+				fileLib = fileLibDic[dllItem.type] = Injector.getInstance(IFileLib,dllItem.type);
 			}
-			analyze.addFileBytes(data,dllItem.name);
-			next();
+			fileLib.addFileBytes(data,dllItem.name);
+			onItemComplete(dllItem);
 		}
 		/**
 		 * 加载失败
@@ -169,48 +168,24 @@ package org.flexlite.domDll.core
 			freeLoaders.push(loader);
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
-			if(dllItem.compFunc!=null)
-				dllItem.compFunc(dllItem);
-			if(dllItem.inGroupLoading)
-			{
-				loadedIndex++;
-				loadedSize += dllItem.size;
-				checkAllComp();
-			}
-			next();
+			onItemComplete(dllItem);
 		}
 		
 		/**
-		 * 文件字节流解析完成
+		 * 检查当前的加载队列是否全部完成了。
 		 */		
-		private function onAnalyzeComp(data:ByteArray):void
+		private function onItemComplete(dllItem:DllItem):void
 		{
-			var dllItem:DllItem = dllItemDic[data];
-			delete dllItemDic[data];
 			if(dllItem.compFunc!=null)
 				dllItem.compFunc(dllItem);
 			if(dllItem.inGroupLoading)
 			{
-				loadedIndex++;
 				loadedSize += dllItem.size;
-				checkAllComp();
+				var progressEvent:ProgressEvent = 
+					new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
+				dispatchEvent(progressEvent);
 			}
-		}
-		/**
-		 * 检查当前的加载队列是否全部完成了。
-		 */		
-		private function checkAllComp():void
-		{
-			var progressEvent:ProgressEvent = 
-				new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
-			dispatchEvent(progressEvent);
-			if(loadedIndex>=groupTotal)
-			{
-				loadedIndex = 0;
-				groupTotal = 0;
-				var event:Event = new Event(Event.COMPLETE);
-				dispatchEvent(event);
-			}
+			next();
 		}
 	}
 }

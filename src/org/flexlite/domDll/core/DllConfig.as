@@ -11,17 +11,15 @@ package org.flexlite.domDll.core
 	{
 		/**
 		 * 构造函数
-		 * @param language 当前的语言环境
 		 */		
-		public function DllConfig(language:String)
+		public function DllConfig()
 		{
-			this.language = language;
 		}
 		
 		/**
 		 * 当前的语言环境
 		 */		
-		private var language:String;
+		public var language:String;
 				
 		private var _loadingGroup:Array = [];
 		/**
@@ -166,6 +164,16 @@ package org.flexlite.domDll.core
 			}
 			if(data)
 				return data.type;
+			return "";
+		}
+		/**
+		 *  通过二级键名获取一级键名
+		 */		
+		public function getKeyBySubKey(subKey:String):String
+		{
+			var data:Object = subkeyMap[subKey];
+			if(data)
+				return data.name;
 			return "";
 		}
 		/**

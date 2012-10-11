@@ -16,7 +16,7 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String,subKey:String=""):*
+		override public function getRes(key:String,subKey:String):*
 		{
 			if(sharedMap.has(key))
 				return sharedMap.get(key);
