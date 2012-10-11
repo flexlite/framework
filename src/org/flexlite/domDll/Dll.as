@@ -207,17 +207,24 @@ package org.flexlite.domDll
 			}
 			for each(var name:String in configNameList)
 			{
-				var config:Object = analyze.getData(name);
-				analyze.destoryCache(name);
+				var config:Object = analyze.getRes(name);
+				analyze.destoryRes(name);
 				dllConfig.parseConfig(config);
 			}
+			var loadingGroup:Vector.<DllItem> = dllConfig.loadingGroup;
+			if(loadingGroup.length>0)
+			dllLoader.loadGroup(loadingGroup);
 		}
 		/**
 		 * 开始加载配置为"预加载"组的资源。
 		 */		
 		private function loadPreloadGroup():void
 		{
-			
+			if(!dllConfig)
+				return;
+			groupName = GROUP_PRELOAD;
+			var preloadGroup:Vector.<DllItem> = dllConfig.preloadGroup;
+			dllLoader.loadGroup(preloadGroup);
 		}
 		/**
 		 * 同步方式获取资源。<br/>

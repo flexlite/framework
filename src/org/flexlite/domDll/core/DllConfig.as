@@ -22,14 +22,33 @@ package org.flexlite.domDll.core
 		 * 当前的语言环境
 		 */		
 		private var language:String;
+				
+		private var _loadingGroup:Array = [];
 		/**
-		 * 进度条队列结束索引(不包括)
-		 */		
-		public var loadingGroup:Array = [];
+		 * loading组资源列表
+		 */
+		public function get loadingGroup():Vector.<DllItem>
+		{
+			var group:Vector.<DllItem> = new Vector.<DllItem>();
+			for each(var obj:Object in _loadingGroup)
+			{
+				group.push(parseDllItem(obj));
+			}
+			return group;
+		}
+		private var _preloadGroup:Array = [];
 		/**
-		 * 预加载队列结束索引(不包括)
-		 */		
-		public var preloadGroup:Array = [];
+		 * 预加载组资源列表
+		 */
+		public function get preloadGroup():Vector.<DllItem>
+		{
+			var group:Vector.<DllItem> = new Vector.<DllItem>();
+			for each(var obj:Object in _preloadGroup)
+			{
+				group.push(parseDllItem(obj));
+			}
+			return group;
+		}
 		/**
 		 * 加载列表
 		 */		
@@ -52,9 +71,9 @@ package org.flexlite.domDll.core
 			{
 				var xmlConfig:XML = data as XML;
 				if(xmlConfig.loading[0])
-					getItemFromXML(xmlConfig.loading[0],loadingGroup);
+					getItemFromXML(xmlConfig.loading[0],_loadingGroup);
 				if(xmlConfig.preload[0])
-					getItemFromXML(xmlConfig.preload[0],preloadGroup);
+					getItemFromXML(xmlConfig.preload[0],_preloadGroup);
 				if(xmlConfig.lazyload[0])
 					getItemFromXML(xmlConfig.lazyload[0]);
 			}
@@ -70,9 +89,9 @@ package org.flexlite.domDll.core
 					data = (data as ByteArray).readObject();
 				}
 				if(data.hasOwnProperty("loading"))
-					getItemFromObject(data.loading,loadingGroup);
+					getItemFromObject(data.loading,_loadingGroup);
 				if(data.hasOwnProperty("preload"))
-					getItemFromObject(data.preload,preloadGroup);
+					getItemFromObject(data.preload,_preloadGroup);
 				if(data.hasOwnProperty("lazyload"))
 					getItemFromObject(data.lazyload);
 			}
@@ -130,6 +149,49 @@ package org.flexlite.domDll.core
 					subkeyMap[key] = item;
 				}
 			}
+		}
+		/**
+		 * 根据一级键名或二级键名获取加载项的类型。
+		 */		
+		public function getType(key:String,subKey:String=""):String
+		{
+			var data:Object;
+			if(key)
+			{
+				data = keyMap[key];
+			}
+			else if(subKey)
+			{
+				data = subkeyMap[subKey];
+			}
+			if(data)
+				return data.type;
+			return "";
+		}
+		/**
+		 * 根据一级键名或二级键名获取加载项信息对象
+		 */		
+		public function getDllItem(key:String,subKey:String=""):DllItem
+		{
+			var data:Object;
+			if(key)
+			{
+				data = keyMap[key];
+			}
+			else if(subKey)
+			{
+				data = subkeyMap[subKey];
+			}
+			if(data)
+				return parseDllItem(data);
+			return null;
+		}
+		/**
+		 * 转换Object数据为DllItem对象
+		 */		
+		private function parseDllItem(data:Object):DllItem
+		{
+			return new DllItem(data.name,data.url,data.type,data.size);
 		}
 		
 	}

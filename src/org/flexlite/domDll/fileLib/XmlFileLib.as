@@ -1,41 +1,26 @@
 package org.flexlite.domDll.fileLib
 {
 	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	import org.flexlite.domDll.core.IFileLib;
-	
 	
 	/**
-	 * XML文件解析器
+	 * XML文件解析库
 	 * @author DOM
 	 */
-	public class XmlFileLib implements IFileLib
+	public class XmlFileLib extends FileLibBase
 	{
 		/**
 		 * 构造函数
 		 */		
 		public function XmlFileLib()
 		{
-		}
-		/**
-		 * 数据缓存字典
-		 */		
-		private var cacheDic:Dictionary = new Dictionary;
-		
-		public function addFileBytes(bytes:ByteArray,name:String,compFunc:Function):void
-		{
-			if(cacheDic[name])
-			{
-				compFunc(bytes);
-				return;
-			}
-			cacheDic[name] = bytes;
-			compFunc(bytes);
+			super();
 		}
 		
-		public function getData(key:String,subKey:String=""):*
+		override public function getRes(key:String,subKey:String=""):*
 		{
-			var bytes:ByteArray = cacheDic[key];
+			if(sharedMap.has(key))
+				return sharedMap.get(key);
+			var bytes:ByteArray = bytesDic[key];
 			if(!bytes)
 				return null;
 			bytes.position = 0;
@@ -45,16 +30,9 @@ package org.flexlite.domDll.fileLib
 			{
 				xml = XML(resultStr);
 			}
-			catch(e:Error)
-			{
-			}
+			catch(e:Error){}
+			sharedMap.set(key,xml);
 			return xml;
-		}
-		
-		public function destoryCache(key:String):void
-		{
-			if(cacheDic[key])
-				delete cacheDic[key];
 		}
 	}
 }

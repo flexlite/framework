@@ -28,5 +28,5 @@
 12.素材加载管理模块
 11.PopUpManager需重新设计。
 12.各种Manager都改成可以由项目注入的。
-13.DXR格式需要修改，要记录二进制压缩格式字符串。
+13.DXR格式需要修改，要记录二进制压缩格式字符串，位图共享要改成使用SharedMap
 54.ViewStack,TabNavigator,Alert,Tree

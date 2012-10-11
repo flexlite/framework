@@ -8,7 +8,7 @@ package org.flexlite.domUtils
 	 * 它类似Dictionary，使用key-value形式来存储数据。
 	 * 但当外部对value的所有引用都断开时，value会被GC标记为可回收对象，并从哈希表移除。<br/>
 	 * <b>注意：</b>
-	 * 若value是基本数据类型(例如String,int等)时,value的动态内存管理功能失效，需手动remove()它。
+	 * 只有引用型的value才能启用动态内存管理，若value是基本数据类型(例如String,int等)时，需手动remove()它。
 	 * @author DOM
 	 */
 	public class SharedMap
@@ -47,7 +47,7 @@ package org.flexlite.domUtils
 				if(valueDic[value]===key)
 					break;
 			}
-			if(!value)
+			if(value===undefined)
 				delete keyDic[key];
 			return value;
 		}
@@ -91,6 +91,26 @@ package org.flexlite.domUtils
 		public function get(key:String):*
 		{
 			return getValueByKey(key);
+		}
+		/**
+		 * 检测是否含有指定键
+		 * @param key 
+		 */		
+		public function has(key:String):Boolean
+		{
+			var valueDic:Dictionary = keyDic[key];
+			if(!valueDic)
+				return false;
+			var value:*;
+			for(value in valueDic)
+			{
+				if(valueDic[value]===key)
+					break;
+			}
+			var has:Boolean = value===undefined;
+			if(!has)
+				delete keyDic[key];
+			return has;
 		}
 		/**
 		 * 移除指定的键

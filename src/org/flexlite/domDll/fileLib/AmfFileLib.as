@@ -2,58 +2,43 @@ package org.flexlite.domDll.fileLib
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	
 	import org.flexlite.domDll.core.IFileLib;
+	import org.flexlite.domUtils.SharedMap;
 	
 	
 	/**
-	 * 二进制序列化对象文件解析器
+	 * 二进制序列化对象文件解析库
 	 * @author DOM
 	 */
-	public class AmfFileLib implements IFileLib
+	public class AmfFileLib extends FileLibBase
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function AmfFileLib()
 		{
+			super();
 		}
 		
-		/**
-		 * 数据缓存字典
-		 */		
-		private var cacheDic:Dictionary = new Dictionary;
-		
-		public function addFileBytes(bytes:ByteArray, name:String, compFunc:Function):void
+		override public function getRes(key:String, subKey:String=""):*
 		{
-			if(cacheDic[name]!=null)
+			var bytes:ByteArray = bytesDic[key];
+			if(!bytes)
+				return null;
+			try
 			{
-				compFunc(bytes);
-				return;
+				bytes.uncompress();
 			}
-			cacheDic[name] = bytes;
-			compFunc(bytes);
-		}
-		
-		public function getData(key:String, subKey:String=""):*
-		{
-			var byte:ByteArray = cacheDic[key];
-			if(byte)
+			catch(e:Error){}
+			var data:Object = null;
+			try
 			{
-				try
-				{
-					byte.uncompress();
-				}
-				catch(e:Error){}
-				try
-				{
-					return byte.readObject();
-				}
-				catch(e:Error){}
+				data = bytes.readObject();
 			}
-			return null;
-		}
-		
-		public function destoryCache(key:String):void
-		{
-			if(cacheDic[key])
-				delete cacheDic[key];
+			catch(e:Error){}
+			sharedMap.set(key,data);
+			return data;
 		}
 	}
 }
