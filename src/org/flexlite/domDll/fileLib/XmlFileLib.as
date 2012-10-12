@@ -3,7 +3,7 @@ package org.flexlite.domDll.fileLib
 	import flash.utils.ByteArray;
 	
 	/**
-	 * XML文件解析库
+	 * XML文件解析缓存库
 	 * @author DOM
 	 */
 	public class XmlFileLib extends FileLibBase
@@ -16,11 +16,11 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String,subKey:String):*
+		override public function getRes(key:String):*
 		{
 			if(sharedMap.has(key))
 				return sharedMap.get(key);
-			var bytes:ByteArray = bytesDic[key];
+			var bytes:ByteArray = fileDic[key];
 			if(!bytes)
 				return null;
 			bytes.position = 0;

@@ -10,33 +10,31 @@ package org.flexlite.domDll.core
 	public interface IFileLib
 	{
 		/**
-		 * 缓存字节流数据。若name已经存在于缓存中，则以放弃当前字节流。
-		 * @param bytes 要解析的二进制字节流
-		 * @param name 文件的唯一标识符
+		 * 除了swf文件是缓存显示对象外，其余文件都缓存字节流数据。若name已经存在于缓存中，则放弃缓存。
+		 * @param file 要缓存的对象
+		 * @param name 配置文件中加载项的name属性
 		 */		
-		function addFileBytes(bytes:ByteArray,name:String):void;
+		function addFile(file:*,name:String):void;
 		/**
 		 * 同步方式获取解析完成的数据
-		 * @param key 通常对应配置文件里的name属性。
-		 * @param subKey 二级键名(可选)，通常对应swf里的导出类名。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */
-		function getRes(key:String,subKey:String):*;
+		function getRes(key:String):*;
 		/**
 		 * 异步方式获取解析完成的数据。
-		 * @param key 通常对应配置文件里的name属性。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @param compFunc 解析完成回调函数
-		 * @param subKey 二级键名(可选)，通常对应swf里的导出类名。
 		 */		
-		function getResAsync(key:String,subKey:String,compFunc:Function):void;
+		function getResAsync(key:String,compFunc:Function):void;
 		/**
-		 * 是否已经含有某个资源的二进制数据
-		 * @param key 通常对应配置文件里的name属性。
+		 * 是否已经含有某个资源文件的缓存数据
+		 * @param name 配置文件中加载项的name属性
 		 */		
-		function hasRes(key:String):Boolean;
+		function hasRes(name:String):Boolean;
 		/**
 		 * 销毁指定key对应文件的缓存数据。
-		 * @param key 通常对应配置文件里的name属性
+		 * @param name 配置文件中加载项的name属性
 		 */		
-		function destoryRes(key:String):void;
+		function destoryRes(name:String):void;
 	}
 }

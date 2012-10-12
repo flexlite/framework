@@ -1,7 +1,7 @@
 package org.flexlite.domDll.fileLib
 {
 	/**
-	 * 二进制文件解析库
+	 * 二进制文件解析缓存库
 	 * @author DOM
 	 */
 	public class BinFileLib extends FileLibBase
@@ -14,9 +14,9 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String,subKey:String):*
+		override public function getRes(key:String):*
 		{
-			return bytesDic[key];
+			return fileDic[key];
 		}
 	}
 }

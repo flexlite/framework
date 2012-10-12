@@ -22,40 +22,40 @@ package org.flexlite.domDll.fileLib
 		/**
 		 * 字节流数据缓存字典
 		 */		
-		protected var bytesDic:Dictionary = new Dictionary;
+		protected var fileDic:Dictionary = new Dictionary;
 		/**
 		 * 解码后对象的共享缓存表
 		 */		
 		protected var sharedMap:SharedMap = new SharedMap();
 		
-		public function addFileBytes(bytes:ByteArray,name:String):void
+		public function addFile(bytes:*,name:String):void
 		{
-			if(bytesDic[name])
+			if(fileDic[name])
 				return;
-			bytesDic[name] = bytes;
+			fileDic[name] = bytes;
 		}
 		
-		public function getRes(key:String,subKey:String):*
+		public function getRes(key:String):*
 		{
 			return null;
 		}
 		
-		public function getResAsync(key:String,subKey:String,compFunc:Function):void
+		public function getResAsync(key:String,compFunc:Function):void
 		{
-			var res:* = getRes(key,subKey);
+			var res:* = getRes(key);
 			if(compFunc!=null)
 				compFunc(res);
 		}
 		
-		public function hasRes(key:String):Boolean
+		public function hasRes(name:String):Boolean
 		{
-			return bytesDic[key]!=null;
+			return fileDic[name]!=null;
 		}
 		
-		public function destoryRes(key:String):void
+		public function destoryRes(name:String):void
 		{
-			delete bytesDic[key];
-			sharedMap.remove(key);
+			delete fileDic[name];
+			sharedMap.remove(name);
 		}
 	}
 }

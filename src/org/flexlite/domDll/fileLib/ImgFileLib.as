@@ -9,7 +9,7 @@ package org.flexlite.domDll.fileLib
 	import flash.utils.Dictionary;
 	
 	/**
-	 * 图片文件解析库
+	 * 图片文件解析缓存库
 	 * @author DOM
 	 */
 	public class ImgFileLib extends FileLibBase
@@ -19,7 +19,7 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String,subKey:String):*
+		override public function getRes(key:String):*
 		{
 			if(sharedMap.has(key))
 				return sharedMap.get(key);
@@ -35,7 +35,7 @@ package org.flexlite.domDll.fileLib
 		 */		
 		private var keyDic:Dictionary;
 		
-		override public function getResAsync(key:String,subKey:String,compFunc:Function):void
+		override public function getResAsync(key:String,compFunc:Function):void
 		{
 			if(sharedMap.has(key))
 			{
@@ -45,7 +45,7 @@ package org.flexlite.domDll.fileLib
 			}
 			else
 			{
-				var bytes:ByteArray = bytesDic[key];
+				var bytes:ByteArray = fileDic[key];
 				if(bytes)
 				{
 					if(!compFuncDic)

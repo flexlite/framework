@@ -55,10 +55,6 @@ package org.flexlite.domDll.core
 		 * 一级键名字典
 		 */		
 		private var keyMap:Dictionary = new Dictionary;
-		/**
-		 * 二级键名字典
-		 */		
-		private var subkeyMap:Dictionary = new Dictionary;
 		
 		/**
 		 * 解析一个配置数据,构造查询表
@@ -135,61 +131,44 @@ package org.flexlite.domDll.core
 		private function addItemToList(item:Object):void
 		{
 			loadList.push(item);
-			keyMap[item.name] = item;
+			if(!keyMap[item.name])
+				keyMap[item.name] = item;
 			if(item.hasOwnProperty("subkeys"))
 			{
 				var subkeys:Array = String(item.subkeys).split(",");
 				delete item.subkeys;
 				for each(var key:String in subkeys)
 				{
-					if(subkeyMap[key]!=null)
+					if(keyMap[key]!=null)
 						continue;
-					subkeyMap[key] = item;
+					keyMap[key] = item;
 				}
 			}
 		}
 		/**
-		 * 根据一级键名或二级键名获取加载项的类型。
+		 * 获取加载项类型。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */		
-		public function getType(key:String,subKey:String=""):String
+		public function getType(key:String):String
 		{
-			var data:Object;
-			if(key)
-			{
-				data = keyMap[key];
-			}
-			else if(subKey)
-			{
-				data = subkeyMap[subKey];
-			}
-			if(data)
-				return data.type;
-			return "";
+			var data:Object = keyMap[key];
+			return data?data.type:"";
 		}
 		/**
-		 *  通过二级键名获取一级键名
+		 * 获取加载项名称
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */		
-		public function getKeyBySubKey(subKey:String):String
+		public function getName(key:String):String
 		{
-			var data:Object = subkeyMap[subKey];
-			if(data)
-				return data.name;
-			return "";
+			var data:Object = keyMap[key];
+			return data?data.name:"";
 		}
 		/**
 		 * 根据一级键名或二级键名获取加载项信息对象
 		 */		
-		public function getDllItem(key:String,subKey:String=""):DllItem
+		public function getDllItem(key:String):DllItem
 		{
-			var data:Object;
-			if(key)
-			{
-				data = keyMap[key];
-			}
-			else if(subKey)
-			{
-				data = subkeyMap[subKey];
-			}
+			var data:Object = keyMap[key];
 			if(data)
 				return parseDllItem(data);
 			return null;

@@ -8,7 +8,7 @@ package org.flexlite.domDll.fileLib
 	
 	
 	/**
-	 * 二进制序列化对象文件解析库
+	 * 二进制序列化对象文件解析缓存库
 	 * @author DOM
 	 */
 	public class AmfFileLib extends FileLibBase
@@ -21,9 +21,9 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function getRes(key:String,subKey:String):*
+		override public function getRes(key:String):*
 		{
-			var bytes:ByteArray = bytesDic[key];
+			var bytes:ByteArray = fileDic[key];
 			if(!bytes)
 				return null;
 			try

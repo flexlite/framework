@@ -45,11 +45,24 @@ package org.flexlite.domCore
 			var requestName:String = getQualifiedClassName(whenAskedFor)+"#"+named;
 			mapValueDic[requestName] = useValue;
 		}
-		
-		
+		/**
+		 * 检查指定的映射规则是否存在
+		 * @param whenAskedFor 传递类或接口作为需要映射的键。
+		 * @param named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
+		 */		
+		public static function hasMapRule(whenAskedFor:Class,named:String=""):Boolean
+		{
+			var requestName:String = getQualifiedClassName(whenAskedFor)+"#"+named;
+			if((mapValueDic&&mapValueDic[requestName])||
+				(mapClassDic&&mapClassDic[requestName]))
+			{
+				return true;
+			}
+			return false;
+		}
 		/**
 		 * 获取指定类映射的单例
-		 * @param clazz 类定义
+		 * @param clazz 类或接口定义
 		 * @param named 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
 		 */		
 		public static function getInstance(clazz:Class,named:String=""):*

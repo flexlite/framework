@@ -65,5 +65,10 @@ package org.flexlite.domDll.core
 		 * 出于队列加载中
 		 */		
 		dx_internal var inGroupLoading:Boolean = false;
+		
+		public function toString():String
+		{
+			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" size=\""+size+"\"]";
+		}
 	}
 }

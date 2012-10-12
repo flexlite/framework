@@ -13,7 +13,9 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.events.DllEvent;
 	import org.flexlite.domDll.fileLib.AmfFileLib;
 	import org.flexlite.domDll.fileLib.BinFileLib;
+	import org.flexlite.domDll.fileLib.DxrFileLib;
 	import org.flexlite.domDll.fileLib.ImgFileLib;
+	import org.flexlite.domDll.fileLib.SwfFileLib;
 	import org.flexlite.domDll.fileLib.XmlFileLib;
 	
 	/**
@@ -92,26 +94,24 @@ package org.flexlite.domDll
 		
 		/**
 		 * 同步方式获取资源。<br/>
-		 * 在loading组和preload组中的资源都可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
+		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 通常对应配置文件里的name属性。
-		 * @param subKey 二级键名(可选)，通常对应swf里的导出类名。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */		
-		public static function getRes(key:String,subKey:String=""):*
+		public static function getRes(key:String):*
 		{
-			return instance.getRes(key,subKey);
+			return instance.getRes(key);
 		}
 		/**
-		 * 异步方式获取资源。<br/>
+		 * 异步方式获取资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 通常对应配置文件里的name属性。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
-		 * @param subKey 二级键名(可选),通常对应swf里的导出类名。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
-		public static function getResAsync(key:String,compFunc:Function,subKey:String="",other:Object=null):void
+		public static function getResAsync(key:String,compFunc:Function,other:Object=null):void
 		{
-			instance.getResAsync(key,compFunc,subKey,other);
+			instance.getResAsync(key,compFunc,other);
 		}
 		
 		/**
@@ -123,10 +123,18 @@ package org.flexlite.domDll
 		 */		
 		private function init():void
 		{
-			Injector.mapClass(IFileLib,XmlFileLib,DllItem.TYPE_XML);
-			Injector.mapClass(IFileLib,BinFileLib,DllItem.TYPE_BIN);
-			Injector.mapClass(IFileLib,AmfFileLib,DllItem.TYPE_AMF);
-			Injector.mapClass(IFileLib,ImgFileLib,DllItem.TYPE_IMG);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_XML))
+				Injector.mapClass(IFileLib,XmlFileLib,DllItem.TYPE_XML);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_BIN))
+				Injector.mapClass(IFileLib,BinFileLib,DllItem.TYPE_BIN);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_AMF))
+				Injector.mapClass(IFileLib,AmfFileLib,DllItem.TYPE_AMF);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_IMG))
+				Injector.mapClass(IFileLib,ImgFileLib,DllItem.TYPE_IMG);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_SWF))
+				Injector.mapClass(IFileLib,SwfFileLib,DllItem.TYPE_SWF);
+			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_DXR))
+				Injector.mapClass(IFileLib,DxrFileLib,DllItem.TYPE_DXR);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
@@ -246,7 +254,7 @@ package org.flexlite.domDll
 			var fileLib:IFileLib = getFileLibByType(configType);
 			for each(var name:String in configNameList)
 			{
-				var config:Object = fileLib.getRes(name,"");
+				var config:Object = fileLib.getRes(name);
 				fileLib.destoryRes(name);
 				dllConfig.parseConfig(config);
 			}
@@ -269,91 +277,84 @@ package org.flexlite.domDll
 		}
 		/**
 		 * 同步方式获取资源。<br/>
-		 * 在loading组和preload组中的资源都可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
+		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 通常对应配置文件里的name属性。
-		 * @param subKey 二级键名(可选)，通常对应swf里的导出类名。
-		 */		
-		private function getRes(key:String,subKey:String=""):*
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 */	
+		private function getRes(key:String):*
 		{
-			var type:String = dllConfig.getType(key,subKey);
+			var type:String = dllConfig.getType(key);
+			if(type=="")
+				return null;
 			var fileLib:IFileLib = getFileLibByType(type);
-			return fileLib.getRes(key,subKey);
+			return fileLib.getRes(key);
 		}
 		
 		/**
-		 * 加载完成回调函数字典
+		 * 异步获取资源参数缓存字典
 		 */		
-		private var keyDic:Dictionary = new Dictionary;
+		private var asyncDic:Dictionary = new Dictionary;
 		/**
-		 * 异步获取资源回调函数字典
-		 */		
-		private var compFuncDic:Dictionary = new Dictionary;
-		/**
-		 * 异步获取资源回调函数附加参数字典
-		 */		
-		private var otherDic:Dictionary = new Dictionary;
-		/**
-		 * 异步方式获取资源。<br/>
+		 * 异步方式获取资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 通常对应配置文件里的name属性。
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
-		 * @param subKey 二级键名(可选),通常对应swf里的导出类名。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
-		private function getResAsync(key:String,compFunc:Function,subKey:String="",other:Object=null):void
+		private function getResAsync(key:String,compFunc:Function,other:Object=null):void
 		{
-			if(compFunc==null)
+			if(compFunc==null||!key)
 				return;
-			var type:String = dllConfig.getType(key,subKey);
+			var type:String = dllConfig.getType(key);
+			if(type=="")
+			{
+				doCompFunc(compFunc,null,other);
+				return;
+			}
 			var fileLib:IFileLib = getFileLibByType(type);
-			var res:* = fileLib.getRes(key,subKey);
+			var res:* = fileLib.getRes(key);
 			if(res)
 			{
-				if(other)
-					compFunc(res,other);
-				else 
-					compFunc(res);
+				doCompFunc(compFunc,res,other);
 				return;
 			}
-			if(!key)
+			var name:String = dllConfig.getName(key);
+			if(fileLib.hasRes(name))
 			{
-				key = dllConfig.getKeyBySubKey(subKey);
-			}
-			if(!key)
-			{
-				if(other)
-					compFunc(null,other);
-				else 
-					compFunc(null);
-				return;
-			}
-			else if(fileLib.hasRes(key))
-			{
-				doGetResAsync(fileLib,key,subKey,compFunc,other);
+				doGetResAsync(fileLib,key,compFunc,other);
 			}
 			else
 			{
-				otherDic[key+"#"+subKey] = other;
-				if(keyDic[key])
+				var args:Object = {key:key,compFunc:compFunc,other:other};
+				if(asyncDic[name])
 				{
-					keyDic[key].push(key+"#"+subKey);
+					asyncDic[name].push(args);
 				}
 				else
 				{
-					keyDic[key] = new <String>[key+"#"+subKey];
-					var dllItem:DllItem = dllConfig.getDllItem(key,subKey);
+					asyncDic[key] = [args];
+					var dllItem:DllItem = dllConfig.getDllItem(key);
 					dllItem.compFunc = onDllItemComp;
 					dllLoader.loadItem(dllItem);
 				}
 			}
 		}
 		/**
+		 * 执行回调函数
+		 */		
+		private function doCompFunc(compFunc:Function,res:*,other:Object):void
+		{
+			if(other)
+				compFunc(res,other);
+			else 
+				compFunc(res);
+		}
+		/**
 		 * 执行异步获取资源
 		 */		
-		private function doGetResAsync(fileLib:IFileLib,key:String,subKey:String,compFunc:Function,other:Object):void
+		private function doGetResAsync(fileLib:IFileLib,key:String,compFunc:Function,other:Object):void
 		{
-			fileLib.getResAsync(key,subKey,function(data:*):void{
+			fileLib.getResAsync(key,function(data:*):void{
 				if(other)
 					compFunc(data,other);
 				else 
@@ -365,17 +366,12 @@ package org.flexlite.domDll
 		 */		
 		private function onDllItemComp(item:DllItem):void
 		{
-			var keyList:Vector.<String> = keyDic[item.name];
-			delete keyDic[item.name];
+			var argsList:Array = asyncDic[item.name];
+			delete asyncDic[item.name];
 			var fileLib:IFileLib = getFileLibByType(item.type);
-			for each(var key:String in keyList)
+			for each(var args:Object in argsList)
 			{
-				var keys:Array = key.split("#");
-				var compFunc:Function = compFuncDic[key];
-				delete compFuncDic[key];
-				var other:Object = otherDic[key];
-				delete otherDic[key];
-				doGetResAsync(fileLib,keys[0],keys[1],compFunc,other);
+				doGetResAsync(fileLib,args.key,args.compFunc,args.other);
 			}
 		}
 	}
