@@ -79,10 +79,11 @@ package org.flexlite.domDll
 		 * @param path 配置文件路径
 		 * @param type 配置文件类型
 		 * @param language 当前的语言环境 
+		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
 		 */		
-		public static function loadConfig(pathList:Array,type:String="xml",language:String="cn"):void
+		public static function setInitConfig(pathList:Array,type:String="xml",language:String="cn",folder:String=""):void
 		{
-			instance.loadConfig(pathList,type,language);
+			instance.setInitConfig(pathList,type,language,folder);
 		}
 		/**
 		 * 开始加载配置为"预加载"组的资源。
@@ -207,10 +208,12 @@ package org.flexlite.domDll
 		 * @param path 配置文件路径
 		 * @param type 配置文件类型
 		 * @param language 当前的语言环境 
+		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
 		 */		
-		private function loadConfig(pathList:Array,type:String="xml",language:String="cn"):void
+		private function setInitConfig(pathList:Array,type:String="xml",language:String="cn",folder:String=""):void
 		{
 			dllConfig.language = language;
+			dllConfig.folder = folder;
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
 			for each(var path:String in pathList)

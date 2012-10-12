@@ -20,6 +20,10 @@ package org.flexlite.domDll.core
 		 * 当前的语言环境
 		 */		
 		public var language:String;
+		/**
+		 * 加载项路径前缀
+		 */		
+		public var folder:String = "";
 				
 		private var _loadingGroup:Array = [];
 		/**
@@ -178,7 +182,7 @@ package org.flexlite.domDll.core
 		 */		
 		private function parseDllItem(data:Object):DllItem
 		{
-			return new DllItem(data.name,data.url,data.type,data.size);
+			return new DllItem(data.name,folder+data.url,data.type,data.size);
 		}
 		
 	}
