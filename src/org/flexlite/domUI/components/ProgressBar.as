@@ -4,10 +4,12 @@ package org.flexlite.domUI.components
 	import flash.geom.Point;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
+	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.effects.easing.Sine;
+	import org.flexlite.domUI.events.ResizeEvent;
 	
 	[DXML(show="true")]
 	
@@ -150,6 +152,33 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
+			updateSkinDisplayList();
+		}
+		
+		override protected function partAdded(partName:String, instance:Object):void
+		{
+			if(instance==track)
+			{
+				if(track is UIComponent)
+				{
+					track.addEventListener(ResizeEvent.RESIZE,onTrackResize);
+				}
+			}
+		}
+		
+		override protected function partRemoved(partName:String, instance:Object):void
+		{
+			if(instance==track)
+			{
+				if(track is UIComponent)
+				{
+					track.removeEventListener(ResizeEvent.RESIZE,onTrackResize);
+				}
+			}
+		}
+		
+		private function onTrackResize(event:ResizeEvent):void
+		{
 			updateSkinDisplayList();
 		}
 		/**
