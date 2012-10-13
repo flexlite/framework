@@ -9,18 +9,20 @@ package org.flexlite.domDll.core
 	 */
 	public class DllItem
 	{
-		/** swf文件 */		
+		/** SWF文件 */		
 		public static const TYPE_SWF:String = "swf";
-		/** xml文件  */		
+		/** XML文件  */		
 		public static const TYPE_XML:String = "xml";
 		/** 图片文件 */		
 		public static const TYPE_IMG:String = "img";
 		/** 二进制流 */		
 		public static const TYPE_BIN:String = "bin";
-		/** dxr文件 */		
+		/** DXR文件 */		
 		public static const TYPE_DXR:String = "dxr";
 		/** 二进制序列化对象 */		
 		public static const TYPE_AMF:String = "amf";
+		/** JSON文件 */		
+		public static const TYPE_JSON:String = "json";
 		
 		
 		/**
