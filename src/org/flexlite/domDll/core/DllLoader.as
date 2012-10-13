@@ -43,6 +43,10 @@ package org.flexlite.domDll.core
 			this.thread = thread;
 		}
 		/**
+		 * 资源版本号，请求资源时加在url后的Get参数。
+		 */		
+		public var version:String;
+		/**
 		 * 最大并发加载数 
 		 */		
 		private var thread:int = 2;
@@ -193,13 +197,14 @@ package org.flexlite.domDll.core
 					break;
 				var dllItem:DllItem = currentLoadList.shift();
 				dllItemDic[loader] = dllItem;
+				var url:String = dllItem.url+"?v="+version;
 				if(loader is URLLoader)
 				{
-					loader.load(new URLRequest(dllItem.url));
+					loader.load(new URLRequest(url));
 				}
 				else
 				{
-					loader.load(new URLRequest(dllItem.url),loaderContext);
+					loader.load(new URLRequest(url),loaderContext);
 				}
 			}
 		}

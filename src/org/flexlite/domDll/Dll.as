@@ -79,12 +79,14 @@ package org.flexlite.domDll
 		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源。
 		 * @param path 配置文件路径
 		 * @param type 配置文件类型
+		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
 		 * @param language 当前的语言环境 
 		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
 		 */		
-		public static function setInitConfig(pathList:Array,type:String="xml",language:String="cn",folder:String=""):void
+		public static function setInitConfig(pathList:Array,type:String="xml",version:String="0",
+											 language:String="cn",folder:String=""):void
 		{
-			instance.setInitConfig(pathList,type,language,folder);
+			instance.setInitConfig(pathList,type,version,language,folder);
 		}
 		/**
 		 * 开始加载配置为"预加载"组的资源。
@@ -210,13 +212,16 @@ package org.flexlite.domDll
 		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源(若有配置)。
 		 * @param path 配置文件路径
 		 * @param type 配置文件类型
-		 * @param language 当前的语言环境 
+		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
+		 * @param language 当前的语言环境 。配置中与当前语言不匹配的加载项将被过滤掉。
 		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
 		 */		
-		private function setInitConfig(pathList:Array,type:String="xml",language:String="cn",folder:String=""):void
+		private function setInitConfig(pathList:Array,type:String="xml",version:String="0",
+									   language:String="cn",folder:String=""):void
 		{
 			dllConfig.language = language;
 			dllConfig.folder = folder;
+			dllLoader.version = version;
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
 			for each(var path:String in pathList)
