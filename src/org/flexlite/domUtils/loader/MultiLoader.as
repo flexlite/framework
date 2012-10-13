@@ -105,7 +105,7 @@ package org.flexlite.domUtils.loader
 		private function load(urlArray:Array,onAllComp:Function,onCurrentComp:Function=null,
 							  onProgress:Function=null,onIoError:Function=null):void
 		{
-			if(urlArray==null||urlArray.length==0||onAllComp==null)
+			if(urlArray==null||urlArray.length==0)
 				return;	
 			if(loader==null)
 			{
@@ -228,7 +228,8 @@ package org.flexlite.domUtils.loader
 		private function onAllComp():void
 		{
 			removeEventListener();
-			allCompFunc(returnArray);
+			if(allCompFunc!=null)
+				allCompFunc(returnArray);
 			returnArray = null;
 		}
 		
