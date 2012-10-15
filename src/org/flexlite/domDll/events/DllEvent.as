@@ -12,9 +12,9 @@ package org.flexlite.domDll.events
 	public class DllEvent extends Event
 	{
 		/**
-		 * loading组资源加载进度事件。
+		 * 一个加载项加载结束事件，可能是加载成功也可能是加载失败。
 		 */		
-		public static const LOADING_PROGRESS:String = "loadingProgress";
+		public static const ITEM_LOAD_FINISHED:String = "itemLoadFinished";
 		/**
 		 * loading组资源加载完成事件
 		 */		
@@ -43,8 +43,17 @@ package org.flexlite.domDll.events
 		 */		
 		public var bytesTotal:Number=0;
 		/**
-		 * 本次加载完成的项信息对象
+		 * 一次加载项加载结束的项信息对象
 		 */		
 		public var dllItem:DllItem;
+		
+		override public function clone():Event
+		{
+			var event:DllEvent = new DllEvent(type,bubbles,cancelable);
+			event.bytesLoaded = bytesLoaded;
+			event.bytesTotal = bytesTotal;
+			event.dllItem = dllItem;
+			return event;
+		}
 	}
 }

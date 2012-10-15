@@ -24,11 +24,15 @@ package org.flexlite.domDll.core
 	/**
 	 * 队列加载进度事件
 	 */	
-	[Event(name="progress",type="flash.events.DllEvent")]
+	[Event(name="progress",type="flash.events.ProgressEvent")]
 	/**
 	 * 队列加载完成事件
 	 */	
 	[Event(name="complete",type="flash.events.Event")]
+	/**
+	 * 一个加载项加载结束事件，可能是加载成功也可能是加载失败。
+	 */	
+	[Event(name="itemLoadFinished",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * 多文件队列加载器
 	 * @author DOM
@@ -82,6 +86,7 @@ package org.flexlite.domDll.core
 				{
 					var loader:Loader = new Loader();
 					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,onError);
+					loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,onProgress);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onComplete);
 					return loader;
 				}
@@ -97,12 +102,14 @@ package org.flexlite.domDll.core
 					var urlLoader:URLLoader = new URLLoader();
 					urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 					urlLoader.addEventListener(Event.COMPLETE,onComplete);
+					urlLoader.addEventListener(ProgressEvent.PROGRESS,onProgress);
 					urlLoader.addEventListener(IOErrorEvent.IO_ERROR,onError);
 					urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,onError);
 					return urlLoader;
 				}
 			}
 		}
+		
 		/**
 		 * 释放一个loader
 		 */		
@@ -152,6 +159,7 @@ package org.flexlite.domDll.core
 			for each(var dllItem:DllItem in list)
 			{
 				dllItem.inGroupLoading = true;
+				dllItem.bytesLoaded = 0;
 				totalSize += dllItem.size;
 			}
 			currentLoadList = list;
@@ -219,6 +227,25 @@ package org.flexlite.domDll.core
 			}
 		}
 		/**
+		 * 加载进度
+		 */		
+		private function onProgress(event:ProgressEvent):void
+		{
+			var loader:Object = event.target;
+			if(loader is LoaderInfo)
+			{
+				loader = (loader as LoaderInfo).loader;
+			}
+			var dllItem:DllItem = dllItemDic[loader];
+			if(!dllItem.inGroupLoading)
+				return;
+			loadedSize += event.bytesLoaded-dllItem.bytesLoaded;
+			var progressEvent:ProgressEvent = 
+				new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
+			dllItem.bytesLoaded = event.bytesLoaded;
+			dispatchEvent(progressEvent);
+		}
+		/**
 		 * 解析器字典类
 		 */		
 		private var fileLibDic:Dictionary = new Dictionary;
@@ -238,6 +265,7 @@ package org.flexlite.domDll.core
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
 			dllItem.endTime = getTimer();
+			dllItem._loadComplete = true;
 			var data:Object;
 			if(isUrlLoader)
 				data = loader.data;
@@ -265,7 +293,7 @@ package org.flexlite.domDll.core
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
 			dllItem.endTime = getTimer();
-			trace("资源加载失败::::::",dllItem);
+			dllItem._loadComplete = false;
 			onItemComplete(dllItem);
 		}
 		
@@ -274,18 +302,16 @@ package org.flexlite.domDll.core
 		 */		
 		private function onItemComplete(dllItem:DllItem):void
 		{
+			var itemLoadEvent:DllEvent = new DllEvent(DllEvent.ITEM_LOAD_FINISHED);
+			itemLoadEvent.dllItem = dllItem;
+			dispatchEvent(itemLoadEvent);
 			if(dllItem.compFunc!=null)
 				dllItem.compFunc(dllItem);
 			if(dllItem.inGroupLoading)
 			{
 				loadedIndex++;
-				loadedSize += dllItem.size;
-				var progressEvent:DllEvent = 
-					new DllEvent(ProgressEvent.PROGRESS);
-				progressEvent.bytesLoaded = loadedSize;
-				progressEvent.bytesTotal = totalSize;
-				progressEvent.dllItem = dllItem;
-				
+				var progressEvent:ProgressEvent = 
+					new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
 				dispatchEvent(progressEvent);
 				if(loadedIndex>=groupTotal)
 				{

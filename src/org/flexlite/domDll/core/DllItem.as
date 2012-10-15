@@ -65,6 +65,10 @@ package org.flexlite.domDll.core
 		 */		
 		dx_internal var inGroupLoading:Boolean = false;
 		/**
+		 * 已经加载的字节数
+		 */		
+		dx_internal var bytesLoaded:int = 0;
+		/**
 		 * 开始加载时间
 		 */		
 		dx_internal var startTime:int = 0;
@@ -80,9 +84,19 @@ package org.flexlite.domDll.core
 			return endTime - startTime;
 		}
 		
+		dx_internal var _loadComplete:Boolean = false;
+		/**
+		 * 是否加载成功
+		 */		
+		public function get loadComplete():Boolean
+		{
+			return _loadComplete;
+		}
+		
 		public function toString():String
 		{
-			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" size=\""+size+"\" loadTime=\""+loadTime+"\"]";
+			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" " +
+				"size=\""+size+"\" loadTime=\""+loadTime+"\" loadComplete=\""+loadComplete+"\"]";
 		}
 	}
 }

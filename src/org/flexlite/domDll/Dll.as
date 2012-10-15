@@ -19,21 +19,21 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.fileLib.XmlFileLib;
 	
 	/**
-	 * loading组资源加载进度事件。
-	 */	
-	[Event(name="loadingProgress",type="org.flexlite.domDll.events.DllEvent")]
-	/**
 	 * loading组资源加载完成事件
 	 */
 	[Event(name="loadingComplete",type="org.flexlite.domDll.events.DllEvent")]
+	/**
+	 * preload组资源加载完成事件
+	 */
+	[Event(name="preloadComplete",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * preload组资源加载进度事件
 	 */
 	[Event(name="preloadProgress",type="org.flexlite.domDll.events.DllEvent")]
 	/**
-	 * preload组资源加载完成事件
-	 */
-	[Event(name="preloadComplete",type="org.flexlite.domDll.events.DllEvent")]
+	 * 一个加载项加载结束事件，可能是加载成功也可能是加载失败。
+	 */	
+	[Event(name="itemLoadFinished",type="org.flexlite.domDll.events.DllEvent")]
 			
 	/**
 	 * 资源管理器
@@ -145,29 +145,26 @@ package org.flexlite.domDll
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
+			dllLoader.addEventListener(DllEvent.ITEM_LOAD_FINISHED,onItemLoadFinished)
+		}
+		/**
+		 * 重抛事件
+		 */		
+		private function onItemLoadFinished(event:DllEvent):void
+		{
+			dispatchEvent(event);
 		}
 		/**
 		 * 队列加载进度事件
 		 */		
-		private function onGroupProgress(event:DllEvent):void
+		private function onGroupProgress(event:ProgressEvent):void
 		{
-			var dllEvent:DllEvent;
-			switch(groupName)
-			{
-				case GROUP_LOADING:
-					dllEvent = new DllEvent(DllEvent.LOADING_PROGRESS);
-					break;
-				case GROUP_PRELOAD:
-					dllEvent = new DllEvent(DllEvent.PRELOAD_PROGRESS);
-					break;
-			}
-			if(dllEvent)
-			{
-				dllEvent.bytesTotal = event.bytesTotal;
-				dllEvent.bytesLoaded = event.bytesLoaded;
-				dllEvent.dllItem = event.dllItem;
-				dispatchEvent(dllEvent);
-			}
+			if(groupName!=GROUP_PRELOAD)
+				return;
+			var dllEvent:DllEvent = new DllEvent(DllEvent.PRELOAD_PROGRESS);
+			dllEvent.bytesTotal = event.bytesTotal;
+			dllEvent.bytesLoaded = event.bytesLoaded;
+			dispatchEvent(dllEvent);
 		}
 		/**
 		 * 队列加载完成事件
