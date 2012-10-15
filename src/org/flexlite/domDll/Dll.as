@@ -85,7 +85,7 @@ package org.flexlite.domDll
 		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
 		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		public static function setInitConfig(pathList:Array,type:String="xml",version:String="0",
+		public static function setInitConfig(pathList:Array,type:String="xml",version:String="",
 											 language:String="cn",folder:String="",autoLoad:Boolean=true):void
 		{
 			instance.setInit(pathList,type,version,language,folder,autoLoad);
@@ -229,7 +229,7 @@ package org.flexlite.domDll
 		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
 		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		private function setInit(pathList:Array,type:String="xml",version:String="0",
+		private function setInit(pathList:Array,type:String="xml",version:String="",
 									   language:String="cn",folder:String="",autoLoad:Boolean=true):void
 		{
 			dllConfig.language = language;
