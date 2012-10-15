@@ -84,6 +84,7 @@ package org.flexlite.domDll.core
 						(data as ByteArray).uncompress();
 					}
 					catch(e:Error){}
+					(data as ByteArray).position = 0;
 					data = (data as ByteArray).readObject();
 				}
 				if(data.hasOwnProperty("loading"))

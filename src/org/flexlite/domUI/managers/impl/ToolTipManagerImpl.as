@@ -12,12 +12,12 @@ package org.flexlite.domUI.managers.impl
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.ToolTip;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IToolTip;
 	import org.flexlite.domUI.core.PopUpPosition;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
@@ -454,11 +454,11 @@ package org.flexlite.domUI.managers.impl
 			var stage:Stage = DomGlobals.stage;
 			var x:Number;
 			var y:Number;
-			var toolTipWidth:Number = currentToolTip.width;
-			var toolTipHeight:Number = currentToolTip.height;
+			var dp:DisplayObject = currentToolTip as DisplayObject;
+			var toolTipRect:Rectangle = dp.getBounds(dp);
 			var rect:Rectangle = DisplayObject(currentTarget).getRect(stage);
-			var centerX:Number = rect.left+(rect.width - toolTipWidth)*0.5;
-			var centetY:Number = rect.top+(rect.height - toolTipHeight)*0.5;
+			var centerX:Number = rect.left+(rect.width - toolTipRect.width)*0.5;
+			var centetY:Number = rect.top+(rect.height - toolTipRect.height)*0.5;
 			switch(currentTarget.toolTipPosition)
 			{
 				case PopUpPosition.BELOW:
@@ -467,10 +467,10 @@ package org.flexlite.domUI.managers.impl
 					break;
 				case PopUpPosition.ABOVE:
 					x = centerX;
-					y = rect.top-toolTipHeight;
+					y = rect.top-toolTipRect.height;
 					break;
 				case PopUpPosition.LEFT:
-					x = rect.left-toolTipWidth;
+					x = rect.left-toolTipRect.width;
 					y = centetY;
 					break;
 				case PopUpPosition.RIGHT:
@@ -490,6 +490,8 @@ package org.flexlite.domUI.managers.impl
 					y = stage.mouseY + 20;
 					break;
 			}
+			x -= toolTipRect.left;
+			y -= toolTipRect.top;
 			var offset:Point = currentTarget.toolTipOffset;
 			if(offset)
 			{
@@ -498,10 +500,10 @@ package org.flexlite.domUI.managers.impl
 			}
 			var screenWidth:Number = stage.stageWidth;
 			var screenHeight:Number = stage.stageHeight;
-			if (x + toolTipWidth > screenWidth)
-				x = screenWidth - toolTipWidth;
-			if (y + toolTipHeight > screenHeight)
-				y = screenHeight - toolTipHeight;
+			if (x + toolTipRect.width > screenWidth)
+				x = screenWidth - toolTipRect.width;
+			if (y + toolTipRect.height > screenHeight)
+				y = screenHeight - toolTipRect.height;
 			currentToolTip.x = x;
 			currentToolTip.y = y;
 		}

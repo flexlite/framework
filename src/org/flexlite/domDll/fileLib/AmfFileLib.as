@@ -23,6 +23,8 @@ package org.flexlite.domDll.fileLib
 		
 		override public function getRes(key:String):*
 		{
+			if(sharedMap.has(key))
+				return sharedMap.get(key);
 			var bytes:ByteArray = fileDic[key];
 			if(!bytes)
 				return null;
@@ -34,6 +36,7 @@ package org.flexlite.domDll.fileLib
 			var data:Object = null;
 			try
 			{
+				bytes.position = 0;
 				data = bytes.readObject();
 			}
 			catch(e:Error){}

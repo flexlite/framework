@@ -51,11 +51,5 @@ package org.flexlite.domDll.fileLib
 		{
 			return fileDic[name]!=null;
 		}
-		
-		public function destoryRes(name:String):void
-		{
-			delete fileDic[name];
-			sharedMap.remove(name);
-		}
 	}
 }

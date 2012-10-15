@@ -38,11 +38,12 @@ package org.flexlite.domDisplay.codec
 		 * @param mcList MovieClip对象列表,也可以传入显示对象列表,当做单帧处理
 		 * @param keyList MovieClip在文件中的导出键名列表
 		 * @param codecList 位图编解码器标识符列表,"jpegxr"|"jpeg32"|"png",留空默认值为"jpeg32"
-		 * @param compress 是否启用二进制压缩
+		 * @param compress 二进制压缩格式，仅支持CompressionAlgorithm.ZLIB和CompressionAlgorithm.LZMA(需要11.4支持),
+		 * 输入其他任何值都认为不启用二进制压缩。默认值：CompressionAlgorithm.ZLIB。
 		 * @param maxBitmapWidth 单张位图最大宽度
 		 * @param maxBitmapHeight 单张位图最大高度
 		 */	
-		public function encode(mcList:Array,keyList:Array=null,codecList:Array=null,compress:Boolean=true,
+		public function encode(mcList:Array,keyList:Array=null,codecList:Array=null,compress:String="zlib",
 							   maxBitmapWidth:Number=4000,maxBitmapHeight:Number=4000):ByteArray
 		{
 			var dxrDataList:Array = drawMcList(mcList,keyList,codecList);
@@ -77,11 +78,12 @@ package org.flexlite.domDisplay.codec
 		/**
 		 * 将多个DxrData对象编码合并到一个文件，返回文件的字节流数组
 		 * @param dxrDataList DxrData对象列表
-		 * @param compress 是否启用二进制压缩
+		 * @param compress 二进制压缩格式，仅支持CompressionAlgorithm.ZLIB和CompressionAlgorithm.LZMA(需要11.4支持),
+		 * 输入其他任何值都认为不启用二进制压缩。默认值：CompressionAlgorithm.ZLIB。
 		 * @param maxBitmapWidth 单张位图最大宽度
 		 * @param maxBitmapHeight 单张位图最大高度
 		 */		
-		public function encodeDxrDataList(dxrDataList:Array,compress:Boolean=true,
+		public function encodeDxrDataList(dxrDataList:Array,compress:String="zlib",
 							   maxBitmapWidth:Number=4000,maxBitmapHeight:Number=4000):ByteArray
 		{
 			var dxrFile:Object = {keyList:{}};
@@ -89,15 +91,30 @@ package org.flexlite.domDisplay.codec
 			{
 				dxrFile.keyList[dxrData.key] = encodeDxrData(dxrData,maxBitmapWidth,maxBitmapHeight);
 			}
+			var bytes:ByteArray = writeObject(dxrFile,compress);
+			return bytes;
+		}
+		/**
+		 * 将DXR 转换为文件字节流数据
+		 * @param keyObject 文件信息描述对象 
+		 * @param compress 二进制压缩格式，仅支持CompressionAlgorithm.ZLIB和CompressionAlgorithm.LZMA(需要11.4支持),
+		 * 输入其他任何值都认为不启用二进制压缩。默认值：CompressionAlgorithm.ZLIB。
+		 */		
+		public static function writeObject(keyObject:Object,compress:String="zlib"):ByteArray
+		{
 			var bytes:ByteArray = new ByteArray();
 			bytes.position = 0;
 			bytes.writeUTF("dxr");
-			bytes.writeBoolean(compress);
-			var dxrBytes:ByteArray = new ByteArray();
-			dxrBytes.writeObject(dxrFile);
-			if(compress)
+			if(compress!="zlib"&&compress!="lzma")
 			{
-				dxrBytes.compress();
+				compress = "false";
+			}
+			bytes.writeUTF(compress);
+			var dxrBytes:ByteArray = new ByteArray();
+			dxrBytes.writeObject(keyObject);
+			if(compress!="false")
+			{
+				dxrBytes.compress(compress);
 			}
 			bytes.writeBytes(dxrBytes);
 			return bytes;

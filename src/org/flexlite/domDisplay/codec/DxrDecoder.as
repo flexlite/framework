@@ -199,16 +199,13 @@ package org.flexlite.domDisplay.codec
 			try
 			{
 				data.position = 0;
-				if(data.readUTF() != "dxr")
-				{
-					throw new Error();
-				}
-				var hasCompress:Boolean = data.readBoolean();
+				var version:String = data.readUTF();
+				var compressStr:String = data.readUTF();
 				var dxrBytes:ByteArray = new ByteArray();
 				data.readBytes(dxrBytes);
-				if(hasCompress)
+				if(compressStr!="false")
 				{
-					dxrBytes.uncompress();
+					dxrBytes.uncompress(compressStr);
 				}
 				var keyObject:Object = dxrBytes.readObject();
 				if(keyObject["keyList"]==null)

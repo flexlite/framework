@@ -31,10 +31,5 @@ package org.flexlite.domDll.core
 		 * @param name 配置文件中加载项的name属性
 		 */		
 		function hasRes(name:String):Boolean;
-		/**
-		 * 销毁指定key对应文件的缓存数据。
-		 * @param name 配置文件中加载项的name属性
-		 */		
-		function destoryRes(name:String):void;
 	}
 }
