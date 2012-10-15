@@ -15,7 +15,6 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.fileLib.BinFileLib;
 	import org.flexlite.domDll.fileLib.DxrFileLib;
 	import org.flexlite.domDll.fileLib.ImgFileLib;
-	import org.flexlite.domDll.fileLib.JsonFileLib;
 	import org.flexlite.domDll.fileLib.SwfFileLib;
 	import org.flexlite.domDll.fileLib.XmlFileLib;
 	
@@ -143,8 +142,6 @@ package org.flexlite.domDll
 				Injector.mapClass(IFileLib,SwfFileLib,DllItem.TYPE_SWF);
 			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_DXR))
 				Injector.mapClass(IFileLib,DxrFileLib,DllItem.TYPE_DXR);
-			if(!Injector.hasMapRule(IFileLib,DllItem.TYPE_JSON))
-				Injector.mapClass(IFileLib,JsonFileLib,DllItem.TYPE_JSON);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);

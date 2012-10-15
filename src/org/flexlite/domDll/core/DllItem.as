@@ -21,9 +21,6 @@ package org.flexlite.domDll.core
 		public static const TYPE_DXR:String = "dxr";
 		/** 二进制序列化对象 */		
 		public static const TYPE_AMF:String = "amf";
-		/** JSON文件 */		
-		public static const TYPE_JSON:String = "json";
-		
 		
 		/**
 		 * 构造函数
