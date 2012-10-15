@@ -88,14 +88,16 @@ package org.flexlite.domDll
 		public static function setInitConfig(pathList:Array,type:String="xml",version:String="0",
 											 language:String="cn",folder:String="",autoLoad:Boolean=true):void
 		{
-			instance.setInitConfig(pathList,type,version,language,folder,autoLoad);
+			instance.setInit(pathList,type,version,language,folder,autoLoad);
 		}
 		/**
 		 * 手动启动预加载组资源的加载，仅当setInitConfig()的autoLoad参数设置为false时有效。
 		 */		
 		public static function loadPreloadGroup():void
 		{
-			instance.loadPreloadGroup();
+			if(instance.autoLoad)
+				return;
+			instance.loadPreload();
 		}
 		
 		/**
@@ -150,7 +152,7 @@ package org.flexlite.domDll
 		/**
 		 * 队列加载进度事件
 		 */		
-		private function onGroupProgress(event:ProgressEvent):void
+		private function onGroupProgress(event:DllEvent):void
 		{
 			var dllEvent:DllEvent;
 			switch(groupName)
@@ -166,6 +168,7 @@ package org.flexlite.domDll
 			{
 				dllEvent.bytesTotal = event.bytesTotal;
 				dllEvent.bytesLoaded = event.bytesLoaded;
+				dllEvent.dllItem = event.dllItem;
 				dispatchEvent(dllEvent);
 			}
 		}
@@ -184,7 +187,7 @@ package org.flexlite.domDll
 					dllEvent = new DllEvent(DllEvent.LOADING_COMPLETE);
 					dispatchEvent(event);
 					if(autoLoad)
-						loadPreloadGroup();
+						loadPreload();
 					break;
 				case GROUP_PRELOAD:
 					dllEvent = new DllEvent(DllEvent.PRELOAD_COMPLETE);
@@ -226,7 +229,7 @@ package org.flexlite.domDll
 		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
 		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		private function setInitConfig(pathList:Array,type:String="xml",version:String="0",
+		private function setInit(pathList:Array,type:String="xml",version:String="0",
 									   language:String="cn",folder:String="",autoLoad:Boolean=true):void
 		{
 			dllConfig.language = language;
@@ -287,9 +290,9 @@ package org.flexlite.domDll
 		/**
 		 * 手动启动预加载组资源的加载，仅当setInitConfig()的autoLoad参数设置为false时有效。
 		 */		
-		private function loadPreloadGroup():void
+		private function loadPreload():void
 		{
-			if(autoLoad||groupName == GROUP_PRELOAD)
+			if(groupName == GROUP_PRELOAD)
 				return;
 			var preloadGroup:Vector.<DllItem> = dllConfig.preloadGroup;
 			if(preloadGroup.length>0)

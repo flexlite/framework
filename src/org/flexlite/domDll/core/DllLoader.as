@@ -14,15 +14,17 @@ package org.flexlite.domDll.core
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.getTimer;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domDll.events.DllEvent;
 	
 	use namespace dx_internal;
 	/**
 	 * 队列加载进度事件
 	 */	
-	[Event(name="progress",type="flash.events.ProgressEvent")]
+	[Event(name="progress",type="flash.events.DllEvent")]
 	/**
 	 * 队列加载完成事件
 	 */	
@@ -197,7 +199,15 @@ package org.flexlite.domDll.core
 					break;
 				var dllItem:DllItem = currentLoadList.shift();
 				dllItemDic[loader] = dllItem;
-				var url:String = dllItem.url+"?v="+version;
+				var url:String = dllItem.url;
+				if(version)
+				{
+					if(url.indexOf("?")==-1)
+						url += "?v="+version;
+					else
+						url += "&v="+version;
+				}
+				dllItem.startTime = getTimer();
 				if(loader is URLLoader)
 				{
 					loader.load(new URLRequest(url));
@@ -227,6 +237,7 @@ package org.flexlite.domDll.core
 			freeLoader(loader);
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
+			dllItem.endTime = getTimer();
 			var data:Object;
 			if(isUrlLoader)
 				data = loader.data;
@@ -253,6 +264,7 @@ package org.flexlite.domDll.core
 			freeLoader(loader);
 			var dllItem:DllItem = dllItemDic[loader];
 			delete dllItemDic[loader];
+			dllItem.endTime = getTimer();
 			trace("资源加载失败::::::",dllItem);
 			onItemComplete(dllItem);
 		}
@@ -268,8 +280,12 @@ package org.flexlite.domDll.core
 			{
 				loadedIndex++;
 				loadedSize += dllItem.size;
-				var progressEvent:ProgressEvent = 
-					new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
+				var progressEvent:DllEvent = 
+					new DllEvent(ProgressEvent.PROGRESS);
+				progressEvent.bytesLoaded = loadedSize;
+				progressEvent.bytesTotal = totalSize;
+				progressEvent.dllItem = dllItem;
+				
 				dispatchEvent(progressEvent);
 				if(loadedIndex>=groupTotal)
 				{

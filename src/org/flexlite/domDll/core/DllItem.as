@@ -64,13 +64,28 @@ package org.flexlite.domDll.core
 		 */		
 		public var compFunc:Function;
 		/**
-		 * 出于队列加载中
+		 * 处于队列加载中标志
 		 */		
 		dx_internal var inGroupLoading:Boolean = false;
+		/**
+		 * 开始加载时间
+		 */		
+		dx_internal var startTime:int = 0;
+		/**
+		 * 加载结束时间
+		 */		
+		dx_internal var endTime:int = 0;
+		/**
+		 * 加载时间,单位:ms
+		 */		
+		public function get loadTime():int
+		{
+			return endTime - startTime;
+		}
 		
 		public function toString():String
 		{
-			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" size=\""+size+"\"]";
+			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" size=\""+size+"\" loadTime=\""+loadTime+"\"]";
 		}
 	}
 }

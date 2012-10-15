@@ -2,6 +2,8 @@ package org.flexlite.domDll.events
 {
 	import flash.events.Event;
 	
+	import org.flexlite.domDll.core.DllItem;
+	
 	
 	/**
 	 * 资源管理器事件
@@ -40,5 +42,9 @@ package org.flexlite.domDll.events
 		 * 要加载的总字节数
 		 */		
 		public var bytesTotal:Number=0;
+		/**
+		 * 本次加载完成的项信息对象
+		 */		
+		public var dllItem:DllItem;
 	}
 }
