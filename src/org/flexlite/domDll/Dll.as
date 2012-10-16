@@ -6,6 +6,8 @@ package org.flexlite.domDll
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.Injector;
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domDll.core.ConfigItem;
 	import org.flexlite.domDll.core.DllConfig;
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.DllLoader;
@@ -17,6 +19,8 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.fileLib.ImgFileLib;
 	import org.flexlite.domDll.fileLib.SwfFileLib;
 	import org.flexlite.domDll.fileLib.XmlFileLib;
+	
+	use namespace dx_internal;
 	
 	/**
 	 * loading组资源加载完成事件
@@ -76,18 +80,16 @@ package org.flexlite.domDll
 		
 		/**
 		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源。
-		 * @param path 配置文件路径
-		 * @param type 配置文件类型
+		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
 		 * @param language 当前的语言环境 
-		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
 		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
 		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		public static function setInitConfig(pathList:Array,type:String="xml",version:String="",
-											 language:String="cn",folder:String="",autoLoad:Boolean=true):void
+		public static function setInitConfig(configList:Vector.<ConfigItem>,version:String="",
+											 language:String="cn",autoLoad:Boolean=true):void
 		{
-			instance.setInit(pathList,type,version,language,folder,autoLoad);
+			instance.setInit(configList,version,language,autoLoad);
 		}
 		/**
 		 * 手动启动预加载组资源的加载，仅当setInitConfig()的autoLoad参数设置为false时有效。
@@ -214,34 +216,30 @@ package org.flexlite.domDll
 		 */		
 		private var autoLoad:Boolean = true;
 		/**
-		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源(若有配置)。
-		 * @param path 配置文件路径
-		 * @param type 配置文件类型
+		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源。
+		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
-		 * @param language 当前的语言环境 。配置中与当前语言不匹配的加载项将被过滤掉。
-		 * @param folder 所有加载项的路径前缀。可将加载项url中重复的部分提取出来作为folder属性。
+		 * @param language 当前的语言环境 
 		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
 		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		private function setInit(pathList:Array,type:String="xml",version:String="",
-									   language:String="cn",folder:String="",autoLoad:Boolean=true):void
+		private function setInit(configList:Vector.<ConfigItem>,version:String="",
+								 language:String="cn",autoLoad:Boolean=true):void
 		{
 			dllConfig.language = language;
-			dllConfig.folder = folder;
 			dllLoader.version = version;
 			autoLoad = autoLoad;
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
-			for each(var path:String in pathList)
+			for each(var config:ConfigItem in configList)
 			{
-				var name:String = "DLL__CONFIG"+index;
-				configNameList.push(name);
-				var dllItem:DllItem = new DllItem(name,path,type);
+				config.name = "DLL__CONFIG"+index;
+				configNameList.push(config);
+				var dllItem:DllItem = new DllItem(config.name,config.url,config.type);
 				itemList.push(dllItem);
 				index++;
 			}
 			groupName = GROUP_CONFIG;
-			configType = type;
 			dllLoader.loadGroup(itemList);
 		}
 		
@@ -270,11 +268,11 @@ package org.flexlite.domDll
 		 */		
 		private function onConfigComp():void
 		{
-			var fileLib:IFileLib = getFileLibByType(configType);
-			for each(var name:String in configNameList)
+			for each(var config:ConfigItem in configNameList)
 			{
-				var config:Object = fileLib.getRes(name);
-				dllConfig.parseConfig(config);
+				var fileLib:IFileLib = getFileLibByType(config.type);
+				var data:Object = fileLib.getRes(config.name);
+				dllConfig.parseConfig(data,config.folder);
 			}
 			var loadingGroup:Vector.<DllItem> = dllConfig.loadingGroup;
 			groupName = GROUP_LOADING;
