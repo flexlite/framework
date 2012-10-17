@@ -102,7 +102,8 @@ package org.flexlite.domUI.components
 		
 		override public function getVirtualElementAt(index:int):IVisualElement
 		{
-			virtualRendererIndices.push(index);
+			if(virtualLayoutUnderWay)
+				virtualRendererIndices.push(index);
 			if(indexToRenderer[index]!=null)
 			{
 				return indexToRenderer[index];
