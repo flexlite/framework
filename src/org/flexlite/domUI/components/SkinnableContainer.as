@@ -245,50 +245,21 @@ package org.flexlite.domUI.components
 			
 			dispatchEvent(event);
 		}
-		
-		override protected function attachSkin(skin:Object):void
+
+		override dx_internal function createSkinParts():void
 		{
-			super.attachSkin(skin);
-			if(!(skin is ISkinPartHost))
-			{
-				createContentGroup();
-			}
-		}
-		
-		override protected function detachSkin(skin:Object):void
-		{
-			if(!(skin is ISkinPartHost))
-			{
-				removeContentGroup();
-			}
-			super.detachSkin(skin);
-		}
-		
-		/**
-		 * 当皮肤不是ISkinPartHost时，创建DataGroup
-		 */		
-		private function createContentGroup():void
-		{
-			if(contentGroup)
-				return;
 			contentGroup = new Group();
 			contentGroup.percentWidth = 100;
 			contentGroup.percentHeight = 100;
 			addToDisplyList(contentGroup);
 			partAdded("contentGroup",contentGroup);
 		}
-		
-		/**
-		 * 销毁当皮肤不是ISkinPartHost时创建的DataGroup
-		 */		
-		private function removeContentGroup():void
+				
+		override dx_internal function removeSkinParts():void
 		{
-			if(!contentGroup)
-				return;
 			partRemoved("contentGroup",contentGroup);
 			removeFromDisplayList(contentGroup);
 			contentGroup = null;
 		}
-		
 	}
 }

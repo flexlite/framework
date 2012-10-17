@@ -4,13 +4,13 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.DataGroup;
 	import org.flexlite.domUI.components.IItemRenderer;
 	import org.flexlite.domUI.components.SkinnableDataContainer;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.IndexChangeEvent;
@@ -384,9 +384,6 @@ package org.flexlite.domUI.components.supportClasses
 				renderer.label = itemToLabel(renderer.data); 
 		}
 		
-		/**
-		 *  @private
-		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -403,9 +400,6 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
-		/**
-		 *  @private
-		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{        
 			super.partRemoved(partName, instance);
@@ -733,54 +727,6 @@ package org.flexlite.domUI.components.supportClasses
 				}
 			}
 			
-		}
-		
-		override protected function attachSkin(skin:Object):void
-		{
-			super.attachSkin(skin);
-			if(!(skin is ISkinPartHost))
-			{
-				createDataGroup();
-			}
-		}
-		
-		override protected function detachSkin(skin:Object):void
-		{
-			if(!(skin is ISkinPartHost))
-			{
-				removeDataGroup();
-			}
-			super.detachSkin(skin);
-		}
-		
-		/**
-		 * 当皮肤不是ISkinPartHost时，创建DataGroup
-		 */		
-		private function createDataGroup():void
-		{
-			if(dataGroup)
-				return;
-			dataGroup = new DataGroup();
-			dataGroup.percentHeight = dataGroup.percentWidth = 100;
-			dataGroup.clipAndEnableScrolling = true;
-			var temp:VerticalLayout = new VerticalLayout();
-			dataGroup.layout = temp;
-			temp.gap = 0;
-			temp.horizontalAlign = "contentJustify";
-			addToDisplyList(dataGroup);
-			partAdded("dataGroup",dataGroup);
-		}
-		
-		/**
-		 * 销毁当皮肤不是ISkinPartHost时创建的DataGroup
-		 */		
-		private function removeDataGroup():void
-		{
-			if(!dataGroup)
-				return;
-			partRemoved("dataGroup",dataGroup);
-			removeFromDisplayList(dataGroup);
-			dataGroup = null;
 		}
 	}
 }

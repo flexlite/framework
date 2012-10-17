@@ -156,10 +156,8 @@ package org.flexlite.domUI.components
 			}
 		}
 
-		override dx_internal function createTextDisplay():void
+		override dx_internal function createSkinParts():void
 		{
-			if(textDisplay)
-				return;
 			textDisplay = new EditableText();
 			textDisplay.widthInChars = 15;
 			textDisplay.heightInLines = 10;

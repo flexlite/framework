@@ -7,12 +7,12 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.ISkinPartHost;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	
@@ -428,26 +428,6 @@ package org.flexlite.domUI.components.supportClasses
 			return "up";
 		}
 		
-		override protected function attachSkin(skin:Object):void
-		{
-			super.attachSkin(skin);
-			if(!(skin is ISkinPartHost))
-			{
-				createLabelDisplay();
-			}
-		}
-		
-		override protected function detachSkin(skin:Object):void
-		{
-			if(!(skin is ISkinPartHost)&&labelDisplay)
-			{
-				partRemoved("labelDisplay",labelDisplay);
-				removeFromDisplayList(labelDisplay as DisplayObject);
-				labelDisplay = null;
-			}
-			super.detachSkin(skin);
-		}
-		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -464,17 +444,15 @@ package org.flexlite.domUI.components.supportClasses
 			if(createLabelIfNeedChanged)
 			{
 				createLabelIfNeedChanged = false;
-				if(!createLabelIfNeed&&labelDisplay)
+				if(createLabelIfNeed)
 				{
-					_label = labelDisplay.text;
-					removeFromDisplayList(labelDisplay as DisplayObject);
-					labelDisplay = null;
+					createSkinParts();
 					invalidateSize();
 					invalidateDisplayList();
 				}
-				else if(createLabelIfNeed&&!labelDisplay)
+				else
 				{
-					createLabelDisplay();
+					removeSkinParts();
 				}
 			}
 		}
@@ -498,15 +476,16 @@ package org.flexlite.domUI.components.supportClasses
 			createLabelIfNeedChanged = true;
 			invalidateProperties();
 		}
-
-		
 		/**
-		 * 创建labelDisplay对象
-		 */		
-		private function createLabelDisplay():void
+		 * 创建过label的标志
+		 */
+		private var hasCreatedLabel:Boolean = false;
+		
+		override dx_internal function createSkinParts():void
 		{
-			if(labelDisplay||!_createLabelIfNeed)
+			if(hasCreatedLabel||!_createLabelIfNeed)
 				return;
+			hasCreatedLabel = true;
 			var text:Label = new Label();
 			text.textAlign = TextFormatAlign.CENTER;
 			text.verticalAlign = VerticalAlign.MIDDLE;
@@ -518,6 +497,19 @@ package org.flexlite.domUI.components.supportClasses
 			addToDisplyList(text);
 			labelDisplay = text;
 			partAdded("labelDisplay",labelDisplay);
+		}
+		
+		override dx_internal function removeSkinParts():void
+		{
+			if(!hasCreatedLabel)
+				return;
+			hasCreatedLabel = false;
+			if(!labelDisplay)
+				return;
+			_label = labelDisplay.text;
+			partRemoved("labelDisplay",labelDisplay);
+			removeFromDisplayList(labelDisplay as DisplayObject);
+			labelDisplay = null;
 		}
 		
 	}

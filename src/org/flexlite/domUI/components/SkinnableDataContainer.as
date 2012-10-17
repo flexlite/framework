@@ -1,9 +1,10 @@
 package org.flexlite.domUI.components
 {
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
@@ -277,6 +278,28 @@ package org.flexlite.domUI.components
 						RendererExistenceEvent.RENDERER_REMOVE, dispatchEvent);
 				}
 			}
+		}
+		
+		override dx_internal function createSkinParts():void
+		{
+			dataGroup = new DataGroup();
+			dataGroup.percentHeight = dataGroup.percentWidth = 100;
+			dataGroup.clipAndEnableScrolling = true;
+			var temp:VerticalLayout = new VerticalLayout();
+			dataGroup.layout = temp;
+			temp.gap = 0;
+			temp.horizontalAlign = "contentJustify";
+			addToDisplyList(dataGroup);
+			partAdded("dataGroup",dataGroup);
+		}
+		
+		override dx_internal function removeSkinParts():void
+		{
+			if(!dataGroup)
+				return;
+			partRemoved("dataGroup",dataGroup);
+			removeFromDisplayList(dataGroup);
+			dataGroup = null;
 		}
 	}
 }

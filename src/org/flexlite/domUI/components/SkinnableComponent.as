@@ -3,6 +3,7 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.filters.ColorMatrixFilter;
+	import flash.net.dns.AAAARecord;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
@@ -143,6 +144,12 @@ package org.flexlite.domUI.components
 		 */		
 		protected function attachSkin(skin:Object):void
 		{
+			if(hasCreatedSkinParts&&(skin is ISkinPartHost))
+			{
+				removeSkinParts();
+				hasCreatedSkinParts = true;
+			}
+			
 			if(skin is IInvisibleSkin)
 			{
 				(skin as IInvisibleSkin).getSkin(getCurrentSkinState(),super.onGetSkin);
@@ -166,6 +173,12 @@ package org.flexlite.domUI.components
 			{
 				layout = new SkinBasicLayout();
 				layout.target = this;
+			}
+			
+			if(!hasCreatedSkinParts&&!(skin is ISkinPartHost))
+			{
+				createSkinParts();
+				hasCreatedSkinParts = false;
 			}
 		}
 		
@@ -191,6 +204,23 @@ package org.flexlite.domUI.components
 					}
 				}
 			}
+		}
+		
+		/**
+		 * 由组件自身创建了SkinPart的标志
+		 */		
+		private var hasCreatedSkinParts:Boolean = false;
+		/**
+		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart是调用。
+		 */		
+		dx_internal function createSkinParts():void
+		{
+		}
+		/**
+		 * 删除组件自身创建的SkinPart
+		 */		
+		dx_internal function removeSkinParts():void
+		{
 		}
 		
 		/**

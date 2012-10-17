@@ -381,14 +381,6 @@ package org.flexlite.domUI.components.supportClasses
 				textDisplay.setFocus();
 		}
 		
-		override protected function attachSkin(skin:Object):void
-		{
-			super.attachSkin(skin);
-			if(!(skin is ISkinPartHost))
-			{
-				createTextDisplay();
-			}
-		}
 		/**
 		 * 当皮肤不为ISkinPartHost时，创建TextDisplay显示对象
 		 */		
@@ -396,15 +388,13 @@ package org.flexlite.domUI.components.supportClasses
 		{
 		}
 		
-		override protected function detachSkin(skin:Object):void
+		override dx_internal function removeSkinParts():void
 		{
-			if(!(skin is ISkinPartHost)&&textDisplay)
-			{
-				partRemoved("textDisplay",textDisplay);
-				removeFromDisplayList(DisplayObject(textDisplay));
-				textDisplay = null;
-			}
-			super.detachSkin(skin);
+			if(!textDisplay)
+				return;
+			partRemoved("labelDisplay",textDisplay);
+			removeFromDisplayList(textDisplay as DisplayObject);
+			textDisplay = null;
 		}
 		
 		/**
