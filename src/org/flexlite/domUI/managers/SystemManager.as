@@ -9,12 +9,12 @@ package org.flexlite.domUI.managers
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
-	import org.flexlite.domCore.dx_internal;
 
 	use namespace dx_internal;
 	
@@ -38,17 +38,24 @@ package org.flexlite.domUI.managers
 			{
 				addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
 			}
+			this.addEventListener(Event.REMOVED_FROM_STAGE,onRemoved)
+		}
+		/**
+		 * 从舞台移除
+		 */		
+		private function onRemoved(event:Event):void
+		{
+			stage.removeEventListener(Event.RESIZE,onResize);
+			stage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true);
 		}
 		/**
 		 * 添加到舞台
 		 */		
 		private function onAddToStage(event:Event=null):void
 		{
-			if(event)
-			{
-				removeEventListener(Event.ADDED_TO_STAGE,onAddToStage);
-			}
-			
 			DomGlobals.systemManager = this;
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;

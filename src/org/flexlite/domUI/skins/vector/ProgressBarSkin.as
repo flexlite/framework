@@ -38,7 +38,8 @@ package org.flexlite.domUI.skins.vector
 			addElement(thumb);
 			
 			labelDisplay = new Label();
-			labelDisplay.y = 12;
+			labelDisplay.y = 14;
+			labelDisplay.horizontalCenter = 0;
 			addElement(labelDisplay);
 		}
 	}

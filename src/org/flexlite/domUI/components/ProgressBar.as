@@ -67,7 +67,7 @@ package org.flexlite.domUI.components
 		{
 			if(labelFunction!=null)
 			{
-				return labelFunction(value);
+				return labelFunction(value,maximum);
 			}
 			return value+" / "+maximum;
 		}
