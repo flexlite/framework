@@ -147,7 +147,7 @@ package org.flexlite.domUI.components
 			if(hasCreatedSkinParts&&(skin is ISkinPartHost))
 			{
 				removeSkinParts();
-				hasCreatedSkinParts = true;
+				hasCreatedSkinParts = false;
 			}
 			
 			if(skin is IInvisibleSkin)
@@ -178,7 +178,7 @@ package org.flexlite.domUI.components
 			if(!hasCreatedSkinParts&&!(skin is ISkinPartHost))
 			{
 				createSkinParts();
-				hasCreatedSkinParts = false;
+				hasCreatedSkinParts = true;
 			}
 		}
 		
