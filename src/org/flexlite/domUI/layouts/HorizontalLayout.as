@@ -499,7 +499,7 @@ package org.flexlite.domUI.layouts
 			for(var i:int=startIndex;i<=endIndex;i++)
 			{
 				var exceesHeight:Number = 0;
-				layoutElement = target.getVirtualElementAt(i) as ILayoutElement;
+				layoutElement = target.getVirtualElementAt(i,true) as ILayoutElement;
 				if (layoutElement==null)
 				{
 					continue;

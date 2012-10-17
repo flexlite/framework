@@ -680,7 +680,7 @@ package org.flexlite.domUI.layouts
 			for(var index:int = startIndex;index <= endIndex;index++)
 			{
 				if(useVirtualLayout)
-					elt = target.getVirtualElementAt(index) as ILayoutElement;
+					elt = target.getVirtualElementAt(index,true) as ILayoutElement;
 				else
 					elt = target.getElementAt(index) as ILayoutElement;
 				if(elt == null||!elt.includeInLayout)

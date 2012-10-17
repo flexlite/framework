@@ -3,11 +3,11 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.layouts.BasicLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
@@ -362,8 +362,9 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 支持 useVirtualLayout 属性的布局类在 updateDisplayList() 中使用此方法来获取“处于视图中”的布局元素 
 		 * @param index 要检索的元素的索引。
+		 * @param changeElementInViews 是否把当前索引加入可视索引列表内，仅对采用虚拟布局的容器有效。
 		 */		
-		public function getVirtualElementAt(index:int):IVisualElement
+		public function getVirtualElementAt(index:int,changeElementInViews:Boolean=false):IVisualElement
 		{
 			return getElementAt(index);            
 		}
