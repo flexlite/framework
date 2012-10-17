@@ -57,6 +57,8 @@ package org.flexlite.domDll.core
 		 */		
 		public function parseConfig(data:Object,folder:String):void
 		{
+			if(!data)
+				return;
 			if(data is XML)
 			{
 				var xmlConfig:XML = data as XML;
