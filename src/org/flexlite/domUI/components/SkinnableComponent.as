@@ -51,9 +51,13 @@ package org.flexlite.domUI.components
 		{
 			if(!defaultTheme)
 			{
-				getDefaultTheme();
+				try
+				{
+					defaultTheme = Injector.getInstance(Theme);
+				}
+				catch(e:Error){}
 			}
-			if(skinName==null)
+			if(defaultTheme&&skinName==null)
 			{
 				skinName = defaultTheme.getSkinName(hostComponentKey);
 			}
@@ -64,23 +68,9 @@ package org.flexlite.domUI.components
 			super.createChildren();
 		}
 		/**
-		 * 皮肤解析适配器
+		 * 默认的皮肤解析适配器
 		 */		
 		private static var defaultTheme:Theme;
-		/**
-		 * 获取默认主题
-		 */		
-		private static function getDefaultTheme():void
-		{
-			try
-			{
-				defaultTheme = Injector.getInstance(Theme);
-			}
-			catch(e:Error)
-			{
-				defaultTheme = new Theme();
-			}
-		}
 		
 		/**
 		 * 在皮肤注入管理器里标识自身的默认键，可以是类定义，实例，或者是完全限定类名。

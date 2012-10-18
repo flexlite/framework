@@ -117,19 +117,26 @@ package org.flexlite.domUI.components
 		 */		
 		private static var skinAdapter:ISkinAdapter;
 		/**
+		 * 默认的皮肤解析适配器
+		 */	
+		private static var defaultSkinAdapter:DefaultSkinAdapter;
+		/**
 		 * 解析skinName
 		 */		
 		private function parseSkinName():void
 		{
-			if(!skinAdapter)
+			var adapter:ISkinAdapter = skinAdapter;
+			if(!adapter)
 			{
 				try
 				{
-					skinAdapter = Injector.getInstance(ISkinAdapter);
+					adapter = skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{
-					skinAdapter = new DefaultSkinAdapter();
+					if(!defaultSkinAdapter)
+						defaultSkinAdapter = new DefaultSkinAdapter();
+					adapter = defaultSkinAdapter;
 				}
 			}
 			if(_skinName==null||_skinName=="")
@@ -138,7 +145,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				skinAdapter.getSkin(_skinName,skinChnaged);
+				adapter.getSkin(_skinName,skinChnaged);
 			}
 		}
 		/**
