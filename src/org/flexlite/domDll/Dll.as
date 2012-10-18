@@ -106,6 +106,13 @@ package org.flexlite.domDll
 		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @return 
+		 * "swf" name:Loader subkey:Class<br/>
+		 * "dxr" name:DxrFile subkey:DxrData<br/>
+		 * "amf" name:Object<br/>
+		 * "xml" name:XML<br/>
+		 * "img" name:BitmapData<br/>
+		 * "bin" name:ByteArray
 		 */		
 		public static function getRes(key:String):*
 		{
@@ -121,6 +128,14 @@ package org.flexlite.domDll
 		public static function getResAsync(key:String,compFunc:Function,other:Object=null):void
 		{
 			instance.getResAsync(key,compFunc,other);
+		}
+		/**
+		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * @param name 配置文件中加载项的name属性
+		 */
+		public static function destroyRes(name:String):Boolean
+		{
+			return instance.destroyRes(name);
 		}
 		
 		/**
@@ -181,17 +196,14 @@ package org.flexlite.domDll
 					break;
 				case GROUP_LOADING:
 					dllEvent = new DllEvent(DllEvent.LOADING_COMPLETE);
-					dispatchEvent(event);
+					dispatchEvent(dllEvent);
 					if(autoLoad)
 						loadPreload();
 					break;
 				case GROUP_PRELOAD:
 					dllEvent = new DllEvent(DllEvent.PRELOAD_COMPLETE);
+					dispatchEvent(dllEvent);
 					break;
-			}
-			if(dllEvent)
-			{
-				dispatchEvent(dllEvent);
 			}
 		}
 		
@@ -227,7 +239,7 @@ package org.flexlite.domDll
 								 language:String="cn",autoLoad:Boolean=true):void
 		{
 			dllConfig.language = language;
-			dllLoader.version = version;
+			dllConfig.version = version;
 			autoLoad = autoLoad;
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
@@ -298,6 +310,13 @@ package org.flexlite.domDll
 		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @return 
+		 * "swf" name:Loader subkey:Class<br/>
+		 * "dxr" name:DxrFile subkey:DxrData<br/>
+		 * "amf" name:Object<br/>
+		 * "xml" name:XML<br/>
+		 * "img" name:BitmapData<br/>
+		 * "bin" name:ByteArray
 		 */	
 		private function getRes(key:String):*
 		{
@@ -391,6 +410,18 @@ package org.flexlite.domDll
 			{
 				doGetResAsync(fileLib,args.key,args.compFunc,args.other);
 			}
+		}
+		/**
+		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * @param name 配置文件中加载项的name属性
+		 */
+		public function destroyRes(name:String):Boolean
+		{
+			var type:String = dllConfig.getType(name);
+			if(type=="")
+				return false;
+			var fileLib:IFileLib = getFileLibByType(type);
+			return fileLib.destroyRes(name);
 		}
 	}
 }

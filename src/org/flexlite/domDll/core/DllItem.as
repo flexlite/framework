@@ -30,14 +30,12 @@ package org.flexlite.domDll.core
 		 * @param size 加载项文件大小(单位:字节)
 		 * @param compFunc 加载并解析完成回调函数
 		 */			
-		public function DllItem(name:String,url:String,
-								type:String,size:int=0,compFunc:Function=null)
+		public function DllItem(name:String,url:String,type:String,size:int=0)
 		{
 			this.name = name;
 			this.url = url;
 			this.type = type;
 			this.size = size;
-			this.compFunc = compFunc;
 		}
 		
 		/**
@@ -59,7 +57,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：compFunc(dllItem:DllItem):void;
 		 */		
-		public var compFunc:Function;
+		dx_internal var compFunc:Function;
 		/**
 		 * 处于队列加载中标志
 		 */		
@@ -75,23 +73,19 @@ package org.flexlite.domDll.core
 		/**
 		 * 加载结束时间
 		 */		
-		dx_internal var endTime:int = 0;
+		dx_internal var _loadTime:int = 0;
 		/**
 		 * 加载时间,单位:ms
 		 */		
 		public function get loadTime():int
 		{
-			return endTime - startTime;
+			return _loadTime;
 		}
 		
-		dx_internal var _loadComplete:Boolean = false;
 		/**
 		 * 是否加载成功
 		 */		
-		public function get loadComplete():Boolean
-		{
-			return _loadComplete;
-		}
+		public var loadComplete:Boolean = false;
 		
 		public function toString():String
 		{

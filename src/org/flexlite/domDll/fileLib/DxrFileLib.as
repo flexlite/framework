@@ -1,5 +1,7 @@
 package org.flexlite.domDll.fileLib
 {
+	import flash.utils.ByteArray;
+	
 	import org.flexlite.domDisplay.DxrData;
 	import org.flexlite.domDisplay.DxrFile;
 	
@@ -14,10 +16,8 @@ package org.flexlite.domDll.fileLib
 			super();
 		}
 		
-		override public function addFile(bytes:*,name:String):void
+		override protected function cacheFileBytes(bytes:ByteArray,name:String):void
 		{
-			if(fileDic[name])
-				return;
 			fileDic[name] = new DxrFile(bytes,name);
 		}
 		

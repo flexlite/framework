@@ -20,6 +20,10 @@ package org.flexlite.domDll.core
 		 * 当前的语言环境
 		 */		
 		public var language:String;
+		/**
+		 * 当前的资源版本号
+		 */		
+		public var version:String;
 				
 		private var _loadingGroup:Array = [];
 		/**
@@ -177,7 +181,15 @@ package org.flexlite.domDll.core
 		 */		
 		private function parseDllItem(data:Object):DllItem
 		{
-			return new DllItem(data.name,data.url,data.type,data.size);
+			var url:String = data.url;
+			if(version)
+			{
+				if(url.indexOf("?")==-1)
+					url += "?v="+version;
+				else
+					url += "&v="+version;
+			}
+			return new DllItem(data.name,url,data.type,data.size);
 		}
 		
 	}

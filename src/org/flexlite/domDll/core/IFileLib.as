@@ -10,11 +10,12 @@ package org.flexlite.domDll.core
 	public interface IFileLib
 	{
 		/**
-		 * 除了swf文件是缓存显示对象外，其余文件都缓存字节流数据。若name已经存在于缓存中，则放弃缓存。
-		 * @param file 要缓存的对象
-		 * @param name 配置文件中加载项的name属性
-		 */		
-		function addFile(file:*,name:String):void;
+		 * 加载一个资源文件
+		 * @param dllItem 加载项信息
+		 * @param compFunc 加载完成回调函数,示例:compFunc(dllItem:DllItem):void;
+		 * @param onProgress 加载进度回调函数,示例:onProgress(bytesLoaded:int,dllItem:DllItem):void;
+		 */			
+		function loadFile(dllItem:DllItem,compFunc:Function,onProgress:Function):void;
 		/**
 		 * 同步方式获取解析完成的数据
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
@@ -31,5 +32,10 @@ package org.flexlite.domDll.core
 		 * @param name 配置文件中加载项的name属性
 		 */		
 		function hasRes(name:String):Boolean;
+		/**
+		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * @param name 配置文件中加载项的name属性
+		 */		
+		function destroyRes(name:String):Boolean;
 	}
 }
