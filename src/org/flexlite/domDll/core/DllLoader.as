@@ -38,6 +38,16 @@ package org.flexlite.domDll.core
 			super();
 			this.thread = thread;
 		}
+		
+		private var _inGroupLoading:Boolean;
+		/**
+		 * 正在进行组加载的标志
+		 */
+		public function get inGroupLoading():Boolean
+		{
+			return _inGroupLoading;
+		}
+
 		/**
 		 * 最大并发加载数 
 		 */		
@@ -77,6 +87,7 @@ package org.flexlite.domDll.core
 			}
 			totalSize = 0;
 			loadedSize = 0;
+			_inGroupLoading = true;
 			for each(var dllItem:DllItem in list)
 			{
 				dllItem.inGroupLoading = true;
@@ -128,12 +139,20 @@ package org.flexlite.domDll.core
 				loadingCount++;
 				var dllItem:DllItem = currentLoadList.shift();
 				dllItem.startTime = getTimer();
-				var fileLib:IFileLib = fileLibDic[dllItem.type];
-				if(!fileLib)
+				if(dllItem.loaded)
 				{
-					fileLib = fileLibDic[dllItem.type] = Injector.getInstance(IFileLib,dllItem.type);
+					onItemProgress(dllItem.size,dllItem);
+					onItemComplete(dllItem);
 				}
-				fileLib.loadFile(dllItem,onItemComplete,onItemProgress);
+				else
+				{
+					var fileLib:IFileLib = fileLibDic[dllItem.type];
+					if(!fileLib)
+					{
+						fileLib = fileLibDic[dllItem.type] = Injector.getInstance(IFileLib,dllItem.type);
+					}
+					fileLib.loadFile(dllItem,onItemComplete,onItemProgress);
+				}
 			}
 		}
 		/**
@@ -162,13 +181,14 @@ package org.flexlite.domDll.core
 			if(dllItem.inGroupLoading)
 			{
 				loadedIndex++;
-				if(!dllItem.loadComplete)
+				if(!dllItem.loaded)
 					loadedSize += dllItem.size;
 				var progressEvent:ProgressEvent = 
 					new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
 				dispatchEvent(progressEvent);
 				if(loadedIndex==groupTotal)
 				{
+					_inGroupLoading = false;
 					var event:Event = new Event(Event.COMPLETE);
 					dispatchEvent(event);
 				}

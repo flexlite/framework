@@ -81,16 +81,32 @@ package org.flexlite.domDll.core
 		{
 			return _loadTime;
 		}
-		
 		/**
-		 * 是否加载成功
+		 * 被引用的原始数据对象
 		 */		
-		public var loadComplete:Boolean = false;
+		dx_internal var data:Object;
+		
+		private var _loaded:Boolean = false;
+		/**
+		 * 加载完成的标志
+		 */
+		public function get loaded():Boolean
+		{
+			return data?data.loaded:_loaded;
+		}
+
+		public function set loaded(value:Boolean):void
+		{
+			if(data)
+				data.loaded = value;
+			_loaded = value;
+		}
+
 		
 		public function toString():String
 		{
 			return "[DllItem name=\""+name+"\" url=\""+url+"\" type=\""+type+"\" " +
-				"size=\""+size+"\" loadTime=\""+loadTime+"\" loadComplete=\""+loadComplete+"\"]";
+				"size=\""+size+"\" loadTime=\""+loadTime+"\" loaded=\""+loaded+"\"]";
 		}
 	}
 }

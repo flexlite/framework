@@ -83,8 +83,8 @@ package org.flexlite.domDll.fileLib
 			delete dllItemDic[data];
 			var dllItem:DllItem = data.item;
 			var compFunc:Function = data.func;
-			dllItem.loadComplete = (event.type==Event.COMPLETE);
-			if(dllItem.loadComplete)
+			dllItem.loaded = (event.type==Event.COMPLETE);
+			if(dllItem.loaded)
 			{
 				if(!swfDic[dllItem.name])
 				{

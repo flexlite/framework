@@ -23,17 +23,17 @@ package org.flexlite.domDll
 	use namespace dx_internal;
 	
 	/**
-	 * loading组资源加载完成事件
+	 * 配置文件加载并解析完成事件
 	 */
-	[Event(name="loadingComplete",type="org.flexlite.domDll.events.DllEvent")]
+	[Event(name="configComplete",type="org.flexlite.domDll.events.DllEvent")]
 	/**
-	 * preload组资源加载完成事件
+	 * 一组资源加载完成事件
 	 */
-	[Event(name="preloadComplete",type="org.flexlite.domDll.events.DllEvent")]
+	[Event(name="groupComplete",type="org.flexlite.domDll.events.DllEvent")]
 	/**
-	 * preload组资源加载进度事件
+	 * 一组资源加载进度事件
 	 */
-	[Event(name="preloadProgress",type="org.flexlite.domDll.events.DllEvent")]
+	[Event(name="groupProgress",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * 一个加载项加载结束事件，可能是加载成功也可能是加载失败。
 	 */	
@@ -79,31 +79,26 @@ package org.flexlite.domDll
 		}
 		
 		/**
-		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源。
+		 * 加载配置文件并解析
 		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
 		 * @param language 当前的语言环境 
-		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
-		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
 		 */		
-		public static function setInitConfig(configList:Vector.<ConfigItem>,version:String="",
-											 language:String="cn",autoLoad:Boolean=true):void
+		public static function loadConfig(configList:Vector.<ConfigItem>,version:String="",language:String="cn"):void
 		{
-			instance.setInit(configList,version,language,autoLoad);
+			instance.loadConfig(configList,version,language);
 		}
 		/**
-		 * 手动启动预加载组资源的加载，仅当setInitConfig()的autoLoad参数设置为false时有效。
-		 */		
-		public static function loadPreloadGroup():void
+		 * 根据组名加载一组资源,可多次调用此方法，Dll将会根据调用顺序依次加载每个组。
+		 * @param name 要加载资源组的组名
+		 */	
+		public static function loadGroup(name:String):void
 		{
-			if(instance.autoLoad)
-				return;
-			instance.loadPreload();
+			instance.loadGroup(name);
 		}
-		
 		/**
 		 * 同步方式获取资源。<br/>
-		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
+		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
@@ -139,6 +134,23 @@ package org.flexlite.domDll
 		}
 		
 		/**
+		 * 解析器字典
+		 */		
+		private var fileLibDic:Dictionary = new Dictionary;
+		/**
+		 * 根据type获取对应的文件解析库
+		 */		
+		private function getFileLibByType(type:String):IFileLib
+		{
+			var fileLib:IFileLib = fileLibDic[type];
+			if(!fileLib)
+			{
+				fileLib = fileLibDic[type] = Injector.getInstance(IFileLib,type);
+			}
+			return fileLib;
+		}
+		
+		/**
 		 * 多文件队列加载器
 		 */		
 		private var dllLoader:DllLoader;
@@ -171,82 +183,37 @@ package org.flexlite.domDll
 		{
 			dispatchEvent(event);
 		}
-		/**
-		 * 队列加载进度事件
-		 */		
-		private function onGroupProgress(event:ProgressEvent):void
-		{
-			if(groupName!=GROUP_PRELOAD)
-				return;
-			var dllEvent:DllEvent = new DllEvent(DllEvent.PRELOAD_PROGRESS);
-			dllEvent.bytesTotal = event.bytesTotal;
-			dllEvent.bytesLoaded = event.bytesLoaded;
-			dispatchEvent(dllEvent);
-		}
-		/**
-		 * 队列加载完成事件
-		 */		
-		private function onGroupComp(event:Event):void
-		{
-			var dllEvent:DllEvent;
-			switch(groupName)
-			{
-				case GROUP_CONFIG:
-					onConfigComp();
-					break;
-				case GROUP_LOADING:
-					dllEvent = new DllEvent(DllEvent.LOADING_COMPLETE);
-					dispatchEvent(dllEvent);
-					if(autoLoad)
-						loadPreload();
-					break;
-				case GROUP_PRELOAD:
-					dllEvent = new DllEvent(DllEvent.PRELOAD_COMPLETE);
-					dispatchEvent(dllEvent);
-					break;
-			}
-		}
 		
 		/**
-		 * 正在加载的组名
+		 * 配置文件组组名
 		 */		
-		private var groupName:String = GROUP_CONFIG;
-		
 		private static const GROUP_CONFIG:String = "config";
-		private static const GROUP_LOADING:String = "loading";
-		private static const GROUP_PRELOAD:String = "preload";
 		/**
 		 * 配置文件名列表
 		 */		
-		private var configNameList:Array = [];
+		private var configItemList:Array = [];
 		/**
-		 * 配置文件的类型
+		 * 配置文件加载解析完成标志
 		 */		
-		private var configType:String;
+		private var configComplete:Boolean = false;
 		/**
-		 * loading组资源加载完毕后是否自动加载preload组资源
-		 */		
-		private var autoLoad:Boolean = true;
-		/**
-		 * 加载初始化配置文件并解析，解析完成后开始加载loading组资源。
+		 * 加载配置文件并解析
 		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
 		 * @param language 当前的语言环境 
-		 * @param autoLoad 在加载完loading组资源后是否立即开始preload组资源加载。若需要手动启动preload组加载，
-		 * 请设置为false，并监听到LOADING_COMPLETE事件后调用Dll.loadPreloadGrouop()。 默认为true.
-		 */		
-		private function setInit(configList:Vector.<ConfigItem>,version:String="",
-								 language:String="cn",autoLoad:Boolean=true):void
+		 */	
+		private function loadConfig(configList:Vector.<ConfigItem>,version:String="",language:String="cn"):void
 		{
+			if(configComplete)
+				return;
 			dllConfig.language = language;
 			dllConfig.version = version;
-			autoLoad = autoLoad;
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
 			for each(var config:ConfigItem in configList)
 			{
 				config.name = "DLL__CONFIG"+index;
-				configNameList.push(config);
+				configItemList.push(config);
 				var dllItem:DllItem = new DllItem(config.name,config.url,config.type);
 				itemList.push(dllItem);
 				index++;
@@ -256,58 +223,81 @@ package org.flexlite.domDll
 		}
 		
 		/**
-		 * 解析器字典
+		 * 待加载的组名列表
 		 */		
-		private var fileLibDic:Dictionary = new Dictionary;
+		private var groupList:Vector.<String> = new Vector.<String>();
 		/**
-		 * 根据type获取对应的文件解析库
+		 * 根据组名加载一组资源,可多次调用此方法，Dll将会根据调用顺序依次加载每个组。
+		 * @param name 要加载资源组的组名
 		 */		
-		private function getFileLibByType(type:String):IFileLib
+		public function loadGroup(name:String):void
 		{
-			var fileLib:IFileLib = fileLibDic[type];
-			if(!fileLib)
-			{
-				fileLib = fileLibDic[type] = Injector.getInstance(IFileLib,type);
-			}
-			return fileLib;
+			if(groupList.indexOf(name)!=-1)
+				return;
+			groupList.push(name);
+			loadNextGroup();
 		}
+		/**
+		 * 正在加载的组名
+		 */		
+		private var groupName:String = GROUP_CONFIG;
+		/**
+		 * 加载下一组资源
+		 */		
+		private function loadNextGroup():void
+		{
+			if(!configComplete||dllLoader.inGroupLoading||groupList.length==0)
+				return;
+			groupName = groupList.shift();
+			var group:Vector.<DllItem> = dllConfig.getGroupByName(groupName);
+			dllLoader.loadGroup(group);
+		}
+		/**
+		 * 队列加载进度事件
+		 */		
+		private function onGroupProgress(event:ProgressEvent):void
+		{
+			var dllEvent:DllEvent = new DllEvent(DllEvent.GROUP_PROGRESS);
+			dllEvent.bytesTotal = event.bytesTotal;
+			dllEvent.bytesLoaded = event.bytesLoaded;
+			dllEvent.groupName = groupName;
+			dispatchEvent(dllEvent);
+		}
+		
 		/**
 		 * dll配置数据
 		 */		
 		private var dllConfig:DllConfig = new DllConfig();
 		/**
-		 * 配置文件加载并解析完成
+		 * 队列加载完成事件
 		 */		
-		private function onConfigComp():void
+		private function onGroupComp(event:Event):void
 		{
-			for each(var config:ConfigItem in configNameList)
+			var dllEvent:DllEvent;
+			if(groupName==GROUP_CONFIG)
 			{
-				var fileLib:IFileLib = getFileLibByType(config.type);
-				var data:Object = fileLib.getRes(config.name);
-				dllConfig.parseConfig(data,config.folder);
+				for each(var config:ConfigItem in configItemList)
+				{
+					var fileLib:IFileLib = getFileLibByType(config.type);
+					var data:Object = fileLib.getRes(config.name);
+					fileLib.destroyRes(config.name);
+					dllConfig.parseConfig(data,config.folder);
+				}
+				configComplete = true;
+				dllEvent = new DllEvent(DllEvent.CONFIG_COMPLETE);
 			}
-			var loadingGroup:Vector.<DllItem> = dllConfig.loadingGroup;
-			groupName = GROUP_LOADING;
-			dllLoader.loadGroup(loadingGroup);
+			else
+			{
+				dllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
+				dllEvent.groupName = groupName;
+			}
+			dispatchEvent(dllEvent);
+			loadNextGroup();
 		}
 		
 		/**
-		 * 手动启动预加载组资源的加载，仅当setInitConfig()的autoLoad参数设置为false时有效。
-		 */		
-		private function loadPreload():void
-		{
-			if(groupName == GROUP_PRELOAD)
-				return;
-			var preloadGroup:Vector.<DllItem> = dllConfig.preloadGroup;
-			if(preloadGroup.length>0)
-			{
-				groupName = GROUP_PRELOAD;
-				dllLoader.loadGroup(preloadGroup);
-			}
-		}
-		/**
 		 * 同步方式获取资源。<br/>
-		 * 只有在loading组和preload组中的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
+		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
@@ -317,7 +307,7 @@ package org.flexlite.domDll
 		 * "xml" name:XML<br/>
 		 * "img" name:BitmapData<br/>
 		 * "bin" name:ByteArray
-		 */	
+		 */		
 		private function getRes(key:String):*
 		{
 			var type:String = dllConfig.getType(key);

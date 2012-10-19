@@ -3,6 +3,9 @@ package org.flexlite.domDll.core
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
+	import org.flexlite.domCore.dx_internal;
+	
+	use namespace dx_internal;
 	/**
 	 * Dll配置文件解析类
 	 * @author DOM
@@ -24,28 +27,16 @@ package org.flexlite.domDll.core
 		 * 当前的资源版本号
 		 */		
 		public var version:String;
-				
-		private var _loadingGroup:Array = [];
 		/**
-		 * loading组资源列表
-		 */
-		public function get loadingGroup():Vector.<DllItem>
+		 * 根据组名获取组加载项列表
+		 * @param name
+		 */		
+		public function getGroupByName(name:String):Vector.<DllItem>
 		{
 			var group:Vector.<DllItem> = new Vector.<DllItem>();
-			for each(var obj:Object in _loadingGroup)
-			{
-				group.push(parseDllItem(obj));
-			}
-			return group;
-		}
-		private var _preloadGroup:Array = [];
-		/**
-		 * 预加载组资源列表
-		 */
-		public function get preloadGroup():Vector.<DllItem>
-		{
-			var group:Vector.<DllItem> = new Vector.<DllItem>();
-			for each(var obj:Object in _preloadGroup)
+			if(!groupDic[name])
+				return group;
+			for each(var obj:Object in groupDic[name])
 			{
 				group.push(parseDllItem(obj));
 			}
@@ -54,8 +45,11 @@ package org.flexlite.domDll.core
 		/**
 		 * 一级键名字典
 		 */		
-		private var keyMap:Dictionary = new Dictionary;
-		
+		private var keyMap:Dictionary = new Dictionary();
+		/**
+		 * 加载组字典
+		 */		
+		private var groupDic:Dictionary = new Dictionary();
 		/**
 		 * 解析一个配置数据,构造查询表
 		 */		
@@ -63,15 +57,23 @@ package org.flexlite.domDll.core
 		{
 			if(!data)
 				return;
+			var group:Array;
 			if(data is XML)
 			{
 				var xmlConfig:XML = data as XML;
-				if(xmlConfig.loading[0])
-					getItemFromXML(xmlConfig.loading[0],folder,_loadingGroup);
-				if(xmlConfig.preload[0])
-					getItemFromXML(xmlConfig.preload[0],folder,_preloadGroup);
-				if(xmlConfig.lazyload[0])
-					getItemFromXML(xmlConfig.lazyload[0],folder);
+				data = {};
+				for each(var item:XML in xmlConfig.children())
+				{
+					var name:String = String(item.@name);
+					if(!name)
+						continue;
+					group = groupDic[name];
+					if(!group)
+					{
+						group = groupDic[name] = [];
+					}
+					getItemFromXML(item,folder,group);
+				}
 			}
 			else
 			{
@@ -85,12 +87,15 @@ package org.flexlite.domDll.core
 					(data as ByteArray).position = 0;
 					data = (data as ByteArray).readObject();
 				}
-				if(data.hasOwnProperty("loading"))
-					getItemFromObject(data.loading,folder,_loadingGroup);
-				if(data.hasOwnProperty("preload"))
-					getItemFromObject(data.preload,folder,_preloadGroup);
-				if(data.hasOwnProperty("lazyload"))
-					getItemFromObject(data.lazyload,folder);
+				for(var key:String in data)
+				{
+					group = groupDic[key];
+					if(!group)
+					{
+						group = groupDic[key] = [];
+					}
+					getItemFromObject(data[key],folder,group);
+				}
 			}
 		}
 		/**
@@ -189,7 +194,9 @@ package org.flexlite.domDll.core
 				else
 					url += "&v="+version;
 			}
-			return new DllItem(data.name,url,data.type,data.size);
+			var dllItem:DllItem = new DllItem(data.name,url,data.type,data.size);
+			dllItem.data = data;
+			return dllItem;
 		}
 		
 	}

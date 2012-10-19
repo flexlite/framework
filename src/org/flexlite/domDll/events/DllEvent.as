@@ -16,17 +16,17 @@ package org.flexlite.domDll.events
 		 */		
 		public static const ITEM_LOAD_FINISHED:String = "itemLoadFinished";
 		/**
-		 * loading组资源加载完成事件
+		 * 配置文件加载并解析完成事件
 		 */		
-		public static const LOADING_COMPLETE:String = "loadingComplete";
+		public static const CONFIG_COMPLETE:String = "configComplete";
 		/**
-		 * preload组资源加载进度事件
+		 * 延迟加载组资源加载进度事件
 		 */		
-		public static const PRELOAD_PROGRESS:String = "preloadProgress";
+		public static const GROUP_PROGRESS:String = "groupProgress";
 		/**
-		 * preload组资源加载完成事件
+		 * 延迟加载组资源加载完成事件
 		 */		
-		public static const PRELOAD_COMPLETE:String = "preloadComplete";
+		public static const GROUP_COMPLETE:String = "groupComplete";
 		/**
 		 * 构造函数
 		 */		
@@ -42,6 +42,10 @@ package org.flexlite.domDll.events
 		 * 要加载的总字节数
 		 */		
 		public var bytesTotal:Number=0;
+		/**
+		 * 资源组名
+		 */		
+		public var groupName:String;
 		/**
 		 * 一次加载项加载结束的项信息对象
 		 */		

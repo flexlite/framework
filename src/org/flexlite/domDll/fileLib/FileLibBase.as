@@ -95,8 +95,8 @@ package org.flexlite.domDll.fileLib
 			recycler.push(loader);
 			var dllItem:DllItem = data.item;
 			var compFunc:Function = data.func;
-			dllItem.loadComplete = (event.type==Event.COMPLETE);
-			if(dllItem.loadComplete)
+			dllItem.loaded = (event.type==Event.COMPLETE);
+			if(dllItem.loaded)
 			{
 				if(!fileDic[dllItem.name])
 				{
