@@ -1,4 +1,4 @@
-package org.flexlite.domDll.fileLib
+package org.flexlite.domDll.loaders
 {
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -11,20 +11,20 @@ package org.flexlite.domDll.fileLib
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
-	import org.flexlite.domDll.core.IFileLib;
+	import org.flexlite.domDll.core.IResLoader;
 	import org.flexlite.domUtils.Recycler;
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**
-	 * SWF文件解析缓存库
+	 * SWF文件加载器
 	 * @author DOM
 	 */
-	public class SwfFileLib implements IFileLib
+	public class SwfResLoader implements IResLoader
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function SwfFileLib()
+		public function SwfResLoader()
 		{
 			super();
 		}

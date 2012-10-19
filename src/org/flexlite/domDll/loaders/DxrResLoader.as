@@ -1,4 +1,4 @@
-package org.flexlite.domDll.fileLib
+package org.flexlite.domDll.loaders
 {
 	import flash.utils.ByteArray;
 	
@@ -6,12 +6,12 @@ package org.flexlite.domDll.fileLib
 	import org.flexlite.domDisplay.DxrFile;
 	
 	/**
-	 * DXR文件解析缓存库
+	 * DXR文件加载器
 	 * @author DOM
 	 */
-	public class DxrFileLib extends FileLibBase
+	public class DxrResLoader extends ResLoaderBase
 	{
-		public function DxrFileLib()
+		public function DxrResLoader()
 		{
 			super();
 		}

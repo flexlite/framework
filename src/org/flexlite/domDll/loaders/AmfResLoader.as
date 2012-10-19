@@ -1,17 +1,22 @@
-package org.flexlite.domDll.fileLib
+package org.flexlite.domDll.loaders
 {
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
+	
+	import org.flexlite.domDll.core.IResLoader;
+	import org.flexlite.domUtils.SharedMap;
+	
 	
 	/**
-	 * XML文件解析缓存库
+	 * 二进制序列化对象加载器
 	 * @author DOM
 	 */
-	public class XmlFileLib extends FileLibBase
+	public class AmfResLoader extends ResLoaderBase
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function XmlFileLib()
+		public function AmfResLoader()
 		{
 			super();
 		}
@@ -28,16 +33,15 @@ package org.flexlite.domDll.fileLib
 				bytes.uncompress();
 			}
 			catch(e:Error){}
-			bytes.position = 0;
-			var resultStr:String = bytes.readUTFBytes(bytes.length);
-			var xml:XML
+			var data:Object = null;
 			try
 			{
-				xml = XML(resultStr);
+				bytes.position = 0;
+				data = bytes.readObject();
 			}
 			catch(e:Error){}
-			sharedMap.set(key,xml);
-			return xml;
+			sharedMap.set(key,data);
+			return data;
 		}
 	}
 }

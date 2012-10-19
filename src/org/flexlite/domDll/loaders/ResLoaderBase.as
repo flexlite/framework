@@ -1,4 +1,4 @@
-package org.flexlite.domDll.fileLib
+package org.flexlite.domDll.loaders
 {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -11,21 +11,21 @@ package org.flexlite.domDll.fileLib
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
-	import org.flexlite.domDll.core.IFileLib;
+	import org.flexlite.domDll.core.IResLoader;
 	import org.flexlite.domUtils.Recycler;
 	import org.flexlite.domUtils.SharedMap;
 	
 	
 	/**
-	 * 文件解析缓存库基类
+	 * 文件加载器基类
 	 * @author DOM
 	 */
-	public class FileLibBase implements IFileLib
+	public class ResLoaderBase implements IResLoader
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function FileLibBase()
+		public function ResLoaderBase()
 		{
 		}
 		/**

@@ -1,15 +1,15 @@
-package org.flexlite.domDll.fileLib
+package org.flexlite.domDll.loaders
 {
 	/**
-	 * 二进制文件解析缓存库
+	 * 二进制文件加载器
 	 * @author DOM
 	 */
-	public class BinFileLib extends FileLibBase
+	public class BinResLoader extends ResLoaderBase
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function BinFileLib()
+		public function BinResLoader()
 		{
 			super();
 		}
