@@ -81,14 +81,54 @@ package org.flexlite.domUI.layouts
 			return _columnCount;
 		}
 		
+		private var _requestedColumnCount:int = -1;
+		/**
+		 * 要显示的列数。设置为0表示自动确定列计数,默认值0。<br/>
+		 * 注意:当orientation为TileOrientation.COLUMNS，即逐列排列元素时，设置此属性无效。
+		 */
+		public function get requestedColumnCount():int
+		{
+			return _requestedColumnCount;
+		}
+
+		public function set requestedColumnCount(value:int):void
+		{
+			if (_requestedColumnCount == value)
+				return;
+			_requestedColumnCount = value;
+			_columnCount = value;
+			invalidateTargetSizeAndDisplayList();
+		}
+
+		
 		private var _rowCount:int = -1;
 		/**
-		 * 行计数。
+		 * 实际行计数。
 		 */		
 		public function get rowCount():int
 		{
 			return _rowCount;
 		}
+		
+		private var _requestedRowCount:int = 0;
+		/**
+		 * 要显示的行数。设置为0表示自动确定行计数,默认值0。<br/>
+		 * 注意:当orientation为TileOrientation.ROWS，即逐行排列元素时，设置此属性无效。
+		 */
+		public function get requestedRowCount():int
+		{
+			return _requestedRowCount;
+		}
+
+		public function set requestedRowCount(value:int):void
+		{
+			if (_requestedRowCount == value)
+				return;
+			_requestedRowCount = value;
+			_rowCount = value;
+			invalidateTargetSizeAndDisplayList();
+		}
+
 		
 		/**
 		 * 外部显式指定的列宽
@@ -432,14 +472,28 @@ package org.flexlite.domUI.layouts
 			{
 				if(orientedByColumns)
 				{
-					_rowCount = Math.sqrt(numElements*itemWidth/itemHeight);
-					_rowCount = Math.floor(_rowCount);
+					if(_requestedRowCount>0)
+					{
+						_rowCount = Math.min(_requestedRowCount,numElements);
+					}
+					else
+					{
+						_rowCount = Math.sqrt(numElements*itemWidth/itemHeight);
+						_rowCount = Math.floor(_rowCount);
+					}
 					_columnCount = Math.ceil(numElements/_rowCount);
 				}
 				else
 				{
-					_columnCount = Math.sqrt(numElements*itemHeight/itemWidth);
-					_columnCount = Math.floor(_columnCount);
+					if(_requestedColumnCount>0)
+					{
+						_columnCount = Math.min(_requestedColumnCount,numElements);
+					}
+					else
+					{
+						_columnCount = Math.sqrt(numElements*itemHeight/itemWidth);
+						_columnCount = Math.floor(_columnCount);
+					}
 					_rowCount = Math.ceil(numElements/_columnCount);
 				}
 			}
