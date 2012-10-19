@@ -24,7 +24,7 @@ package org.flexlite.domUI.components
 	[DXML(show="false")]
 	
 	/**
-	 * 素材包装器。默认禁用了鼠标事件。<p/>
+	 * 素材包装器。<p/>
 	 * 可将任何类型值赋值给skinName属性,它会调用项目注入的皮肤解配器，
 	 * 解析skinName并获取显示对象赋值给skin属性。
 	 * 注意：UIAsset仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
@@ -37,7 +37,6 @@ package org.flexlite.domUI.components
 		{
 			super();
 			mouseChildren = false;
-			mouseEnabled = false;
 		}
 		
 		private var skinNameChanged:Boolean = false;
