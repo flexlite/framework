@@ -11,14 +11,14 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.core.DllConfig;
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.DllLoader;
-	import org.flexlite.domDll.core.IResLoader;
+	import org.flexlite.domDll.core.IResolver;
 	import org.flexlite.domDll.events.DllEvent;
-	import org.flexlite.domDll.loaders.AmfResLoader;
-	import org.flexlite.domDll.loaders.BinResLoader;
-	import org.flexlite.domDll.loaders.DxrResLoader;
-	import org.flexlite.domDll.loaders.ImgResLoader;
-	import org.flexlite.domDll.loaders.SwfResLoader;
-	import org.flexlite.domDll.loaders.XmlResLoader;
+	import org.flexlite.domDll.resolvers.AmfResolver;
+	import org.flexlite.domDll.resolvers.BinResolver;
+	import org.flexlite.domDll.resolvers.DxrResolver;
+	import org.flexlite.domDll.resolvers.ImgResolver;
+	import org.flexlite.domDll.resolvers.SwfResolver;
+	import org.flexlite.domDll.resolvers.XmlResolver;
 	
 	use namespace dx_internal;
 	
@@ -136,18 +136,18 @@ package org.flexlite.domDll
 		/**
 		 * 解析器字典
 		 */		
-		private var resLoaderDic:Dictionary = new Dictionary;
+		private var resolverDic:Dictionary = new Dictionary;
 		/**
 		 * 根据type获取对应的文件解析库
 		 */		
-		private function getResLoaderByType(type:String):IResLoader
+		private function getResolverByType(type:String):IResolver
 		{
-			var resLoader:IResLoader = resLoaderDic[type];
-			if(!resLoader)
+			var resolver:IResolver = resolverDic[type];
+			if(!resolver)
 			{
-				resLoader = resLoaderDic[type] = Injector.getInstance(IResLoader,type);
+				resolver = resolverDic[type] = Injector.getInstance(IResolver,type);
 			}
-			return resLoader;
+			return resolver;
 		}
 		
 		/**
@@ -159,18 +159,18 @@ package org.flexlite.domDll
 		 */		
 		private function init():void
 		{
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_XML))
-				Injector.mapClass(IResLoader,XmlResLoader,DllItem.TYPE_XML);
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_BIN))
-				Injector.mapClass(IResLoader,BinResLoader,DllItem.TYPE_BIN);
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_AMF))
-				Injector.mapClass(IResLoader,AmfResLoader,DllItem.TYPE_AMF);
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_IMG))
-				Injector.mapClass(IResLoader,ImgResLoader,DllItem.TYPE_IMG);
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_SWF))
-				Injector.mapClass(IResLoader,SwfResLoader,DllItem.TYPE_SWF);
-			if(!Injector.hasMapRule(IResLoader,DllItem.TYPE_DXR))
-				Injector.mapClass(IResLoader,DxrResLoader,DllItem.TYPE_DXR);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_XML))
+				Injector.mapClass(IResolver,XmlResolver,DllItem.TYPE_XML);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_BIN))
+				Injector.mapClass(IResolver,BinResolver,DllItem.TYPE_BIN);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_AMF))
+				Injector.mapClass(IResolver,AmfResolver,DllItem.TYPE_AMF);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_IMG))
+				Injector.mapClass(IResolver,ImgResolver,DllItem.TYPE_IMG);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SWF))
+				Injector.mapClass(IResolver,SwfResolver,DllItem.TYPE_SWF);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_DXR))
+				Injector.mapClass(IResolver,DxrResolver,DllItem.TYPE_DXR);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
@@ -278,9 +278,9 @@ package org.flexlite.domDll
 			{
 				for each(var config:ConfigItem in configItemList)
 				{
-					var resLoader:IResLoader = getResLoaderByType(config.type);
-					var data:Object = resLoader.getRes(config.name);
-					resLoader.destroyRes(config.name);
+					var resolver:IResolver = getResolverByType(config.type);
+					var data:Object = resolver.getRes(config.name);
+					resolver.destroyRes(config.name);
 					dllConfig.parseConfig(data,config.folder);
 				}
 				configComplete = true;
@@ -313,8 +313,8 @@ package org.flexlite.domDll
 			var type:String = dllConfig.getType(key);
 			if(type=="")
 				return null;
-			var resLoader:IResLoader = getResLoaderByType(type);
-			return resLoader.getRes(key);
+			var resolver:IResolver = getResolverByType(type);
+			return resolver.getRes(key);
 		}
 		
 		/**
@@ -338,17 +338,17 @@ package org.flexlite.domDll
 				doCompFunc(compFunc,null,other);
 				return;
 			}
-			var resLoader:IResLoader = getResLoaderByType(type);
-			var res:* = resLoader.getRes(key);
+			var resolver:IResolver = getResolverByType(type);
+			var res:* = resolver.getRes(key);
 			if(res)
 			{
 				doCompFunc(compFunc,res,other);
 				return;
 			}
 			var name:String = dllConfig.getName(key);
-			if(resLoader.hasRes(name))
+			if(resolver.hasRes(name))
 			{
-				doGetResAsync(resLoader,key,compFunc,other);
+				doGetResAsync(resolver,key,compFunc,other);
 			}
 			else
 			{
@@ -379,9 +379,9 @@ package org.flexlite.domDll
 		/**
 		 * 执行异步获取资源
 		 */		
-		private function doGetResAsync(resLoader:IResLoader,key:String,compFunc:Function,other:Object):void
+		private function doGetResAsync(resolver:IResolver,key:String,compFunc:Function,other:Object):void
 		{
-			resLoader.getResAsync(key,function(data:*):void{
+			resolver.getResAsync(key,function(data:*):void{
 				if(other)
 					compFunc(data,other);
 				else 
@@ -395,10 +395,10 @@ package org.flexlite.domDll
 		{
 			var argsList:Array = asyncDic[item.name];
 			delete asyncDic[item.name];
-			var resLoader:IResLoader = getResLoaderByType(item.type);
+			var resolver:IResolver = getResolverByType(item.type);
 			for each(var args:Object in argsList)
 			{
-				doGetResAsync(resLoader,args.key,args.compFunc,args.other);
+				doGetResAsync(resolver,args.key,args.compFunc,args.other);
 			}
 		}
 		/**
@@ -410,8 +410,8 @@ package org.flexlite.domDll
 			var type:String = dllConfig.getType(name);
 			if(type=="")
 				return false;
-			var resLoader:IResLoader = getResLoaderByType(type);
-			return resLoader.destroyRes(name);
+			var resolver:IResolver = getResolverByType(type);
+			return resolver.destroyRes(name);
 		}
 	}
 }

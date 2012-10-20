@@ -1,17 +1,17 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	import flash.utils.ByteArray;
 	
 	/**
-	 * XML文件加载器
+	 * XML文件解析器
 	 * @author DOM
 	 */
-	public class XmlResLoader extends ResLoaderBase
+	public class XmlResolver extends ResolverBase
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function XmlResLoader()
+		public function XmlResolver()
 		{
 			super();
 		}

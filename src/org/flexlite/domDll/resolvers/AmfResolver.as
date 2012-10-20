@@ -1,22 +1,22 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
-	import org.flexlite.domDll.core.IResLoader;
+	import org.flexlite.domDll.core.IResolver;
 	import org.flexlite.domUtils.SharedMap;
 	
 	
 	/**
-	 * 二进制序列化对象加载器
+	 * 二进制序列化对象解析器
 	 * @author DOM
 	 */
-	public class AmfResLoader extends ResLoaderBase
+	public class AmfResolver extends ResolverBase
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function AmfResLoader()
+		public function AmfResolver()
 		{
 			super();
 		}

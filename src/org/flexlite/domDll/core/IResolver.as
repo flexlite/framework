@@ -4,10 +4,10 @@ package org.flexlite.domDll.core
 	import flash.utils.Dictionary;
 	
 	/**
-	 * 文件加载器接口
+	 * 文件解析器接口
 	 * @author DOM
 	 */
-	public interface IResLoader
+	public interface IResolver
 	{
 		/**
 		 * 加载一个资源文件

@@ -1,4 +1,4 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -11,21 +11,21 @@ package org.flexlite.domDll.loaders
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
-	import org.flexlite.domDll.core.IResLoader;
+	import org.flexlite.domDll.core.IResolver;
 	import org.flexlite.domUtils.Recycler;
 	import org.flexlite.domUtils.SharedMap;
 	
 	
 	/**
-	 * 文件加载器基类
+	 * 文件解析器基类
 	 * @author DOM
 	 */
-	public class ResLoaderBase implements IResLoader
+	public class ResolverBase implements IResolver
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function ResLoaderBase()
+		public function ResolverBase()
 		{
 		}
 		/**

@@ -1,4 +1,4 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -12,20 +12,20 @@ package org.flexlite.domDll.loaders
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
-	import org.flexlite.domDll.core.IResLoader;
+	import org.flexlite.domDll.core.IResolver;
 	import org.flexlite.domUtils.Recycler;
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**
-	 * SWF文件加载器
+	 * SWF文件解析器
 	 * @author DOM
 	 */
-	public class SwfResLoader implements IResLoader
+	public class SwfResolver implements IResolver
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function SwfResLoader()
+		public function SwfResolver()
 		{
 			super();
 			if(Capabilities.os.substr(0,9)=="iPhone OS")

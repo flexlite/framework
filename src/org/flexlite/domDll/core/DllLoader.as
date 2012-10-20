@@ -116,7 +116,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 资源解析库字典类
 		 */		
-		private var resLoaderDic:Dictionary = new Dictionary;
+		private var resolverDic:Dictionary = new Dictionary;
 		/**
 		 * 正在加载的线程计数
 		 */		
@@ -146,12 +146,12 @@ package org.flexlite.domDll.core
 				}
 				else
 				{
-					var resLoader:IResLoader = resLoaderDic[dllItem.type];
-					if(!resLoader)
+					var resolver:IResolver = resolverDic[dllItem.type];
+					if(!resolver)
 					{
-						resLoader = resLoaderDic[dllItem.type] = Injector.getInstance(IResLoader,dllItem.type);
+						resolver = resolverDic[dllItem.type] = Injector.getInstance(IResolver,dllItem.type);
 					}
-					resLoader.loadFile(dllItem,onItemComplete,onItemProgress);
+					resolver.loadFile(dllItem,onItemComplete,onItemProgress);
 				}
 			}
 		}

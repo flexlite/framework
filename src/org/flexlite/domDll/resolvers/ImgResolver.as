@@ -1,4 +1,4 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -9,12 +9,12 @@ package org.flexlite.domDll.loaders
 	import flash.utils.Dictionary;
 	
 	/**
-	 * 图片文件加载器
+	 * 图片文件解析器
 	 * @author DOM
 	 */
-	public class ImgResLoader extends ResLoaderBase
+	public class ImgResolver extends ResolverBase
 	{
-		public function ImgResLoader()
+		public function ImgResolver()
 		{
 			super();
 		}

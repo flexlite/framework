@@ -1,15 +1,15 @@
-package org.flexlite.domDll.loaders
+package org.flexlite.domDll.resolvers
 {
 	/**
-	 * 二进制文件加载器
+	 * 二进制文件解析器
 	 * @author DOM
 	 */
-	public class BinResLoader extends ResLoaderBase
+	public class BinResolver extends ResolverBase
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function BinResLoader()
+		public function BinResolver()
 		{
 			super();
 		}
