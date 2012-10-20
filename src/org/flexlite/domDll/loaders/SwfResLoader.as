@@ -7,6 +7,7 @@ package org.flexlite.domDll.loaders
 	import flash.events.ProgressEvent;
 	import flash.net.URLRequest;
 	import flash.system.ApplicationDomain;
+	import flash.system.Capabilities;
 	import flash.system.LoaderContext;
 	import flash.utils.Dictionary;
 	
@@ -27,26 +28,31 @@ package org.flexlite.domDll.loaders
 		public function SwfResLoader()
 		{
 			super();
+			if(Capabilities.os.substr(0,9)=="iPhone OS")
+				inIOS = true;
 		}
 		
 		/**
 		 * 字节流数据缓存字典
 		 */		
-		protected var swfDic:Dictionary = new Dictionary;
+		private var swfDic:Dictionary = new Dictionary;
+		/**
+		 * 程序域列表
+		 */		
+		private var appDomainList:Vector.<ApplicationDomain> 
+			= new <ApplicationDomain>[ApplicationDomain.currentDomain];
 		/**
 		 * 解码后对象的共享缓存表
 		 */		
-		protected var sharedMap:SharedMap = new SharedMap();
+		private var sharedMap:SharedMap = new SharedMap();
 		/**
 		 * 加载项字典
 		 */		
-		protected var dllItemDic:Dictionary = new Dictionary();
-		
+		private var dllItemDic:Dictionary = new Dictionary();
 		/**
-		 * 程序域加载参数
+		 * 在IOS系统中运行的标志
 		 */		
-		private var loaderContext:LoaderContext = 
-			new LoaderContext(false,ApplicationDomain.currentDomain,null);
+		private var inIOS:Boolean = false;
 		
 		public function loadFile(dllItem:DllItem,compFunc:Function,progressFunc:Function):void
 		{
@@ -60,7 +66,16 @@ package org.flexlite.domDll.loaders
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onLoadFinish);
 			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,onProgress);
 			dllItemDic[loader] = {item:dllItem,func:compFunc,progress:progressFunc};
-			loader.load(new URLRequest(dllItem.url),loaderContext);
+			if(inIOS)
+			{
+				var loaderContext:LoaderContext = 
+					new LoaderContext(false,ApplicationDomain.currentDomain);
+				loader.load(new URLRequest(dllItem.url),loaderContext);
+			}
+			else
+			{
+				loader.load(new URLRequest(dllItem.url));
+			}
 		}
 		/**
 		 * 加载进度事件
@@ -89,15 +104,13 @@ package org.flexlite.domDll.loaders
 				if(!swfDic[dllItem.name])
 				{
 					swfDic[dllItem.name] = loader;
+					if(!inIOS)
+						appDomainList.push(loader.contentLoaderInfo.applicationDomain);
 				}
 			}
 			compFunc(dllItem);
 		}
 		
-		/**
-		 * 程序域
-		 */		
-		private var appDomain:ApplicationDomain = ApplicationDomain.currentDomain;
 		
 		public function getRes(key:String):*
 		{
@@ -106,12 +119,16 @@ package org.flexlite.domDll.loaders
 				return res;
 			if(sharedMap.has(key))
 				return sharedMap.get(key);
-			if(appDomain.hasDefinition(key))
+			for each(var domain:ApplicationDomain in appDomainList)
 			{
-				var clazz:Class = appDomain.getDefinition(key) as Class;
-				sharedMap.set(key,clazz);
-				return clazz;
+				if(domain.hasDefinition(key))
+				{
+					var clazz:Class = domain.getDefinition(key) as Class;
+					sharedMap.set(key,clazz);
+					return clazz;
+				}
 			}
+			
 			return null;
 		}
 		
@@ -132,6 +149,15 @@ package org.flexlite.domDll.loaders
 		{
 			if(swfDic[name])
 			{
+				var domain:ApplicationDomain = (swfDic[name] as Loader).contentLoaderInfo.applicationDomain;
+				for(var i:int=0;i<appDomainList.length>0;i++)
+				{
+					if(appDomainList[i]==domain)
+					{
+						appDomainList.splice(i,1);
+						break;
+					}
+				}
 				delete swfDic[name];
 				return true;
 			}

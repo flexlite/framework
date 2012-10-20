@@ -90,7 +90,7 @@ package org.flexlite.domDll.core
 			_inGroupLoading = true;
 			for each(var dllItem:DllItem in list)
 			{
-				dllItem.inGroupLoading = true;
+				dllItem._inGroupLoading = true;
 				dllItem.bytesLoaded = 0;
 				totalSize += dllItem.size;
 			}
@@ -110,7 +110,7 @@ package org.flexlite.domDll.core
 		public function loadItem(dllItem:DllItem):void
 		{
 			lazyLoadList.push(dllItem);
-			dllItem.inGroupLoading = false;
+			dllItem._inGroupLoading = false;
 			next();
 		}
 		/**

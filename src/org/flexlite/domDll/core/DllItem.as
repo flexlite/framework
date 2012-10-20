@@ -9,18 +9,34 @@ package org.flexlite.domDll.core
 	 */
 	public class DllItem
 	{
-		/** SWF文件 */		
+		/**
+		 * SWF文件 
+		 */		
 		public static const TYPE_SWF:String = "swf";
-		/** XML文件  */		
+		/** 
+		 * XML文件  
+		 */		
 		public static const TYPE_XML:String = "xml";
-		/** 图片文件 */		
+		/** 
+		 * 图片文件 
+		 */		
 		public static const TYPE_IMG:String = "img";
-		/** 二进制流 */		
+		/** 
+		 * 二进制流文件
+		 */		
 		public static const TYPE_BIN:String = "bin";
-		/** DXR文件 */		
+		/** 
+		 * DXR文件 
+		 */		
 		public static const TYPE_DXR:String = "dxr";
-		/** 二进制序列化对象 */		
+		/** 
+		 * 二进制序列化对象 
+		 */		
 		public static const TYPE_AMF:String = "amf";
+		/**
+		 * 声音文件
+		 */		
+		public static const TYPE_SOUND:String = "sound";
 		
 		/**
 		 * 构造函数
@@ -58,10 +74,15 @@ package org.flexlite.domDll.core
 		 * 加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：compFunc(dllItem:DllItem):void;
 		 */		
 		dx_internal var compFunc:Function;
+
+		dx_internal var _inGroupLoading:Boolean = false;
 		/**
-		 * 处于队列加载中标志
+		 * 处于组加载中的标志
 		 */		
-		dx_internal var inGroupLoading:Boolean = false;
+		public function get inGroupLoading():Boolean
+		{
+			return _inGroupLoading;
+		}
 		/**
 		 * 已经加载的字节数
 		 */		
