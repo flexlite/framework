@@ -19,44 +19,44 @@ package org.flexlite.domUI.core
 		function get targets():Array;
 		function set targets(value:Array):void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#duration
+		 * 动画持续时间,单位毫秒，默认值500
 		 */
 		function get duration():Number;
 		function set duration(value:Number):void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isPlaying
+		 * 是否正在播放动画
 		 */
 		function get isPlaying():Boolean;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isPaused
+		 * 正在暂停中
 		 */
 		function get isPaused():Boolean;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isReverse
+		 * 正在反向播放。
 		 */
 		function get isReverse():Boolean;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#play()
+		 * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
 		 */	
 		function play(targets:Array=null):void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#reverse()
+		 * 开始反向播放动画,若动画已经在播放中，则从当前位置开始反向播放。
 		 */	
 		function reverse():void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#end()
+		 * 直接跳到动画结尾
 		 */		
 		function end():void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#stop()
+		 * 停止播放动画
 		 */	
 		function stop():void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#pause()
+		 * 暂停播放
 		 */		
 		function pause():void;
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#resume()
+		 * 继续播放
 		 */		
 		function resume():void;
 	}

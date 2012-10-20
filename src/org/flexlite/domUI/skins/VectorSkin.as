@@ -19,6 +19,9 @@ package org.flexlite.domUI.skins
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitCurrentState():void
 		{
 			invalidateDisplayList();

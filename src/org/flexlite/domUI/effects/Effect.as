@@ -61,7 +61,9 @@ package org.flexlite.domUI.effects
 			else
 				return null;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function set target(value:Object):void
 		{
 			_targets.splice(0);
@@ -73,7 +75,7 @@ package org.flexlite.domUI.effects
 		dx_internal var _targets:Array = [];
 		
 		/**
-		 * 要应用此动画特效的多个对象列表。
+		 * @inheritDoc
 		 */
 		public function get targets():Array
 		{
@@ -136,7 +138,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#easer
+		 * @inheritDoc
 		 */
 		public function get easer():IEaser
 		{
@@ -150,7 +152,7 @@ package org.flexlite.domUI.effects
 		
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isPlaying
+		 * @inheritDoc
 		 */
 		public function get isPlaying():Boolean
 		{
@@ -159,7 +161,7 @@ package org.flexlite.domUI.effects
 		
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#duration
+		 * @inheritDoc
 		 */
 		public function get duration():Number
 		{
@@ -172,7 +174,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#startDelay
+		 * @inheritDoc
 		 */	
 		public function get startDelay():Number
 		{
@@ -185,7 +187,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#repeatBehavior
+		 * @inheritDoc
 		 */
 		public function get repeatBehavior():String
 		{
@@ -199,7 +201,7 @@ package org.flexlite.domUI.effects
 		
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#repeatCount
+		 * @inheritDoc
 		 */
 		public function get repeatCount():int
 		{
@@ -212,7 +214,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#repeatDelay
+		 * @inheritDoc
 		 */
 		public function get repeatDelay():Number
 		{
@@ -225,7 +227,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#play()
+		 * @inheritDoc
 		 */	
 		public function play(targets:Array=null):void
 		{
@@ -246,7 +248,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isReverse
+		 * @inheritDoc
 		 */
 		public function get isReverse():Boolean
 		{
@@ -255,14 +257,14 @@ package org.flexlite.domUI.effects
 		
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#reverse()
-		 */	
+		 * @inheritDoc
+		 */
 		public function reverse():void
 		{
 			animator.reverse();
 		}
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#end()
+		 * @inheritDoc
 		 */		
 		public function end():void
 		{
@@ -270,7 +272,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#stop()
+		 * @inheritDoc
 		 */	
 		public function stop():void
 		{
@@ -280,7 +282,7 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#isPaused
+		 * @inheritDoc
 		 */
 		public function get isPaused():Boolean
 		{
@@ -288,14 +290,14 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#pause()
+		 * @inheritDoc
 		 */		
 		public function pause():void
 		{
 			animator.pause();
 		}
 		/**
-		 * @copy org.flexlite.domUI.effects.animation.Animation#resume()
+		 * @inheritDoc
 		 */		
 		public function resume():void
 		{

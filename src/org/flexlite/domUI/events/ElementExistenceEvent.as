@@ -41,6 +41,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var element:IVisualElement;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new ElementExistenceEvent(type, bubbles, cancelable,

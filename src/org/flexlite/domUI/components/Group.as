@@ -77,6 +77,9 @@ package org.flexlite.domUI.components
 				invalidateDisplayListExceptLayout();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addEventListener(type:String, listener:Function,
 												  useCapture:Boolean = false, priority:int = 0,
 												  useWeakReference:Boolean = false):void
@@ -101,6 +104,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function removeEventListener( type:String, listener:Function,
 													  useCapture:Boolean = false):void
 		{
@@ -124,6 +130,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
@@ -164,6 +173,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var createChildrenCalled:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -245,11 +257,17 @@ package org.flexlite.domUI.components
 		
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get numElements():int
 		{
 			return _elementsContent.length;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getElementAt(index:int):IVisualElement
 		{
 			checkForRangeError(index);
@@ -266,7 +284,9 @@ package org.flexlite.domUI.components
 			if (index < 0 || index > maxIndex)
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
 			var index:int = numElements;
@@ -276,7 +296,9 @@ package org.flexlite.domUI.components
 			
 			return addElementAt(element, index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
 			if (element == this)
@@ -302,12 +324,16 @@ package org.flexlite.domUI.components
 			
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElement(element:IVisualElement):IVisualElement
 		{
 			return removeElementAt(getElementIndex(element));
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElementAt(index:int):IVisualElement
 		{
 			checkForRangeError(index);
@@ -321,7 +347,9 @@ package org.flexlite.domUI.components
 			
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeAllElements():void
 		{
 			for (var i:int = numElements - 1; i >= 0; i--)
@@ -330,11 +358,16 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getElementIndex(element:IVisualElement):int
 		{
 			return _elementsContent.indexOf(element);
 		}
-
+		/**
+		 * @inheritDoc
+		 */
 		public function setElementIndex(element:IVisualElement, index:int):void
 		{
 			checkForRangeError(index);
@@ -345,12 +378,16 @@ package org.flexlite.domUI.components
 			removeElement(element);
 			addElementAt(element, index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElements(element1:IVisualElement, element2:IVisualElement):void
 		{
 			swapElementsAt(getElementIndex(element1), getElementIndex(element2));
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElementsAt(index1:int, index2:int):void
 		{
 			checkForRangeError(index1);

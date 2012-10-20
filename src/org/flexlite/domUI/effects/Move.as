@@ -48,6 +48,9 @@ package org.flexlite.domUI.effects
 		 */	
 		public var xTo:Number = NaN;
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createMotionPath():Vector.<MotionPath>
 		{
 			var xFromSet:Boolean = !isNaN(xFrom);
@@ -139,6 +142,9 @@ package org.flexlite.domUI.effects
 			return true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function animationUpdateHandler(animation:Animation):void
 		{
 			var index:int = 0;

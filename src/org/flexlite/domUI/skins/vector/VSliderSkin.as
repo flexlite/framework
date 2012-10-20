@@ -28,6 +28,9 @@ package org.flexlite.domUI.skins.vector
 		
 		public var trackHighlight:UIAsset;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -61,6 +64,9 @@ package org.flexlite.domUI.skins.vector
 			addElement(thumb);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number,h:Number):void
 		{
 			super.updateDisplayList(w,h);

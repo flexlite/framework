@@ -38,6 +38,9 @@ package org.flexlite.domUI.events
 		 */   
 		public var partName:String;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new SkinPartEvent(type, bubbles, cancelable, 

@@ -15,6 +15,9 @@ package org.flexlite.domUI.skins.studio
 			states = ["up","over","down","upAndSelected","overAndSelected","downAndSelected"];
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitCurrentState():void
 		{
 			if(hasOwnProperty("upSkin"))

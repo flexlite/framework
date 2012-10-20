@@ -65,6 +65,9 @@ package org.flexlite.domUI.components.supportClasses
 		 */	
 		private var animator:Animation = null;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get maximum():Number
 		{
 			return super.maximum;
@@ -87,6 +90,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function setValue(value:Number):void
 		{
 			_pendingValue = value;
@@ -127,6 +133,9 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(new UIEvent(UIEvent.CHANGE_END));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function thumb_mouseDownHandler(event:MouseEvent):void
 		{
 			if (animator && animator.isPlaying)
@@ -149,6 +158,9 @@ package org.flexlite.domUI.components.supportClasses
 			_liveDragging = value;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateWhenMouseMove():void
 		{      
 			if(!track)
@@ -173,6 +185,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function stage_mouseUpHandler(event:Event):void
 		{
 			super.stage_mouseUpHandler(event);
@@ -183,6 +198,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function track_mouseDownHandler(event:MouseEvent):void
 		{
 			if (!enabled)
@@ -227,6 +245,9 @@ package org.flexlite.domUI.components.supportClasses
 			
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);

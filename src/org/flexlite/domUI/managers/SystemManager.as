@@ -138,14 +138,41 @@ package org.flexlite.domUI.managers
 		//==========================================================================
 		//                            禁止外部布局顶级容器
 		//==========================================================================
+		/**
+		 * @inheritDoc
+		 */
 		override public function set x(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function set y(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function set width(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function set height(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function set scaleX(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function set scaleY(value:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function setActualSize(w:Number, h:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function setLayoutBoundsPosition(x:Number, y:Number):void{}
+		/**
+		 * @inheritDoc
+		 */
 		override public function setLayoutBoundsSize(layoutWidth:Number, layoutHeight:Number):void{}
 		
 		
@@ -263,16 +290,25 @@ package org.flexlite.domUI.managers
 		//==========================================================================
 		//                                复写容器操作方法
 		//==========================================================================
+		/**
+		 * @inheritDoc
+		 */
 		override public function get numElements():int
 		{
 			return _noTopMostIndex;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addElement(element:IVisualElement):IVisualElement
 		{
 			return addElementAt(element, _noTopMostIndex);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addElementAt(element:IVisualElement,index:int):IVisualElement
 		{
 			if(index>_noTopMostIndex)
@@ -301,11 +337,17 @@ package org.flexlite.domUI.managers
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function removeElement(element:IVisualElement):IVisualElement
 		{
 			return removeElementAt(super.getElementIndex(element));
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function removeElementAt(index:int):IVisualElement
 		{
 			if(index<_noTopMostIndex)
@@ -319,12 +361,18 @@ package org.flexlite.domUI.managers
 			return super.removeElementAt(index);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function setElementIndex(element:IVisualElement, newIndex:int):void
 		{
 			checkForRangeError(newIndex);
 			super.setElementIndex(element,newIndex)
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function removeAllElements():void
 		{
 			while(_noTopMostIndex>0)
@@ -334,11 +382,17 @@ package org.flexlite.domUI.managers
 			}
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function swapElements(element1:IVisualElement,element2:IVisualElement):void
 		{
 			swapElementsAt(getElementIndex(element1), getElementIndex(element2));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function swapElementsAt(index1:int, index2:int):void
 		{
 			checkForRangeError(index1);
@@ -346,6 +400,9 @@ package org.flexlite.domUI.managers
 			super.swapElementsAt(index1,index2);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function containsElement(element:IVisualElement):Boolean
 		{
 			if (super.containsElement(element))

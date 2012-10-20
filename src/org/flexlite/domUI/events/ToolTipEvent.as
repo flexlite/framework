@@ -40,6 +40,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var toolTip:IToolTip;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new ToolTipEvent(type, bubbles, cancelable, toolTip);

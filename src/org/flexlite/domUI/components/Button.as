@@ -20,6 +20,9 @@ package org.flexlite.domUI.components
 			super();
 		}   
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return Button;
@@ -30,6 +33,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var frameDic:Dictionary;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function attachSkin(skin:Object):void
 		{
 			super.attachSkin(skin);
@@ -48,6 +54,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function validateSkinState():void
 		{
 			super.validateSkinState();

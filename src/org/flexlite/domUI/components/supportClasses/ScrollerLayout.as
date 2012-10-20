@@ -149,6 +149,9 @@ package org.flexlite.domUI.components.supportClasses
 			return (w >= vsb.preferredWidth) && (h >= vsb.minHeight);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function measure():void
 		{
 			const scroller:Scroller = getScroller();
@@ -247,6 +250,9 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private var invalidationCount:int = 0;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateDisplayList(w:Number, h:Number):void
 		{  
 			var scroller:Scroller = getScroller();

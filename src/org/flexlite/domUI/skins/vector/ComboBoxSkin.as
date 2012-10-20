@@ -43,6 +43,9 @@ package org.flexlite.domUI.skins.vector
 		
 		public var textInput:TextInput;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -88,6 +91,9 @@ package org.flexlite.domUI.skins.vector
 				verticalGradientMatrix(x+1, y+1, w - 2, h - 2)); 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitCurrentState():void
 		{
 			super.commitCurrentState();

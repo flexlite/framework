@@ -130,6 +130,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();    
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);                

@@ -22,6 +22,10 @@ package org.flexlite.domUI.collections
 	 */
 	public class ArrayCollection extends Proxy implements ICollection
 	{
+		/**
+		 * 构造函数
+		 * @param source 数据源
+		 */		
 		public function ArrayCollection(source:Array = null)
 		{
 			super();
@@ -81,18 +85,24 @@ package org.flexlite.domUI.collections
 		// ICollection接口实现方法
 		//
 		//--------------------------------------------------------------------------
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get length():int
 		{
 			return _source.length;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addItem(item:Object):void
 		{
 			_source.push(item);
 			dispatchCoEvent(CollectionEventKind.ADD,_source.length-1,-1,[item]);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addItemAt(item:Object, index:int):void
 		{
 			if(index<0||index>_source.length)
@@ -102,12 +112,16 @@ package org.flexlite.domUI.collections
 			_source.splice(index,0,item);
 			dispatchCoEvent(CollectionEventKind.ADD,index,-1,[item]);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getItemAt(index:int):Object
 		{
 			return _source[index];
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getItemIndex(item:Object):int
 		{
 			var found:Boolean = false;
@@ -127,7 +141,9 @@ package org.flexlite.domUI.collections
 			}
 			return -1;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function itemUpdated(item:Object):void
 		{
 			var index:int = getItemIndex(item);
@@ -136,14 +152,18 @@ package org.flexlite.domUI.collections
 				dispatchCoEvent(CollectionEventKind.UPDATE,index,-1,[item]);
 			}
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeAll():void
 		{
 			var items:Array = _source.concat();
 			_source.length = 0;
 			dispatchCoEvent(CollectionEventKind.REMOVE,0,-1,items);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeItemAt(index:int):Object
 		{
 			checkIndex(index);
@@ -151,7 +171,9 @@ package org.flexlite.domUI.collections
 			dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[item]);
 			return item;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function replaceItemAt(item:Object, index:int):Object
 		{
 			checkIndex(index);
@@ -159,7 +181,9 @@ package org.flexlite.domUI.collections
 			dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item]);
 			return oldItem;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function moveItemAt(oldIndex:int,newIndex:int):Object
 		{
 			checkIndex(oldIndex);
@@ -190,7 +214,9 @@ package org.flexlite.domUI.collections
 		
 		private var eventDispatcher:EventDispatcher;
 		
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addEventListener(type:String,
 										 listener:Function,
 										 useCapture:Boolean = false,
@@ -200,24 +226,32 @@ package org.flexlite.domUI.collections
 			eventDispatcher.addEventListener(type, listener, useCapture,
 				priority, useWeakReference);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeEventListener(type:String,
 											listener:Function,
 											useCapture:Boolean = false):void
 		{
 			eventDispatcher.removeEventListener(type, listener, useCapture);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function dispatchEvent(event:Event):Boolean
 		{
 			return eventDispatcher.dispatchEvent(event);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function hasEventListener(type:String):Boolean
 		{
 			return eventDispatcher.hasEventListener(type);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function willTrigger(type:String):Boolean
 		{
 			return eventDispatcher.willTrigger(type);
@@ -229,6 +263,9 @@ package org.flexlite.domUI.collections
 		//
 		//--------------------------------------------------------------------------
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function getProperty(name:*):*
 		{
 			var index:int = convertToIndex(name);
@@ -255,12 +292,18 @@ package org.flexlite.domUI.collections
 			return index;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function setProperty(name:*, value:*):void
 		{
 			var index:int = convertToIndex(name);
 			replaceItemAt(value, index);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function hasProperty(name:*):Boolean
 		{
 			var index:int = convertToIndex(name);
@@ -269,21 +312,33 @@ package org.flexlite.domUI.collections
 			return index >= 0 && index < length;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function nextNameIndex(index:int):int
 		{
 			return index < length ? index + 1 : 0;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function nextName(index:int):String
 		{
 			return (index - 1).toString();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function nextValue(index:int):*
 		{
 			return getItemAt(index - 1);
 		}    
 		
+		/**
+		 * @inheritDoc
+		 */
 		override flash_proxy function callProperty(name:*, ... rest):*
 		{
 			return null;

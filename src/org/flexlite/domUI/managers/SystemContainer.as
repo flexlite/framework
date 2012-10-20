@@ -14,6 +14,9 @@ package org.flexlite.domUI.managers
 	 */
 	public class SystemContainer implements IContainer
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function SystemContainer(owner:SystemManager,
 										lowerBoundReference:QName,
 										upperBoundReference:QName)
@@ -36,12 +39,16 @@ package org.flexlite.domUI.managers
 		 * 容器上边界属性
 		 */		
 		private var upperBoundReference:QName;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get numElements():int
 		{
 			return owner[upperBoundReference] - owner[lowerBoundReference];
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementAt(index:int):IVisualElement
 		{
 			var retval:IVisualElement =
@@ -49,7 +56,9 @@ package org.flexlite.domUI.managers
 					owner[lowerBoundReference] + index);
 			return retval;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
 			owner.raw_addElementAt(
@@ -57,7 +66,9 @@ package org.flexlite.domUI.managers
 			owner[upperBoundReference]++;
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
 			owner.raw_addElementAt(
@@ -65,7 +76,9 @@ package org.flexlite.domUI.managers
 			owner[upperBoundReference]++;
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElement(element:IVisualElement):IVisualElement
 		{
 			var index:int = owner.raw_getElementIndex(element);
@@ -77,7 +90,9 @@ package org.flexlite.domUI.managers
 			}
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElementAt(index:int):IVisualElement
 		{
 			index += owner[lowerBoundReference];
@@ -90,14 +105,18 @@ package org.flexlite.domUI.managers
 			}
 			return element;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementIndex(element:IVisualElement):int
 		{
 			var retval:int = owner.raw_getElementIndex(element);
 			retval -= owner[lowerBoundReference];
 			return retval;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function setElementIndex(element:IVisualElement, index:int):void
 		{
 			owner.raw_setElementIndex(

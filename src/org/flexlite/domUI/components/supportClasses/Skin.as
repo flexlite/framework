@@ -40,13 +40,18 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			_hostComponent = value;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getSkinParts():Vector.<String>
 		{
 			return SkinPartUtil.getSkinParts(this);
 		}
 
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();

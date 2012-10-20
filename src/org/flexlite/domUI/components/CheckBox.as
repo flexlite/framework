@@ -18,6 +18,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return CheckBox;

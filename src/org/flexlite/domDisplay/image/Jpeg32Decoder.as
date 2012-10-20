@@ -24,7 +24,9 @@ package org.flexlite.domDisplay.image
 		public function Jpeg32Decoder()
 		{
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get codecKey():String
 		{
 			return "jpeg32";
@@ -38,7 +40,9 @@ package org.flexlite.domDisplay.image
 		 * 透明通道字典类
 		 */		
 		private var alphaBlockDic:Dictionary = new Dictionary;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function decode(bytes:ByteArray,onComp:Function):void
 		{
 			var fBlock:ByteArray = bytes;

@@ -51,6 +51,9 @@ package org.flexlite.domDll.events
 		 */		
 		public var dllItem:DllItem;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			var event:DllEvent = new DllEvent(type,bubbles,cancelable);

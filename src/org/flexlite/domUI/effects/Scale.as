@@ -57,6 +57,9 @@ package org.flexlite.domUI.effects
 		 */	
 		public var scaleXBy:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createMotionPath():Vector.<MotionPath>
 		{
 			var motionPath:Vector.<MotionPath> = new Vector.<MotionPath>();
@@ -172,6 +175,9 @@ package org.flexlite.domUI.effects
 			return result;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function animationUpdateHandler(animation:Animation):void
 		{
 			var index:int = 0;

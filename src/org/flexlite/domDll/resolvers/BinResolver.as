@@ -14,6 +14,9 @@ package org.flexlite.domDll.resolvers
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getRes(key:String):*
 		{
 			return fileDic[key];

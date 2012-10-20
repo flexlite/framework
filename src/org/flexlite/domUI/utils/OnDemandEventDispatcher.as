@@ -12,11 +12,15 @@ package org.flexlite.domUI.utils
 	public class OnDemandEventDispatcher implements IEventDispatcher
 	{
 		private var _dispatcher:EventDispatcher;
-		
+		/**
+		 * 构造函数
+		 */		
 		public function OnDemandEventDispatcher()
 		{
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
 		{
 			if (_dispatcher == null)
@@ -25,24 +29,35 @@ package org.flexlite.domUI.utils
 			}
 			_dispatcher.addEventListener(type,listener,useCapture,priority,useWeakReference); 
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function dispatchEvent(event:Event):Boolean
 		{
 			if (_dispatcher != null)
 				return _dispatcher.dispatchEvent(event);
 			return true; 
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function hasEventListener(type:String):Boolean
 		{
 			if (_dispatcher != null)
 				return _dispatcher.hasEventListener(type);
 			return false; 
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
 		{
 			if (_dispatcher != null)
 				_dispatcher.removeEventListener(type,listener,useCapture);         
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function willTrigger(type:String):Boolean
 		{
 			if (_dispatcher != null)

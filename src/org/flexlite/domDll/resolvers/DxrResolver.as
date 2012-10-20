@@ -16,11 +16,17 @@ package org.flexlite.domDll.resolvers
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function cacheFileBytes(bytes:ByteArray,name:String):void
 		{
 			fileDic[name] = new DxrFile(bytes,name);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getRes(key:String):*
 		{
 			var res:* = fileDic[key];
@@ -31,6 +37,9 @@ package org.flexlite.domDll.resolvers
 			return null;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getResAsync(key:String, compFunc:Function):void
 		{
 			if(compFunc==null)

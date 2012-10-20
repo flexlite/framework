@@ -30,6 +30,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return VScrollBar;
@@ -47,6 +50,9 @@ package org.flexlite.domUI.components
 			pageSize = viewportHeight;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set viewport(newViewport:IViewport):void
 		{
 			const oldViewport:IViewport = super.viewport;
@@ -70,6 +76,9 @@ package org.flexlite.domUI.components
 			}
 		}   
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function pointToValue(x:Number, y:Number):Number
 		{
 			if (!thumb || !track)
@@ -79,6 +88,9 @@ package org.flexlite.domUI.components
 			return minimum + ((r != 0) ? (y / r) * (maximum - minimum) : 0); 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateSkinDisplayList():void
 		{
 			if (!thumb || !track)
@@ -115,6 +127,9 @@ package org.flexlite.domUI.components
 			thumb.setLayoutBoundsPosition(thumb.layoutBoundsX, Math.round(thumbPosParentY));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function setValue(value:Number):void
 		{
 			super.setValue(value);
@@ -122,6 +137,9 @@ package org.flexlite.domUI.components
 				viewport.verticalScrollPosition = value;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function changeValueByPage(increase:Boolean = true):void
 		{
 			var oldPageSize:Number;
@@ -136,6 +154,9 @@ package org.flexlite.domUI.components
 				pageSize = oldPageSize;
 		} 
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function animatePaging(newValue:Number, pageSize:Number):void
 		{
 			if (viewport)
@@ -148,6 +169,9 @@ package org.flexlite.domUI.components
 			super.animatePaging(newValue, pageSize);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function changeValueByStep(increase:Boolean = true):void
 		{
 			var oldStepSize:Number;
@@ -162,6 +186,9 @@ package org.flexlite.domUI.components
 				stepSize = oldStepSize;
 		} 
 		    
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			if (instance == thumb)
@@ -173,18 +200,27 @@ package org.flexlite.domUI.components
 			super.partAdded(partName, instance);
 		}     
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function viewportVerticalScrollPositionChangeHandler(event:PropertyChangeEvent):void
 		{
 			if (viewport)
 				value = viewport.verticalScrollPosition;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function viewportResizeHandler(event:ResizeEvent):void
 		{
 			if (viewport)
 				updateMaximumAndPageSize();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function viewportContentHeightChangeHandler(event:PropertyChangeEvent):void
 		{
 			if (viewport)

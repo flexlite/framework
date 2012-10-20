@@ -28,6 +28,9 @@ package org.flexlite.domUI.components
 			allowCustomSelectedItem = true;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return ComboBox;
@@ -110,7 +113,12 @@ package org.flexlite.domUI.components
 		 */		
 		private var restrictChanged:Boolean;
 		/**
-		 * @copy org.flexlite.domUI.components.EditableText#restrict
+		 * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。 
+		 * 如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，
+		 *  则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。
+		 *  只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。 <p/>
+		 * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
+		 *  如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
 		 */
 		public function get restrict():String
 		{
@@ -126,12 +134,18 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set selectedIndex(value:int):void
 		{
 			super.selectedIndex = value;
 			actualProposedSelectedIndex = value;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function set userProposedSelectedIndex(value:Number):void
 		{
 			super.userProposedSelectedIndex = value;
@@ -247,6 +261,9 @@ package org.flexlite.domUI.components
 			userTypedIntoText = false;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{        
 			
@@ -277,6 +294,9 @@ package org.flexlite.domUI.components
 				previousTextInputText = textInput.text = "";
 		}    
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function updateLabelDisplay(displayItem:* = undefined):void
 		{
 			super.updateLabelDisplay();
@@ -292,6 +312,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -305,6 +328,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);
@@ -314,6 +340,9 @@ package org.flexlite.domUI.components
 				textInput.removeEventListener(Event.CHANGE,textInput_changeHandler);
 			}
 		}
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function changeHighlightedSelection(newIndex:int, scrollToTop:Boolean = false):void
 		{
 			super.changeHighlightedSelection(newIndex, scrollToTop);
@@ -332,6 +361,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function setFocus():void
 		{
 			if (stage && textInput)
@@ -340,12 +372,18 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function dropDownController_openHandler(event:UIEvent):void
 		{
 			super.dropDownController_openHandler(event);
 			userProposedSelectedIndex = userTypedIntoText ? NO_SELECTION : selectedIndex;  
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dropDownController_closeHandler(event:UIEvent):void
 		{        
 			super.dropDownController_closeHandler(event);      
@@ -355,6 +393,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function itemRemoved(index:int):void
 		{
 			if (index == selectedIndex)

@@ -21,6 +21,9 @@ package org.flexlite.domUI.skins.studio
 			this.currentState = "up";
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitCurrentState():void
 		{
 			if(hasOwnProperty("upSkin"))

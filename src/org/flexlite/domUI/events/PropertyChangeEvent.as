@@ -83,6 +83,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var source:Object;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new PropertyChangeEvent(type, bubbles, cancelable, kind,

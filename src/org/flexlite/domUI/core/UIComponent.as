@@ -49,6 +49,9 @@ package org.flexlite.domUI.core
 	public class UIComponent extends Sprite 
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,IInvalidating,IVisualElement,IToolTipManagerClient
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function UIComponent()
 		{
 			super();
@@ -82,7 +85,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _toolTip:Object;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get toolTip():Object
 		{
 			return _toolTip;
@@ -100,7 +105,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _toolTipClass:Class;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get toolTipClass():Class
 		{
 			return _toolTipClass;
@@ -113,7 +120,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _toolTipOffset:Point;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get toolTipOffset():Point
 		{
 			return _toolTipOffset;
@@ -125,7 +134,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _toolTipPosition:String = "mouse";
-
+		/**
+		 * @inheritDoc
+		 */
 		public function get toolTipPosition():String
 		{
 			return _toolTipPosition;
@@ -137,7 +148,9 @@ package org.flexlite.domUI.core
 		}
 
 		private var _isPopUp:Boolean;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get isPopUp():Boolean
 		{
 			return _isPopUp;
@@ -148,7 +161,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _owner:DisplayObjectContainer;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get owner():DisplayObjectContainer
 		{
 			return _owner ? _owner : parent;
@@ -162,7 +177,7 @@ package org.flexlite.domUI.core
 		private var _hasParent:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#hasParent
+		 * @inheritDoc
 		 */
 		public function get hasParent():Boolean
 		{
@@ -210,7 +225,7 @@ package org.flexlite.domUI.core
 		
 		private var _updateCompletePendingFlag:Boolean = false;
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#updateCompletePendingFlag
+		 * @inheritDoc
 		 */		
 		public function get updateCompletePendingFlag():Boolean
 		{
@@ -224,7 +239,7 @@ package org.flexlite.domUI.core
 		private var _initialized:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#initialized
+		 * @inheritDoc
 		 */
 		public function get initialized():Boolean
 		{
@@ -270,8 +285,8 @@ package org.flexlite.domUI.core
 		
 		private var _nestLevel:int = 0;
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#nestLevel
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get nestLevel():int
 		{
 			return _nestLevel;
@@ -290,6 +305,9 @@ package org.flexlite.domUI.core
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
 			if(child is ILayoutManagerClient)
@@ -299,6 +317,9 @@ package org.flexlite.domUI.core
 			return super.addChild(child);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
 			if(child is ILayoutManagerClient)
@@ -334,11 +355,17 @@ package org.flexlite.domUI.core
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get doubleClickEnabled():Boolean
 		{
 			return super.doubleClickEnabled;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set doubleClickEnabled(value:Boolean):void
 		{
 			super.doubleClickEnabled = value;
@@ -357,7 +384,7 @@ package org.flexlite.domUI.core
 		private var oldMouseChilren:Boolean = true;
 		
 		/**
-		 * @copy flash.display.DisplayObjectContainer#mouseChildren
+		 * @inheritDoc
 		 */		
 		override public function set mouseChildren(enable:Boolean):void
 		{
@@ -372,7 +399,9 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _enabled:Boolean = true;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get enabled():Boolean
 		{
 			return _enabled;
@@ -405,7 +434,9 @@ package org.flexlite.domUI.core
 		dx_internal var oldWidth:Number;
 			
 		private var _explicitWidth:Number = NaN;
-
+		/**
+		 * @inheritDoc
+		 */
 		public function get explicitWidth():Number
 		{
 			return _explicitWidth;
@@ -429,6 +460,9 @@ package org.flexlite.domUI.core
 				invalidateSize();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get width():Number
 		{
 			return _width;
@@ -441,7 +475,9 @@ package org.flexlite.domUI.core
 		dx_internal var oldHeight:Number;
 		
 		private var _explicitHeight:Number = NaN;
-				
+		/**
+		 * @inheritDoc
+		 */	
 		public function get explicitHeight():Number
 		{
 			return _explicitHeight;
@@ -465,11 +501,17 @@ package org.flexlite.domUI.core
 				invalidateSize();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get height():Number
 		{
 			return _height;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set scaleX(value:Number):void
 		{
 			if(super.scaleX == value)
@@ -479,6 +521,9 @@ package org.flexlite.domUI.core
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set scaleY(value:Number):void
 		{
 			if(super.scaleY == value)
@@ -489,7 +534,7 @@ package org.flexlite.domUI.core
 		
 		private var _minWidth:Number = 0;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#minWidth
+		 * @inheritDoc
 		 */
 		public function get minWidth():Number
 		{
@@ -506,7 +551,7 @@ package org.flexlite.domUI.core
 		
 		private var _maxWidth:Number = 10000;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#maxWidth
+		 * @inheritDoc
 		 */
 		public function get maxWidth():Number
 		{
@@ -524,7 +569,7 @@ package org.flexlite.domUI.core
 		
 		private var _minHeight:Number = 0;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#minHeight
+		 * @inheritDoc
 		 */
 		public function get minHeight():Number
 		{
@@ -541,7 +586,7 @@ package org.flexlite.domUI.core
 		
 		private var _maxHeight:Number = 10000;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#maxHeight
+		 * @inheritDoc
 		 */
 		public function get maxHeight():Number
 		{
@@ -585,7 +630,9 @@ package org.flexlite.domUI.core
 		{
 			_measuredHeight = value;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function setActualSize(w:Number, h:Number):void
 		{
 			var change:Boolean = false;
@@ -611,6 +658,9 @@ package org.flexlite.domUI.core
 		 */
 		dx_internal var oldX:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set x(value:Number):void
 		{
 			if(x==value)
@@ -626,6 +676,9 @@ package org.flexlite.domUI.core
 		 */
 		dx_internal var oldY:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set y(value:Number):void
 		{
 			if(y==value)
@@ -635,7 +688,9 @@ package org.flexlite.domUI.core
 			if (_includeInLayout&&parent && parent is UIComponent)
 				UIComponent(parent).childXYChanged();
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get invalidateFlag():Boolean
 		{
 			return invalidatePropertiesFlag||invalidateSizeFlag||invalidateDisplayListFlag;
@@ -644,7 +699,7 @@ package org.flexlite.domUI.core
 		dx_internal var invalidatePropertiesFlag:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.IInvalidating#invalidateProperties()
+		 * @inheritDoc
 		 */		
 		public function invalidateProperties():void
 		{
@@ -657,7 +712,7 @@ package org.flexlite.domUI.core
 			}
 		}
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#validateProperties()
+		 * @inheritDoc
 		 */		
 		public function validateProperties():void
 		{
@@ -672,8 +727,8 @@ package org.flexlite.domUI.core
 		dx_internal var invalidateSizeFlag:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.IInvalidating#invalidateSize()
-		 */		
+		 * @inheritDoc
+		 */	
 		public function invalidateSize():void
 		{
 			if (!invalidateSizeFlag)
@@ -686,8 +741,8 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#validateSize()
-		 */		
+		 * @inheritDoc
+		 */	
 		public function validateSize(recursive:Boolean = false):void
 		{
 			if (recursive)
@@ -767,7 +822,7 @@ package org.flexlite.domUI.core
 		dx_internal var invalidateDisplayListFlag:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.IInvalidating#invalidateDisplayList()
+		 * @inheritDoc
 		 */		
 		public function invalidateDisplayList():void
 		{
@@ -781,7 +836,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.managers.ILayoutManagerClient#validateDisplayList()
+		 * @inheritDoc
 		 */		
 		public function validateDisplayList():void
 		{
@@ -826,8 +881,8 @@ package org.flexlite.domUI.core
 		dx_internal var validateNowFlag:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.IInvalidating#validateNow()
-		 */		
+		 * @inheritDoc
+		 */	
 		public function validateNow(skipDisplayList:Boolean = false):void
 		{
 			if(!validateNowFlag&&DomGlobals.layoutManager!=null)
@@ -938,7 +993,7 @@ package org.flexlite.domUI.core
 		
 		private var _includeInLayout:Boolean = true;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#includeInLayout
+		 * @inheritDoc
 		 */
 		public function get includeInLayout():Boolean
 		{
@@ -956,7 +1011,7 @@ package org.flexlite.domUI.core
 		private var _left:Number;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#left
+		 * @inheritDoc
 		 */
 		public function get left():Number
 		{
@@ -972,7 +1027,7 @@ package org.flexlite.domUI.core
 		
 		private var _right:Number;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#right
+		 * @inheritDoc
 		 */
 		public function get right():Number
 		{
@@ -988,7 +1043,7 @@ package org.flexlite.domUI.core
 		
 		private var _top:Number;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#top
+		 * @inheritDoc
 		 */
 		public function get top():Number
 		{
@@ -1004,7 +1059,7 @@ package org.flexlite.domUI.core
 		
 		private var _bottom:Number;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#bottom
+		 * @inheritDoc
 		 */	
 		public function get bottom():Number
 		{
@@ -1021,7 +1076,7 @@ package org.flexlite.domUI.core
 		
 		private var _horizontalCenter:Number;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#horizontalCenter
+		 * @inheritDoc
 		 */
 		public function get horizontalCenter():Number
 		{
@@ -1036,9 +1091,8 @@ package org.flexlite.domUI.core
 		}
 		
 		private var _verticalCenter:Number;
-		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#verticalCenter
+		 * @inheritDoc
 		 */
 		public function get verticalCenter():Number
 		{
@@ -1055,7 +1109,7 @@ package org.flexlite.domUI.core
 		
 		private var _percentWidth:Number;
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#percentWidth
+		 * @inheritDoc
 		 */
 		public function get percentWidth():Number
 		{
@@ -1073,7 +1127,7 @@ package org.flexlite.domUI.core
 		private var _percentHeight:Number;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#percentHeight
+		 * @inheritDoc
 		 */
 		public function get percentHeight():Number
 		{
@@ -1098,8 +1152,8 @@ package org.flexlite.domUI.core
 		dx_internal var layoutHeightExplicitlySet:Boolean = false;
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#setLayoutBoundsSize()
-		 */		
+		 * @inheritDoc
+		 */	
 		public function setLayoutBoundsSize(layoutWidth:Number,layoutHeight:Number):void
 		{
 			layoutWidth /= scaleX;
@@ -1126,8 +1180,8 @@ package org.flexlite.domUI.core
 			setActualSize(layoutWidth,layoutHeight);
 		}
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#setLayoutBoundsPosition()
-		 */		
+		 * @inheritDoc
+		 */	
 		public function setLayoutBoundsPosition(x:Number,y:Number):void
 		{
 			var changed:Boolean = false;
@@ -1148,7 +1202,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#preferredWidth
+		 * @inheritDoc
 		 */		
 		public function get preferredWidth():Number
 		{
@@ -1159,7 +1213,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#preferredHeight
+		 * @inheritDoc
 		 */
 		public function get preferredHeight():Number
 		{
@@ -1170,38 +1224,38 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#preferredX
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get preferredX():Number
 		{
 			return super.x;
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#preferredY
+		 * @inheritDoc
 		 */
 		public function get preferredY():Number
 		{
 			return super.y;
 		}
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#layoutBoundsX
-		 */	
+		 * @inheritDoc
+		 */
 		public function get layoutBoundsX():Number
 		{
 			return super.x;
 		}
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#layoutBoundsY
-		 */	
+		 * @inheritDoc
+		 */
 		public function get layoutBoundsY():Number
 		{
 			return super.y;
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.core.ILayoutElement#layoutBoundsWidth
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get layoutBoundsWidth():Number
 		{
 			var w:Number =  0;

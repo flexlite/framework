@@ -85,8 +85,8 @@ package org.flexlite.domUI.components.supportClasses
 		public var track:Button; 
 		
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.Range#maximum
-		 */			
+		 * @inheritDoc
+		 */
 		override public function set maximum(value:Number):void
 		{
 			if (value == super.maximum)
@@ -97,7 +97,7 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.Range#minimum
+		 * @inheritDoc
 		 */
 		override public function set minimum(value:Number):void
 		{
@@ -109,7 +109,7 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.Range#value
+		 * @inheritDoc
 		 */
 		override public function set value(newValue:Number):void
 		{
@@ -120,6 +120,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function setValue(value:Number):void
 		{
 			super.setValue(value);
@@ -137,6 +140,9 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function changeValueByStep(increase:Boolean = true):void
 		{
 			var prevValue:Number = this.value;
@@ -147,11 +153,17 @@ package org.flexlite.domUI.components.supportClasses
 				dispatchEvent(new Event(Event.CHANGE));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			return enabled ? "normal" : "disabled";
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -170,6 +182,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);
@@ -187,6 +202,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);

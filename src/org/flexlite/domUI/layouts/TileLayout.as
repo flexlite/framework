@@ -387,6 +387,9 @@ package org.flexlite.domUI.layouts
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function measure():void
 		{
 			if (target==null)
@@ -587,6 +590,9 @@ package org.flexlite.domUI.layouts
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clearVirtualLayoutCache():void
 		{
 			super.clearVirtualLayoutCache();
@@ -607,6 +613,9 @@ package org.flexlite.domUI.layouts
 		 */		
 		private var indexInViewCalculated:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function scrollPositionChanged():void
 		{
 			super.scrollPositionChanged();
@@ -693,6 +702,9 @@ package org.flexlite.domUI.layouts
 			return startIndex != oldStartIndex||endIndex != oldEndIndex;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateDisplayList(width:Number, height:Number):void
 		{
 			super.updateDisplayList(width, height);
@@ -866,6 +878,9 @@ package org.flexlite.domUI.layouts
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
@@ -888,6 +903,9 @@ package org.flexlite.domUI.layouts
 			return bounds;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
@@ -910,6 +928,9 @@ package org.flexlite.domUI.layouts
 			return bounds;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
@@ -932,6 +953,9 @@ package org.flexlite.domUI.layouts
 			return bounds;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();

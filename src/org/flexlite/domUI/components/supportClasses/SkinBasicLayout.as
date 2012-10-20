@@ -31,7 +31,7 @@ package org.flexlite.domUI.components.supportClasses
 
 		
 		/**
-		 * @copy org.flexlite.domUI.layouts.supportClasses.LayoutBase#measure()
+		 * 测量组件尺寸大小
 		 */		
 		public function measure():void
 		{
@@ -106,8 +106,8 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.layouts.supportClasses.LayoutBase#updateDisplayList()
-		 */
+		 * 更新显示列表
+		 */	
 		public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			if (target==null)

@@ -40,6 +40,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateSkinState();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			if (!selected)
@@ -48,6 +51,9 @@ package org.flexlite.domUI.components.supportClasses
 				return super.getCurrentSkinState() + "AndSelected";
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function buttonReleased():void
 		{
 			super.buttonReleased();

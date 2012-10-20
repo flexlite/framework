@@ -66,6 +66,9 @@ package org.flexlite.domUI.components
 		
 		private var useVirtualLayoutChanged:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set layout(value:LayoutBase):void
 		{
 			if (value == layout)
@@ -100,6 +103,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var virtualRendererIndices:Vector.<int>;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getVirtualElementAt(index:int,changeElementInViews:Boolean=false):IVisualElement
 		{
 			if(changeElementInViews)
@@ -200,6 +206,9 @@ package org.flexlite.domUI.components
 			virtualLayoutUnderWay = false;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getElementIndicesInView():Vector.<int>
 		{
 			if(layout != null&&layout.useVirtualLayout)
@@ -462,6 +471,9 @@ package org.flexlite.domUI.components
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			if(itemRendererChanged||dataProviderChanged||useVirtualLayoutChanged)
@@ -499,6 +511,9 @@ package org.flexlite.domUI.components
 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			if(layout&&layout.useVirtualLayout)
@@ -513,6 +528,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var virtualLayoutUnderWay:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			if(layoutInvalidateDisplayListFlag&&layout!=null&&layout.useVirtualLayout)
@@ -670,11 +688,17 @@ package org.flexlite.domUI.components
 			else return " ";
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getElementAt(index:int):IVisualElement
 		{
 			return indexToRenderer[index];
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getElementIndex(element:IVisualElement):int
 		{
 			if(element==null)
@@ -682,6 +706,9 @@ package org.flexlite.domUI.components
 			return indexToRenderer.indexOf(element);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get numElements():int
 		{
 			if(_dataProvider==null)

@@ -42,7 +42,9 @@ package org.flexlite.domUI.components
 		private var _displayAsPassword:Boolean = false;
 		
 		private var displayAsPasswordChanged:Boolean = true;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get displayAsPassword():Boolean
 		{
 			return _displayAsPassword;
@@ -65,7 +67,9 @@ package org.flexlite.domUI.components
 		private var _editable:Boolean = true;
 		
 		private var editableChanged:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get editable():Boolean
 		{
 			if(enabled)
@@ -89,9 +93,8 @@ package org.flexlite.domUI.components
 			}
 		}
 		
-		
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#enabled
+		 * @inheritDoc
 		 */		
 		override public function set enabled(value:Boolean):void
 		{
@@ -118,7 +121,9 @@ package org.flexlite.domUI.components
 		private var _maxChars:int = 0;
 		
 		private var maxCharsChanged:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get maxChars():int
 		{
 			return _maxChars;
@@ -136,7 +141,9 @@ package org.flexlite.domUI.components
 		private var _multiline:Boolean = true;
 		
 		private var multilineChanged:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get multiline():Boolean
 		{
 			return _multiline;
@@ -155,7 +162,9 @@ package org.flexlite.domUI.components
 		private var _restrict:String = null;
 		
 		private var restrictChanged:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get restrict():String
 		{
 			return _restrict;
@@ -173,8 +182,8 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.TextBase#size
-		 */		
+		 * @inheritDoc
+		 */	
 		override public function set size(value:uint):void
 		{
 			if(size==value)
@@ -184,6 +193,9 @@ package org.flexlite.domUI.components
 			widthInCharsChanged = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set leading(value:int):void
 		{
 			if(leading==value)
@@ -273,7 +285,9 @@ package org.flexlite.domUI.components
 		
 		
 		private var _horizontalScrollPosition:Number = 0;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get horizontalScrollPosition():Number
 		{
 			return _horizontalScrollPosition;
@@ -295,7 +309,9 @@ package org.flexlite.domUI.components
 		}
 		
 		private var _verticalScrollPosition:Number = 0
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get verticalScrollPosition():Number
 		{
 			return _verticalScrollPosition;
@@ -345,7 +361,9 @@ package org.flexlite.domUI.components
 			}
 			return lineHeight*(scrollV-1);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getHorizontalScrollPositionDelta(navigationUnit:uint):Number
 		{
 			var delta:Number = 0;
@@ -376,7 +394,9 @@ package org.flexlite.domUI.components
 			}
 			return delta;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getVerticalScrollPositionDelta(navigationUnit:uint):Number
 		{
 			var delta:Number = 0;
@@ -424,7 +444,9 @@ package org.flexlite.domUI.components
 		}
 		
 		private var _clipAndEnableScrolling:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get clipAndEnableScrolling():Boolean
 		{
 			return _clipAndEnableScrolling;
@@ -453,6 +475,9 @@ package org.flexlite.domUI.components
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			if(textField==null)
@@ -539,6 +564,9 @@ package org.flexlite.domUI.components
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			isValidating = true;
@@ -576,7 +604,9 @@ package org.flexlite.domUI.components
 			setContentHeight(contentHeight);
 		}
 		
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get selectionBeginIndex():int
 		{
 			validateProperties();
@@ -584,7 +614,9 @@ package org.flexlite.domUI.components
 				return textField.selectionBeginIndex;
 			return 0;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get selectionEndIndex():int
 		{
 			validateProperties();
@@ -592,7 +624,9 @@ package org.flexlite.domUI.components
 				return textField.selectionEndIndex;
 			return 0;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get caretIndex():int
 		{
 			validateProperties();
@@ -600,7 +634,9 @@ package org.flexlite.domUI.components
 				return textField.caretIndex;
 			return 0;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function setSelection(beginIndex:int,endIndex:int):void
 		{
 			validateProperties();
@@ -609,7 +645,9 @@ package org.flexlite.domUI.components
 				textField.setSelection(beginIndex,endIndex);
 			}
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function selectAll():void
 		{
 			validateProperties();
@@ -628,6 +666,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var defaultWidth:Number = NaN;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			measuredWidth = isNaN(defaultWidth)? DEFAULT_MEASURED_WIDTH:defaultWidth;

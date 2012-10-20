@@ -30,6 +30,9 @@ package org.flexlite.domUI.events
 		public var oldWidth:Number;
 
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new ResizeEvent(type, oldWidth, oldHeight, bubbles, cancelable);

@@ -36,13 +36,16 @@ package org.flexlite.domUI.components
 		
 		private var _alpha:Number = 0.4;
 		/**
-		 * @copy spark.filters.DropShadowFilter#alpha
-		 */		
+		 * @inheritDoc
+		 */	
 		override public function get alpha():Number
 		{
 			return _alpha;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set alpha(value:Number):void
 		{
 			if (_alpha==value)
@@ -54,7 +57,9 @@ package org.flexlite.domUI.components
 		
 		private var _angle:Number = 45.0;
 		/**
-		 * @copy spark.filters.DropShadowFilter#angle
+		 * 斜角的角度。有效值为 0 到 360 度。角度值表示理论上的光源落在对象上的角度，
+		 * 它决定了效果相对于该对象的位置。如果 distance 属性设置为 0，
+		 * 则效果相对于对象没有偏移，因此 angle 属性不起作用。
 		 */		
 		public function get angle():Number
 		{
@@ -72,7 +77,7 @@ package org.flexlite.domUI.components
 		
 		private var _color:int = 0;
 		/**
-		 * @copy spark.filters.DropShadowFilter#color
+		 * 光晕颜色。有效值采用十六进制格式 0xRRGGBB。
 		 */		
 		public function get color():int
 		{
@@ -90,7 +95,7 @@ package org.flexlite.domUI.components
 		
 		private var _distance:Number = 4.0;
 		/**
-		 * @copy flash.filters.DropShadowFilter#distance
+		 * 阴影的偏移距离，以像素为单位。默认值为 4.0（浮点）。
 		 */		
 		public function get distance():Number
 		{
@@ -180,7 +185,7 @@ package org.flexlite.domUI.components
 		
 		private var _blurX:Number = 4;
 		/**
-		 * @copy flash.filters.DropShadowFilter#blurX
+		 * 水平模糊量。有效值为 0 到 255.0（浮点）。默认值为 4.0。
 		 */		
 		public function get blurX():Number
 		{
@@ -198,7 +203,7 @@ package org.flexlite.domUI.components
 		
 		private var _blurY:Number = 4;
 		/**
-		 * @copy flash.filters.DropShadowFilter#blurY
+		 * 垂直模糊量。有效值为 0 到 255.0（浮点）。默认值为 4.0。
 		 */		
 		public function get blurY():Number
 		{
@@ -214,6 +219,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number,
 													  unscaledHeight:Number):void
 		{

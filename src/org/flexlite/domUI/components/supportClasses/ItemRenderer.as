@@ -19,25 +19,34 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return ItemRenderer;
 		}
 		
 		private var _data:Object;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get data():Object
 		{
 			return _data;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function set data(value:Object):void
 		{
 			_data = value;
 		}
 		
 		private var _selected:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get selected():Boolean
 		{
 			return _selected;
@@ -52,7 +61,9 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		private var _itemIndex:int = -1;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get itemIndex():int
 		{
 			return _itemIndex;
@@ -63,6 +74,9 @@ package org.flexlite.domUI.components.supportClasses
 			_itemIndex = value;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			if(_selected)

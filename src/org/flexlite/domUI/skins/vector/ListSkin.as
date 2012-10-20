@@ -28,6 +28,9 @@ package org.flexlite.domUI.skins.vector
 		
 		public var scroller:Scroller;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -48,6 +51,9 @@ package org.flexlite.domUI.skins.vector
 			addElement(scroller);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number,h:Number):void
 		{
 			super.updateDisplayList(w,h);

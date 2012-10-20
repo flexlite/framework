@@ -45,6 +45,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var renderer:IItemRenderer;
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new RendererExistenceEvent(type, bubbles, cancelable,

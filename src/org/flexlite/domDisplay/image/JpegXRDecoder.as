@@ -25,14 +25,18 @@ package org.flexlite.domDisplay.image
 		public function JpegXRDecoder()
 		{
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get codecKey():String
 		{
 			return "jpegxr";
 		}
 		
 		private var onCompDic:Dictionary;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function decode(byteArray:ByteArray,onComp:Function):void
 		{
 			var loader:Loader = new Loader();

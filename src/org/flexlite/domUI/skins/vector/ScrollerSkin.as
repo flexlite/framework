@@ -23,6 +23,9 @@ package org.flexlite.domUI.skins.vector
 		
 		public var verticalScrollBar:VScrollBar;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -35,6 +38,9 @@ package org.flexlite.domUI.skins.vector
 			addElement(verticalScrollBar);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number,h:Number):void
 		{
 			super.updateDisplayList(w,h);

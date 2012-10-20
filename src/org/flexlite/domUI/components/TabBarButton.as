@@ -23,6 +23,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return TabBarButton;
@@ -44,7 +47,9 @@ package org.flexlite.domUI.components
 		}
 		
 		private var _data:Object;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get data():Object
 		{
 			return _data;
@@ -57,7 +62,9 @@ package org.flexlite.domUI.components
 		}
 		
 		private var _itemIndex:int;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get itemIndex():int
 		{
 			return _itemIndex;
@@ -68,6 +75,9 @@ package org.flexlite.domUI.components
 			_itemIndex = value;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set label(value:String):void
 		{
 			if (value != label)
@@ -79,6 +89,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function buttonReleased():void
 		{
 			if (selected && !allowDeselection)

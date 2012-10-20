@@ -40,7 +40,9 @@ package org.flexlite.domDll.resolvers
 		 * 加载项字典
 		 */		
 		private var dllItemDic:Dictionary = new Dictionary();
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function loadFile(dllItem:DllItem,compFunc:Function,onProgress:Function):void
 		{
 			if(fileDic[dllItem.name])
@@ -112,12 +114,16 @@ package org.flexlite.domDll.resolvers
 		{
 			fileDic[name] = bytes;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getRes(key:String):*
 		{
 			return null;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getResAsync(key:String,compFunc:Function):void
 		{
 			if(compFunc==null)
@@ -125,12 +131,16 @@ package org.flexlite.domDll.resolvers
 			var res:* = getRes(key);
 			compFunc(res);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function hasRes(name:String):Boolean
 		{
 			return fileDic[name]!=null;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function destroyRes(name:String):Boolean
 		{
 			if(fileDic[name])

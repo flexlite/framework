@@ -56,7 +56,9 @@ package org.flexlite.domDisplay
 		}
 		
 		private static var zeroPoint:Point = new Point;
-		
+		/**
+		 * 当前的位图素材起始偏移量
+		 */
 		public function get offsetPoint():Point
 		{
 			return _dxrData?_dxrData.frameOffsetList[0]:zeroPoint;

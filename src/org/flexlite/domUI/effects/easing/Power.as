@@ -36,11 +36,17 @@ package org.flexlite.domUI.effects.easing
 			this.exponent = exponent;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function easeIn(fraction:Number):Number
 		{
 			return Math.pow(fraction, _exponent);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function easeOut(fraction:Number):Number
 		{
 			return 1 - Math.pow((1 - fraction), _exponent);

@@ -77,6 +77,9 @@ package org.flexlite.domUI.components.supportClasses
 		
 		private var dataProviderChanged:Boolean;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set dataProvider(value:ICollection):void
 		{
 			if (dataProvider)
@@ -94,6 +97,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateProperties();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set layout(value:LayoutBase):void
 		{
 			if (value && useVirtualLayout)
@@ -293,6 +299,9 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			var e:IndexChangeEvent; 
@@ -384,6 +393,9 @@ package org.flexlite.domUI.components.supportClasses
 				renderer.label = itemToLabel(renderer.data); 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -400,6 +412,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{        
 			super.partRemoved(partName, instance);
@@ -413,12 +428,18 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateRenderer(renderer:IItemRenderer, itemIndex:int, data:Object):IItemRenderer
 		{
 			itemSelected(itemIndex, isItemIndexSelected(itemIndex));
 			return super.updateRenderer(renderer, itemIndex, data); 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function itemToLabel(item:Object):String
 		{
 			if (_labelFunction != null)

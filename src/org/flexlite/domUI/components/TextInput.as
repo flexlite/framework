@@ -27,13 +27,16 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return TextInput;
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.components.EditableText#widthInChars 
+		 * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
 		 */		
 		public function get widthInChars():Number
 		{
@@ -45,12 +48,18 @@ package org.flexlite.domUI.components
 			setWidthInChars(value);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set text(value:String):void
 		{
 			super.text = value;
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -63,6 +72,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function createSkinParts():void
 		{
 			textDisplay = new EditableText();

@@ -33,6 +33,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return TitleWindow;
@@ -47,6 +50,9 @@ package org.flexlite.domUI.components
 		 */		
 		public var moveArea:InteractiveObject;
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object) : void
 		{
 			super.partAdded(partName, instance);
@@ -61,6 +67,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);

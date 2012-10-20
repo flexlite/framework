@@ -46,6 +46,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var oldLocation:int;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function toString():String
 		{
 			return formatToString("CollectionEvent", "kind", "location",
@@ -53,6 +56,9 @@ package org.flexlite.domUI.events
 				"cancelable", "eventPhase");
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items);

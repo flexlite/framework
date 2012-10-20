@@ -21,14 +21,18 @@ package org.flexlite.domDisplay.image
 		{
 			encodeOptions = new PNGEncoderOptions(fastCompression);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get codecKey():String
 		{
 			return "png";
 		}
 		
 		private var encodeOptions:PNGEncoderOptions;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function encode(bitmapData:BitmapData):ByteArray
 		{
 			var byteArray:ByteArray = new ByteArray;

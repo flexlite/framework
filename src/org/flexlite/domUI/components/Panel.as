@@ -20,6 +20,9 @@ package org.flexlite.domUI.components
 			mouseEnabled = false;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return Panel;
@@ -51,6 +54,9 @@ package org.flexlite.domUI.components
 				titleDisplay.text = title;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);

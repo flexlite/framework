@@ -23,6 +23,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return DropDownList;
@@ -37,6 +40,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var labelChanged:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -48,6 +54,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -59,6 +68,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function updateLabelDisplay(displayItem:* = undefined):void
 		{
 			if (labelDisplay)

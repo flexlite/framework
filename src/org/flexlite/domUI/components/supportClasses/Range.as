@@ -161,6 +161,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateProperties();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();

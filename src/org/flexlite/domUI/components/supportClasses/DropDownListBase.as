@@ -57,6 +57,9 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private var labelChanged:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set dataProvider(value:ICollection):void
 		{   
 			if (dataProvider === value)
@@ -67,8 +70,8 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateProperties();
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.ListBase#labelField
-		 */		
+		 * @inheritDoc
+		 */
 		override public function set labelField(value:String):void
 		{
 			if (labelField == value)
@@ -79,8 +82,8 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateProperties();
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.supportClasses.ListBase#labelFunction
-		 */	
+		 * @inheritDoc
+		 */
 		override public function set labelFunction(value:Function):void
 		{
 			if (labelFunction == value)
@@ -138,6 +141,9 @@ package org.flexlite.domUI.components.supportClasses
 			return _userProposedSelectedIndex;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -149,6 +155,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -164,6 +173,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			if (dropDownController)
@@ -178,11 +190,17 @@ package org.flexlite.domUI.components.supportClasses
 			super.partRemoved(partName, instance);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			return !enabled ? "disabled" : isDropDownOpen ? "open" : "normal";
 		}   
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitSelection(dispatchChangedEvents:Boolean = true):Boolean
 		{
 			var retVal:Boolean = super.commitSelection(dispatchChangedEvents);
@@ -190,6 +208,9 @@ package org.flexlite.domUI.components.supportClasses
 			return retVal; 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function isItemIndexSelected(index:int):Boolean
 		{
 			return userProposedSelectedIndex == index;
@@ -225,6 +246,9 @@ package org.flexlite.domUI.components.supportClasses
 			itemSelected(userProposedSelectedIndex, true);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dataProvider_collectionChangeHandler(event:Event):void
 		{       
 			super.dataProvider_collectionChangeHandler(event);
@@ -236,6 +260,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function item_mouseDownHandler(event:MouseEvent):void
 		{
 			super.item_mouseDownHandler(event);

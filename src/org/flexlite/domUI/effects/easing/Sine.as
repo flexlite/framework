@@ -16,11 +16,17 @@ package  org.flexlite.domUI.effects.easing
 			super(easeInFraction);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function easeIn(fraction:Number):Number
 		{
 			return 1 - Math.cos(fraction * Math.PI/2);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function easeOut(fraction:Number):Number
 		{
 			return Math.sin(fraction * Math.PI/2);

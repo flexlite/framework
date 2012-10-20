@@ -23,14 +23,18 @@ package org.flexlite.domDisplay.image
 		{
 			encodeOptions = new JPEGEncoderOptions(quality);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get codecKey():String
 		{
 			return "jpeg32";
 		}
 		
 		private var encodeOptions:JPEGEncoderOptions;
-
+		/**
+		 * @inheritDoc
+		 */
 		public function encode(bitmapData:BitmapData):ByteArray
 		{
 			var aBlock:ByteArray = getAlphaDataBlock(bitmapData);

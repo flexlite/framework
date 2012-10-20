@@ -23,14 +23,18 @@ package org.flexlite.domDisplay.image
 		public function PngDecoder()
 		{
 		}
-				
+		/**
+		 * @inheritDoc
+		 */	
 		public function get codecKey():String
 		{
 			return "png";
 		}
 		
 		private var onCompDic:Dictionary;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function decode(byteArray:ByteArray,onComp:Function):void
 		{
 			var loader:Loader = new Loader();

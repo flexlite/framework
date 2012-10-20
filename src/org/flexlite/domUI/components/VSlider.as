@@ -19,11 +19,17 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return VSlider;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function pointToValue(x:Number, y:Number):Number
 		{
 			if (!thumb || !track)
@@ -34,6 +40,9 @@ package org.flexlite.domUI.components
 			return minimum + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0); 
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateSkinDisplayList():void
 		{
 			if (!thumb || !track)

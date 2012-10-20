@@ -32,6 +32,9 @@ package org.flexlite.domUI.components
 		
 		private var toolTipSet:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set toolTip(value:Object):void
 		{
 			super.toolTip = value;
@@ -57,6 +60,9 @@ package org.flexlite.domUI.components
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get defaultTextFormat():TextFormat
 		{
 			if(defaultStyleChanged)
@@ -76,6 +82,9 @@ package org.flexlite.domUI.components
 		 * fontFamily，size，textColor，bold，italic，underline，textAlign，<br/>
 		 * leading，letterSpacing，disabledColor,若目标textBase为Label还复制verticalAlign属性。
 		 */	
+		/**
+		 * @inheritDoc
+		 */
 		override public function copyDefaultFormatFrom(textBase:TextBase):void
 		{
 			super.copyDefaultFormatFrom(textBase);
@@ -114,6 +123,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set text(value:String):void
 		{
 			if (value==null)
@@ -124,6 +136,9 @@ package org.flexlite.domUI.components
 			rangeFormatDic = null;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set htmlText(value:String):void
 		{
 			if (!value)
@@ -147,7 +162,7 @@ package org.flexlite.domUI.components
 		 */		
 		private var widthChanged:Boolean = true;
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#width
+		 * @inheritDoc
 		 */		
 		override public function set width(value:Number):void
 		{
@@ -162,8 +177,8 @@ package org.flexlite.domUI.components
 			super.width = value;
 		}
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#maxWidth
-		 */		
+		 * @inheritDoc
+		 */	
 		override public function set maxWidth(value:Number):void
 		{
 			if (value != maxWidth)
@@ -177,7 +192,7 @@ package org.flexlite.domUI.components
 			super.maxWidth = value;
 		}
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#percentWidth
+		 * @inheritDoc
 		 */		
 		override public function set percentWidth(value:Number):void
 		{
@@ -271,6 +286,9 @@ package org.flexlite.domUI.components
 
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			var needSetDefaultFormat:Boolean = defaultStyleChanged||textChanged || htmlTextChanged;
@@ -301,6 +319,9 @@ package org.flexlite.domUI.components
 		}
 
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			if (isSpecialCase())
@@ -476,6 +497,9 @@ package org.flexlite.domUI.components
 		
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
 		{
 			$updateDisplayList(unscaledWidth,unscaledHeight);
@@ -619,6 +643,9 @@ package org.flexlite.domUI.components
 			return false;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createTextField():void
 		{
 			if (textField==null)

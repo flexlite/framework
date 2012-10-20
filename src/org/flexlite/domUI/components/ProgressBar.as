@@ -26,6 +26,9 @@ package org.flexlite.domUI.components
 			mouseEnabled = false;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return ProgressBar;
@@ -143,18 +146,27 @@ package org.flexlite.domUI.components
 			setValue(slideToValue);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function setValue(value:Number):void
 		{
 			super.setValue(value);
 			invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			updateSkinDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			if(instance==track)
@@ -166,6 +178,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			if(instance==track)

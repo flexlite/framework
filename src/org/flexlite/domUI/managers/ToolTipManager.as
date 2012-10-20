@@ -17,7 +17,9 @@ package org.flexlite.domUI.managers
 	 */	
 	public class ToolTipManager extends EventDispatcher
 	{
-		
+		/**
+		 * 构造函数
+		 */		
 		public function ToolTipManager()
 		{
 			super();

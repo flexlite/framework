@@ -18,6 +18,9 @@ package org.flexlite.domUI.skins
 	 */
 	public class InvisibleSkin implements IInvisibleSkin
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function InvisibleSkin()
 		{
 			super();
@@ -27,7 +30,9 @@ package org.flexlite.domUI.skins
 		 * 皮肤解析适配器
 		 */		
 		private static var skinAdapter:ISkinAdapter;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getSkin(state:String,compFunc:Function):void
 		{
 			if(!skinAdapter)

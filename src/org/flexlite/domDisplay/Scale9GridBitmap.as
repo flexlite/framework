@@ -85,11 +85,17 @@ package org.flexlite.domDisplay
 		
 		private var _scale9Grid:Rectangle;
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function get scale9Grid():Rectangle
 		{
 			return _scale9Grid;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function set scale9Grid(value:Rectangle):void
 		{
 			if(value==_scale9Grid)
@@ -136,11 +142,17 @@ package org.flexlite.domDisplay
 		
 		private var _width:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get width():Number
 		{
 			return _width;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set width(value:Number):void
 		{
 			if(value==_width)
@@ -159,11 +171,17 @@ package org.flexlite.domDisplay
 		
 		private var _height:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get height():Number
 		{
 			return _height;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set height(value:Number):void
 		{
 			if(_height==value)

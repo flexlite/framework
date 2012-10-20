@@ -16,6 +16,9 @@ package org.flexlite.domUI.skins.studio
 			this.states = ["open","normal","disabled"];
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitCurrentState():void
 		{
 			super.commitCurrentState();

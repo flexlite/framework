@@ -19,6 +19,9 @@ package org.flexlite.domDll.resolvers
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getRes(key:String):*
 		{
 			if(sharedMap.has(key))
@@ -35,6 +38,9 @@ package org.flexlite.domDll.resolvers
 		 */		
 		private var keyDic:Dictionary;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getResAsync(key:String,compFunc:Function):void
 		{
 			if(sharedMap.has(key))

@@ -46,7 +46,11 @@ package org.flexlite.domUI.components.supportClasses
 		private var condenseWhiteChanged:Boolean = false;
 		
 		/**
-		 * @copy flash.text.TextField#condenseWhite
+		 * 一个布尔值，指定是否删除具有 HTML 文本的文本字段中的额外空白（空格、换行符等等）。
+		 * 默认值为 false。condenseWhite 属性只影响使用 htmlText 属性（而非 text 属性）设置的文本。
+		 * 如果使用 text 属性设置文本，则忽略 condenseWhite。 <p/>
+		 * 如果 condenseWhite 设置为 true，请使用标准 HTML 命令（如 <BR> 和 <P>），将换行符放在文本字段中。<p/>
+		 * 在设置 htmlText 属性之前设置 condenseWhite 属性。
 		 */		
 		public function get condenseWhite():Boolean
 		{
@@ -71,12 +75,9 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(new Event("condenseWhiteChanged"));
 		}
 		
-		
-		
-		
 		/**
-		 * @copy org.flexlite.domUI.core.UIComponent#enabled
-		 */		
+		 * @inheritDoc
+		 */	
 		override public function set enabled(value:Boolean):void
 		{
 			if(super.enabled==value)
@@ -536,6 +537,9 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -546,6 +550,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -594,6 +601,9 @@ package org.flexlite.domUI.components.supportClasses
 			
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function setFocus():void
 		{
 			if(textField!=null)
@@ -629,6 +639,9 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			super.measure();
@@ -645,6 +658,9 @@ package org.flexlite.domUI.components.supportClasses
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);

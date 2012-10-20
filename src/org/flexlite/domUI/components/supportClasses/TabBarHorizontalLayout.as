@@ -43,6 +43,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function measure():void
 		{
 			super.measure();
@@ -77,6 +80,9 @@ package org.flexlite.domUI.components.supportClasses
 			layoutTarget.measuredHeight = height;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateDisplayList(width:Number, height:Number):void
 		{
 			var gap:Number = this.gap;

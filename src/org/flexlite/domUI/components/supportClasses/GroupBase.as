@@ -30,12 +30,7 @@ package org.flexlite.domUI.components.supportClasses
 		private var _contentWidth:Number = 0;
 		
 		/**
-		 * 视域的内容的宽度。
-		 * 如果 clipAndEnabledScrolling 为 true，
-		 * 则视域的 contentWidth 为水平滚动定义限制，
-		 * 且视域的实际宽度定义可见的内容量。
-		 * 要在内容中水平滚动，请在 0 和 contentWidth - width 
-		 * 之间更改 horizontalScrollPosition。 
+		 * @inheritDoc
 		 */
 		public function get contentWidth():Number 
 		{
@@ -54,12 +49,7 @@ package org.flexlite.domUI.components.supportClasses
 		private var _contentHeight:Number = 0;
 		
 		/**
-		 * 视域的内容的高度。
-		 * 如果 clipAndEnabledScrolling 为 true，
-		 * 则视域的 contentHeight 为垂直滚动定义限制，
-		 * 且视域的实际高度定义可见的内容量。
-		 * 要在内容中垂直滚动， 请在 0 和 contentHeight - height 
-		 * 之间更改 verticalScrollPosition
+		 * @inheritDoc
 		 */
 		public function get contentHeight():Number 
 		{
@@ -153,6 +143,9 @@ package org.flexlite.domUI.components.supportClasses
 				}
 		}  
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -181,7 +174,9 @@ package org.flexlite.domUI.components.supportClasses
 				return false;
 			}
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function set clipAndEnableScrolling(value:Boolean):void
 		{
 			if (_layout)
@@ -199,12 +194,16 @@ package org.flexlite.domUI.components.supportClasses
 			
 			invalidateSize();
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getHorizontalScrollPositionDelta(navigationUnit:uint):Number
 		{
 			return (layout) ? layout.getHorizontalScrollPositionDelta(navigationUnit) : 0;     
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getVerticalScrollPositionDelta(navigationUnit:uint):Number
 		{
 			return (layout) ? layout.getVerticalScrollPositionDelta(navigationUnit) : 0;     
@@ -229,7 +228,9 @@ package org.flexlite.domUI.components.supportClasses
 				return 0;
 			}
 		}
-
+		/**
+		 * @inheritDoc
+		 */
 		public function set horizontalScrollPosition(value:Number):void
 		{
 			if (_layout)
@@ -265,7 +266,9 @@ package org.flexlite.domUI.components.supportClasses
 				return 0;
 			}
 		}
-
+		/**
+		 * @inheritDoc
+		 */
 		public function set verticalScrollPosition(value:Number):void
 		{
 			if (_layout)
@@ -282,6 +285,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			if(_layout==null||!layoutInvalidateSizeFlag)
@@ -303,12 +309,18 @@ package org.flexlite.domUI.components.supportClasses
 			super.invalidateDisplayList();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function invalidateDisplayList():void
 		{
 			super.invalidateDisplayList();
 			layoutInvalidateDisplayListFlag = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function childXYChanged():void
 		{
 			invalidateSize();
@@ -328,12 +340,18 @@ package org.flexlite.domUI.components.supportClasses
 			super.invalidateSize();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function invalidateSize():void
 		{
 			super.invalidateSize();
 			layoutInvalidateSizeFlag = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
@@ -345,7 +363,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		/**
-		 *  @copy org.flexlite.domUI.core.IVisualElementContainer#numElements()
+		 * 此容器中的可视元素的数量。
+		 * 可视元素包括实现 IVisualElement 接口的类，
+		 * 例如，UIComponent 和 GraphicElement 的子类。
 		 */
 		public function get numElements():int
 		{
@@ -353,8 +373,10 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
-		 *  @copy org.flexlite.domUI.core.IVisualElementContainer#getElementAt()
-		 */
+		 * 返回指定索引处的可视元素。
+		 * @param index 要检索的元素的索引。
+		 * @throws RangeError 如果在子列表中不存在该索引位置。
+		 */	
 		public function getElementAt(index:int):IVisualElement
 		{
 			return null;
@@ -369,15 +391,17 @@ package org.flexlite.domUI.components.supportClasses
 			return getElementAt(index);            
 		}
 		/**
-		 *  @copy org.flexlite.domUI.core.IVisualElementContainer#getElementIndex()
+		 * 返回可视元素的索引位置。若不存在，则返回-1。
+		 * @param element 可视元素。
 		 */
 		public function getElementIndex(element:IVisualElement):int
 		{
 			return -1;
 		}
 		/**
-		 *  @copy org.flexlite.domUI.core.IVisualElementContainer#containsElement()
-		 */
+		 * 确定指定的 IVisualElement 是否为容器实例的子代或该实例本身。将进行深度搜索，即，如果此元素是该容器的子代、孙代、曾孙代等，它将返回 true。
+		 * @param element 要测试的子对象
+		 */	
 		public function containsElement(element:IVisualElement):Boolean
 		{
 			while (element)

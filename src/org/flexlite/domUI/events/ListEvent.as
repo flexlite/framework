@@ -65,6 +65,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var itemIndex:int;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			var cloneEvent:ListEvent = new ListEvent(type, bubbles, cancelable, 

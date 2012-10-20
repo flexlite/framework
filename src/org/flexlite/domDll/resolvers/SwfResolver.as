@@ -53,7 +53,9 @@ package org.flexlite.domDll.resolvers
 		 * 在IOS系统中运行的标志
 		 */		
 		private var inIOS:Boolean = false;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function loadFile(dllItem:DllItem,compFunc:Function,progressFunc:Function):void
 		{
 			if(swfDic[dllItem.name])
@@ -111,7 +113,9 @@ package org.flexlite.domDll.resolvers
 			compFunc(dllItem);
 		}
 		
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getRes(key:String):*
 		{
 			var res:*  = swfDic[key];
@@ -131,7 +135,9 @@ package org.flexlite.domDll.resolvers
 			
 			return null;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getResAsync(key:String,compFunc:Function):void
 		{
 			if(compFunc==null)
@@ -139,12 +145,16 @@ package org.flexlite.domDll.resolvers
 			var res:* = getRes(key);
 			compFunc(res);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function hasRes(name:String):Boolean
 		{
 			return swfDic[name]!=null;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function destroyRes(name:String):Boolean
 		{
 			if(swfDic[name])

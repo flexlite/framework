@@ -50,6 +50,9 @@ package org.flexlite.domUI.skins.vector
 		 */		
 		public var contentGroup:Group;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -104,6 +107,9 @@ package org.flexlite.domUI.skins.vector
 			addElement(labelDisplay);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w,h);

@@ -30,6 +30,9 @@ package org.flexlite.domUI.events
 			super(type, bubbles, cancelable);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new TrackBaseEvent(type, bubbles, cancelable);

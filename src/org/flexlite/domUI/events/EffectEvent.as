@@ -38,6 +38,9 @@ package org.flexlite.domUI.events
 			super(eventType, bubbles, cancelable);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new EffectEvent(type, bubbles, cancelable);

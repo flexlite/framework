@@ -28,16 +28,24 @@ package org.flexlite.domUI.components
 	 */
 	public class SkinnableDataContainer extends SkinnableComponent implements IItemRendererOwner
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function SkinnableDataContainer()
 		{
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return SkinnableDataContainer;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function updateRenderer(renderer:IItemRenderer, itemIndex:int, data:Object):IItemRenderer
 		{
 			if(renderer is IVisualElement)
@@ -78,7 +86,7 @@ package org.flexlite.domUI.components
 			? dataGroup.dataProvider 
 				: dataGroupProperties.dataProvider;
 		}
-		
+
 		public function set dataProvider(value:ICollection):void
 		{
 			if (dataGroup==null)
@@ -165,6 +173,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -213,6 +224,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);
@@ -239,6 +253,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function addEventListener(
 			type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false) : void
 		{
@@ -257,6 +274,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean=false) : void
 		{
 			super.removeEventListener(type, listener, useCapture);
@@ -280,6 +300,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function createSkinParts():void
 		{
 			dataGroup = new DataGroup();
@@ -293,6 +316,9 @@ package org.flexlite.domUI.components
 			partAdded("dataGroup",dataGroup);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function removeSkinParts():void
 		{
 			if(!dataGroup)

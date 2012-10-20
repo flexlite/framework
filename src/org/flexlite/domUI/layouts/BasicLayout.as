@@ -23,6 +23,9 @@ package org.flexlite.domUI.layouts
 		{
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function measure():void
 		{
 			super.measure();
@@ -98,6 +101,9 @@ package org.flexlite.domUI.layouts
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);

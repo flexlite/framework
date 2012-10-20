@@ -11,6 +11,9 @@ package org.flexlite.domUI.components
 	 */	
 	public class Spacer extends UIComponent
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function Spacer()
 		{
 			super();

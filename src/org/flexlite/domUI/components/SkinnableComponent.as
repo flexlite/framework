@@ -3,7 +3,6 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.filters.ColorMatrixFilter;
-	import flash.net.dns.AAAARecord;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
@@ -40,6 +39,9 @@ package org.flexlite.domUI.components
 	 */
 	public class SkinnableComponent extends UIAsset implements IHostComponent
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function SkinnableComponent()
 		{
 			super();
@@ -47,6 +49,9 @@ package org.flexlite.domUI.components
 			mouseEnabled = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			if(!defaultTheme)
@@ -90,6 +95,9 @@ package org.flexlite.domUI.components
 			return _invisibleSkin;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function onGetSkin(skin:Object,skinName:Object):void
 		{
 			var oldSkin:Object = getCurrentSkin();
@@ -171,7 +179,9 @@ package org.flexlite.domUI.components
 				hasCreatedSkinParts = true;
 			}
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function findSkinParts():void
 		{
 			var curSkin:Object = getCurrentSkin();
@@ -329,6 +339,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set enabled(value:Boolean):void
 		{
 			if(enabled==value)
@@ -347,6 +360,9 @@ package org.flexlite.domUI.components
 		
 		//========================皮肤视图状态===================end========================
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -359,6 +375,9 @@ package org.flexlite.domUI.components
 		
 		private var layout:SkinBasicLayout;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			super.measure();
@@ -368,6 +387,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);

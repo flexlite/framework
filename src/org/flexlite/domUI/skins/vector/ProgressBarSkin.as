@@ -23,6 +23,9 @@ package org.flexlite.domUI.skins.vector
 		public var track:UIAsset;
 		public var labelDisplay:Label;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();

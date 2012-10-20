@@ -30,6 +30,9 @@ package org.flexlite.domUI.events
 		 */
 		public var oldY:Number;
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new MoveEvent(type, oldX, oldY, bubbles, cancelable);

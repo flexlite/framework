@@ -26,6 +26,9 @@ package org.flexlite.domUI.skins.vector
 			this.minWidth = 22;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);

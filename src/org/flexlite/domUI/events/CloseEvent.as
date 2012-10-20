@@ -23,6 +23,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var detail:Object;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new CloseEvent(type, bubbles, cancelable, detail);

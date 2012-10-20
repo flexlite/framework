@@ -25,6 +25,9 @@ package org.flexlite.domUI.components
 			useVirtualLayout = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			if(itemRenderer==null)
@@ -32,6 +35,9 @@ package org.flexlite.domUI.components
 			super.createChildren();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return List;
@@ -45,11 +51,17 @@ package org.flexlite.domUI.components
 			return super.useVirtualLayout;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set useVirtualLayout(value:Boolean):void
 		{
 			super.useVirtualLayout = value;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
 		{
 			super.dataGroup_rendererAddHandler(event);
@@ -61,6 +73,9 @@ package org.flexlite.domUI.components
 			renderer.addEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
 		{
 			super.dataGroup_rendererRemoveHandler(event);

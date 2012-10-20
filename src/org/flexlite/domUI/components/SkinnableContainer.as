@@ -35,6 +35,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return SkinnableContainer;
@@ -74,68 +77,93 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * @copy org.flexlite.domUI.components.Group#elementsContent
+		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。 
+		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
 		 */		
 		public function set elementsContent(value:Array):void
 		{
 			currentContentGroup.elementsContent = value;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get numElements():int
 		{
 			return currentContentGroup.numElements;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementAt(index:int):IVisualElement
 		{
 			return currentContentGroup.getElementAt(index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
 			return currentContentGroup.addElement(element);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
 			return currentContentGroup.addElementAt(element,index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElement(element:IVisualElement):IVisualElement
 		{
 			return currentContentGroup.removeElement(element);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElementAt(index:int):IVisualElement
 		{
 			return currentContentGroup.removeElementAt(index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function removeAllElements():void
 		{
 			currentContentGroup.removeAllElements();
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementIndex(element:IVisualElement):int
 		{
 			return currentContentGroup.getElementIndex(element);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function setElementIndex(element:IVisualElement, index:int):void
 		{
 			currentContentGroup.setElementIndex(element,index);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElements(element1:IVisualElement, element2:IVisualElement):void
 		{
 			currentContentGroup.swapElements(element1,element2);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElementsAt(index1:int, index2:int):void
 		{
 			currentContentGroup.swapElementsAt(index1,index2);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function containsElement(element:IVisualElement):Boolean
 		{
 			return currentContentGroup.containsElement(element);
@@ -168,6 +196,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -200,6 +231,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
@@ -246,6 +280,9 @@ package org.flexlite.domUI.components
 			dispatchEvent(event);
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function createSkinParts():void
 		{
 			contentGroup = new Group();
@@ -255,6 +292,9 @@ package org.flexlite.domUI.components
 			partAdded("contentGroup",contentGroup);
 		}
 				
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function removeSkinParts():void
 		{
 			partRemoved("contentGroup",contentGroup);

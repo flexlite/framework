@@ -21,6 +21,9 @@ package org.flexlite.domUI.skins.vector
 		
 		public var moveArea:Group;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();

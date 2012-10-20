@@ -19,6 +19,9 @@ package org.flexlite.domUI.core
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set width(value:Number):void  
 		{
 			var changed:Boolean = super.width != value;
@@ -27,6 +30,9 @@ package org.flexlite.domUI.core
 				dispatchEvent(new Event("widthChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set height(value:Number):void
 		{
 			var changed:Boolean = super.height != value;
@@ -35,12 +41,18 @@ package org.flexlite.domUI.core
 				dispatchEvent(new Event("heightChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function setTextFormat(format:TextFormat,beginIndex:int = -1,endIndex:int = -1):void
 		{
 			super.setTextFormat(format, beginIndex, endIndex);
 			dispatchEvent(new Event("textFormatChanged"));
 		}  
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set text(value:String):void
 		{
 			if (!value)
@@ -53,6 +65,9 @@ package org.flexlite.domUI.core
 				dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set htmlText(value:String):void
 		{
 			if (!value)
@@ -65,6 +80,9 @@ package org.flexlite.domUI.core
 				dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function insertXMLText(beginIndex:int, endIndex:int,richText:String,pasting:Boolean = false):void
 		{
 			super.insertXMLText(beginIndex, endIndex, richText, pasting);
@@ -72,18 +90,27 @@ package org.flexlite.domUI.core
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function appendText(newText:String):void
 		{
 			super.appendText(newText);
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function replaceSelectedText(value:String):void
 		{
 			super.replaceSelectedText(value);
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function replaceText(beginIndex:int, endIndex:int,newText:String):void
 		{
 			super.replaceText(beginIndex, endIndex, newText);
@@ -96,6 +123,9 @@ package org.flexlite.domUI.core
 		 * 上下各2像素，为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给width，不会造成截断
 		 */	
+		/**
+		 * @inheritDoc
+		 */
 		override public function get textHeight():Number
 		{
 			return super.textHeight+4;
@@ -105,6 +135,9 @@ package org.flexlite.domUI.core
 		 * Flash Player在计算TextFiled.textWidth时，没有考虑装订线的4像素
 		 * 左右各2像素，为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给width，不会造成截断
+		 */
+		/**
+		 * @inheritDoc
 		 */
 		override public function get textWidth():Number
 		{

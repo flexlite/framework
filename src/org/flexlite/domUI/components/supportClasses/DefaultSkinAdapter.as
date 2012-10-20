@@ -22,7 +22,9 @@ package org.flexlite.domUI.components.supportClasses
 		public function DefaultSkinAdapter()
 		{
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getSkin(skinName:Object, compFunc:Function):void
 		{
 			if(skinName is Class)

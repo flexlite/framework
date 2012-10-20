@@ -101,6 +101,9 @@ package org.flexlite.domUI.components
 				validateNow();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -160,6 +163,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			super.measure();
@@ -209,6 +215,9 @@ package org.flexlite.domUI.components
 			}
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);

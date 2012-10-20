@@ -21,7 +21,9 @@ package org.flexlite.domDisplay.image
 			super();
 			encodeOptions = new JPEGXREncoderOptions(quantization,colorSpace,trimFlexBits);
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get codecKey():String
 		{
 			return "jpegxr";
@@ -30,9 +32,8 @@ package org.flexlite.domDisplay.image
 		private var encodeOptions:JPEGXREncoderOptions;
 		
 		/**
-		 * 将位图数据编码为JPEG-XR格式的字节流
-		 * @param bitmapData 要编码的位图数据
-		 */		
+		 * @inheritDoc
+		 */	
 		public function encode(bitmapData:BitmapData):ByteArray
 		{
 			var byteArray:ByteArray = new ByteArray;

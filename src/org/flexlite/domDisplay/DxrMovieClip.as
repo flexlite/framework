@@ -259,11 +259,17 @@ package org.flexlite.domDisplay
 		
 		private var _width:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get width():Number
 		{
 			return _width;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function set width(value:Number):void
 		{
 			if(value==_width)
@@ -292,11 +298,17 @@ package org.flexlite.domDisplay
 		
 		private var _height:Number;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function get height():Number
 		{
 			return _height;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		override public function set height(value:Number):void
 		{
 			if(_height==value)
@@ -373,7 +385,7 @@ package org.flexlite.domDisplay
 
 		private var _currentFrame:int = 0;
 		/**
-		 * 当前播放到的帧索引,从0开始
+		 * @inheritDoc
 		 */
 		public function get currentFrame():int
 		{
@@ -381,7 +393,7 @@ package org.flexlite.domDisplay
 		}
 
 		/**
-		 * 动画总帧数
+		 * @inheritDoc
 		 */
 		public function get totalFrames():int
 		{
@@ -389,8 +401,8 @@ package org.flexlite.domDisplay
 		}
 		
 		/**
-		 * 返回由FrameLabel对象组成的数组。数组包括整个Dxr动画实例的所有帧标签。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get frameLabels():Array
 		{
 			return dxrData?dxrData.frameLabels:[];
@@ -434,19 +446,22 @@ package org.flexlite.domDisplay
 		}
 		
 		private var _repeatPlay:Boolean = true;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get repeatPlay():Boolean
 		{
 			return _repeatPlay;
 		}
-
 		public function set repeatPlay(value:Boolean):void
 		{
 			if(value==_repeatPlay)
 				return;
 			_repeatPlay = value;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function gotoAndPlay(frame:Object):void
 		{
 			gotoFrame(frame);
@@ -476,21 +491,27 @@ package org.flexlite.domDisplay
 				_currentFrame = totalFrames-1;
 			applyCurrentFrameData();
 		}
-			
+		/**
+		 * @inheritDoc
+		 */	
 		public function gotoAndStop(frame:Object):void
 		{
 			gotoFrame(frame);
 			isStop = true;
 			checkEventListener();
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get bitmapData():BitmapData
 		{
 			return dxrData?dxrData.frameList[_currentFrame]:null;
 		}
 		
 		private static var zeroPoint:Point = new Point;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get offsetPoint():Point
 		{
 			return _dxrData?_dxrData.frameOffsetList[_currentFrame]:zeroPoint;

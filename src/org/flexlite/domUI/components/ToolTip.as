@@ -34,7 +34,9 @@ package org.flexlite.domUI.components
 		 * toolTipData发生改变标志
 		 */		
 		private var toolTipDataChanged:Boolean;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get toolTipData():Object
 		{
 			return _toolTipData;
@@ -54,6 +56,9 @@ package org.flexlite.domUI.components
 		 */		
 		private var textField:UITextField;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function createChildren():void
 		{
 			super.createChildren();
@@ -62,6 +67,9 @@ package org.flexlite.domUI.components
 			this.filters = [new DropShadowFilter(1,45,0,0.7,2,2,1,1)];
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -78,6 +86,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function measure():void
 		{
 			super.measure();
@@ -97,6 +108,9 @@ package org.flexlite.domUI.components
 			measuredHeight = textField.height + heightSlop;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);

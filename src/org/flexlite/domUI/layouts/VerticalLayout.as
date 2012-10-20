@@ -162,6 +162,9 @@ package org.flexlite.domUI.layouts
 		
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function measure():void
 		{
 			super.measure();
@@ -237,6 +240,9 @@ package org.flexlite.domUI.layouts
 			target.measuredHeight = Math.ceil(measuredHeight+vPadding);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function updateDisplayList(width:Number, height:Number):void
 		{
 			super.updateDisplayList(width, height);
@@ -321,6 +327,9 @@ package org.flexlite.domUI.layouts
 			return totalSize;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function elementAdded(index:int):void
 		{
 			super.elementAdded(index);
@@ -328,12 +337,18 @@ package org.flexlite.domUI.layouts
 			elementSizeTable.splice(index,0,typicalHeight);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function elementRemoved(index:int):void
 		{
 			super.elementRemoved(index);
 			elementSizeTable.splice(index,1);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clearVirtualLayoutCache():void
 		{
 			super.clearVirtualLayoutCache();
@@ -374,6 +389,9 @@ package org.flexlite.domUI.layouts
 		 */		
 		private var indexInViewCalculated:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function scrollPositionChanged():void
 		{
 			super.scrollPositionChanged();
@@ -750,6 +768,9 @@ package org.flexlite.domUI.layouts
 		}
 		
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var rect:Rectangle = new Rectangle;
@@ -789,6 +810,9 @@ package org.flexlite.domUI.layouts
 			return rect;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var rect:Rectangle = new Rectangle;

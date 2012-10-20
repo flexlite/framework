@@ -105,6 +105,9 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private var trackScrolling:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set minimum(value:Number):void
 		{
 			if (value == super.minimum)
@@ -114,6 +117,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateSkinState();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set maximum(value:Number):void
 		{
 			if (value == super.maximum)
@@ -123,6 +129,9 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateSkinState();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set snapInterval(value:Number):void
 		{
 			super.snapInterval = value;
@@ -302,6 +311,9 @@ package org.flexlite.domUI.components.supportClasses
 			return (Math.abs(validSize) < interval) ? interval : validSize;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -313,6 +325,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			if (maximum <= minimum)
@@ -321,6 +336,9 @@ package org.flexlite.domUI.components.supportClasses
 			return super.getCurrentSkinState();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -354,6 +372,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);
@@ -540,6 +561,9 @@ package org.flexlite.domUI.components.supportClasses
 				Event.MOUSE_LEAVE, button_buttonUpHandler);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function track_mouseDownHandler(event:MouseEvent):void
 		{
 			if (!enabled)

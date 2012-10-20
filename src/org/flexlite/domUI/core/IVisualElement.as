@@ -30,7 +30,7 @@ package org.flexlite.domUI.core
 		function set visible(value:Boolean):void;
 		
 		/**
-		 * @copy flash.display.DisplayObject#alpha
+		 * 表示指定对象的 Alpha 透明度值。有效值为 0（完全透明）到 1（完全不透明）。默认值为 1。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
 		 */		
 		function get alpha():Number;
 		function set alpha(value:Number):void;
@@ -47,12 +47,18 @@ package org.flexlite.domUI.core
 		function set height(value:Number):void;
 		
 		/**
-		 * @copy flash.display.DisplayObject#x
+		 * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
+		 * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 
+		 * 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 
+		 * 的子级将继承逆时针旋转 90 度的坐标系。对象的坐标指的是注册点的位置。
 		 */		
 		function get x():Number;
 		function set x(value:Number):void;
 		/**
-		 * @copy flash.display.DisplayObject#y
+		 * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
+		 * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 
+		 * 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 
+		 * 的子级将继承逆时针旋转 90 度的坐标系。对象的坐标指的是注册点的位置。
 		 */		
 		function get y():Number;
 		function set y(value:Number):void;

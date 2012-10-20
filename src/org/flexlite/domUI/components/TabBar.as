@@ -28,6 +28,9 @@ package org.flexlite.domUI.components
 			requireSelection = true;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return TabBar;
@@ -38,6 +41,9 @@ package org.flexlite.domUI.components
 		 */
 		private var requireSelectionChanged:Boolean;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function set requireSelection(value:Boolean):void
 		{
 			if (value == requireSelection)
@@ -48,6 +54,9 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -76,6 +85,9 @@ package org.flexlite.domUI.components
 		}
 		
 		 
+		/**
+		 * @inheritDoc
+		 */
 		override protected function itemSelected(index:int, selected:Boolean):void
 		{
 			super.itemSelected(index, selected);
@@ -87,6 +99,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
 		{
 			super.dataGroup_rendererAddHandler(event);
@@ -100,6 +115,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
 		{   
 			super.dataGroup_rendererRemoveHandler(event);
@@ -129,6 +147,9 @@ package org.flexlite.domUI.components
 				setSelectedIndex(newIndex, true);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);

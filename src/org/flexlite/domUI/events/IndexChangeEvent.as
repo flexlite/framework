@@ -39,6 +39,9 @@ package org.flexlite.domUI.events
 		 */		
 		public var oldIndex:int;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function clone():Event
 		{
 			return new IndexChangeEvent(type, bubbles, cancelable,

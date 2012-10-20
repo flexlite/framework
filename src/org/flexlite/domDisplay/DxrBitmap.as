@@ -53,7 +53,9 @@ package org.flexlite.domDisplay
 		}
 		
 		private static var zeroPoint:Point = new Point;
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function get offsetPoint():Point
 		{
 			return _dxrData?_dxrData.frameOffsetList[0]:zeroPoint;

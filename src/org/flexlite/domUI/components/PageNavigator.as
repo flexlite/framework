@@ -38,6 +38,9 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function get hostComponentKey():Object
 		{
 			return PageNavigator;
@@ -337,6 +340,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -540,18 +546,27 @@ package org.flexlite.domUI.components
 				lastPageButton.enabled = last;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function attachSkin(skin:Object):void
 		{
 			super.attachSkin(skin);
 			installViewport();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function detachSkin(skin:Object):void
 		{    
 			uninstallViewport();
 			super.detachSkin(skin);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -577,6 +592,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName, instance);

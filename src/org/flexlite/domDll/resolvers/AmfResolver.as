@@ -21,6 +21,9 @@ package org.flexlite.domDll.resolvers
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override public function getRes(key:String):*
 		{
 			if(sharedMap.has(key))

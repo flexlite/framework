@@ -414,6 +414,9 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(new UIEvent(UIEvent.BUTTON_DOWN));
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function getCurrentSkinState():String
 		{
 			if (!enabled)
@@ -428,6 +431,9 @@ package org.flexlite.domUI.components.supportClasses
 			return "up";
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);
@@ -438,6 +444,9 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -481,6 +490,9 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		private var hasCreatedLabel:Boolean = false;
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function createSkinParts():void
 		{
 			if(hasCreatedLabel||!_createLabelIfNeed)
@@ -499,6 +511,9 @@ package org.flexlite.domUI.components.supportClasses
 			partAdded("labelDisplay",labelDisplay);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
 		override dx_internal function removeSkinParts():void
 		{
 			if(!hasCreatedLabel)
