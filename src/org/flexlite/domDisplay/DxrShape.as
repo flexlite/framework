@@ -9,7 +9,7 @@ package org.flexlite.domDisplay
 	
 	/**
 	 * DXR形状。
-	 * 请根据实际需求选择最佳的IDxrDisplayObject呈现DxrData。
+	 * 请根据实际需求选择最佳的IBitmapAsset呈现DxrData。
 	 * DxrShape具有位图九宫格缩放功能，但不具有鼠标事件响应。
 	 * @author DOM
 	 */

@@ -22,7 +22,6 @@ package org.flexlite.domDisplay
 	
 	/**
 	 * DXR影片剪辑
-	 * 注意，为了优化素材性能，此类的mouseEnabled和mouseChildren默认值设置为flase。
 	 * @author DOM
 	 */	
 	public class DxrMovieClip extends Sprite implements IMovieClip,IBitmapAsset
@@ -37,7 +36,6 @@ package org.flexlite.domDisplay
 			super();
 			addEventListener(Event.ADDED_TO_STAGE,onAddedOrRemoved);
 			addEventListener(Event.REMOVED_FROM_STAGE,onAddedOrRemoved);
-			mouseEnabled = false;
 			mouseChildren = false;
 			this._smoothing = smoothing;
 			if(data)
