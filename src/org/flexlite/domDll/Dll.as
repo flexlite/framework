@@ -232,7 +232,7 @@ package org.flexlite.domDll
 		 */		
 		public function loadGroup(name:String):void
 		{
-			if(groupList.indexOf(name)!=-1)
+			if(groupList.indexOf(name)!=-1||name==groupName)
 				return;
 			groupList.push(name);
 			loadNextGroup();
