@@ -97,6 +97,14 @@ package org.flexlite.domDll
 			instance.loadGroup(name);
 		}
 		/**
+		 * 检查某个资源组是否已经加载完成
+		 * @param groupName 组名
+		 */		
+		public static function isGroupLoaded(name:String):Boolean
+		{
+			return instance.isGroupLoaded(name);
+		}
+		/**
 		 * 同步方式获取资源。<br/>
 		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
@@ -221,7 +229,18 @@ package org.flexlite.domDll
 			groupName = GROUP_CONFIG;
 			dllLoader.loadGroup(itemList);
 		}
-		
+		/**
+		 * 已经加载过组名列表
+		 */		
+		private var loadedGroups:Vector.<String> = new Vector.<String>();
+		/**
+		 * 检查某个资源组是否已经加载完成
+		 * @param groupName 组名
+		 */		
+		private function isGroupLoaded(name:String):Boolean
+		{
+			return loadedGroups.indexOf(name)!=-1;
+		}
 		/**
 		 * 待加载的组名列表
 		 */		
@@ -232,7 +251,7 @@ package org.flexlite.domDll
 		 */		
 		public function loadGroup(name:String):void
 		{
-			if(groupList.indexOf(name)!=-1||name==groupName)
+			if(groupName==name||groupList.indexOf(name)!=-1||loadedGroups.indexOf(name)!=-1)
 				return;
 			groupList.push(name);
 			loadNextGroup();
@@ -288,6 +307,7 @@ package org.flexlite.domDll
 			}
 			else
 			{
+				loadedGroups.push(groupName);
 				dllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
 				dllEvent.groupName = groupName;
 			}
