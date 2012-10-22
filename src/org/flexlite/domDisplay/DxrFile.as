@@ -3,9 +3,10 @@ package org.flexlite.domDisplay
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domDisplay.codec.DxrDecoder;
 	import org.flexlite.domDisplay.codec.IBitmapDecoder;
-	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUtils.SharedMap;
 
 	use namespace dx_internal;
 	/**
@@ -64,10 +65,12 @@ package org.flexlite.domDisplay
 		}
 		
 		/**
-		 * DxrData缓存字典
+		 * DxrData缓存表
 		 */		
-		private var dxrDataDic:Dictionary;
-		
+		private var dxrDataMap:SharedMap;
+		/**
+		 * 回调函数字典
+		 */		
 		private var compFuncDic:Dictionary;
 		
 		/**
@@ -77,51 +80,47 @@ package org.flexlite.domDisplay
 		 */		
 		public function getDxrData(key:String,onComp:Function):void
 		{
-			if(dxrDataDic==null)
+			if(onComp==null)
+				return;
+			if(!dxrDataMap)
 			{
-				dxrDataDic = new Dictionary;
+				dxrDataMap = new SharedMap;
 			}
-			else
+			var dxr:DxrData = dxrDataMap.get(key);
+			if(dxr)
 			{
-				for(var dxr:* in dxrDataDic)
-				{
-					if(dxrDataDic[dxr]===key)
-					{
-						if(onComp!=null)
-							onComp(dxr);
-						return;
-					}
-				}
+				onComp(dxr);
+				return;
 			}
 			
 			var data:Object = keyObject.keyList[key];
-			if(data==null)
+			if(!data)
 			{
-				if(onComp!=null)
-					onComp(null);
+				onComp(null);
 				return;
 			}
 			if(compFuncDic==null)
 			{
 				compFuncDic = new Dictionary;
 			}
-			if(compFuncDic[key]==null)
-			{
-				compFuncDic[key] = new <Function>[onComp];
-				
-				var decoder:DxrDecoder = new DxrDecoder();
-				decoder.decode(data,key,onGetDxrData);
-			}
-			else
+			if(compFuncDic[key])
 			{
 				(compFuncDic[key] as Vector.<Function>).push(onComp);
 			}
+			else
+			{
+				compFuncDic[key] = new <Function>[onComp];
+				var decoder:DxrDecoder = new DxrDecoder();
+				decoder.decode(data,key,onGetDxrData);
+			}
 			
 		}
-		
+		/**
+		 * 解析DxrData完成回调函数
+		 */		
 		private function onGetDxrData(dxrData:DxrData):void
 		{
-			dxrDataDic[dxrData] = dxrData.key;
+			dxrDataMap.set(dxrData.key,dxrData);
 			var funcVec:Vector.<Function> = compFuncDic[dxrData.key];
 			delete compFuncDic[dxrData.key];
 			for each(var compFunc:Function in funcVec)
