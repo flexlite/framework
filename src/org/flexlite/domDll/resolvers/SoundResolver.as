@@ -39,13 +39,13 @@ package org.flexlite.domDll.resolvers
 		{
 			if(soundDic[dllItem.name])
 			{
-				compFunc(dllItem.name);
+				compFunc(dllItem);
 				return;
 			}
-			if(dllItem.inGroupLoading)
+			if(!dllItem.inGroupLoading)
 			{
 				soundDic[dllItem.name] = new Sound(new URLRequest(dllItem.url));
-				compFunc(dllItem.name);
+				compFunc(dllItem);
 				return;
 			}
 			var loader:Sound = new Sound();

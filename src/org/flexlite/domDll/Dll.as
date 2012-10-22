@@ -17,6 +17,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.BinResolver;
 	import org.flexlite.domDll.resolvers.DxrResolver;
 	import org.flexlite.domDll.resolvers.ImgResolver;
+	import org.flexlite.domDll.resolvers.SoundResolver;
 	import org.flexlite.domDll.resolvers.SwfResolver;
 	import org.flexlite.domDll.resolvers.XmlResolver;
 	
@@ -115,6 +116,7 @@ package org.flexlite.domDll
 		 * "amf" name:Object<br/>
 		 * "xml" name:XML<br/>
 		 * "img" name:BitmapData<br/>
+		 * "sound" name:Sound<br/>
 		 * "bin" name:ByteArray
 		 */		
 		public static function getRes(key:String):*
@@ -179,6 +181,8 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,SwfResolver,DllItem.TYPE_SWF);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_DXR))
 				Injector.mapClass(IResolver,DxrResolver,DllItem.TYPE_DXR);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SOUND))
+				Injector.mapClass(IResolver,SoundResolver,DllItem.TYPE_SOUND);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
 			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
@@ -326,6 +330,7 @@ package org.flexlite.domDll
 		 * "amf" name:Object<br/>
 		 * "xml" name:XML<br/>
 		 * "img" name:BitmapData<br/>
+		 * "sound" name:Sound<br/>
 		 * "bin" name:ByteArray
 		 */		
 		private function getRes(key:String):*
