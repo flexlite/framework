@@ -167,7 +167,7 @@ package org.flexlite.domUI.collections
 		public function removeItemAt(index:int):Object
 		{
 			checkIndex(index);
-			var item:Object = _source.splice(index,1);
+			var item:Object = _source.splice(index,1)[0];
 			dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[item]);
 			return item;
 		}
@@ -177,7 +177,7 @@ package org.flexlite.domUI.collections
 		public function replaceItemAt(item:Object, index:int):Object
 		{
 			checkIndex(index);
-			var oldItem:Object = _source.splice(index,1,item);
+			var oldItem:Object = _source.splice(index,1,item)[0];
 			dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item]);
 			return oldItem;
 		}
@@ -188,7 +188,7 @@ package org.flexlite.domUI.collections
 		{
 			checkIndex(oldIndex);
 			checkIndex(newIndex);
-			var item:Object = _source.splice(oldIndex,1);
+			var item:Object = _source.splice(oldIndex,1)[0];
 			_source.splice(newIndex,0,item);
 			dispatchCoEvent(CollectionEventKind.MOVE,newIndex,oldIndex,[item]);
 			return item;
