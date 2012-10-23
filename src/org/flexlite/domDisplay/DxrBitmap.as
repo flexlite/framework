@@ -18,7 +18,7 @@ package org.flexlite.domDisplay
 	public class DxrBitmap extends Bitmap implements IBitmapAsset
 	{
 		/**
-		 * 构造函数
+		 * 构造函数,注意：DxrBitmap需要在外部手动添加起始坐标偏移量。
 		 * @param data 被引用的DxrData对象
 		 */		
 		public function DxrBitmap(data:DxrData=null)

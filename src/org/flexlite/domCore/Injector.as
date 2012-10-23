@@ -10,7 +10,7 @@ package org.flexlite.domCore
 	 * IBitmapEncoder:DXR位图动画所用的编码器实例<br>
 	 * ISkinAdapter:皮肤解析适配器实例。<br>
 	 * Theme:皮肤默认主题。<br>
-	 * IAnalyze:资源管理器调用的文件解析类实例。
+	 * IResolover:资源管理器调用的文件解析类实例。
 	 * @author DOM
 	 */
 	public class Injector
