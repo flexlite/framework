@@ -136,8 +136,6 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			
-			graphics.clear();
 			drawBackground();
 		}
 		/**
@@ -149,6 +147,7 @@ package org.flexlite.domUI.components
 				return;
 			if (isNaN(width) || isNaN(height))
 				return;
+			graphics.clear();
 			graphics.beginFill(0xFFFFFF, 0);
 			if (layout && layout.clipAndEnableScrolling)
 				graphics.drawRect(layout.horizontalScrollPosition, layout.verticalScrollPosition, width, height);

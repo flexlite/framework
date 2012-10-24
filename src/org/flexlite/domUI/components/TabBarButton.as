@@ -8,8 +8,10 @@ package org.flexlite.domUI.components
 	use namespace dx_internal;
 	
 	[DXML(show="false")]
-	
-	[Event(name="dataChange", type="mx.events.Event")]
+	/**
+	 * 数据源发生改变
+	 */	
+	[Event(name="dataChange",type="flash.events.Event")]
 	
 	/**
 	 * 选项卡组件的按钮条目

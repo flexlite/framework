@@ -1,13 +1,8 @@
 package org.flexlite.domUI.skins.vector
 {
 	import flash.display.Graphics;
-	import flash.filters.DropShadowFilter;
 	
-	import flashx.textLayout.formats.TextAlign;
-	
-	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.layouts.VerticalAlign;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;

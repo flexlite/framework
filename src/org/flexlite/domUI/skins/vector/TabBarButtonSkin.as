@@ -1,12 +1,10 @@
 package org.flexlite.domUI.skins.vector
 {
 	import flash.display.GradientType;
-	import flash.display.Graphics;
+	import flash.text.TextFormatAlign;
 	
-	import flashx.textLayout.formats.TextAlign;
-	
-	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
@@ -34,7 +32,7 @@ package org.flexlite.domUI.skins.vector
 		{
 			super.createChildren();
 			labelDisplay = new Label();
-			labelDisplay.textAlign = TextAlign.CENTER;
+			labelDisplay.textAlign = TextFormatAlign.CENTER;
 			labelDisplay.verticalAlign = VerticalAlign.MIDDLE;
 			labelDisplay.maxDisplayedLines = 1;
 			labelDisplay.left = 5;

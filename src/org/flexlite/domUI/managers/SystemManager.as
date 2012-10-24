@@ -1,20 +1,25 @@
 package org.flexlite.domUI.managers
 {
+	import flash.display.InteractiveObject;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.EventPhase;
+	import flash.events.FocusEvent;
 	import flash.events.FullScreenEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.core.UIComponent;
 
 	use namespace dx_internal;
 	
@@ -34,11 +39,8 @@ package org.flexlite.domUI.managers
 			{
 				onAddToStage();
 			}
-			else
-			{
-				addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
-			}
-			this.addEventListener(Event.REMOVED_FROM_STAGE,onRemoved)
+			this.addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE,onRemoved);
 		}
 		/**
 		 * 从舞台移除
@@ -50,6 +52,7 @@ package org.flexlite.domUI.managers
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true);
 			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true);
+			removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}
 		/**
 		 * 添加到舞台
@@ -60,12 +63,79 @@ package org.flexlite.domUI.managers
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
+			stage.stageFocusRect=false;
+			mouseEnabledWhereTransparent = false;
 			stage.addEventListener(Event.RESIZE,onResize);
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
+			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
+			addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 			onResize();
+		}
+		
+		private function mouseFocusChangeHandler(event:FocusEvent):void
+		{
+			if (event.isDefaultPrevented())
+				return;
+			
+			if (event.relatedObject is TextField)
+			{
+				var tf:TextField = event.relatedObject as TextField;
+				if (tf.type == "input" || tf.selectable)
+				{
+					return;
+				}
+			}
+			event.preventDefault();
+		}
+		/**
+		 * 是否启用全局的自动焦点管理功能，默认true。设置为false将导致鼠标按下时组件不会自动获取焦点。
+		 */		
+		override public function get focusEnabled():Boolean
+		{
+			return super.focusEnabled;
+		}
+		override public function set focusEnabled(value:Boolean):void
+		{
+			super.focusEnabled = value;
+		}
+		/**
+		 * 当前的焦点对象。
+		 */		
+		private var currentFocus:InteractiveObject;
+		/**
+		 * 鼠标按下事件
+		 */		
+		private function onMouseDown(event:MouseEvent):void
+		{
+			var focus:InteractiveObject = getTopLevelFocusTarget(InteractiveObject(event.target));
+			if (!focus)
+				return;
+			
+			if (focus != currentFocus && !(focus is TextField))
+			{
+				currentFocus = focus;
+				IUIComponent(focus).setFocus();
+			}
+		}
+		
+		private function getTopLevelFocusTarget(target:InteractiveObject):InteractiveObject
+		{
+			while (target != this)
+			{
+				if (target is IUIComponent&&
+					IUIComponent(target).focusEnabled&&
+					IUIComponent(target).enabled)
+				{
+					return target;
+				}
+				target = target.parent;
+				if (target == null)
+					break;
+			}
+			return null;
 		}
 		
 		/**

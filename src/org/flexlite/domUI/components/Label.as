@@ -5,11 +5,8 @@ package org.flexlite.domUI.components
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
 	
-	import mx.controls.Label;
-	import mx.controls.Text;
-	
-	import org.flexlite.domUI.components.supportClasses.TextBase;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.supportClasses.TextBase;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	

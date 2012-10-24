@@ -28,6 +28,7 @@ package org.flexlite.domUI.components
 		public function Scroller()
 		{
 			super();
+			focusEnabled = true;
 		}
 		
 		/**

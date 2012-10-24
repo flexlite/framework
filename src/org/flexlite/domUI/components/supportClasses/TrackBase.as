@@ -19,24 +19,24 @@ package org.flexlite.domUI.components.supportClasses
 	 */	
 	[Event(name="change", type="flash.events.Event")]
 	
-	[Event(name="changeEnd", type="mx.events.UIEvent")]
+	[Event(name="changeEnd", type="org.flexlite.domUI.events.UIEvent")]
 	
-	[Event(name="changeStart", type="mx.events.UIEvent")]
+	[Event(name="changeStart", type="org.flexlite.domUI.events.UIEvent")]
 	
 	/**
 	 * 按下滑块并使用鼠标移动滑块时分派。此事件始终发生在 thumbPress 事件之后。
 	 */	
-	[Event(name="thumbDrag", type="spark.events.TrackBaseEvent")]
+	[Event(name="thumbDrag", type="org.flexlite.domUI.events.TrackBaseEvent")]
 	
 	/**
 	 * 按下滑块（即用户在滑块上按下鼠标按钮）时分派。
 	 */	
-	[Event(name="thumbPress", type="spark.events.TrackBaseEvent")]
+	[Event(name="thumbPress", type="org.flexlite.domUI.events.TrackBaseEvent")]
 	
 	/**
 	 * 按下滑块（即用户在滑块上按下鼠标按钮）时分派。
 	 */	
-	[Event(name="thumbRelease", type="spark.events.TrackBaseEvent")]
+	[Event(name="thumbRelease", type="org.flexlite.domUI.events.TrackBaseEvent")]
 	
 	[DXML(show="false")]
 	

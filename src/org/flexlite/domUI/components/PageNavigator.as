@@ -36,6 +36,7 @@ package org.flexlite.domUI.components
 		public function PageNavigator()
 		{
 			super();
+			focusEnabled = true;
 		}
 		
 		/**

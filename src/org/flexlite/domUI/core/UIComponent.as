@@ -7,6 +7,7 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
@@ -14,7 +15,6 @@ package org.flexlite.domUI.core
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUI.managers.ToolTipManager;
-	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	
@@ -1299,8 +1299,20 @@ package org.flexlite.domUI.core
 			return h*scaleY;
 		}
 		
+		private var _focusEnabled:Boolean = false;
 		/**
-		 * 设置当前组件为焦点对象
+		 * @inheritDoc
+		 */		
+		public function get focusEnabled():Boolean
+		{
+			return _focusEnabled;
+		}
+		public function set focusEnabled(value:Boolean):void
+		{
+			_focusEnabled = value;
+		}
+		/**
+		 * @inheritDoc
 		 */		
 		public function setFocus():void
 		{

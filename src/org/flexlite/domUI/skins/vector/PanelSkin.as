@@ -1,15 +1,12 @@
 package org.flexlite.domUI.skins.vector
 {
-	import flash.display.GradientType;
 	import flash.display.Graphics;
+	import flash.text.TextFormatAlign;
 	
-	import flashx.textLayout.formats.TextAlign;
-	
-	import org.flexlite.domUI.components.EditableText;
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.RectangularDropShadow;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
@@ -64,7 +61,7 @@ package org.flexlite.domUI.skins.vector
 			titleDisplay.top = 1;
 			titleDisplay.minHeight = 28;
 			titleDisplay.verticalAlign = VerticalAlign.MIDDLE;
-			titleDisplay.textAlign = TextAlign.CENTER;
+			titleDisplay.textAlign = TextFormatAlign.CENTER;
 			addElement(titleDisplay);
 		}
 		

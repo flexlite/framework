@@ -1,12 +1,8 @@
 package org.flexlite.domUI.managers.impl
 {
-	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;
 	import flash.events.Event;
-	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	
-	import mx.managers.PopUpData;
 	
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;

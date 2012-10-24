@@ -45,6 +45,7 @@ package org.flexlite.domUI.components.supportClasses
 			mouseChildren = false;
 			buttonMode = true;
 			useHandCursor = true;
+			focusEnabled = true;
 			addHandlers();
 		}
 		

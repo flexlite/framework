@@ -16,6 +16,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function Range():void
 		{
 			super();
+			focusEnabled = true;
 		}
 		
 		private var _maximum:Number = 100;

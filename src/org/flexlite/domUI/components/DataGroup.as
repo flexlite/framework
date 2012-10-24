@@ -7,19 +7,17 @@ package org.flexlite.domUI.components
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	
-	import spark.components.DataGroup;
 
 	use namespace dx_internal;
 	

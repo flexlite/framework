@@ -35,6 +35,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function SkinnableTextBase()
 		{
 			super();
+			focusEnabled = true;
 		}
 		
 		/**
