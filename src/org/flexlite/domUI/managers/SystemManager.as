@@ -35,6 +35,7 @@ package org.flexlite.domUI.managers
 		public function SystemManager()
 		{
 			super();
+			mouseEnabledWhereTransparent = false;
 			if(stage)
 			{
 				onAddToStage();
@@ -52,29 +53,37 @@ package org.flexlite.domUI.managers
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true);
 			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true);
+			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
+			stage.removeEventListener(Event.ACTIVATE, activateHandler);
 			removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			removeEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
 		}
 		/**
 		 * 添加到舞台
 		 */		
 		private function onAddToStage(event:Event=null):void
 		{
+			if(!DomGlobals.systemManager)
+			{
+				stage.scaleMode = StageScaleMode.NO_SCALE;
+				stage.align = StageAlign.TOP_LEFT;
+				stage.stageFocusRect=false;
+			}
 			DomGlobals.systemManager = this;
-			
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.align = StageAlign.TOP_LEFT;
-			stage.stageFocusRect=false;
-			mouseEnabledWhereTransparent = false;
 			stage.addEventListener(Event.RESIZE,onResize);
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
 			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
+			stage.addEventListener(Event.ACTIVATE, activateHandler);
 			addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			addEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
 			onResize();
 		}
-		
+		/**
+		 * 屏蔽FP原始的焦点处理过程
+		 */		
 		private function mouseFocusChangeHandler(event:FocusEvent):void
 		{
 			if (event.isDefaultPrevented())
@@ -91,37 +100,34 @@ package org.flexlite.domUI.managers
 			event.preventDefault();
 		}
 		/**
-		 * 是否启用全局的自动焦点管理功能，默认true。设置为false将导致鼠标按下时组件不会自动获取焦点。
-		 */		
-		override public function get focusEnabled():Boolean
-		{
-			return super.focusEnabled;
-		}
-		override public function set focusEnabled(value:Boolean):void
-		{
-			super.focusEnabled = value;
-		}
-		/**
 		 * 当前的焦点对象。
 		 */		
-		private var currentFocus:InteractiveObject;
+		private var currentFocus:IUIComponent;
 		/**
 		 * 鼠标按下事件
 		 */		
 		private function onMouseDown(event:MouseEvent):void
 		{
-			var focus:InteractiveObject = getTopLevelFocusTarget(InteractiveObject(event.target));
+			var focus:IUIComponent = getTopLevelFocusTarget(InteractiveObject(event.target));
 			if (!focus)
 				return;
 			
 			if (focus != currentFocus && !(focus is TextField))
 			{
-				currentFocus = focus;
-				IUIComponent(focus).setFocus();
+				focus.setFocus();
 			}
 		}
-		
-		private function getTopLevelFocusTarget(target:InteractiveObject):InteractiveObject
+		/**
+		 * 焦点改变时更新currentFocus
+		 */		
+		private function focusInHandler(event:FocusEvent):void
+		{
+			currentFocus = getTopLevelFocusTarget(InteractiveObject(event.target));
+		}
+		/**
+		 * 获取鼠标按下点的焦点对象
+		 */		
+		private function getTopLevelFocusTarget(target:InteractiveObject):IUIComponent
 		{
 			while (target != this)
 			{
@@ -129,13 +135,22 @@ package org.flexlite.domUI.managers
 					IUIComponent(target).focusEnabled&&
 					IUIComponent(target).enabled)
 				{
-					return target;
+					return target as IUIComponent;
 				}
 				target = target.parent;
 				if (target == null)
 					break;
 			}
 			return null;
+		}
+		
+		/**
+		 * 窗口激活时重新设置焦点
+		 */		
+		private function activateHandler(event:Event):void
+		{
+			if(currentFocus)
+				currentFocus.setFocus();
 		}
 		
 		/**
