@@ -68,6 +68,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function ListBase()
 		{
 			super();
+			focusEnabled = true;
 		}
 		
 		/**
@@ -655,7 +656,7 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.addEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.addEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.addEventListener(MouseEvent.CLICK, item_mouseEventHandler);
+			renderer.addEventListener(MouseEvent.CLICK, item_mouseEventHandler,false,-50);
 		}
 		/**
 		 * 项呈示器被移除
