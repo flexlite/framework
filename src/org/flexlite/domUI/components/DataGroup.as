@@ -275,6 +275,10 @@ package org.flexlite.domUI.components
 					break;
 				case CollectionEventKind.REFRESH:
 				case CollectionEventKind.RESET:
+					for(var index:* in indexToRenderer)
+					{
+						freeRendererByIndex(index);
+					}
 					dataProviderChanged = true;
 					invalidateProperties();
 					break;
@@ -288,82 +292,125 @@ package org.flexlite.domUI.components
 		 */		
 		private function itemAddedHandler(items:Array,index:int):void
 		{
-			
-			var useVirtualLayout:Boolean = layout!=null&&layout.useVirtualLayout;
-			
-			for each(var item:Object in items)
+			var length:int = items.length;
+			for (var i:int = 0; i < length; i++)
 			{
-				if(useVirtualLayout)
-				{
-					layout.elementAdded(index);
-					indexToRenderer.splice(index,0,null);
-				}
-				else
-				{
-					var rendererClass:Class = itemToRendererClass(item);
-					var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
-					if(renderer==null||!(renderer is DisplayObject))
-						return;
-					super.addChild(renderer as DisplayObject);
-					indexToRenderer.splice(index,0,renderer);
-					updateRenderer(renderer,index,item);
-					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-						false, false, renderer, index, item));
-				}
-				
-				index ++;
+				itemAdded(items[i], index + i);
 			}
-			for(var i:int=index;i<indexToRenderer.length;i++)
-				resetRendererItemIndex(i);
+			resetRenderersIndices();
 		}
 		/**
 		 * 数据源移动项目事件处理
 		 */		
 		private function itemMovedHandler(item:Object,location:int,oldLocation:int):void
 		{
-			if(layout!=null&&layout.useVirtualLayout)
-			{
-				layout.elementRemoved(oldLocation);
-				layout.elementAdded(location);
-			}
-
-			var renderer:* = indexToRenderer.splice(oldLocation,1)[0];
-			indexToRenderer.splice(location,0,renderer);
-			resetRendererItemIndex(location);
-			resetRendererItemIndex(oldLocation);
+			itemRemoved(item,oldLocation);
+			itemAdded(item,location);
+			resetRenderersIndices();
 		}
 		/**
 		 * 数据源移除项目事件处理
 		 */		
 		private function itemRemovedHandler(items:Array,location:int):void
 		{
-			var renderers:Array = indexToRenderer.splice(location,items.length);
-			var i:int;
-			var renderer:IItemRenderer;
-			for(i = location;i<indexToRenderer.length;i++)
-				resetRendererItemIndex(i);
-			if(layout!=null&&layout.useVirtualLayout)
+			var length:int = items.length;
+			for (var i:int = length-1; i >= 0; i--)
 			{
-				for(i = 0;i<renderers.length;i++)
+				itemRemoved(items[i], location + i);
+			}
+			
+			resetRenderersIndices();
+		}
+		/**
+		 * 添加一项
+		 */		
+		private function itemAdded(item:Object,index:int):void
+		{
+			if (layout)
+				layout.elementAdded(index);
+			
+			if (layout && layout.useVirtualLayout)
+			{
+				if (virtualRendererIndices)
 				{
-					layout.elementRemoved(location);
-					renderer = renderers[i] as IItemRenderer;
-					if(renderer!=null&&renderer is DisplayObject)
-						doFreeRenderer(renderer);
+					const virtualRendererIndicesLength:int = virtualRendererIndices.length;
+					for (var i:int = 0; i < virtualRendererIndicesLength; i++)
+					{
+						const vrIndex:int = virtualRendererIndices[i];
+						if (vrIndex >= index)
+							virtualRendererIndices[i] = vrIndex + 1;
+					}
+					indexToRenderer.splice(index, 0, null); 
 				}
+				return;
+			}
+			var rendererClass:Class = itemToRendererClass(item);
+			var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
+			indexToRenderer.splice(index,0,renderer);
+			if(renderer==null||!(renderer is DisplayObject))
+				return;
+			super.addChild(renderer as DisplayObject);
+			updateRenderer(renderer,index,item);
+			dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
+				false, false, renderer, index, item));
+			
+		}
+		
+		/**
+		 * 移除一项
+		 */		
+		private function itemRemoved(item:Object, index:int):void
+		{
+			if (layout)
+				layout.elementRemoved(index);
+			if (virtualRendererIndices && (virtualRendererIndices.length > 0))
+			{
+				var vrItemIndex:int = -1; 
+				const virtualRendererIndicesLength:int = virtualRendererIndices.length;
+				for (var i:int = 0; i < virtualRendererIndicesLength; i++)
+				{
+					const vrIndex:int = virtualRendererIndices[i];
+					if (vrIndex == index)
+						vrItemIndex = i;
+					else if (vrIndex > index)
+						virtualRendererIndices[i] = vrIndex - 1;
+				}
+				if (vrItemIndex != -1)
+					virtualRendererIndices.splice(vrItemIndex, 1);
+			}
+			const oldRenderer:IItemRenderer = indexToRenderer[index];
+			
+			if (indexToRenderer.length > index)
+				indexToRenderer.splice(index, 1);
+			
+			dispatchEvent(new RendererExistenceEvent(
+				RendererExistenceEvent.RENDERER_REMOVE, false, false, oldRenderer, index, item));
+			
+			if(oldRenderer!=null&&oldRenderer is DisplayObject)
+			{
+				super.removeChild(oldRenderer as DisplayObject);
+				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
+					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
+			}
+		}
+		/**
+		 * 更新当前所有项的索引
+		 */		
+		private function resetRenderersIndices():void
+		{
+			if (indexToRenderer.length == 0)
+				return;
+			
+			if (layout && layout.useVirtualLayout)
+			{
+				for each (var index:int in virtualRendererIndices)
+				resetRendererItemIndex(index);
 			}
 			else
 			{
-				for(i = 0;i<renderers.length;i++)
-				{
-					renderer = renderers[i] as IItemRenderer;
-					if(renderer!=null&&renderer is DisplayObject)
-					{
-						super.removeChild(renderer as DisplayObject);
-						dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
-							false, false, renderer, renderer.itemIndex, renderer.data));
-					}
-				}
+				const indexToRendererLength:int = indexToRenderer.length;
+				for (index = 0; index < indexToRendererLength; index++)
+					resetRendererItemIndex(index);
 			}
 		}
 		/**
@@ -371,6 +418,9 @@ package org.flexlite.domUI.components
 		 */	
 		private function itemUpdatedHandler(item:Object,location:int):void
 		{
+			if (renderersBeingUpdated)
+				return;//防止无限循环
+			
 			var renderer:IItemRenderer = indexToRenderer[location];
 			if(renderer!=null)
 				updateRenderer(renderer,location,item);
@@ -618,17 +668,20 @@ package org.flexlite.domUI.components
 		 */		
 		private function removeAllRenderers():void
 		{
-			while(super.numChildren>0)
+			var length:int = indexToRenderer.length;
+			for(var i:int=0;i<length;i++)
 			{
-				var renderer:IItemRenderer = super.removeChildAt(0) as IItemRenderer;
+				var renderer:IItemRenderer = indexToRenderer[i];
 				if(renderer!=null)
+				{
+					super.removeChild(renderer as DisplayObject);
 					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 						false, false, renderer, renderer.itemIndex, renderer.data));
+				}
 			}
 			indexToRenderer = [];
 			freeRenderers = new Dictionary;
 			virtualRendererIndices = null;
-			
 		}
 		
 		/**
@@ -655,23 +708,34 @@ package org.flexlite.domUI.components
 				index ++;
 			}
 		}
+		/**
+		 * 正在更新数据项的标志
+		 */		
+		private var renderersBeingUpdated:Boolean = false;
 		
 		/**
 		 * 更新项呈示器
 		 */		
 		protected function updateRenderer(renderer:IItemRenderer, itemIndex:int, data:Object):IItemRenderer
 		{
-			if(_rendererOwner!=null)
+			renderersBeingUpdated = true;
+			
+			if(_rendererOwner)
 			{
-				return _rendererOwner.updateRenderer(renderer,itemIndex,data);
+				renderer = _rendererOwner.updateRenderer(renderer,itemIndex,data);
 			}
-			if(renderer is IVisualElement)
+			else 
 			{
-				(renderer as IVisualElement).owner = this;
+				if(renderer is IVisualElement)
+				{
+					(renderer as IVisualElement).owner = this;
+				}
+				renderer.itemIndex = itemIndex;
+				renderer.label = itemToLabel(data);
+				renderer.data = data;
 			}
-			renderer.itemIndex = itemIndex;
-			renderer.label = itemToLabel(data);
-			renderer.data = data;
+			
+			renderersBeingUpdated = false;
 			return renderer;
 		}
 		
@@ -717,7 +781,7 @@ package org.flexlite.domUI.components
 		private static const errorStr:String = "在此组件中不可用，若此组件为容器类，请使用";
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#addChild()
+		 * addChild()在此组件中不可用，若此组件为容器类，请使用addElement()代替
 		 */		
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
@@ -725,7 +789,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#addChildAt()
+		 * addChildAt()在此组件中不可用，若此组件为容器类，请使用addElementAt()代替
 		 */		
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
@@ -733,7 +797,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#removeChild()
+		 * removeChild()在此组件中不可用，若此组件为容器类，请使用removeElement()代替
 		 */		
 		override public function removeChild(child:DisplayObject):DisplayObject
 		{
@@ -741,7 +805,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#removeChildAt()
+		 * removeChildAt()在此组件中不可用，若此组件为容器类，请使用removeElementAt()代替
 		 */		
 		override public function removeChildAt(index:int):DisplayObject
 		{

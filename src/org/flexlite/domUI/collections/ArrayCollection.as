@@ -43,7 +43,7 @@ package org.flexlite.domUI.collections
 		private var _source:Array;
 		/**
 		 * 数据源
-		 * 通常情况下请不要直接操作数据源，否则对应的视图无法收到数据改变的通知
+		 * 通常情况下请不要直接操作数据源，会造成性能问题，并且对应的视图也无法收到数据改变的通知
 		 * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据
 		 */
 		public function get source():Array
