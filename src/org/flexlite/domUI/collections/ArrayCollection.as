@@ -43,8 +43,9 @@ package org.flexlite.domUI.collections
 		private var _source:Array;
 		/**
 		 * 数据源
-		 * 通常情况下请不要直接操作数据源，会造成性能问题，并且对应的视图也无法收到数据改变的通知
-		 * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据
+		 * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。
+		 * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
+		 * 直接对source赋值将会导致对应视图重置为初始状态。
 		 */
 		public function get source():Array
 		{
@@ -58,6 +59,7 @@ package org.flexlite.domUI.collections
 		}
 		/**
 		 * 在对数据源进行排序或过滤操作后可以手动调用此方法刷新所有数据,以更新视图。
+		 * 此刷新方法与直接给source赋值不同,它不会导致视图重置为初始状态,性能更高。
 		 */		
 		public function refresh():void
 		{

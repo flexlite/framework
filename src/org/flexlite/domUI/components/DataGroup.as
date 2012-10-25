@@ -18,6 +18,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
+	import org.flexlite.domUtils.Recycler;
 
 	use namespace dx_internal;
 	
@@ -221,6 +222,7 @@ package org.flexlite.domUI.components
 		private function changeUseVirtualLayout():void
 		{
 			useVirtualLayoutChanged = true;
+			cleanFreeRenderer = true;
 			removeDataProviderListener();
 			invalidateProperties();
 		}
@@ -243,6 +245,7 @@ package org.flexlite.domUI.components
 			removeDataProviderListener();
 			_dataProvider = value;
 			dataProviderChanged = true;
+			cleanFreeRenderer = true;
 			invalidateProperties();
 		}
 		/**
@@ -273,8 +276,12 @@ package org.flexlite.domUI.components
 				case CollectionEventKind.REPLACE:
 					itemUpdatedHandler(event.items[0],event.location);
 					break;
-				case CollectionEventKind.REFRESH:
 				case CollectionEventKind.RESET:
+					cleanFreeRenderer = true;
+					dataProviderChanged = true;
+					invalidateProperties();
+					break;
+				case CollectionEventKind.REFRESH:
 					for(var index:* in indexToRenderer)
 					{
 						freeRendererByIndex(index);
@@ -458,6 +465,7 @@ package org.flexlite.domUI.components
 			_itemRenderer = value;
 			itemRendererChanged = true;
 			typicalItemChanged = true;
+			cleanFreeRenderer = true;
 			removeDataProviderListener();
 			invalidateProperties();
 		}
@@ -662,16 +670,20 @@ package org.flexlite.domUI.components
 		 * 索引到项呈示器的转换数组 
 		 */		
 		private var indexToRenderer:Array = [];
-		
+		/**
+		 * 清理freeRenderer标志
+		 */		
+		private var cleanFreeRenderer:Boolean = false;
 		/**
 		 * 移除所有项呈示器
 		 */		
 		private function removeAllRenderers():void
 		{
 			var length:int = indexToRenderer.length;
+			var renderer:IItemRenderer;
 			for(var i:int=0;i<length;i++)
 			{
-				var renderer:IItemRenderer = indexToRenderer[i];
+				renderer = indexToRenderer[i];
 				if(renderer!=null)
 				{
 					super.removeChild(renderer as DisplayObject);
@@ -680,8 +692,18 @@ package org.flexlite.domUI.components
 				}
 			}
 			indexToRenderer = [];
-			freeRenderers = new Dictionary;
 			virtualRendererIndices = null;
+			if(!cleanFreeRenderer)
+				return;
+			for each(var list:Vector.<IItemRenderer> in freeRenderers)
+			{
+				for each(renderer in list)
+				{
+					super.removeChild(renderer as DisplayObject);
+				}
+			}
+			freeRenderers = new Dictionary;
+			cleanFreeRenderer = false;
 		}
 		
 		/**
