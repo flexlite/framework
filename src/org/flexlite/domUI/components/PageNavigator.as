@@ -3,13 +3,13 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.NavigationUnit;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -399,7 +399,9 @@ package org.flexlite.domUI.components
 					}
 					_totalPages++;
 				}
-				_viewport.verticalScrollPosition = oldScrollPostion;
+				var h:Number = isNaN(_viewport.height)?0:_viewport.height;
+				_viewport.verticalScrollPosition 
+					= Math.min(oldScrollPostion,_viewport.contentHeight-h);
 			}
 			else
 			{
@@ -417,8 +419,10 @@ package org.flexlite.domUI.components
 					}
 					_totalPages++;
 				}
+				var w:Number = isNaN(_viewport.width)?0:_viewport.width;
+				_viewport.horizontalScrollPosition 
+					= Math.min(oldScrollPostion,_viewport.contentWidth-w);
 				
-				_viewport.horizontalScrollPosition = oldScrollPostion;
 			}
 			if(!currentPageFoud)
 			{
