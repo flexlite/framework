@@ -172,7 +172,7 @@ package org.flexlite.domUI.components
 		{
 			if(labelFunction!=null)
 				return labelFunction(pageIndex,totalPages);
-			return "第"+(pageIndex+1)+"/"+totalPages+"页";
+			return (pageIndex+1)+"/"+totalPages;
 		}
 		
 		private var _currentPage:int = -1;
@@ -401,7 +401,7 @@ package org.flexlite.domUI.components
 				}
 				var h:Number = isNaN(_viewport.height)?0:_viewport.height;
 				_viewport.verticalScrollPosition 
-					= Math.min(oldScrollPostion,_viewport.contentHeight-h);
+					= Math.max(0,Math.min(oldScrollPostion,_viewport.contentHeight-h));
 			}
 			else
 			{
@@ -421,7 +421,7 @@ package org.flexlite.domUI.components
 				}
 				var w:Number = isNaN(_viewport.width)?0:_viewport.width;
 				_viewport.horizontalScrollPosition 
-					= Math.min(oldScrollPostion,_viewport.contentWidth-w);
+					= Math.max(0,Math.min(oldScrollPostion,_viewport.contentWidth-w));
 				
 			}
 			if(!currentPageFoud)
