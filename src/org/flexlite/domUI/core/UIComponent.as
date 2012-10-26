@@ -465,7 +465,7 @@ package org.flexlite.domUI.core
 		 */
 		override public function get width():Number
 		{
-			return _width;
+			return escapeNaN(_width);
 		}
 		
 		
@@ -506,9 +506,17 @@ package org.flexlite.domUI.core
 		 */
 		override public function get height():Number
 		{
-			return _height;
+			return escapeNaN(_height);
 		}
-		
+		/**
+		 * 过滤NaN数字
+		 */		
+		private function escapeNaN(number:Number):Number
+		{
+			if(isNaN(number))
+				return 0;
+			return number;
+		}
 		/**
 		 * @inheritDoc
 		 */
@@ -519,8 +527,6 @@ package org.flexlite.domUI.core
 			super.scaleX = value;
 			invalidateParentSizeAndDisplayList();
 		}
-		
-		
 		/**
 		 * @inheritDoc
 		 */
@@ -540,7 +546,6 @@ package org.flexlite.domUI.core
 		{
 			return _minWidth;
 		}
-		
 		public function set minWidth(value:Number):void
 		{
 			if(_minWidth==value)
@@ -557,7 +562,6 @@ package org.flexlite.domUI.core
 		{
 			return _maxWidth;
 		}
-		
 		public function set maxWidth(value:Number):void
 		{
 			if(_maxWidth==value)
@@ -565,7 +569,6 @@ package org.flexlite.domUI.core
 			_maxWidth = value;
 			invalidateSize();
 		}
-		
 		
 		private var _minHeight:Number = 0;
 		/**
@@ -575,7 +578,6 @@ package org.flexlite.domUI.core
 		{
 			return _minHeight;
 		}
-		
 		public function set minHeight(value:Number):void
 		{
 			if(_minHeight==value)
@@ -592,7 +594,6 @@ package org.flexlite.domUI.core
 		{
 			return _maxHeight;
 		}
-		
 		public function set maxHeight(value:Number):void
 		{
 			if(_maxHeight==value)
@@ -611,7 +612,6 @@ package org.flexlite.domUI.core
 		{
 			return _measuredWidth;
 		}
-		
 		public function set measuredWidth(value:Number):void
 		{
 			_measuredWidth = value;
@@ -625,7 +625,6 @@ package org.flexlite.domUI.core
 		{
 			return _measuredHeight;
 		}
-		
 		public function set measuredHeight(value:Number):void
 		{
 			_measuredHeight = value;
@@ -1271,9 +1270,7 @@ package org.flexlite.domUI.core
 			{
 				w = measuredWidth;
 			}
-			if(isNaN(w))
-				return 0;
-			return w*scaleX;
+			return escapeNaN(w*scaleX);
 		}
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
@@ -1294,9 +1291,7 @@ package org.flexlite.domUI.core
 			{
 				h = measuredHeight;
 			}
-			if(isNaN(h))
-				return 0;
-			return h*scaleY;
+			return escapeNaN(h*scaleY);
 		}
 		
 		private var _focusEnabled:Boolean = false;

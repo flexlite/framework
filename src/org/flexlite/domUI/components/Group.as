@@ -145,9 +145,9 @@ package org.flexlite.domUI.components
 		{
 			if (!_mouseEnabledWhereTransparent || !_hasMouseListeners)
 				return;
-			if (isNaN(width) || isNaN(height))
-				return;
 			graphics.clear();
+			if (width==0 || height==0)
+				return;
 			graphics.beginFill(0xFFFFFF, 0);
 			if (layout && layout.clipAndEnableScrolling)
 				graphics.drawRect(layout.horizontalScrollPosition, layout.verticalScrollPosition, width, height);
