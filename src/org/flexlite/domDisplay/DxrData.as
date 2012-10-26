@@ -76,14 +76,6 @@ package org.flexlite.domDisplay
 		}
 		
 		dx_internal var filterOffsetList:Array = [];
-		/**
-		 * 获取指定帧的滤镜尺寸偏移量，若不存在则返回null。
-		 * @param frame 帧序号，从0开始
-		 */		
-		public function getFilterOffset(frame:int):Point
-		{
-			return filterOffsetList[frame];
-		}
 
 		/**
 		 * 动画的总帧数

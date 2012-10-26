@@ -1,5 +1,6 @@
 package org.flexlite.domDisplay
 {
+	import flash.display.BitmapData;
 	import flash.geom.Point;
 	
 	import org.flexlite.domCore.IBitmapAsset;
@@ -9,11 +10,11 @@ package org.flexlite.domDisplay
 	
 	/**
 	 * DXR形状。
-	 * 请根据实际需求选择最佳的IBitmapAsset呈现DxrData。
+	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
 	 * DxrShape具有位图九宫格缩放功能，但不具有鼠标事件响应。
 	 * @author DOM
 	 */
-	public class DxrShape extends Scale9GridBitmap implements IBitmapAsset
+	public class DxrShape extends Scale9GridBitmap implements IDxrDisplay
 	{
 		/**
 		 * 构造函数
@@ -45,23 +46,31 @@ package org.flexlite.domDisplay
 			{
 				scale9Grid = dxrData._scale9Grid;
 				_offsetPoint = dxrData.frameOffsetList[0];
-				bitmapData = dxrData.frameList[0];
+				var sizeOffset:Point = dxrData.filterOffsetList[0]?dxrData.filterOffsetList[0]:new Point;
+				filterWidth = sizeOffset.x;
+				filterHeight = sizeOffset.y;
+				super.bitmapData = dxrData.frameList[0];
 			}
 			else
 			{
 				scale9Grid = null;
 				_offsetPoint = null;
-				bitmapData = null;
+				filterWidth = 0;
+				filterHeight = 0;
+				super.bitmapData = null;
 			}
 		}
 		
-		private static var zeroPoint:Point = new Point;
 		/**
-		 * 当前的位图素材起始偏移量
-		 */
-		public function get offsetPoint():Point
+		 * 被引用的BitmapData对象。注意:此属性被改为只读，对其赋值无效。
+		 * IDxrDisplay只能通过设置dxrData属性来显示位图数据。
+		 */		
+		override public function get bitmapData():BitmapData
 		{
-			return _dxrData?_dxrData.frameOffsetList[0]:zeroPoint;
+			return super.bitmapData;
+		}
+		override public function set bitmapData(value:BitmapData):void
+		{
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package org.flexlite.domUI.skins
 {
+	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.Injector;
@@ -31,19 +32,26 @@ package org.flexlite.domUI.skins
 		 */		
 		private static var skinAdapter:ISkinAdapter;
 		/**
+		 * 默认的皮肤解析适配器
+		 */	
+		private static var defaultSkinAdapter:DefaultSkinAdapter;
+		/**
 		 * @inheritDoc
 		 */
-		public function getSkin(state:String,compFunc:Function):void
+		public function getSkin(state:String,compFunc:Function,oldSkin:DisplayObject):void
 		{
-			if(!skinAdapter)
+			var adapter:ISkinAdapter = skinAdapter;
+			if(!adapter)
 			{
 				try
 				{
-					skinAdapter = Injector.getInstance(ISkinAdapter);
+					adapter = skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
 				catch(e:Error)
 				{
-					skinAdapter = new DefaultSkinAdapter();
+					if(!defaultSkinAdapter)
+						defaultSkinAdapter = new DefaultSkinAdapter();
+					adapter = defaultSkinAdapter;
 				}
 			}
 			var skinName:Object = skinNameDic[state];
@@ -61,7 +69,7 @@ package org.flexlite.domUI.skins
 			}
 			else
 			{
-				skinAdapter.getSkin(skinName,onComp);
+				adapter.getSkin(skinName,onComp,oldSkin);
 			}
 			function onComp(skin:Object,skinName:Object):void
 			{

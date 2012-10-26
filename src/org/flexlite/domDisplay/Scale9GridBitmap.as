@@ -1,11 +1,14 @@
 package org.flexlite.domDisplay
 {
-	import flash.display.*;
+	import flash.display.BitmapData;
+	import flash.display.Graphics;
+	import flash.display.Shape;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
@@ -14,7 +17,7 @@ package org.flexlite.domDisplay
 	 * 注意：此类不具有鼠标事件
 	 * @author DOM
 	 */
-	public class Scale9GridBitmap extends Shape
+	public class Scale9GridBitmap extends Shape implements IBitmapAsset
 	{
 		/**
 		 * 构造函数
@@ -78,7 +81,16 @@ package org.flexlite.domDisplay
 			target.clear();
 			
 			if(value)
+			{
 				applyBitmapData();
+			}
+			else
+			{
+				if(!widthExplicitSet)
+					_width = NaN;
+				if(!heightExplicitSet)
+					_height = NaN;
+			}
 		}
 		
 		private var scale9GridChanged:Boolean = false;
@@ -132,7 +144,6 @@ package org.flexlite.domDisplay
 			offsetPointChanged = true;
 			invalidateProperties();
 		}
-
 		
 		private var widthChanged:Boolean = false;
 		/**
@@ -141,13 +152,12 @@ package org.flexlite.domDisplay
 		private var widthExplicitSet:Boolean = false;
 		
 		private var _width:Number;
-		
 		/**
 		 * @inheritDoc
 		 */
 		override public function get width():Number
 		{
-			return _width;
+			return escapeNaN(_width);
 		}
 		
 		/**
@@ -176,7 +186,7 @@ package org.flexlite.domDisplay
 		 */
 		override public function get height():Number
 		{
-			return _height;
+			return escapeNaN(_height);
 		}
 		
 		/**
@@ -190,6 +200,15 @@ package org.flexlite.domDisplay
 			heightExplicitSet = !isNaN(value);
 			widthChanged = true;
 			invalidateProperties();
+		}
+		/**
+		 * 过滤NaN数字
+		 */		
+		private function escapeNaN(number:Number):Number
+		{
+			if(isNaN(number))
+				return 0;
+			return number;
 		}
 		
 		private var invalidateFlag:Boolean = false;
@@ -257,6 +276,14 @@ package org.flexlite.domDisplay
 		 */		
 		private var cachedDestGrid:Array;
 		/**
+		 * 滤镜宽度,在子类中赋值
+		 */		
+		dx_internal var filterWidth:Number = 0;
+		/**
+		 * 滤镜高度,在子类中赋值
+		 */		
+		dx_internal var filterHeight:Number = 0;
+		/**
 		 * 应用bitmapData属性
 		 */		
 		private function applyBitmapData():void
@@ -280,11 +307,11 @@ package org.flexlite.domDisplay
 				if(!offset)
 					offset = new Point();
 				matrix.identity();
-				matrix.scale(_width/_bitmapData.width,_height/_bitmapData.height);
+				matrix.scale((_width+filterWidth)/_bitmapData.width,(_height+filterHeight)/_bitmapData.height);
 				matrix.translate(offset.x,offset.y);
 				
 				target.beginBitmapFill(bitmapData,matrix,false,_smoothing);
-				target.drawRect(offset.x,offset.x,_width,_height);
+				target.drawRect(offset.x,offset.x,(_width+filterWidth),(_height+filterHeight));
 				target.endFill();
 			}
 			widthChanged = false;
@@ -299,8 +326,8 @@ package org.flexlite.domDisplay
 		private static function applyScaledBitmapData(target:Scale9GridBitmap):void
 		{
 			var bitmapData:BitmapData = target.bitmapData;
-			var width:Number = target.width;
-			var height:Number = target.height;
+			var width:Number = target.width+target.filterWidth;
+			var height:Number = target.height+target.filterHeight;
 			var offset:Point = target.offsetPoint;
 			if(!offset)
 			{

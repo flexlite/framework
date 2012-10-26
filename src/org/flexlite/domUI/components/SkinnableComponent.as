@@ -150,7 +150,7 @@ package org.flexlite.domUI.components
 			
 			if(skin is IInvisibleSkin)
 			{
-				(skin as IInvisibleSkin).getSkin(getCurrentSkinState(),super.onGetSkin);
+				(skin as IInvisibleSkin).getSkin(getCurrentSkinState(),super.onGetSkin,_skin);
 			}
 			if(skin is ISkin)
 			{
@@ -308,7 +308,7 @@ package org.flexlite.domUI.components
 			var curState:String = getCurrentSkinState();
 			if(_invisibleSkin&&_invisibleSkin is IInvisibleSkin)
 			{
-				(_invisibleSkin as IInvisibleSkin).getSkin(curState,super.onGetSkin);
+				(_invisibleSkin as IInvisibleSkin).getSkin(curState,super.onGetSkin,_skin);
 			}
 			var hasState:Boolean = false;
 			var curSkin:Object = _invisibleSkin?_invisibleSkin:_skin;

@@ -21,10 +21,11 @@ package org.flexlite.domDisplay
 	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MoveClipPlayEvent")]
 	
 	/**
-	 * DXR影片剪辑
+	 * DXR影片剪辑。
+	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
 	 * @author DOM
 	 */	
-	public class DxrMovieClip extends Sprite implements IMovieClip,IBitmapAsset
+	public class DxrMovieClip extends Sprite implements IMovieClip,IBitmapAsset,IDxrDisplay
 	{
 		/**
 		 * 构造函数
@@ -212,6 +213,7 @@ package org.flexlite.domDisplay
 			render();
 		}
 		
+		private static var zeroPoint:Point = new Point;
 		/**
 		 * 应用当前帧的位图数据
 		 */		
@@ -264,7 +266,7 @@ package org.flexlite.domDisplay
 		 */
 		override public function get width():Number
 		{
-			return _width;
+			return escapeNaN(_width);
 		}
 
 		/**
@@ -303,7 +305,7 @@ package org.flexlite.domDisplay
 		 */
 		override public function get height():Number
 		{
-			return _height;
+			return escapeNaN(_height);
 		}
 
 		/**
@@ -326,6 +328,16 @@ package org.flexlite.domDisplay
 			}
 			widthChanged = true;
 			invalidateProperties();
+		}
+		
+		/**
+		 * 过滤NaN数字
+		 */		
+		private function escapeNaN(number:Number):Number
+		{
+			if(isNaN(number))
+				return 0;
+			return number;
 		}
 		
 		private var invalidateFlag:Boolean = false;
@@ -506,15 +518,6 @@ package org.flexlite.domDisplay
 		public function get bitmapData():BitmapData
 		{
 			return dxrData?dxrData.frameList[_currentFrame]:null;
-		}
-		
-		private static var zeroPoint:Point = new Point;
-		/**
-		 * @inheritDoc
-		 */
-		public function get offsetPoint():Point
-		{
-			return _dxrData?_dxrData.frameOffsetList[_currentFrame]:zeroPoint;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package org.flexlite.domDisplay
 {
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.geom.Point;
 	
 	import org.flexlite.domCore.IBitmapAsset;
@@ -10,12 +11,12 @@ package org.flexlite.domDisplay
 	
 	/**
 	 * DXR位图显示对象。
-	 * 请根据实际需求选择最佳的IBitmapAsset呈现DxrData。
-	 * DxrBitmap为最轻量级的IBitmapAsset。不具有位图九宫格缩放和鼠标事件响应功能。
+	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
+	 * DxrBitmap为最轻量级的IDxrDisplay。不具有位图九宫格缩放和鼠标事件响应功能。
 	 * 注意：DxrBitmap需要在外部手动添加起始坐标偏移量。
 	 * @author DOM
 	 */
-	public class DxrBitmap extends Bitmap implements IBitmapAsset
+	public class DxrBitmap extends Bitmap implements IBitmapAsset,IDxrDisplay
 	{
 		/**
 		 * 构造函数,注意：DxrBitmap需要在外部手动添加起始坐标偏移量。
@@ -44,21 +45,115 @@ package org.flexlite.domDisplay
 			_dxrData = value;
 			if(value)
 			{
-				bitmapData = dxrData.frameList[0];
+				var sizeOffset:Point = dxrData.filterOffsetList[0]?dxrData.filterOffsetList[0]:new Point;
+				filterWidth = sizeOffset.x;
+				filterHeight = sizeOffset.y;
+				super.bitmapData = dxrData.frameList[0];
+				if(widthExplicitSet)
+					super.width = _width+filterWidth;
+				else
+					_width = super.bitmapData.width-filterWidth;
+				if(heightExplicitSet)
+					super.height = _height+filterHeight;
+				else
+					_height = super.bitmapData.height-filterHeight;
 			}
 			else
 			{
-				bitmapData = null;
+				filterWidth = 0;
+				filterHeight = 0;
+				if(!widthExplicitSet)
+					_width = NaN;
+				if(!heightExplicitSet)
+					_height = NaN;
+				super.bitmapData = null;
 			}
 		}
+		/**
+		 * 滤镜宽度
+		 */		
+		private var filterWidth:Number = 0;
+		/**
+		 * 宽度显式设置标记
+		 */		
+		private var widthExplicitSet:Boolean = false;
 		
-		private static var zeroPoint:Point = new Point;
+		private var _width:Number;
 		/**
 		 * @inheritDoc
 		 */
-		public function get offsetPoint():Point
+		override public function get width():Number
 		{
-			return _dxrData?_dxrData.frameOffsetList[0]:zeroPoint;
+			return escapeNaN(_width);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set width(value:Number):void
+		{
+			if(value==_width)
+				return;
+			_width = value;
+			widthExplicitSet = !isNaN(value);
+			if(dxrData)
+			{
+				super.width = escapeNaN(_width) + filterWidth;
+			}
+		}
+		
+		/**
+		 * 滤镜高度
+		 */		
+		private var filterHeight:Number = 0;
+		/**
+		 * 高度显式设置标志
+		 */		
+		private var heightExplicitSet:Boolean = false;
+		
+		private var _height:Number;
+		/**
+		 * @inheritDoc
+		 */
+		override public function get height():Number
+		{
+			return escapeNaN(_height);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set height(value:Number):void
+		{
+			if(_height==value)
+				return;
+			_height = value;
+			heightExplicitSet = !isNaN(value);
+			if(dxrData)
+			{
+				super.height = escapeNaN(_height)+filterHeight;
+			}
+		}
+		
+		/**
+		 * 过滤NaN数字
+		 */		
+		private function escapeNaN(number:Number):Number
+		{
+			if(isNaN(number))
+				return 0;
+			return number;
+		}
+		/**
+		 * 被引用的BitmapData对象。注意:此属性被改为只读，对其赋值无效。
+		 * IDxrDisplay只能通过设置dxrData属性来显示位图数据。
+		 */		
+		override public function get bitmapData():BitmapData
+		{
+			return super.bitmapData;
+		}
+		override public function set bitmapData(value:BitmapData):void
+		{
 		}
 	}
 }

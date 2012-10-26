@@ -13,9 +13,5 @@ package org.flexlite.domCore
 		 * 当前显示的BitmapData对象
 		 */		
 		function get bitmapData():BitmapData;
-		/**
-		 * 当前的位图素材起始偏移量
-		 */		
-		function get offsetPoint():Point;
 	}
 }

@@ -84,8 +84,6 @@ package org.flexlite.domUI.components
 		 */		
 		protected function onGetSkin(skin:Object,skinName:Object):void
 		{
-			if(skin==_skin)
-				return;
 			if(_skin&&_skin.parent==this)
 			{
 				super.removeChild(_skin);
@@ -147,7 +145,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				adapter.getSkin(_skinName,skinChnaged);
+				adapter.getSkin(_skinName,skinChnaged,_skin);
 			}
 		}
 		/**

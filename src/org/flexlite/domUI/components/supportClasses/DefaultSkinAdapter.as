@@ -2,6 +2,7 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -25,7 +26,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		public function getSkin(skinName:Object, compFunc:Function):void
+		public function getSkin(skinName:Object,compFunc:Function,oldSkin:DisplayObject):void
 		{
 			if(skinName is Class)
 			{
@@ -52,7 +53,17 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			else if(skinName is BitmapData)
 			{
-				compFunc(new Bitmap(skinName as BitmapData,"auto",true),skinName);
+				var skin:Bitmap;
+				if(oldSkin is Bitmap)
+				{
+					skin = oldSkin as Bitmap;
+					skin.bitmapData = skinName as BitmapData;
+				}
+				else
+				{
+					skin = new Bitmap(skinName as BitmapData,"auto",true);
+				}
+				compFunc(skin,skinName);
 			}
 			else
 			{
