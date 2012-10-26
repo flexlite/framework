@@ -835,7 +835,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#setChildIndex()
+		 * setChildIndex()在此组件中不可用，若此组件为容器类，请使用setElementIndex()代替
 		 */		
 		override public function setChildIndex(child:DisplayObject, index:int):void
 		{
@@ -843,7 +843,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#swapChildren()
+		 * swapChildren()在此组件中不可用，若此组件为容器类，请使用swapElements()代替
 		 */		
 		override public function swapChildren(child1:DisplayObject, child2:DisplayObject):void
 		{
@@ -851,7 +851,7 @@ package org.flexlite.domUI.components
 		}
 		[Deprecated] 
 		/**
-		 * @copy org.flexlite.domUI.components.Group#swapChildrenAt()
+		 * swapChildrenAt()在此组件中不可用，若此组件为容器类，请使用swapElementsAt()代替
 		 */		
 		override public function swapChildrenAt(index1:int, index2:int):void
 		{

@@ -81,8 +81,14 @@ package org.flexlite.domUI.skins.vector
 						x+1, y+1, w - 2, h - 1, crr1,
 						0xFFFFFF, 1,
 						verticalGradientMatrix(x+1, y+1, w - 2, h - 1)); 
-					textColor = themeColors[1];
+					textColor = themeColors[0];
 					break;
+			}
+			if(labelDisplay)
+			{
+				labelDisplay.textColor = textColor;
+				labelDisplay.applyTextFormatNow();
+				labelDisplay.filters = currentState=="over"?textOverFilter:null;
 			}
 			this.alpha = currentState=="disabled"||currentState=="disabledAndSelected"?0.5:1;
 		}
