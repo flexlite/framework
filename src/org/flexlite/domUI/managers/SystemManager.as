@@ -55,8 +55,8 @@ package org.flexlite.domUI.managers
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true);
 			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
 			stage.removeEventListener(Event.ACTIVATE, activateHandler);
-			removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			removeEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			stage.removeEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
 		}
 		/**
 		 * 添加到舞台
@@ -77,8 +77,8 @@ package org.flexlite.domUI.managers
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
 			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
 			stage.addEventListener(Event.ACTIVATE, activateHandler);
-			addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			addEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
 			onResize();
 		}
 		/**

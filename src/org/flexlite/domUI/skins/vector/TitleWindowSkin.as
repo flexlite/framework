@@ -12,6 +12,9 @@ package org.flexlite.domUI.skins.vector
 	 */
 	public class TitleWindowSkin extends PanelSkin
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function TitleWindowSkin()
 		{
 			super();

@@ -14,7 +14,6 @@
 
 备注： 
 
-5.用FTE开发一套新的文本组件，采用注入方式与传统文本切换。
 6.考虑下是否让移动版本针对Starling封装，桌面版本由于有较多老PC，无法开启GPU加速，而且很长时间内都无法改变，所以继续保持传统显示列表+位图优化。
 8.为了保持后续版本有持续的向后兼容性，审查每一个public和protected方法，让对外暴露的接口数量最小化。
 9.优化整理Layout类大小。
@@ -23,7 +22,9 @@
 2.DragManager
 53.给ComboBox，DropDownList增加弹出特效
 58.文本锯齿和显示效果问题
-61.优化studio皮肤包，改成继承非可视元素.
 11.PopUpManager需重新设计。
 12.各种Manager都改成可以由项目注入的。
 54.TabNavigator,Alert,Tree
+55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
+56.用非可视化组件基类，虚拟化Skin和UIAsset
+57.ToolTipManager的缓存机制要修改,不用手动清理。

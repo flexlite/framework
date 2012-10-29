@@ -1,6 +1,7 @@
 package org.flexlite.domUI.skins.themes
 {
 	import org.flexlite.domUI.core.Theme;
+	import org.flexlite.domUI.skins.vector.AlertSkin;
 	import org.flexlite.domUI.skins.vector.ButtonSkin;
 	import org.flexlite.domUI.skins.vector.CheckBoxSkin;
 	import org.flexlite.domUI.skins.vector.ComboBoxSkin;
@@ -37,6 +38,7 @@ package org.flexlite.domUI.skins.themes
 		
 		private function apply():void
 		{
+			mapSkin("org.flexlite.domUI.components::Alert",AlertSkin);
 			mapSkin("org.flexlite.domUI.components::Button",ButtonSkin);
 			mapSkin("org.flexlite.domUI.components::CheckBox",CheckBoxSkin);
 			mapSkin("org.flexlite.domUI.components::ComboBox",ComboBoxSkin);

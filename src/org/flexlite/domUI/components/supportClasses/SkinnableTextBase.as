@@ -428,7 +428,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			if(!textDisplay)
 				return;
-			partRemoved("labelDisplay",textDisplay);
+			partRemoved("textDisplay",textDisplay);
 			removeFromDisplayList(textDisplay as DisplayObject);
 			textDisplay = null;
 		}
