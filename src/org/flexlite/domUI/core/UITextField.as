@@ -118,30 +118,22 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * @inheritDoc
-		 * Flash Player在计算TextFiled.textHeight时，没有考虑装订线的4像素
-		 * 上下各2像素，为了方便使用，在这里做了统一处理,
-		 * 此属性返回的值可以直接赋值给width，不会造成截断
+		 * Flash Player在计算TextFiled.textHeight时，
+		 * 没有包含空白的4像素,为了方便使用，在这里做了统一处理,
+		 * 此属性返回的值可以直接赋值给heihgt，不会造成截断
 		 */	
-		/**
-		 * @inheritDoc
-		 */
 		override public function get textHeight():Number
 		{
 			return super.textHeight+4;
 		}
 		/**
-		 * @inheritDoc
-		 * Flash Player在计算TextFiled.textWidth时，没有考虑装订线的4像素
-		 * 左右各2像素，为了方便使用，在这里做了统一处理,
+		 * Flash Player在计算TextFiled.textWidth时，
+		 * 没有包含空白的5像素,为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给width，不会造成截断
-		 */
-		/**
-		 * @inheritDoc
 		 */
 		override public function get textWidth():Number
 		{
-			return super.textWidth+4;
+			return super.textWidth+5;
 		}
 		
 		/**
