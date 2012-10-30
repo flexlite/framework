@@ -27,4 +27,3 @@
 54.TabNavigator,Tree
 55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
 56.用非可视化组件基类，虚拟化Skin和UIAsset
-57.ToolTipManager的缓存机制要修改,不用手动清理。

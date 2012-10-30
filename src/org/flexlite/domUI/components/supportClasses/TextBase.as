@@ -6,11 +6,11 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
-	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	
@@ -351,7 +351,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 由于设置了默认文本格式后，是延迟一帧才集中应用的，若需要立即应用文本样式，可以手动调用此方法。
 		 */		
-		public function applyTextFormatNow():void
+		dx_internal function applyTextFormatNow():void
 		{
 			if(defaultStyleChanged)
 			{
