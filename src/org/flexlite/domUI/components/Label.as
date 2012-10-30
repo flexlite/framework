@@ -154,57 +154,6 @@ package org.flexlite.domUI.components
 		 */		
 		private var lastUnscaledWidth:Number = NaN;
 		
-		/**
-		 * 宽度发生改变 
-		 */		
-		private var widthChanged:Boolean = true;
-		/**
-		 * @inheritDoc
-		 */		
-		override public function set width(value:Number):void
-		{
-			if (value != width)
-			{
-				widthChanged = true;
-				invalidateProperties();
-				invalidateSize();
-				invalidateDisplayList();
-			}
-			
-			super.width = value;
-		}
-		/**
-		 * @inheritDoc
-		 */	
-		override public function set maxWidth(value:Number):void
-		{
-			if (value != maxWidth)
-			{
-				widthChanged = true;
-				invalidateProperties();
-				invalidateSize();
-				invalidateDisplayList();
-			}
-			
-			super.maxWidth = value;
-		}
-		/**
-		 * @inheritDoc
-		 */		
-		override public function set percentWidth(value:Number):void
-		{
-			if (value != percentWidth)
-			{
-				widthChanged = true;
-				invalidateProperties();
-				invalidateSize();
-				invalidateDisplayList();
-			}
-			
-			super.percentWidth = value;
-		}
-		
-		
 		private var _paddingLeft:Number = 0;
 		/**
 		 * 文字距离左边缘的空白像素
@@ -291,11 +240,6 @@ package org.flexlite.domUI.components
 			var needSetDefaultFormat:Boolean = defaultStyleChanged||textChanged || htmlTextChanged;
 			rangeFormatChanged = needSetDefaultFormat||rangeFormatChanged;
 			
-			if(textField==null)
-			{
-				widthChanged = true;
-			}
-			
 			super.commitProperties();
 			
 			if(rangeFormatChanged)
@@ -304,14 +248,6 @@ package org.flexlite.domUI.components
 					textField.$setTextFormat(defaultTextFormat);
 				applyRangeFormat();
 				rangeFormatChanged = false;
-			}
-			
-			if (widthChanged)
-			{
-				textField.wordWrap = !isNaN(explicitWidth) ||
-					maxWidth!=10000||
-					!isNaN(percentWidth);
-				widthChanged = false;
 			}
 		}
 
@@ -323,16 +259,16 @@ package org.flexlite.domUI.components
 		{
 			if (isSpecialCase())
 			{
-				if (!isNaN(lastUnscaledWidth))
-				{
-					measureUsingWidth(lastUnscaledWidth);
-				}
-				else
+				if (isNaN(lastUnscaledWidth))
 				{
 					oldPreferWidth = NaN;
 					oldPreferHeight = NaN;
 				}
-				return;
+				else
+				{
+					measureUsingWidth(lastUnscaledWidth);
+					return;
+				}
 			}
 			
 			var availableWidth:Number;
