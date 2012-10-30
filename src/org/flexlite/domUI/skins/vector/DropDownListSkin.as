@@ -3,21 +3,18 @@ package org.flexlite.domUI.skins.vector
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.components.DataGroup;
-	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.PopUpAnchor;
 	import org.flexlite.domUI.components.RectangularDropShadow;
 	import org.flexlite.domUI.components.Scroller;
-	import org.flexlite.domUI.components.supportClasses.Skin;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;

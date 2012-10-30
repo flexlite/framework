@@ -45,7 +45,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function getSkinParts():Vector.<String>
 		{
-			return SkinPartUtil.getSkinParts(this);
+			return SkinPartUtil.getSkinParts(this,Skin);
 		}
 
 		

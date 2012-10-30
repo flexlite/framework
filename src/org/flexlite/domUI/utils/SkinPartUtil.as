@@ -3,9 +3,9 @@ package org.flexlite.domUI.utils
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
-	
-	import org.flexlite.domUI.components.supportClasses.Skin;
 
+	[ExcludeClass]
+	
 	/**
 	 * 获取皮肤定义的公开属性名工具类
 	 * @author DOM
@@ -17,8 +17,9 @@ package org.flexlite.domUI.utils
 		/**
 		 * 从一个Skin或其子类的实例里获取皮肤定义的公开属性名列表
 		 * @param skin 皮肤实例
+		 * @param superClass 皮肤基类，在遍历属性时过滤基类以上类定义的属性。
 		 */		
-		public static function getSkinParts(skin:Skin):Vector.<String>
+		public static function getSkinParts(skin:Object,superClass:Class):Vector.<String>
 		{
 			if(skinPartCache==null)
 			{
@@ -35,7 +36,7 @@ package org.flexlite.domUI.utils
 			var compilePrefix:String = "__"+key.substr(index+1)+"_";
 			var info:XML = describeType(skin);
 			var node:XML;
-			var skinClass:String = getQualifiedClassName(Skin);
+			var skinClass:String = getQualifiedClassName(superClass);
 			var fitClasses:Vector.<String> = new Vector.<String>();
 			if(skinClass==info.@name)
 			{

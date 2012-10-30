@@ -5,7 +5,7 @@ package org.flexlite.domUI.utils
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.IMovieClip;
-	
+	[ExcludeClass]
 	/**
 	 * 影片剪辑工具类
 	 * @author DOM
