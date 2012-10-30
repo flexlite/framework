@@ -41,14 +41,21 @@ package org.flexlite.domUtils
 			var valueDic:Dictionary = keyDic[key];
 			if(!valueDic)
 				return null;
+			var found:Boolean = false;
 			var value:*;
 			for(value in valueDic)
 			{
 				if(valueDic[value]===key)
+				{
+					found = true;
 					break;
+				}
 			}
-			if(value===undefined)
+			if(!found)
+			{
+				value = null;
 				delete keyDic[key];
+			}
 			return value;
 		}
 		
