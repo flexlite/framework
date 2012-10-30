@@ -11,6 +11,7 @@ package org.flexlite.domUI.managers.impl
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import flash.utils.getQualifiedClassName;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.ToolTip;
@@ -21,6 +22,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
+	import org.flexlite.domUtils.SharedMap;
 	
 	use namespace dx_internal;
 	
@@ -32,7 +34,9 @@ package org.flexlite.domUI.managers.impl
 	 */	
 	public class ToolTipManagerImpl extends EventDispatcher
 	{
-		
+		/**
+		 * 构造函数
+		 */		
 		public function ToolTipManagerImpl()
 		{
 			super();
@@ -61,55 +65,6 @@ package org.flexlite.domUI.managers.impl
 		 * 上一个ToolTip显示对象
 		 */		
 		private var previousTarget:IToolTipManagerClient;
-		
-		private var _reuseToolTip:Boolean = true;
-		
-		/**
-		 * 是否复用ToolTip实例,若为true,则每个ToolTipClass只创建一个实例缓存于管理器，
-		 * 回收时需要手动调用destroyToolTipClass(toolTipClass)方法。
-		 * 若为false，则每次都重新创建新的ToolTip实例。 默认为true。
-		 * @see #destroyAllCache()
-		 * @see #destroyToolTipClass()
-		 */
-		public function get reuseToolTip():Boolean
-		{
-			return _reuseToolTip;
-		}
-
-		public function set reuseToolTip(value:Boolean):void
-		{
-			_reuseToolTip = value;
-		}
-		
-		private var toolTipCache:Dictionary = new Dictionary;
-		/**
-		 * 销毁指定类对应的ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
-		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
-		 * @param toolTipClass 要移除的ToolTip类定义
-		 * @return 是否移除成功,若不存在该实例，返回false。
-		 * @see #reuseToolTip
-		 * @see #destroyAllCache()
-		 */				
-		public function destroyToolTipClass(toolTipClass:Class):Boolean
-		{
-			if(toolTipCache[toolTipClass]!==undefined)
-			{
-				delete toolTipCache[toolTipClass];
-				return true;
-			}
-			return false;
-		}
-		
-		/**
-		 * 销毁所有缓存在ToolTipManager内ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
-		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
-		 * @see #reuseToolTip
-		 * @see #destroyToolTipClass()
-		 */			
-		public function destroyAllCache():void
-		{
-			toolTipCache = new Dictionary;
-		}
 		
 		private var _currentTarget:IToolTipManagerClient;
 		/**
@@ -399,6 +354,10 @@ package org.flexlite.domUI.managers.impl
 			}
 		}
 		/**
+		 * toolTip实例缓存表
+		 */		
+		private var toolTipCacheMap:SharedMap = new SharedMap;
+		/**
 		 * 创建ToolTip显示对象
 		 */		
 		private function createTip():void
@@ -408,21 +367,12 @@ package org.flexlite.domUI.managers.impl
 			{
 				tipClass = toolTipClass;
 			}
-			if(_reuseToolTip)
-			{
-				if(toolTipCache[tipClass])
-				{
-					currentToolTip = toolTipCache[tipClass];
-				}
-				else 
-				{
-					currentToolTip = new tipClass();
-					toolTipCache[tipClass] = currentToolTip;
-				}
-			}
-			else
+			var key:String = getQualifiedClassName(tipClass);
+			currentToolTip = toolTipCacheMap.get(key);
+			if(!currentToolTip)
 			{
 				currentToolTip = new tipClass();
+				toolTipCacheMap.set(key,currentToolTip);
 			}
 			
 			currentToolTip.visible = false;
@@ -550,7 +500,6 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function reset():void
 		{
-			
 			showTimer.reset();
 			hideTimer.reset();
 			if (currentToolTip)
@@ -568,10 +517,12 @@ package org.flexlite.domUI.managers.impl
 			}
 		}
 		/**
-		 * 使用指定的ToolTip数据,创建默认ToolTip类的实例，然后在舞台坐标中的指定位置显示此实例。 
+		 * 使用指定的ToolTip数据,创建默认的ToolTip类的实例，然后在舞台坐标中的指定位置显示此实例。
+		 * 保存此方法返回的对 ToolTip 的引用，以便将其传递给destroyToolTip()方法销毁实例。
 		 * @param toolTipData ToolTip数据
 		 * @param x 舞台坐标x
 		 * @param y 舞台坐标y
+		 * @return 创建的ToolTip实例引用
 		 */		
 		public function createToolTip(toolTipData:String, x:Number, y:Number):IToolTip
 		{
@@ -586,6 +537,15 @@ package org.flexlite.domUI.managers.impl
 			toolTip.x = x;
 			toolTip.y = y;
 			return toolTip;
+		}
+		
+		/**
+		 * 销毁由createToolTip()方法创建的ToolTip实例。 
+		 * @param toolTip 要销毁的ToolTip实例
+		 */		
+		public function destroyToolTip(toolTip:IToolTip):void
+		{
+			DomGlobals.systemManager.toolTipContainer.removeElement(toolTip);
 		}
 		
 		/**
@@ -608,7 +568,6 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function showTimer_timerHandler(event:TimerEvent):void
 		{
-			
 			if (currentTarget)
 			{
 				createTip();

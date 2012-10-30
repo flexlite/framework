@@ -40,46 +40,6 @@ package org.flexlite.domUI.managers
 		}
 		
 		/**
-		 * 是否复用ToolTip实例,若为true,则每个ToolTipClass只创建一个实例缓存于管理器，
-		 * 回收时需要手动调用destroyToolTipClass(toolTipClass)方法。
-		 * 若为false，则每次都重新创建新的ToolTip实例。 默认为true。
-		 * @see #destroyAllCache()
-		 * @see #destroyToolTipClass()
-		 */
-		public static function get reuseToolTip():Boolean
-		{
-			return impl.reuseToolTip;
-		}
-		
-		public static function set reuseToolTip(value:Boolean):void
-		{
-			impl.reuseToolTip = value;
-		}
-		
-		/**
-		 * 销毁指定类对应的ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
-		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
-		 * @param toolTipClass 要移除的ToolTip类定义
-		 * @return 是否移除成功,若不存在该实例，返回false。
-		 * @see #reuseToolTip
-		 * @see #destroyAllCache()
-		 */		
-		public static function destroyToolTipClass(toolTipClass:Class):Boolean
-		{
-			return impl.destroyToolTipClass(toolTipClass);
-		}
-		/**
-		 * 销毁所有缓存在ToolTipManager内ToolTip实例。当reuseToolTip为true时，同一个工具提示类，
-		 * 在全局只会创建一个实例以共享。此实例缓存在ToolTipManager内，必须手动调用此方法销毁。
-		 * @see #reuseToolTip
-		 * @see #destroyToolTipClass()
-		 */			
-		public static function destroyAllCache():void
-		{
-			impl.destroyAllCache();
-		}
-		
-		/**
 		 * 当前的IToolTipManagerClient组件
 		 */			
 		public static function get currentTarget():IToolTipManagerClient
@@ -106,7 +66,7 @@ package org.flexlite.domUI.managers
 		}
 		
 		/**
-		 * 如果为 true，则当用户将鼠标指针移至组件上方时，ToolTipManager 会自动显示工具提示。
+		 * 如果为 true，则当用户将鼠标指针移至组件上方时，ToolTipManager会自动显示工具提示。
 		 * 如果为 false，则不会显示任何工具提示。
 		 */		
 		public static function get enabled():Boolean 
@@ -187,6 +147,7 @@ package org.flexlite.domUI.managers
 		
 		/**
 		 * 使用指定的ToolTip数据,创建默认的ToolTip类的实例，然后在舞台坐标中的指定位置显示此实例。
+		 * 保存此方法返回的对 ToolTip 的引用，以便将其传递给destroyToolTip()方法销毁实例。
 		 * @param toolTipData ToolTip数据
 		 * @param x 舞台坐标x
 		 * @param y 舞台坐标y
@@ -195,6 +156,14 @@ package org.flexlite.domUI.managers
 		public static function createToolTip(toolTipData:String, x:Number, y:Number):IToolTip
 		{
 			return impl.createToolTip(toolTipData,x,y);
+		}
+		/**
+		 * 销毁由createToolTip()方法创建的ToolTip实例。 
+		 * @param toolTip 要销毁的ToolTip实例
+		 */		
+		public static function destroyToolTip(toolTip:IToolTip):void
+		{
+			return impl.destroyToolTip(toolTip);
 		}
 	}
 	
