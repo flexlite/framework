@@ -26,7 +26,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		public function getSkin(skinName:Object,compFunc:Function,oldSkin:DisplayObject):void
+		public function getSkin(skinName:Object,compFunc:Function,oldSkin:DisplayObject=null):void
 		{
 			if(skinName is Class)
 			{
