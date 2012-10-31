@@ -79,7 +79,8 @@ package org.flexlite.domDisplay
 				return;
 			_bitmapData = value;
 			target.clear();
-			
+			cachedSourceGrid = null;
+			cachedDestGrid = null;
 			if(value)
 			{
 				applyBitmapData();
