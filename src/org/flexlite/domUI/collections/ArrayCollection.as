@@ -13,6 +13,10 @@ package org.flexlite.domUI.collections
 	 */	
 	[Event(name="collectionChange", type="org.flexlite.domUI.events.CollectionEvent")]
 	
+	[DXML(show="false")]
+	
+	[DefaultProperty(name="source",array="true")]
+	
 	/**
 	 * 数组的集合类数据结构包装器
 	 * 通常作为列表组件的数据源，使用这种数据结构包装普通数组，

@@ -1,4 +1,5 @@
 <componentPackage>
+  <component id="ArrayCollection" p="org.flexlite.domUI.collections.ArrayCollection" d="source" array="true" s="flash.utils.Proxy"/>
   <component id="BasicLayout" p="org.flexlite.domUI.layouts.BasicLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
   <component id="Button" p="org.flexlite.domUI.components.Button" show="true" s="org.flexlite.domUI.components.supportClasses.ButtonBase"/>
   <component id="ButtonBase" p="org.flexlite.domUI.components.supportClasses.ButtonBase" s="org.flexlite.domUI.components.SkinnableComponent"/>
@@ -52,6 +53,7 @@
   <component id="VScrollBar" p="org.flexlite.domUI.components.VScrollBar" show="true" s="org.flexlite.domUI.components.supportClasses.ScrollBarBase"/>
   <component id="VSlider" p="org.flexlite.domUI.components.VSlider" show="true" s="org.flexlite.domUI.components.supportClasses.SliderBase"/>
   <component id="VerticalLayout" p="org.flexlite.domUI.layouts.VerticalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
+  <component id="ViewStack" p="org.flexlite.domUI.components.ViewStack" show="true" d="elementsContent" array="true" s="org.flexlite.domUI.core.UIComponent"/>
   <component id="BevelFilter" p="flash.filters.BevelFilter" s="flash.filters.BitmapFilter"/>
   <component id="BlurFilter" p="flash.filters.BlurFilter" s="flash.filters.BitmapFilter"/>
   <component id="ColorMatrixFilter" p="flash.filters.ColorMatrixFilter" s="flash.filters.BitmapFilter"/>
@@ -65,4 +67,5 @@
   <component id="Matrix" p="flash.geom.Matrix" s="Object"/>
   <component id="Matrix3D" p="flash.geom.Matrix3D" s="Object"/>
   <component id="Point" p="flash.geom.Point" s="Object"/>
+  <component id="Object" p="Object"/>
 </componentPackage>
