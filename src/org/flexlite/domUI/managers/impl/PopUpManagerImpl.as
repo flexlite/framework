@@ -205,7 +205,7 @@ package org.flexlite.domUI.managers.impl
 				{
 					setOnePopUpCenter(data.popUp)
 				}
-				if(data.popUpEffect&&_currentPopUps.indexOf(data.popUp)==-1)
+				if(data.popUpEffect&&_currentPopUps.indexOf(data)==-1)
 				{
 					showEffect(data.popUp,data.popUpEffect);
 				}
