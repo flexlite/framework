@@ -2,6 +2,7 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import flash.events.Event;
 	import flash.text.AntiAliasType;
+	import flash.text.Font;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
@@ -109,6 +110,10 @@ package org.flexlite.domUI.components.supportClasses
 		//===========================字体样式=====================start==========================
 		
 		dx_internal var defaultStyleChanged:Boolean = true;
+		/**
+		 * 是否使用嵌入字体
+		 */		
+		private var embedFonts:Boolean = false;
 		
 		private var _fontFamily:String = "Times New Roman";
 		
@@ -125,6 +130,16 @@ package org.flexlite.domUI.components.supportClasses
 			if(_fontFamily==value)
 				return;
 			_fontFamily = value;
+			var fontList:Array = Font.enumerateFonts(false);
+			embedFonts = false;
+			for each(var font:Font in fontList)
+			{
+				if(font.fontName==value)
+				{
+					embedFonts = true;
+					break;
+				}
+			}
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
@@ -585,6 +600,7 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				textField.$setTextFormat(defaultTextFormat);
 				textField.defaultTextFormat = defaultTextFormat;
+				textField.embedFonts = embedFonts;
 			}
 			
 			if (textChanged || htmlTextChanged)
