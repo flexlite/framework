@@ -3,7 +3,8 @@ package org.flexlite.domUI.core
 	import flash.display.DisplayObject;
 
 	/**
-	 * 皮肤解析适配器注入接口
+	 * 皮肤适配器接口。<br/>
+	 * 若项目需要自定义可设置外观组件的skinName属性的解析规则，需要实现这个接口，然后调用Injector.mapClass()注入到框架即可。
 	 * @author DOM
 	 */
 	public interface ISkinAdapter

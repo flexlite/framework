@@ -7,7 +7,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.SkinBasicLayout;
-	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.IInvisibleSkin;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.ISkinPartHost;
@@ -37,7 +36,7 @@ package org.flexlite.domUI.components
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @author DOM
 	 */
-	public class SkinnableComponent extends UIAsset implements IHostComponent
+	public class SkinnableComponent extends UIAsset
 	{
 		/**
 		 * 构造函数
@@ -180,8 +179,9 @@ package org.flexlite.domUI.components
 			}
 		}
 		/**
-		 * @inheritDoc
-		 */
+		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
+		 * 若皮肤中含有延迟实例化的子部件，在子部件实例化完成时需要从外部再次调用此方法,完成注入。
+		 */	
 		public function findSkinParts():void
 		{
 			var curSkin:Object = getCurrentSkin();

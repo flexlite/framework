@@ -12,6 +12,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
 	import org.flexlite.domUI.core.IInvalidating;
+	import org.flexlite.domUI.core.ISkinnableClient;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
@@ -180,11 +181,24 @@ package org.flexlite.domUI.components
 				(renderer as DisplayObject).visible = true;
 				return renderer;
 			}
-			renderer = new rendererClass() as IItemRenderer;
+			createNewRendererFlag = true;
+			return createOneRenderer(rendererClass);
+		}
+		/**
+		 * 根据rendererClass创建一个Renderer,并添加到显示列表
+		 */		
+		private function createOneRenderer(rendererClass:Class):IItemRenderer
+		{
+			var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
 			if(renderer==null||!(renderer is DisplayObject))
 				return null;
+			if(_itemRendererSkinName)
+			{
+				var client:ISkinnableClient = renderer as ISkinnableClient;
+				if(client&&client.skinName==null)
+					client.skinName = _itemRendererSkinName;
+			}
 			super.addChild(renderer as DisplayObject);
-			createNewRendererFlag = true;
 			return renderer;
 		}
 		
@@ -352,11 +366,10 @@ package org.flexlite.domUI.components
 				return;
 			}
 			var rendererClass:Class = itemToRendererClass(item);
-			var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
+			var renderer:IItemRenderer = createOneRenderer(rendererClass);
 			indexToRenderer.splice(index,0,renderer);
-			if(renderer==null||!(renderer is DisplayObject))
+			if(!renderer)
 				return;
-			super.addChild(renderer as DisplayObject);
 			updateRenderer(renderer,index,item);
 			dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 				false, false, renderer, index, item));
@@ -470,8 +483,22 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		
+		private var _itemRendererSkinName:Object;
+		/**
+		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
+		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
+		 */
+		public function get itemRendererSkinName():Object
+		{
+			return _itemRendererSkinName;
+		}
+		public function set itemRendererSkinName(value:Object):void
+		{
+			_itemRendererSkinName = value;
+		}
+
+
 		private var _itemRendererFunction:Function;
-		
 		/**
 		 * 为某个特定项目返回一个项呈示器Class的函数。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。<br/>
@@ -632,14 +659,13 @@ package org.flexlite.domUI.components
 				return;
 			}
 			var rendererClass:Class = itemToRendererClass(typicalItem);
-			var typicalRenderer:IItemRenderer = new rendererClass() as IItemRenderer;
-			if(typicalRenderer==null||!(typicalRenderer is DisplayObject))
+			var typicalRenderer:IItemRenderer = createOneRenderer(rendererClass);
+			if(typicalRenderer==null)
 			{
 				setTypicalLayoutRect(null);
 				return;
 			}
 			var displayObj:DisplayObject = typicalRenderer as DisplayObject;
-			super.addChild(displayObj);
 			updateRenderer(typicalRenderer,0,typicalItem);
 			if(typicalRenderer is IInvalidating)
 				(typicalRenderer as IInvalidating).validateNow();
@@ -717,10 +743,9 @@ package org.flexlite.domUI.components
 			for each(var item:Object in _dataProvider)
 			{
 				var rendererClass:Class = itemToRendererClass(item);
-				var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
-				if(renderer == null||!(renderer is DisplayObject))
+				var renderer:IItemRenderer = createOneRenderer(rendererClass);
+				if(renderer == null)
 					continue;
-				super.addChild(renderer as DisplayObject);
 				indexToRenderer[index] = renderer;
 				updateRenderer(renderer,index,item);
 				if(renderer is IInvalidating)

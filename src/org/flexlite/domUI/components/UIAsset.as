@@ -10,6 +10,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
 	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.ISkinAdapter;
+	import org.flexlite.domUI.core.ISkinnableClient;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.events.UIEvent;
@@ -31,7 +32,7 @@ package org.flexlite.domUI.components
 	 * 若做了引起skin尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
 	 * @author DOM
 	 */
-	public class UIAsset extends UIComponent
+	public class UIAsset extends UIComponent implements ISkinnableClient
 	{
 		public function UIAsset()
 		{

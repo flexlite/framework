@@ -1,11 +1,10 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
-	import org.flexlite.domUI.core.IHostComponent;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.utils.SkinPartUtil;
 
 	use namespace dx_internal;
@@ -26,17 +25,17 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 		}
 		
-		private var _hostComponent:IHostComponent;
+		private var _hostComponent:Object;
 
 		/**
 		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
 		 */
-		public function get hostComponent():IHostComponent
+		public function get hostComponent():Object
 		{
 			return _hostComponent;
 		}
 
-		public function set hostComponent(value:IHostComponent):void
+		public function set hostComponent(value:Object):void
 		{
 			_hostComponent = value;
 		}

@@ -11,8 +11,8 @@ package org.flexlite.domUI.core
 		/**
 		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
 		 */		
-		function get hostComponent():IHostComponent;
-		function set hostComponent(value:IHostComponent):void;
+		function get hostComponent():Object;
+		function set hostComponent(value:Object):void;
 
 		/**
 		 * 此容器的布局对象

@@ -125,6 +125,30 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
+		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
+		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
+		 */	
+		public function get itemRendererSkinName():Object
+		{
+			return (dataGroup) 
+			? dataGroup.itemRendererSkinName 
+				: dataGroupProperties.itemRendererSkinName;
+		}
+		
+		public function set itemRendererSkinName(value:Object):void
+		{
+			if (dataGroup==null)
+			{
+				dataGroupProperties.itemRendererSkinName = value;
+			}
+			else
+			{
+				dataGroup.itemRendererSkinName = value;
+				dataGroupProperties.itemRendererSkinName = true;
+			}
+		}
+		
+		/**
 		 * 为某个特定项目返回一个项呈示器Class的函数。 <br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。 <br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
@@ -202,6 +226,12 @@ package org.flexlite.domUI.components
 					newDataGroupProperties.itemRenderer = true;
 				}
 				
+				if (dataGroupProperties.itemRendererSkinName !== undefined)
+				{
+					dataGroup.itemRendererSkinName = dataGroupProperties.itemRendererSkinName;
+					newDataGroupProperties.itemRendererSkinName = true;
+				}
+				
 				if (dataGroupProperties.itemRendererFunction !== undefined)
 				{
 					dataGroup.itemRendererFunction = dataGroupProperties.itemRendererFunction;
@@ -244,6 +274,8 @@ package org.flexlite.domUI.components
 					newDataGroupProperties.dataProvider = dataGroup.dataProvider;
 				if(dataGroupProperties.itemRenderer)
 					newDataGroupProperties.itemRenderer = dataGroup.itemRenderer;
+				if(dataGroupProperties.itemRendererSkinName)
+					newDataGroupProperties.itemRendererSkinName = dataGroup.itemRendererSkinName;
 				if(dataGroupProperties.itemRendererFunction)
 					newDataGroupProperties.itemRendererFunction = dataGroup.itemRendererFunction;
 				dataGroupProperties = newDataGroupProperties
