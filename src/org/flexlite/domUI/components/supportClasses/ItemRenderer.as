@@ -17,6 +17,9 @@ package org.flexlite.domUI.components.supportClasses
 		public function ItemRenderer()
 		{
 			super();
+			mouseChildren = true;
+			buttonMode = false;
+			useHandCursor = false;
 		}
 		
 		/**
