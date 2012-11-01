@@ -31,21 +31,13 @@ package org.flexlite.domUI.skins.vector
 		 */		
 		public var contentDisplay:Label;
 		/**
-		 * [SkinPart]"确定"按钮
+		 * [SkinPart]第一个按钮，通常是"确定"。
 		 */		
-		public var okButton:Button;
+		public var firstButton:Button;
 		/**
-		 * [SkinPart]"是"按钮
+		 * [SkinPart]第二个按钮，通常是"取消"。
 		 */		
-		public var yesButton:Button;
-		/**
-		 * [SkinPart]"否"按钮
-		 */		
-		public var noButton:Button;
-		/**
-		 * [SkinPart]"取消"按钮
-		 */		
-		public var cancelButton:Button;
+		public var secondButton:Button;
 		
 		/**
 		 * @inheritDoc
@@ -77,18 +69,12 @@ package org.flexlite.domUI.skins.vector
 			hGroup.layout = layout;
 			addElement(hGroup);
 			
-			okButton = new Button();
-			okButton.label = "确定";
-			hGroup.addElement(okButton);
-			yesButton = new Button();
-			yesButton.label = "是";
-			hGroup.addElement(yesButton);
-			noButton = new Button();
-			noButton.label = "否";
-			hGroup.addElement(noButton);
-			cancelButton = new Button();
-			cancelButton.label = "取消";
-			hGroup.addElement(cancelButton);
+			firstButton = new Button();
+			firstButton.label = "确定";
+			hGroup.addElement(firstButton);
+			secondButton = new Button();
+			secondButton.label = "取消";
+			hGroup.addElement(secondButton);
 		}
 	}
 }

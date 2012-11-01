@@ -13,49 +13,38 @@ package org.flexlite.domUI.components
 	public class Alert extends TitleWindow
 	{
 		/**
-		 * 作为 show() 方法的 flags 参数传递时，在 Alert 控件上启用“是”按钮的值。
-		 * 您可以使用 | 运算符将此位标志与 OK、CANCEL、NO 和 CLOSE 标志结合使用。
+		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为firstButton。
 		 */		
-		public static const YES:uint = 0x0001;
+		public static const FIRST_BUTTON:String = "firstButton";
 		/**
-		 * 作为 show() 方法的 flags 参数传递时，在 Alert 控件上启用“否”按钮的值。
-		 * 您可以使用 | 运算符将此位标志与 OK、CANCEL、YES 和 CLOSE 标志结合使用。
+		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为secondButton。
 		 */		
-		public static const NO:uint = 0x0002;
+		public static const SECOND_BUTTON:String = "secondButton";
 		/**
-		 * 作为 show() 方法的 flags 参数传递时，在 Alert 控件上启用“确定”按钮的值。
-		 * 您可以使用 | 运算符将此位标志与 CANCEL、YES、NO 和 CLOSE 标志结合使用。
+		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为closeButton。
 		 */		
-		public static const OK:uint = 0x0004;
-		/**
-		 * 作为 show() 方法的 flags 参数传递时，在 Alert 控件上启用“取消”按钮的值。
-		 * 您可以使用 | 运算符将此位标志与 OK、YES、NO 和 CLOSE 标志结合使用。
-		 */		
-		public static const CANCEL:uint= 0x0008;
-		/**
-		 * 作为 show() 方法的 flags 参数传递时，在 Alert 控件上启用"关闭"按钮的值。
-		 * 您可以使用 | 运算符将此位标志与 OK、YES、NO 和 CANCEL标志结合使用。
-		 */		
-		public static const CLOSE:uint = 0x0010;
+		public static const CLOSE_BUTTON:String = "closeButton";
 		
 		/**
 		 * 弹出Alert控件的静态方法。在Alert控件中选择一个按钮，将关闭该控件。
 		 * @param text 要显示的文本内容字符串。
 		 * @param title 对话框标题
-		 * @param flags Alert控件中放置的按钮。有效值为 Alert.OK、Alert.CANCEL、Alert.YES、Alert.NO 和  Alert.CLOSE。
-		 * 使用按位 OR 运算符可显示多个按钮。例如，传递 (Alert.YES | Alert.NO) 显示“是”和“否”按钮。默认值为:Alert.OK|Alert.CLOSE。
 		 * @param closeHandler 按下Alert控件上的任意按钮时的回调函数。示例:closeHandler(event:CloseEvent);
-		 * event的detail属性包含 Alert.OK、Alert.CANCEL、Alert.YES、Alert.NO或 Alert.CLOSE值。
+		 * event的detail属性包含 Alert.FIRST_BUTTON、Alert.SECOND_BUTTON和Alert.CLOSE_BUTTON。
+		 * @param firstButtonLabel 第一个按钮上显示的文本。
+		 * @param secondButtonLabel 第二个按钮上显示的文本，若为null，则不显示第二个按钮。
 		 * @param modal 是否启用模态。即禁用弹出层以下的鼠标事件。默认true。
 		 * @return 弹出的对话框实例的引用
 		 */		
-		public static function show(text:String="",title:String="",flags:uint=0x0014,
-									closeHandler:Function=null,modal:Boolean=true):Alert
+		public static function show(text:String="",title:String="",closeHandler:Function=null,
+									firstButtonLabel:String="确定",secondButtonLabel:String="",
+									modal:Boolean=true):Alert
 		{
 			var alert:Alert = new Alert();
 			alert.contentText = text;
 			alert.title = title;
-			alert.buttonFlags = flags;
+			alert._firstButtonLabel = firstButtonLabel;
+			alert._secondButtonLabel = secondButtonLabel;
 			alert.closeHandler = closeHandler;
 			PopUpManager.addPopUp(alert,modal);
 			return alert;
@@ -74,10 +63,44 @@ package org.flexlite.domUI.components
 		{
 			return Alert;
 		}
+		private var _firstButtonLabel:String = "";
 		/**
-		 * 应该放置哪些按钮的标志。
-		 */		
-		private var buttonFlags:uint = Alert.OK;
+		 * 第一个按钮上显示的文本
+		 */
+		public function get firstButtonLabel():String
+		{
+			return _firstButtonLabel;
+		}
+		public function set firstButtonLabel(value:String):void
+		{
+			if(_firstButtonLabel==value)
+				return;
+			_firstButtonLabel = value;
+			if(firstButton)
+				firstButton.label = value;
+		}
+
+		private var _secondButtonLabel:String = "";
+		/**
+		 * 第二个按钮上显示的文本
+		 */
+		public function get secondButtonLabel():String
+		{
+			return _secondButtonLabel;
+		}
+		public function set secondButtonLabel(value:String):void
+		{
+			if(_secondButtonLabel==value)
+				return;
+			_secondButtonLabel = value;
+			if(secondButton)
+			{
+				if(value==null||value=="")
+					secondButton.includeInLayout = secondButton.visible
+						= (_secondButtonLabel!=""&&_secondButtonLabel!=null);
+			}
+		}
+
 		
 		private var _contentText:String = "";
 		/**
@@ -110,17 +133,11 @@ package org.flexlite.domUI.components
 				var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
 				switch(event.currentTarget)
 				{
-					case okButton:
-						closeEvent.detail = Alert.OK;
+					case firstButton:
+						closeEvent.detail = Alert.FIRST_BUTTON;
 						break;
-					case yesButton:
-						closeEvent.detail = Alert.YES;
-						break;
-					case noButton:
-						closeEvent.detail = Alert.NO;
-						break;
-					case cancelButton:
-						closeEvent.detail = Alert.CANCEL;
+					case secondButton:
+						closeEvent.detail = Alert.SECOND_BUTTON;
 						break;
 				}
 				closeHandler(closeEvent);
@@ -133,7 +150,7 @@ package org.flexlite.domUI.components
 		{
 			super.closeButton_clickHandler(event);
 			PopUpManager.removePopUp(this);
-			var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE,false,false,Alert.CLOSE);
+			var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE,false,false,Alert.CLOSE_BUTTON);
 			if(closeHandler!=null)
 				closeHandler(closeEvent);
 		}
@@ -143,21 +160,13 @@ package org.flexlite.domUI.components
 		 */		
 		public var contentDisplay:IDisplayText;
 		/**
-		 * [SkinPart]"确定"按钮
+		 * [SkinPart]第一个按钮，通常是"确定"。
 		 */		
-		public var okButton:Button;
+		public var firstButton:Button;
 		/**
-		 * [SkinPart]"是"按钮
+		 * [SkinPart]第二个按钮，通常是"取消"。
 		 */		
-		public var yesButton:Button;
-		/**
-		 * [SkinPart]"否"按钮
-		 */		
-		public var noButton:Button;
-		/**
-		 * [SkinPart]"取消"按钮
-		 */		
-		public var cancelButton:Button;
+		public var secondButton:Button;
 		/**
 		 * @inheritDoc
 		 */
@@ -168,29 +177,16 @@ package org.flexlite.domUI.components
 			{
 				contentDisplay.text = _contentText;
 			}
-			else if(instance==okButton)
+			else if(instance==firstButton)
 			{
-				okButton.includeInLayout = okButton.visible = Boolean(buttonFlags&Alert.OK);
-				okButton.addEventListener(MouseEvent.CLICK,onClose);
+				firstButton.label = _firstButtonLabel;
+				firstButton.addEventListener(MouseEvent.CLICK,onClose);
 			}
-			else if(instance==yesButton)
+			else if(instance==secondButton)
 			{
-				yesButton.includeInLayout = yesButton.visible = Boolean(buttonFlags&Alert.YES);
-				yesButton.addEventListener(MouseEvent.CLICK,onClose);
-			}
-			else if(instance==noButton)
-			{
-				noButton.includeInLayout = noButton.visible = Boolean(buttonFlags&Alert.NO);
-				noButton.addEventListener(MouseEvent.CLICK,onClose);
-			}
-			else if(instance==cancelButton)
-			{
-				cancelButton.includeInLayout = cancelButton.visible = Boolean(buttonFlags&Alert.CANCEL);
-				cancelButton.addEventListener(MouseEvent.CLICK,onClose);
-			}
-			else if(instance==closeButton)
-			{
-				closeButton.visible = Boolean(buttonFlags&Alert.CLOSE);
+				secondButton.includeInLayout = secondButton.visible
+					= (_secondButtonLabel!=""&&_secondButtonLabel!=null);
+				secondButton.addEventListener(MouseEvent.CLICK,onClose);
 			}
 		}
 		/**
@@ -199,21 +195,13 @@ package org.flexlite.domUI.components
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-			if(instance==okButton)
+			if(instance==firstButton)
 			{
-				okButton.removeEventListener(MouseEvent.CLICK,onClose);
+				firstButton.removeEventListener(MouseEvent.CLICK,onClose);
 			}
-			else if(instance==yesButton)
+			else if(instance==secondButton)
 			{
-				yesButton.removeEventListener(MouseEvent.CLICK,onClose);
-			}
-			else if(instance==noButton)
-			{
-				noButton.removeEventListener(MouseEvent.CLICK,onClose);
-			}
-			else if(instance==cancelButton)
-			{
-				cancelButton.removeEventListener(MouseEvent.CLICK,onClose);
+				secondButton.removeEventListener(MouseEvent.CLICK,onClose);
 			}
 		}
 	}
