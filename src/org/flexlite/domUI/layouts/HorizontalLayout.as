@@ -202,7 +202,6 @@ package org.flexlite.domUI.layouts
 				measuredWidth -= isNaN(elementSizeTable[i])?typicalWidth:elementSizeTable[i];;
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
-			measuredWidth += (numElements-1)*_gap
 			var hPadding:Number = _paddingLeft + _paddingRight;
 			var vPadding:Number = _paddingTop + _paddingBottom;
 			target.measuredWidth = Math.ceil(measuredWidth+hPadding);
