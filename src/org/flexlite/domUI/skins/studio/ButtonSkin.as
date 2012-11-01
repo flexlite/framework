@@ -49,6 +49,8 @@ package org.flexlite.domUI.skins.studio
 				case "down":
 					if(hasOwnProperty("downSkin"))
 						currentSkin = this["downSkin"];
+					else if(hasOwnProperty("overSkin"))
+						currentSkin = this["overSkin"];
 					else if(hasOwnProperty("upSkin"))
 						currentSkin = this["upSkin"];
 					break;

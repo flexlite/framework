@@ -58,6 +58,8 @@ package org.flexlite.domUI.collections
 
 		public function set source(value:Array):void
 		{
+			if(value==null)
+				value = [];
 			_source = value;
 			dispatchCoEvent(CollectionEventKind.RESET);
 		}
