@@ -323,6 +323,7 @@ package org.flexlite.domUI.layouts
 				}
 				totalSize += eltHeight+gap;
 			}
+			totalSize -= gap;
 			return totalSize;
 		}
 		
