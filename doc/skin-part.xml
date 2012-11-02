@@ -49,8 +49,8 @@
 		<skinpart>dataGroup</skinpart>
 	</component>
 	<component id="Panel">
-		<skinpart >titleDisplay</skinpart>
-		<skinpart type="Group">contentGroup</skinpart>
+		<skinpart>titleDisplay</skinpart>
+		<skinpart>contentGroup</skinpart>
 	</component>
 	<component id="Scroller">
 		<skinpart type="HScrollBar">horizontalScrollBar</skinpart>
@@ -107,5 +107,20 @@
 		<skinpart type="Button">lastPageButton</skinpart>
 		<skinpart >labelDisplay</skinpart>
 		<skinpart >contentGroup</skinpart>
+	</component>
+	<component id="TitleWindow">
+		<skinpart>titleDisplay</skinpart>
+		<skinpart>contentGroup</skinpart>
+		<skinpart>moveArea</skinpart>
+		<skinpart type="Button">closeButton</skinpart>
+	</component>
+	<component id="Alert">
+		<skinpart>titleDisplay</skinpart>
+		<skinpart>contentGroup</skinpart>
+		<skinpart>moveArea</skinpart>
+		<skinpart type="Button">closeButton</skinpart>
+		<skinpart type="Button">firstButton</skinpart>
+		<skinpart type="Button">secondButton</skinpart>
+		<skinpart>contentDisplay</skinpart>
 	</component>
 </root>

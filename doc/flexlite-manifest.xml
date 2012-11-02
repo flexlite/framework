@@ -40,6 +40,7 @@
   <component id="TabBar" p="org.flexlite.domUI.components.TabBar" show="true" s="org.flexlite.domUI.components.supportClasses.ListBase"/>
   <component id="TabBarButton" p="org.flexlite.domUI.components.TabBarButton" s="org.flexlite.domUI.components.supportClasses.ToggleButtonBase"/>
   <component id="TabBarHorizontalLayout" p="org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout" s="org.flexlite.domUI.layouts.supportClasses.LayoutBase"/>
+  <component id="TabNavigator" p="org.flexlite.domUI.components.TabNavigator" show="true" s="org.flexlite.domUI.components.ViewStack"/>
   <component id="TextArea" p="org.flexlite.domUI.components.TextArea" show="true" s="org.flexlite.domUI.components.supportClasses.SkinnableTextBase"/>
   <component id="TextBase" p="org.flexlite.domUI.components.supportClasses.TextBase" s="org.flexlite.domUI.core.UIComponent"/>
   <component id="TextInput" p="org.flexlite.domUI.components.TextInput" show="true" s="org.flexlite.domUI.components.supportClasses.SkinnableTextBase"/>
