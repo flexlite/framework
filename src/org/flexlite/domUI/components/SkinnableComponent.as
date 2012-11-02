@@ -173,17 +173,12 @@ package org.flexlite.domUI.components
 			
 			if(skin is ISkinPartHost)
 			{
+				skinLayoutEnabled = false;
 				findSkinParts();
-				if(layout)
-				{//如果皮肤是ISkinPartHost，子项均在皮肤内部，由皮肤统一布局。则不需要额外的布局类。
-					layout.target = null;
-					layout = null;
-				}
 			}
-			else if(!layout)
+			else
 			{
-				layout = new SkinBasicLayout();
-				layout.target = this;
+				skinLayoutEnabled = true;
 			}
 			
 			if(!hasCreatedSkinParts&&!(skin is ISkinPartHost))
@@ -388,6 +383,25 @@ package org.flexlite.domUI.components
 		}
 		
 		private var layout:SkinBasicLayout;
+		/**
+		 * 启用或禁用组件自身的布局。通常用在当组件的皮肤不是ISkinPartHost，又需要自己创建子项并布局时。
+		 */		
+		dx_internal function set skinLayoutEnabled(value:Boolean):void
+		{
+			var hasLayout:Boolean = (layout != null);
+			if(hasLayout==value)
+				return;
+			if(value)
+			{
+				layout = new SkinBasicLayout();
+				layout.target = this;
+			}
+			else
+			{
+				layout.target = null;
+				layout = null;
+			}
+		}
 		
 		/**
 		 * @inheritDoc
