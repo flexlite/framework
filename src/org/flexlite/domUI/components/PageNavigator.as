@@ -714,7 +714,7 @@ package org.flexlite.domUI.components
 		
 		private function throwNotSupportedError():void
 		{
-			throw new Error("此方法在Scroller组件内不可用!");
+			throw new Error("此方法在PageNavigator组件内不可用!");
 		}
 		
 		public function addElement(element:IVisualElement):IVisualElement

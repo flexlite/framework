@@ -8,6 +8,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.SkinBasicLayout;
 	import org.flexlite.domUI.core.IInvisibleSkin;
+	import org.flexlite.domUI.core.INavigatorContent;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
@@ -36,7 +37,7 @@ package org.flexlite.domUI.components
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @author DOM
 	 */
-	public class SkinnableComponent extends UIAsset
+	public class SkinnableComponent extends UIAsset implements INavigatorContent
 	{
 		/**
 		 * 构造函数
@@ -46,6 +47,19 @@ package org.flexlite.domUI.components
 			super();
 			mouseChildren = true;
 			mouseEnabled = true;
+		}
+		
+		private var _navigatorLabel:String = "";
+		/**
+		 * 此组件作为导航器容器子项时，要在容器内显示的文本。例如TabNavigator容器的选项卡区域显示的文本。
+		 */
+		public function get navigatorLabel():String
+		{
+			return _navigatorLabel;
+		}
+		public function set navigatorLabel(value:String):void
+		{
+			_navigatorLabel = value;
 		}
 		
 		/**

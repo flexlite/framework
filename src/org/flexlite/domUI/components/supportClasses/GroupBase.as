@@ -5,6 +5,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.ILayoutElement;
+	import org.flexlite.domUI.core.INavigatorContent;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
@@ -20,7 +21,7 @@ package org.flexlite.domUI.components.supportClasses
 	 * 自动布局容器基类
 	 * @author DOM
 	 */
-	public class GroupBase extends UIComponent implements IViewport
+	public class GroupBase extends UIComponent implements IViewport,INavigatorContent
 	{
 		public function GroupBase()
 		{
@@ -283,6 +284,19 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				_layoutProperties = {verticalScrollPosition: value};
 			}
+		}
+		
+		private var _navigatorLabel:String = "";
+		/**
+		 * 此组件作为导航器容器子项时，要在容器内显示的文本。例如TabNavigator容器的选项卡区域显示的文本。
+		 */
+		public function get navigatorLabel():String
+		{
+			return _navigatorLabel;
+		}
+		public function set navigatorLabel(value:String):void
+		{
+			_navigatorLabel = value;
 		}
 
 		/**

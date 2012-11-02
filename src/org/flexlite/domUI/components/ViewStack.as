@@ -15,7 +15,8 @@ package org.flexlite.domUI.components
 	[DefaultProperty(name="elementsContent",array="true")]
 	
 	/**
-	 * 层级堆叠容器,一次只显示一个子对象。
+	 * 层级堆叠容器,一次只显示一个子对象。此容器的布局方式与BasicLayout相同。
+	 * 可以接受任何IVisualElement作为子项。
 	 * @author DOM
 	 */
 	public class ViewStack extends UIComponent implements IVisualElementContainer
@@ -138,7 +139,7 @@ package org.flexlite.domUI.components
 		
 		private var proposedSelectedIndex:int = -1;
 		
-		private var _selectedIndex:int = -1;
+		dx_internal var _selectedIndex:int = -1;
 		/**
 		 * 当前可见子容器的索引。索引从0开始。
 		 */		
@@ -160,7 +161,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 设置选中项索引
 		 */		
-		private function setSelectedIndex(value:int):void
+		dx_internal function setSelectedIndex(value:int):void
 		{
 			if(_selectedIndex==value)
 				return;
@@ -367,7 +368,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 添加一个显示元素到容器
 		 */		
-		private function elementAdded(element:IVisualElement, index:int):void
+		dx_internal function elementAdded(element:IVisualElement, index:int):void
 		{
 			if(element is DisplayObject)
 				super.addChildAt(DisplayObject(element), index);
@@ -378,7 +379,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 从容器移除一个显示元素
 		 */		
-		private function elementRemoved(element:IVisualElement, index:int):void
+		dx_internal function elementRemoved(element:IVisualElement, index:int):void
 		{
 			var childDO:DisplayObject = element as DisplayObject; 
 			if (childDO && childDO.parent == this)
@@ -451,6 +452,10 @@ package org.flexlite.domUI.components
 			measuredHeight = Math.ceil(extY + preferredHeight);
 		}
 		/**
+		 * 距离顶部距离
+		 */		
+		dx_internal var paddingTop:Number = 0;
+		/**
 		 * @inheritDoc
 		 */
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
@@ -500,7 +505,7 @@ package org.flexlite.domUI.components
 			var childY:Number = NaN;
 			
 			if (!isNaN(hCenter))
-				childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);
+				childX = Math.round((unscaledWidth - elementWidth) * 0.5 + hCenter);
 			else if (!isNaN(left))
 				childX = left;
 			else if (!isNaN(right))
@@ -509,7 +514,7 @@ package org.flexlite.domUI.components
 				childX = _selectedChild.layoutBoundsX;
 			
 			if (!isNaN(vCenter))
-				childY = Math.round((unscaledHeight - elementHeight) / 2 + vCenter);
+				childY = Math.round((unscaledHeight - elementHeight) * 0.5 + vCenter);
 			else if (!isNaN(top))
 				childY = top;
 			else if (!isNaN(bottom))
@@ -520,6 +525,14 @@ package org.flexlite.domUI.components
 			_selectedChild.setLayoutBoundsPosition(childX, childY);
 		}
 		
+		
+		/**
+		 * 添加对象到显示列表指定的索引
+		 */		
+		final dx_internal function addToDisplyListAt(child:DisplayObject,index:int):DisplayObject
+		{
+			return super.addChildAt(child,index);
+		}
 		
 		private static const errorStr:String = "在此组件中不可用，若此组件为容器类，请使用";
 		[Deprecated] 
