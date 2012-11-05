@@ -99,9 +99,16 @@ package org.flexlite.domUI.components
 		 * 动画播放结束时要到达的value。
 		 */		
 		private var slideToValue:Number;
+		
 		/**
-		 * @param org.flexlite.domUI.components.supportClasses.Range#value
-		 */		
+		 * 进度条的当前值。
+		 * 注意：当组件添加到显示列表后，若slideDuration不为0。设置此属性，并不会立即应用。而是作为目标值，开启缓动动画缓慢接近。
+		 * 若需要立即重置属性，请先设置slideDuration为0，或者把组件从显示列表移除。
+		 */
+		override public function get value():Number
+		{
+			return super.value;
+		}
 		override public function set value(newValue:Number):void
 		{
 			if(super.value == newValue)
