@@ -224,8 +224,8 @@ package org.flexlite.domDisplay
 			var sizeOffset:Point = dxrData.filterOffsetList[_currentFrame];
 			if(!sizeOffset)
 				sizeOffset = zeroPoint;
-			_width = Math.round(bitmapData.width*frameScaleX);
-			_height = Math.round(bitmapData.height*frameScaleY);
+			_width = Math.round((bitmapData.width-sizeOffset.x)*frameScaleX);
+			_height = Math.round((bitmapData.height-sizeOffset.y)*frameScaleY);
 			if(useScale9Grid)
 			{
 				if(smoothingChanged)
