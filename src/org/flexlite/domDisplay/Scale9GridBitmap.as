@@ -290,9 +290,9 @@ package org.flexlite.domDisplay
 		private function applyBitmapData():void
 		{
 			if(!widthExplicitSet)
-				_width = _bitmapData.width;
+				_width = _bitmapData.width-filterWidth;
 			if(!heightExplicitSet)
-				_height = _bitmapData.height;
+				_height = _bitmapData.height-filterHeight;
 			
 			if(_scale9Grid)
 			{
