@@ -5,8 +5,9 @@ package org.flexlite.domUI.skins
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
 	
-	import org.flexlite.domUI.components.supportClasses.Skin;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.supportClasses.Skin;
+	import org.flexlite.domUI.utils.GraphicsUtil;
 	
 	/**
 	 * Vector主题皮肤基类
@@ -207,7 +208,7 @@ package org.flexlite.domUI.skins
 			}
 			else
 			{
-				drawRoundRectComplex(g,
+				GraphicsUtil.drawRoundRectComplex(g,
 					x, y, width, height,
 					cornerRadius.tl, cornerRadius.tr,
 					cornerRadius.bl, cornerRadius.br);
@@ -224,7 +225,7 @@ package org.flexlite.domUI.skins
 				}
 				else
 				{
-					drawRoundRectComplex(g,
+					GraphicsUtil.drawRoundRectComplex(g,
 						hole.x, hole.y, hole.w, hole.h,
 						holeR.tl, holeR.tr, holeR.bl, holeR.br);
 				}	
@@ -233,47 +234,6 @@ package org.flexlite.domUI.skins
 			if (color !== null)
 				g.endFill();
 		}
-		/**
-		 * 绘制圆角矩形
-		 */		
-		private static function drawRoundRectComplex(graphics:Graphics, x:Number, y:Number, 
-													width:Number, height:Number, 
-													topLeftRadius:Number, topRightRadius:Number, 
-													bottomLeftRadius:Number, bottomRightRadius:Number):void
-		{
-			var xw:Number = x + width;
-			var yh:Number = y + height;
-			
-			var minSize:Number = width < height ? width * 2 : height * 2;
-			topLeftRadius = topLeftRadius < minSize ? topLeftRadius : minSize;
-			topRightRadius = topRightRadius < minSize ? topRightRadius : minSize;
-			bottomLeftRadius = bottomLeftRadius < minSize ? bottomLeftRadius : minSize;
-			bottomRightRadius = bottomRightRadius < minSize ? bottomRightRadius : minSize;
-			
-			var a:Number = bottomRightRadius * 0.292893218813453;
-			var s:Number = bottomRightRadius * 0.585786437626905;
-			graphics.moveTo(xw, yh - bottomRightRadius);
-			graphics.curveTo(xw, yh - s, xw - a, yh - a);
-			graphics.curveTo(xw - s, yh, xw - bottomRightRadius, yh);
-			
-			a = bottomLeftRadius * 0.292893218813453;
-			s = bottomLeftRadius * 0.585786437626905;
-			graphics.lineTo(x + bottomLeftRadius, yh);
-			graphics.curveTo(x + s, yh, x + a, yh - a);
-			graphics.curveTo(x, yh - s, x, yh - bottomLeftRadius);
-			
-			a = topLeftRadius * 0.292893218813453;
-			s = topLeftRadius * 0.585786437626905;
-			graphics.lineTo(x, y + topLeftRadius);
-			graphics.curveTo(x, y + s, x + a, y + a);
-			graphics.curveTo(x + s, y, x + topLeftRadius, y);
-			
-			a = topRightRadius * 0.292893218813453;
-			s = topRightRadius * 0.585786437626905;
-			graphics.lineTo(xw - topRightRadius, y);
-			graphics.curveTo(xw - s, y, xw - a, y + a);
-			graphics.curveTo(xw, y + s, xw, y + topRightRadius);
-			graphics.lineTo(xw, yh - bottomRightRadius);
-		}
+		
 	}
 }
