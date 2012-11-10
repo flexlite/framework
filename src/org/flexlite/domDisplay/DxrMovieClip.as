@@ -140,19 +140,30 @@ package org.flexlite.domDisplay
 		 */
 		private var frameScaleY:Number = 1;
 		/**
+		 * 0帧的滤镜水平偏移量。
+		 */		
+		private var initFilterWidth:Number = 0;
+		/**
+		 * 0帧的滤镜竖直偏移量
+		 */		
+		private var initFilterHeight:Number = 0;
+		/**
 		 * 初始化显示对象实体
 		 */		
 		private function initContent():void
 		{
 			frameScaleX = 1;
 			frameScaleY = 1;
+			var sizeOffset:Point = dxrData.filterOffsetList[0];
+			initFilterWidth = sizeOffset?sizeOffset.x:0;
+			initFilterHeight = sizeOffset?sizeOffset.y:0;
 			if(widthExplicitSet)
 			{
-				frameScaleX = _width/_dxrData.frameList[0].width;
+				frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
 			}
 			if(heightExplicitSet)
 			{
-				frameScaleY = _height/_dxrData.frameList[0].height;
+				frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
 			}
 			if(useScale9Grid)
 			{
@@ -224,14 +235,23 @@ package org.flexlite.domDisplay
 			var sizeOffset:Point = dxrData.filterOffsetList[_currentFrame];
 			if(!sizeOffset)
 				sizeOffset = zeroPoint;
+			filterWidth = sizeOffset.x;
+			filterHeight = sizeOffset.y;
 			_width = Math.round((bitmapData.width-sizeOffset.x)*frameScaleX);
 			_height = Math.round((bitmapData.height-sizeOffset.y)*frameScaleY);
+			widthChanged = false;
+			heightChanged = false;
 			if(useScale9Grid)
 			{
 				if(smoothingChanged)
 				{
 					smoothingChanged = false;
 					s9gBitmapContent.smoothing = _smoothing;
+				}
+				if(_width==0||_height==0)
+				{
+					s9gBitmapContent.bitmapData = null;
+					return;
 				}
 				s9gBitmapContent.scale9Grid = dxrData._scale9Grid;
 				s9gBitmapContent._offsetPoint = pos;
@@ -241,6 +261,11 @@ package org.flexlite.domDisplay
 			}
 			else
 			{
+				if(_width==0||_height==0)
+				{
+					bitmapContent.bitmapData = null;
+					return;
+				}
 				bitmapContent.x = pos.x;
 				bitmapContent.y = pos.y;
 				bitmapContent.bitmapData = bitmapData;
@@ -249,8 +274,6 @@ package org.flexlite.domDisplay
 				bitmapContent.width = _width+sizeOffset.x;
 				bitmapContent.height = _height+sizeOffset.y;
 			}
-			widthChanged = false;
-			heightChanged = false;
 		}
 		
 		private var widthChanged:Boolean = false;
@@ -281,7 +304,7 @@ package org.flexlite.domDisplay
 			if(widthExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleX = _width/_dxrData.frameList[0].width;
+					frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
 			}
 			else
 			{
@@ -320,7 +343,7 @@ package org.flexlite.domDisplay
 			if(heightExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleY = _height/_dxrData.frameList[0].height;
+					frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
 			}
 			else 
 			{
@@ -518,6 +541,32 @@ package org.flexlite.domDisplay
 		public function get bitmapData():BitmapData
 		{
 			return dxrData?dxrData.frameList[_currentFrame]:null;
+		}
+		/**
+		 * 滤镜宽度
+		 */		
+		private var filterWidth:Number = 0;
+		/**
+		 * @inheritDoc
+		 */	
+		public function get measuredWidth():Number
+		{
+			if(bitmapData)
+				return bitmapData.width-filterWidth;
+			return 0;
+		}
+		/**
+		 * 滤镜高度
+		 */		
+		private var filterHeight:Number = 0;
+		/**
+		 * @inheritDoc
+		 */
+		public function get measuredHeight():Number
+		{
+			if(bitmapData)
+				return bitmapData.height-filterHeight;
+			return 0;
 		}
 	}
 }

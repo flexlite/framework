@@ -50,11 +50,11 @@ package org.flexlite.domDisplay
 				filterHeight = sizeOffset.y;
 				super.bitmapData = dxrData.frameList[0];
 				if(widthExplicitSet)
-					super.width = _width+filterWidth;
+					super.width = _width==0?0:_width+filterWidth;
 				else
 					_width = super.bitmapData.width-filterWidth;
 				if(heightExplicitSet)
-					super.height = _height+filterHeight;
+					super.height = _height==0?0:_height+filterHeight;
 				else
 					_height = super.bitmapData.height-filterHeight;
 			}
@@ -98,8 +98,30 @@ package org.flexlite.domDisplay
 			widthExplicitSet = !isNaN(value);
 			if(dxrData)
 			{
-				super.width = escapeNaN(_width) + filterWidth;
+				if(_width==0)
+					super.width = 0;
+				else
+					super.width = escapeNaN(_width) + filterWidth;
 			}
+		}
+		
+		/**
+		 * 素材的默认宽度（以像素为单位）。
+		 */		
+		public function get measuredWidth():Number
+		{
+			if(bitmapData)
+				return bitmapData.width-filterWidth;
+			return 0;
+		}
+		/**
+		 * 素材的默认高度（以像素为单位）。
+		 */
+		public function get measuredHeight():Number
+		{
+			if(bitmapData)
+				return bitmapData.height-filterHeight;
+			return 0;
 		}
 		
 		/**
@@ -131,7 +153,10 @@ package org.flexlite.domDisplay
 			heightExplicitSet = !isNaN(value);
 			if(dxrData)
 			{
-				super.height = escapeNaN(_height)+filterHeight;
+				if(_height==0)
+					super.height = 0;
+				else
+					super.height = escapeNaN(_height)+filterHeight;
 			}
 		}
 		

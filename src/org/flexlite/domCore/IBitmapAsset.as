@@ -13,5 +13,13 @@ package org.flexlite.domCore
 		 * 当前显示的BitmapData对象
 		 */		
 		function get bitmapData():BitmapData;
+		/**
+		 * 素材的默认宽度（以像素为单位）。
+		 */		
+		function get measuredWidth():Number;
+		/**
+		 * 素材的默认高度（以像素为单位）。
+		 */
+		function get measuredHeight():Number;
 	}
 }

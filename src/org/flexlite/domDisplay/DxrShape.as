@@ -14,7 +14,7 @@ package org.flexlite.domDisplay
 	 * DxrShape具有位图九宫格缩放功能，但不具有鼠标事件响应。
 	 * @author DOM
 	 */
-	public class DxrShape extends Scale9GridBitmap implements IDxrDisplay
+	public class DxrShape extends Scale9GridBitmap implements IDxrDisplay,IBitmapAsset
 	{
 		/**
 		 * 构造函数
@@ -71,6 +71,25 @@ package org.flexlite.domDisplay
 		}
 		override public function set bitmapData(value:BitmapData):void
 		{
+		}
+		
+		/**
+		 * 素材的默认宽度（以像素为单位）。
+		 */		
+		public function get measuredWidth():Number
+		{
+			if(bitmapData)
+				return bitmapData.width-filterWidth;
+			return 0;
+		}
+		/**
+		 * 素材的默认高度（以像素为单位）。
+		 */
+		public function get measuredHeight():Number
+		{
+			if(bitmapData)
+				return bitmapData.height-filterHeight;
+			return 0;
 		}
 	}
 }

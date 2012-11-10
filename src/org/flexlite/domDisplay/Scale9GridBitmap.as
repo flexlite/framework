@@ -17,7 +17,7 @@ package org.flexlite.domDisplay
 	 * 注意：此类不具有鼠标事件
 	 * @author DOM
 	 */
-	public class Scale9GridBitmap extends Shape implements IBitmapAsset
+	public class Scale9GridBitmap extends Shape
 	{
 		/**
 		 * 构造函数
@@ -78,7 +78,6 @@ package org.flexlite.domDisplay
 			if(_bitmapData==value)
 				return;
 			_bitmapData = value;
-			target.clear();
 			cachedSourceGrid = null;
 			cachedDestGrid = null;
 			if(value)
@@ -87,6 +86,7 @@ package org.flexlite.domDisplay
 			}
 			else
 			{
+				target.clear();
 				if(!widthExplicitSet)
 					_width = NaN;
 				if(!heightExplicitSet)
@@ -289,6 +289,7 @@ package org.flexlite.domDisplay
 		 */		
 		private function applyBitmapData():void
 		{
+			target.clear();
 			if(!widthExplicitSet)
 				_width = _bitmapData.width-filterWidth;
 			if(!heightExplicitSet)
@@ -299,11 +300,17 @@ package org.flexlite.domDisplay
 				if(widthChanged||heightChanged)
 				{
 					cachedDestGrid = null;
+					widthChanged = false;
+					heightChanged = false;
 				}
+				if(_height==0||_width==0)
+					return;
 				applyScaledBitmapData(this);
 			}
 			else
 			{
+				if(_height==0||_width==0)
+					return;
 				var offset:Point = _offsetPoint;
 				if(!offset)
 					offset = new Point();
@@ -315,9 +322,6 @@ package org.flexlite.domDisplay
 				target.drawRect(offset.x,offset.x,(_width+filterWidth),(_height+filterHeight));
 				target.endFill();
 			}
-			widthChanged = false;
-			heightChanged = false;
-			scale9GridChanged = false;
 		}
 
 		private static var matrix:Matrix = new Matrix();

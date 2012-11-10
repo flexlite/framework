@@ -247,6 +247,8 @@ package org.flexlite.domUI.core
 		}
 		public function set initialized(value:Boolean):void
 		{
+			if(_initialized==value)
+				return;
 			_initialized = value;
 			if (value)
 			{
@@ -254,12 +256,17 @@ package org.flexlite.domUI.core
 			}
 		}
 		/**
+		 * initialize()方法被调用过的标志。
+		 */		
+		private var initializeCalled:Boolean = false;
+		/**
 		 * 初始化组件
 		 */
 		private function initialize():void
 		{
-			if (initialized)
+			if(initializeCalled)
 				return;
+			initializeCalled = true;
 			dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
 			createChildren();
 			childrenCreated();

@@ -177,19 +177,24 @@ package org.flexlite.domUI.components
 			}
 			else if(_skin is IBitmapAsset)
 			{
-				var bitmapData:BitmapData = (_skin as IBitmapAsset).bitmapData;
-				measuredWidth = bitmapData?bitmapData.width:0;
-				measuredHeight = bitmapData?bitmapData.height:0;
+				measuredWidth = (_skin as IBitmapAsset).measuredWidth;
+				measuredHeight = (_skin as IBitmapAsset).measuredHeight;
 			}
 			else if(_skin is TextField&&!(_skin is UITextField))
 			{
-				measuredWidth = (_skin as TextField).textWidth+4;
+				measuredWidth = (_skin as TextField).textWidth+5;
 				measuredHeight = (_skin as TextField).textHeight+4;
 			}
 			else
 			{
+				var oldScaleX:Number = _skin.scaleX;
+				var oldScaleY:Number = _skin.scaleY;
+				_skin.scaleX = 1;
+				_skin.scaleY = 1;
 				measuredWidth = _skin.width;
 				measuredHeight = _skin.height;
+				_skin.scaleX = oldScaleX;
+				_skin.scaleY = oldScaleY;
 			}
 		}
 		
