@@ -538,23 +538,13 @@ package org.flexlite.domUI.managers
 			{
 				var oldIndex:int = super.getElementIndex(element);
 				if(oldIndex>=_noTopMostIndex&&oldIndex<_topMostIndex)
-				{
-					popUpContainer.removeElement(element);
-				}
+					topMostIndex--;
 				else if(oldIndex>=_topMostIndex&&oldIndex<_toolTipIndex)
-				{
-					toolTipContainer.removeElement(element);
-				}
+					toolTipIndex--;
 				else if(oldIndex>=_toolTipIndex&&oldIndex<_cursorIndex)
-				{
-					cursorContainer.removeElement(element);
-				}
+					cursorIndex--;
 				else
-				{
-					removeElement(element);
-				}
-				if(oldIndex<index)
-					index--;
+					noTopMostIndex--;
 			}
 			return super.addElementAt(element,index);
 		}
