@@ -126,12 +126,23 @@ package org.flexlite.domUI.managers.impl
 										exclusive:Boolean=false,priority:int=0,
 										popUpEffect:IEffect=null):void
 		{
-			var popUpData:PopUpData = new PopUpData(popUp,modal,center,exclusive,priority,popUpEffect);
+			var popUpData:PopUpData;
 			if(popUpDataDic[popUp]!=null)
 			{
-				remove(popUpDataDic[popUp]);
+				popUpData = popUpDataDic[popUp];
+				popUpData.modal = modal;
+				popUpData.center = center;
+				popUpData.exclusive = exclusive;
+				popUpData.priority = priority;
+				popUpData.popUpEffect = popUpEffect;
+				remove(popUpData);
 			}
-			popUpDataDic[popUp] = popUpData;
+			else
+			{
+				popUpData = new PopUpData(popUp,modal,center,exclusive,priority,popUpEffect);
+				popUpDataDic[popUp] = popUpData;
+			}
+			
 			if(popUp is IUIComponent)
 				(popUp as IUIComponent).isPopUp = true;
 			insert(popUpData);

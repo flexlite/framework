@@ -391,6 +391,14 @@ package org.flexlite.domUI.managers
 			return addElementAt(element, _noTopMostIndex);
 		}
 		
+		override public function setElementIndex(element:IVisualElement, index:int):void
+		{
+			if (getElementIndex(element) == index)
+				return;
+			
+			super.removeElement(element);
+			super.addElementAt(element, index);
+		}
 		/**
 		 * @inheritDoc
 		 */
