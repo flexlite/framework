@@ -507,6 +507,8 @@ package org.flexlite.domUI.managers
 					cursorIndex--;
 				else
 					noTopMostIndex--;
+				if(oldIndex<index)
+					index--;
 			}
 			return super.addElementAt(element,index);
 		}
