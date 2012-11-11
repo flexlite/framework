@@ -411,17 +411,6 @@ package org.flexlite.domUI.managers
 			return super.addElementAt(element,index);
 		}
 		
-		private function checkForRangeError(index:int, addingElement:Boolean = false):void
-		{
-			var maxIndex:int = _noTopMostIndex - 1;
-			
-			if (addingElement)
-				maxIndex++;
-			
-			if (index < 0 || index > maxIndex)
-				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
-		}
-		
 		/**
 		 * @inheritDoc
 		 */
@@ -449,15 +438,6 @@ package org.flexlite.domUI.managers
 		/**
 		 * @inheritDoc
 		 */
-		override public function setElementIndex(element:IVisualElement, newIndex:int):void
-		{
-			checkForRangeError(newIndex);
-			super.setElementIndex(element,newIndex)
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
 		override public function removeAllElements():void
 		{
 			while(_noTopMostIndex>0)
@@ -467,24 +447,6 @@ package org.flexlite.domUI.managers
 			}
 		}
 
-		/**
-		 * @inheritDoc
-		 */
-		override public function swapElements(element1:IVisualElement,element2:IVisualElement):void
-		{
-			swapElementsAt(getElementIndex(element1), getElementIndex(element2));
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override public function swapElementsAt(index1:int, index2:int):void
-		{
-			checkForRangeError(index1);
-			checkForRangeError(index2);
-			super.swapElementsAt(index1,index2);
-		}
-		
 		/**
 		 * @inheritDoc
 		 */
