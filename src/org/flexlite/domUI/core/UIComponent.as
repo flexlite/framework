@@ -47,7 +47,8 @@ package org.flexlite.domUI.core
 	 * @author DOM
 	 */
 	public class UIComponent extends Sprite 
-		implements IUIComponent,ILayoutManagerClient,ILayoutElement,IInvalidating,IVisualElement,IToolTipManagerClient
+		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
+		IInvalidating,IVisualElement,IToolTipManagerClient
 	{
 		/**
 		 * 构造函数
@@ -191,7 +192,6 @@ package org.flexlite.domUI.core
 			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
 			DomGlobals.initlize(stage);
 			checkInvalidateFlag();
-			addRenderListener();
 		}
 		/**
 		 * 被添加到显示列表时
@@ -205,7 +205,6 @@ package org.flexlite.domUI.core
 				_hasParent = true;
 				checkInvalidateFlag();
 				initialize();
-				addRenderListener();
 			}
 		}		
 		
@@ -1318,103 +1317,11 @@ package org.flexlite.domUI.core
 		 */		
 		public function setFocus():void
 		{
-			if(DomGlobals.stage!=null)
+			if(DomGlobals.stage)
 			{
 				DomGlobals.stage.focus = this;
 			}
 		}
 		
-		/**
-		 * 延迟函数队列 
-		 */		
-		private var methodQueue:Vector.<MethodQueueElement>;
-		/**
-		 * 是否添加过事件监听标志 
-		 */		
-		private var listeningForRender:Boolean = false;
-		/**
-		 * 为callLater()添加 事件监听
-		 */		
-		private function addRenderListener():void
-		{
-			if(!listeningForRender&&methodQueue&&methodQueue.length>0
-				&&DomGlobals.stage&&_hasParent)
-			{
-				DomGlobals.layoutManager.addEventListener(UIEvent.UPDATE_COMPLETE,onCallBack);
-				listeningForRender = true;
-			}
-		}
-		
-		/**
-		 * 延迟函数到下一次组件重绘后执行。由于组件使用了延迟渲染的优化机制，
-		 * 在改变组件某些属性后，并不立即应用，而是延迟一帧统一处理，避免了重复的渲染。
-		 * 若组件的某些属性会影响到它的尺寸位置，在属性发生改变后，请调用此方法,
-		 * 延迟执行函数以获取正确的组件尺寸位置。
-		 * @param method 要延迟执行的函数
-		 * @param args 函数参数列表
-		 */		
-		public function callLater(method:Function,args:Array=null):void
-		{
-			var p:IInvalidating = parent as IInvalidating;
-			var parentInvalidateFlag:Boolean = p&&p.invalidateFlag;
-			if(invalidateFlag||parentInvalidateFlag||!initialized)
-			{
-				if(methodQueue==null)
-				{
-					methodQueue = new Vector.<MethodQueueElement>();
-				}
-				methodQueue.push(new MethodQueueElement(method,args));
-				addRenderListener();
-				return;
-			}
-			if(args==null)
-			{
-				method();
-			}
-			else
-			{
-				method.apply(null,args);
-			}
-		}
-		/**
-		 * 执行延迟函数
-		 */		
-		private function onCallBack(event:Event):void
-		{
-			DomGlobals.layoutManager.removeEventListener(UIEvent.UPDATE_COMPLETE,onCallBack);
-			listeningForRender = false;
-			var queue:Vector.<MethodQueueElement> = methodQueue;
-			if(!queue||queue.length==0)
-				return;
-			methodQueue = null;
-			for each(var element:MethodQueueElement in queue)
-			{
-				if(element.args==null)
-				{
-					element.method();
-				}
-				else
-				{
-					element.method.apply(null,element.args);
-				}
-			}
-		}
-		
 	}
-}
-/**
- *  延迟执行函数元素
- */
-class MethodQueueElement
-{
-	
-	public function MethodQueueElement(method:Function,args:Array = null)
-	{
-		this.method = method;
-		this.args = args;
-	}
-	
-	public var method:Function;
-	
-	public var args:Array;
 }

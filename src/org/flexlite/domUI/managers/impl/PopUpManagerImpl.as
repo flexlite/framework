@@ -12,6 +12,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.events.EffectEvent;
+	import org.flexlite.domUI.utils.callLater;
 
 	[ExcludeClass]
 	
@@ -252,7 +253,7 @@ package org.flexlite.domUI.managers.impl
 		private function showEffect(popUp:IVisualElement,effect:IEffect):void
 		{
 			popUp.visible = false;
-			popUp.callLater(function():void{
+			callLater(function():void{
 				effect.addEventListener(EffectEvent.EFFECT_START,onEffectStart);
 				effect.play([popUp]);
 			});

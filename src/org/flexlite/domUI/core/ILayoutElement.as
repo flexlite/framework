@@ -149,14 +149,5 @@ package org.flexlite.domUI.core
 		 * 设置组件的布局位置
 		 */		
 		function setLayoutBoundsPosition(x:Number,y:Number):void;
-		/**
-		 * 延迟函数到下一次组件重绘后执行。由于组件使用了延迟渲染的优化机制，
-		 * 在改变组件某些属性后，并不立即应用，而是延迟一帧统一处理，避免了重复的渲染。
-		 * 若组件的某些属性会影响到它的尺寸位置，在属性发生改变后，请调用此方法,
-		 * 延迟执行函数以获取正确的组件尺寸位置。
-		 * @param method 要延迟执行的函数
-		 * @param args 函数参数列表
-		 */	
-		function callLater(method:Function,args:Array=null):void;
 	}
 }

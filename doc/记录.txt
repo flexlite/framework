@@ -21,10 +21,9 @@
 3.飘文字组件
 2.DragManager
 53.给ComboBox，DropDownList增加弹出特效
-58.文本锯齿和显示效果问题
 11.PopUpManager需重新设计。
 12.各种Manager都改成可以由项目注入的。
-54.TabNavigator,Tree
+54.Tree
 55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
 56.用非可视化组件基类，虚拟化Skin和UIAsset
 57.Group和ViewStack容器要增加对非可视元素的兼容,防止索引报错。elementAdded(),elementRemoved().
