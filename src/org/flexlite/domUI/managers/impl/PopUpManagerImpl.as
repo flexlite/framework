@@ -209,11 +209,6 @@ package org.flexlite.domUI.managers.impl
 			var needModal:Boolean = false;
 			for each(data in popUps)
 			{
-				if(data.popUp.parent==DomGlobals.systemManager)
-				{
-					popUpContainer.addElement(data.popUp);
-					continue;
-				}
 				popUpContainer.addElement(data.popUp);
 				if(data.center&&
 					lastCenterPopUps.indexOf(data.popUp)==-1)
