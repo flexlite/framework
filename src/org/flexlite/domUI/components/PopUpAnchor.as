@@ -5,12 +5,13 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.managers.PopUpManager;
+	import org.flexlite.domUI.utils.callLater;
 	
 	use namespace dx_internal;
 	
@@ -238,17 +239,32 @@ package org.flexlite.domUI.components
 		private function addedToStageHandler(event:Event):void
 		{
 			addedToStage = true;
-			addOrRemovePopUp();    
+			callLater(checkPopUpState);
 		}
+		
+		/**
+		 * 延迟检查弹出状态，防止堆栈溢出。
+		 */		
+		private function checkPopUpState():void
+		{
+			if(addedToStage)
+			{
+				addOrRemovePopUp();    
+			}
+			else
+			{
+				if (popUp != null && DisplayObject(popUp).parent != null)
+					removeAndResetPopUp();
+			}
+		}
+		
 		/**
 		 * 从舞台移除事件
 		 */		
 		private function removedFromStageHandler(event:Event):void
 		{
-			if (popUp != null && DisplayObject(popUp).parent != null)
-				removeAndResetPopUp();
-			
 			addedToStage = false;
+			callLater(checkPopUpState);
 		}
 		
 	}
