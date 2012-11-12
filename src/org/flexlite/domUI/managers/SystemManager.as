@@ -1,5 +1,6 @@
 package org.flexlite.domUI.managers
 {
+	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -20,6 +21,7 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
 	
@@ -263,7 +265,7 @@ package org.flexlite.domUI.managers
 		
 		private var _popUpContainer:SystemContainer;
 		/**
-		 * 弹出窗口层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
+		 * 弹出窗口层容器。
 		 */		
 		public function get popUpContainer():IContainer
 		{
@@ -279,7 +281,7 @@ package org.flexlite.domUI.managers
 		
 		private var _toolTipContainer:SystemContainer;
 		/**
-		 * 工具提示层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
+		 * 工具提示层容器。
 		 */		
 		public function get toolTipContainer():IContainer
 		{
@@ -295,7 +297,7 @@ package org.flexlite.domUI.managers
 		
 		private var _cursorContainer:SystemContainer;
 		/**
-		 * 鼠标样式层容器。注意：此层级禁用了自动布局功能。所有相对位置属性都无效。
+		 * 鼠标样式层容器。
 		 */		
 		public function get cursorContainer():IContainer
 		{
@@ -311,7 +313,7 @@ package org.flexlite.domUI.managers
 		
 		private var _noTopMostIndex:int = 0;
 		/**
-		 * 弹出窗口层的起始(包括)索引
+		 * 弹出窗口层的起始索引(包括)
 		 */		
 		dx_internal function get noTopMostIndex():int
 		{
@@ -327,7 +329,7 @@ package org.flexlite.domUI.managers
 		
 		private var _topMostIndex:int = 0;
 		/**
-		 * 弹出窗口层结束(不包括)索引
+		 * 弹出窗口层结束索引(不包括)
 		 */		
 		dx_internal function get topMostIndex():int
 		{
@@ -343,7 +345,7 @@ package org.flexlite.domUI.managers
 		
 		private var _toolTipIndex:int = 0;
 		/**
-		 * 工具提示层结束(不包括)索引
+		 * 工具提示层结束索引(不包括)
 		 */		
 		dx_internal function get toolTipIndex():int
 		{
@@ -359,7 +361,7 @@ package org.flexlite.domUI.managers
 		
 		private var _cursorIndex:int = 0;
 		/**
-		 * 鼠标样式层结束(不包括)索引
+		 * 鼠标样式层结束索引(不包括)
 		 */		
 		dx_internal function get cursorIndex():int
 		{
@@ -388,34 +390,23 @@ package org.flexlite.domUI.managers
 		 */
 		override public function addElement(element:IVisualElement):IVisualElement
 		{
-			return addElementAt(element, _noTopMostIndex);
+			var addIndex:int = _noTopMostIndex;
+			if (element.parent == this)
+				addIndex--;
+			return addElementAt(element, addIndex);
 		}
 		
-		override public function setElementIndex(element:IVisualElement, index:int):void
-		{
-			if (getElementIndex(element) == index)
-				return;
-			
-			super.removeElement(element);
-			super.addElementAt(element, index);
-		}
 		/**
 		 * @inheritDoc
 		 */
 		override public function addElementAt(element:IVisualElement,index:int):IVisualElement
 		{
-			if(index>_noTopMostIndex)
-				index = _noTopMostIndex;
-			if(element.parent == this&&
-				super.getElementIndex(element)<_noTopMostIndex)
-			{
-				if(index == _noTopMostIndex)
-					index--;
-			}
-			else
-			{
-				noTopMostIndex++;
-			}
+			noTopMostIndex++;
+			
+			var host:IVisualElementContainer = element.parent as IVisualElementContainer;
+			if (host)
+				host.removeElement(element);
+			
 			return super.addElementAt(element,index);
 		}
 		
@@ -500,24 +491,14 @@ package org.flexlite.domUI.managers
 			var index:int = super.numElements;
 			if (element.parent == this)
 				index--;
-			return super.addElementAt(element, index);
+			return raw_addElementAt(element, index);
 		}
 		dx_internal function raw_addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
-			if(element.parent==this)
-			{
-				var oldIndex:int = super.getElementIndex(element);
-				if(oldIndex>=_noTopMostIndex&&oldIndex<_topMostIndex)
-					topMostIndex--;
-				else if(oldIndex>=_topMostIndex&&oldIndex<_toolTipIndex)
-					toolTipIndex--;
-				else if(oldIndex>=_toolTipIndex&&oldIndex<_cursorIndex)
-					cursorIndex--;
-				else
-					noTopMostIndex--;
-				if(oldIndex<index)
-					index--;
-			}
+			var host:IVisualElementContainer = element.parent as IVisualElementContainer;
+			if (host)
+				host.removeElement(element);
+			
 			return super.addElementAt(element,index);
 		}
 		dx_internal function raw_removeElement(element:IVisualElement):IVisualElement

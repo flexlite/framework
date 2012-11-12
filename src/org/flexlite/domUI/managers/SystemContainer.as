@@ -1,8 +1,8 @@
 package org.flexlite.domUI.managers
 {
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	
@@ -61,9 +61,8 @@ package org.flexlite.domUI.managers
 		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
-			owner.raw_addElementAt(
-				element, owner[upperBoundReference]);
 			owner[upperBoundReference]++;
+			owner.raw_addElement(element);
 			return element;
 		}
 		/**
@@ -71,9 +70,9 @@ package org.flexlite.domUI.managers
 		 */
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
+			owner[upperBoundReference]++;
 			owner.raw_addElementAt(
 				element, owner[lowerBoundReference] + index);
-			owner[upperBoundReference]++;
 			return element;
 		}
 		/**
@@ -85,8 +84,8 @@ package org.flexlite.domUI.managers
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				owner.raw_removeElement(element);
 				owner[upperBoundReference]--;
+				owner.raw_removeElement(element);
 			}
 			return element;
 		}
@@ -100,8 +99,8 @@ package org.flexlite.domUI.managers
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				element = owner.raw_removeElementAt(index);
 				owner[upperBoundReference]--;
+				element = owner.raw_removeElementAt(index);
 			}
 			return element;
 		}
