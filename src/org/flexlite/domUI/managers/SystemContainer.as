@@ -61,8 +61,11 @@ package org.flexlite.domUI.managers
 		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
+			var index:int = owner[upperBoundReference];
+			if(element.parent==owner)
+				index--;
 			owner[upperBoundReference]++;
-			owner.raw_addElement(element);
+			owner.raw_addElementAt(element,index);
 			return element;
 		}
 		/**
