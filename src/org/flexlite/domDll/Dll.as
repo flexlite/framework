@@ -113,13 +113,13 @@ package org.flexlite.domDll
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
-		 * "swf" name:Loader subkey:Class<br/>
-		 * "dxr" name:DxrFile subkey:DxrData<br/>
-		 * "amf" name:Object<br/>
-		 * "xml" name:XML<br/>
-		 * "img" name:BitmapData<br/>
-		 * "sound" name:Sound<br/>
-		 * "bin" name:ByteArray
+		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
+		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
+		 * "amf" key是name返回:Object<br/>
+		 * "xml" key是name返回:XML<br/>
+		 * "img" key是name返回:BitmapData<br/>
+		 * "sound" key是name返回:Sound<br/>
+		 * "bin" key是name返回:ByteArray
 		 */		
 		public static function getRes(key:String):*
 		{
@@ -341,13 +341,13 @@ package org.flexlite.domDll
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
-		 * "swf" name:Loader subkey:Class<br/>
-		 * "dxr" name:DxrFile subkey:DxrData<br/>
-		 * "amf" name:Object<br/>
-		 * "xml" name:XML<br/>
-		 * "img" name:BitmapData<br/>
-		 * "sound" name:Sound<br/>
-		 * "bin" name:ByteArray
+		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
+		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
+		 * "amf" key是name返回:Object<br/>
+		 * "xml" key是name返回:XML<br/>
+		 * "img" key是name返回:BitmapData<br/>
+		 * "sound" key是name返回:Sound<br/>
+		 * "bin" key是name返回:ByteArray
 		 */		
 		private function getRes(key:String):*
 		{
