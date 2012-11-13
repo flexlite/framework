@@ -33,7 +33,7 @@ package org.flexlite.domDll.core
 		 */		
 		function hasRes(name:String):Boolean;
 		/**
-		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
 		 * @param name 配置文件中加载项的name属性
 		 */		
 		function destroyRes(name:String):Boolean;

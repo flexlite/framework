@@ -160,6 +160,8 @@ package org.flexlite.domDll.resolvers
 			if(swfDic[name])
 			{
 				var domain:ApplicationDomain = (swfDic[name] as Loader).contentLoaderInfo.applicationDomain;
+				if(domain==ApplicationDomain.currentDomain)
+					
 				for(var i:int=0;i<appDomainList.length>0;i++)
 				{
 					if(appDomainList[i]==domain)

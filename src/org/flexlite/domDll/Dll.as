@@ -3,6 +3,7 @@ package org.flexlite.domDll
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.Injector;
@@ -20,6 +21,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.SoundResolver;
 	import org.flexlite.domDll.resolvers.SwfResolver;
 	import org.flexlite.domDll.resolvers.XmlResolver;
+	import org.flexlite.domUtils.CRC32Util;
 	
 	use namespace dx_internal;
 	
@@ -106,7 +108,7 @@ package org.flexlite.domDll
 			return instance.isGroupLoaded(name);
 		}
 		/**
-		 * 同步方式获取资源。<br/>
+		 * 同步方式获取配置里的资源。<br/>
 		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
@@ -124,7 +126,7 @@ package org.flexlite.domDll
 			return instance.getRes(key);
 		}
 		/**
-		 * 异步方式获取资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
+		 * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
@@ -135,7 +137,21 @@ package org.flexlite.domDll
 			instance.getResAsync(key,compFunc,other);
 		}
 		/**
-		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * 通过URL方式获取外部资源。<br/>
+		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
+		 * @param url 要加载文件的外部路径。
+		 * @param type 文件类型。请使用DllItem类中定义的静态常量。
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
+		 */		
+		public static function getResByUrl(url:String,type:String,compFunc:Function,other:Object=null):void
+		{
+			instance.getResByUrl(url,type,compFunc,other);
+		}
+		/**
+		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
+		 * 注意：Dll通常是只缓存文件字节流数据(占内存很少),而解码后的对像采用的是动态缓存，
+		 * 在外部引用都断开时能自动回收,所以不需要显式销毁它们。
 		 * @param name 配置文件中加载项的name属性
 		 */
 		public static function destroyRes(name:String):Boolean
@@ -320,7 +336,7 @@ package org.flexlite.domDll
 		}
 		
 		/**
-		 * 同步方式获取资源。<br/>
+		 * 同步方式获取配置里的资源。<br/>
 		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
@@ -347,7 +363,7 @@ package org.flexlite.domDll
 		 */		
 		private var asyncDic:Dictionary = new Dictionary;
 		/**
-		 * 异步方式获取资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
+		 * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
@@ -355,7 +371,7 @@ package org.flexlite.domDll
 		 */		
 		private function getResAsync(key:String,compFunc:Function,other:Object=null):void
 		{
-			if(compFunc==null||!key)
+			if(compFunc==null)
 				return;
 			var type:String = dllConfig.getType(key);
 			if(type=="")
@@ -390,6 +406,70 @@ package org.flexlite.domDll
 					dllLoader.loadItem(dllItem);
 				}
 			}
+		}
+		/**
+		 * 统计同一个外部资源请求计数的字典
+		 */		
+		private var outResNameDic:Dictionary = new Dictionary();
+		/**
+		 * 通过URL方式获取外部资源。<br/>
+		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
+		 * @param url 要加载文件的外部路径。
+		 * @param type 文件类型。请使用DllItem类中定义的静态常量。
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
+		 */		
+		private function getResByUrl(url:String,type:String,compFunc:Function,other:Object=null):void
+		{
+			if(compFunc==null)
+				return;
+			if(!url||!type)
+			{
+				doCompFunc(compFunc,null,other);
+				return;
+			}
+			var resolver:IResolver = getResolverByType(type);
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeUTF(url+type);
+			var name:String = "URLRES__"+CRC32Util.getCRC32(bytes).toString(36);
+
+			var args:Object = {key:name,compFunc:onUrlComp,
+				other:{name:name,type:type,compFunc:compFunc,other:other}};
+			if(outResNameDic[name])
+				outResNameDic[name]++;
+			else
+				outResNameDic[name] = 1;
+			if(asyncDic[name])
+			{
+				asyncDic[name].push(args);
+			}
+			else
+			{
+				asyncDic[name] = [args];
+				var dllItem:DllItem = dllConfig.parseDllItem({name:name,url:url,type:type,size:0});
+				dllItem.compFunc = onDllItemComp;
+				dllLoader.loadItem(dllItem);
+			}
+		}
+		/**
+		 * 通过URL方式加载的资源完成
+		 */		
+		private function onUrlComp(data:*,args:Object):void
+		{
+			var other:Object = args.other;
+			var compFunc:Function = args.compFunc;
+			var name:String = args.name;
+			outResNameDic[name]--;
+			if(outResNameDic[name]==0)
+			{
+				delete outResNameDic[name];
+				var resolver:IResolver = getResolverByType(args.type);
+				resolver.destroyRes(name);
+			}
+			if(other)
+				compFunc(data,other);
+			else 
+				compFunc(data);
 		}
 		/**
 		 * 执行回调函数
@@ -427,7 +507,9 @@ package org.flexlite.domDll
 			}
 		}
 		/**
-		 * 销毁某个资源文件的缓存数据,返回是否删除成功。
+		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
+		 * 注意：Dll通常是只缓存文件字节流数据(占内存很少),而解码后的对像采用的是动态缓存，
+		 * 在外部引用都断开时能自动回收,所以不需要显式销毁它们。
 		 * @param name 配置文件中加载项的name属性
 		 */
 		public function destroyRes(name:String):Boolean

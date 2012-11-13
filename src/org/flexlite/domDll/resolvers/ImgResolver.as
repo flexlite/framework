@@ -96,12 +96,12 @@ package org.flexlite.domDll.resolvers
 				bitmapData= (loader.content as Bitmap).bitmapData;
 			}
 			catch(e:Error){}
+			sharedMap.set(key,bitmapData);
 			for each(var func:Function in compFuncList)
 			{
 				if(func!=null)
 					func(bitmapData);
 			}
-			sharedMap.set(key,bitmapData);
 		}
 	}
 }

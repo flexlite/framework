@@ -37,6 +37,7 @@ package org.flexlite.domDll.core
 		{
 			super();
 			this.thread = thread;
+			currentLoadList = lazyLoadList;
 		}
 		
 		private var _inGroupLoading:Boolean;
@@ -56,7 +57,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 当前正在加载的队列
 		 */		
-		private var currentLoadList:Vector.<DllItem> = lazyLoadList;
+		private var currentLoadList:Vector.<DllItem>;
 		/**
 		 * 当前队列总文件大小
 		 */		

@@ -184,7 +184,7 @@ package org.flexlite.domDll.core
 		/**
 		 * 转换Object数据为DllItem对象
 		 */		
-		private function parseDllItem(data:Object):DllItem
+		public function parseDllItem(data:Object):DllItem
 		{
 			var url:String = data.url;
 			if(version)
