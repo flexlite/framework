@@ -17,7 +17,8 @@ package org.flexlite.domDll.resolvers
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**
-	 * SWF文件解析器
+	 * SWF文件解析器<br/>
+	 * 在IOS下将swf加载到当前程序域。其他平台默认加载到子程序域。
 	 * @author DOM
 	 */
 	public class SwfResolver implements IResolver

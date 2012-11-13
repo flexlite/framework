@@ -1,17 +1,12 @@
 package org.flexlite.domDll.resolvers
 {
 	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	
-	import org.flexlite.domDll.core.IResolver;
-	import org.flexlite.domUtils.SharedMap;
-	
-	
 	/**
-	 * 二进制序列化对象解析器
+	 * 二进制序列化对象解析器<br/>
+	 * 将调用ByteArray.writeObject()方法序列化的二进制文件，解析为Object对象。
 	 * @author DOM
 	 */
-	public class AmfResolver extends ResolverBase
+	public class AmfResolver extends BinResolver
 	{
 		/**
 		 * 构造函数
@@ -31,11 +26,6 @@ package org.flexlite.domDll.resolvers
 			var bytes:ByteArray = fileDic[key];
 			if(!bytes)
 				return null;
-			try
-			{
-				bytes.uncompress();
-			}
-			catch(e:Error){}
 			var data:Object = null;
 			try
 			{

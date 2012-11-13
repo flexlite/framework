@@ -9,7 +9,7 @@ package org.flexlite.domDll.resolvers
 	 * DXR文件解析器
 	 * @author DOM
 	 */
-	public class DxrResolver extends ResolverBase
+	public class DxrResolver extends BinResolver
 	{
 		public function DxrResolver()
 		{
@@ -21,6 +21,7 @@ package org.flexlite.domDll.resolvers
 		 */
 		override protected function cacheFileBytes(bytes:ByteArray,name:String):void
 		{
+			super.cacheFileBytes(bytes,name);
 			fileDic[name] = new DxrFile(bytes,name);
 		}
 		

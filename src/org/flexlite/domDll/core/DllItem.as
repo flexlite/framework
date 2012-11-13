@@ -10,7 +10,7 @@ package org.flexlite.domDll.core
 	public class DllItem
 	{
 		/**
-		 * SWF文件 
+		 * SWF文件
 		 */		
 		public static const TYPE_SWF:String = "swf";
 		/** 

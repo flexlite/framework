@@ -6,7 +6,7 @@ package org.flexlite.domDll.resolvers
 	 * XML文件解析器
 	 * @author DOM
 	 */
-	public class XmlResolver extends ResolverBase
+	public class XmlResolver extends BinResolver
 	{
 		/**
 		 * 构造函数
@@ -26,11 +26,6 @@ package org.flexlite.domDll.resolvers
 			var bytes:ByteArray = fileDic[key];
 			if(!bytes)
 				return null;
-			try
-			{
-				bytes.uncompress();
-			}
-			catch(e:Error){}
 			bytes.position = 0;
 			var resultStr:String = bytes.readUTFBytes(bytes.length);
 			var xml:XML
