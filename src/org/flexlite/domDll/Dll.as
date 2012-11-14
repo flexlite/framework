@@ -108,6 +108,14 @@ package org.flexlite.domDll
 			return instance.isGroupLoaded(name);
 		}
 		/**
+		 * 检查配置文件里是否含有指定的资源
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 */		
+		public static function hasKey(key:String):Boolean
+		{
+			return instance.hasKey(key);
+		}
+		/**
 		 * 同步方式获取配置里的资源。<br/>
 		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
@@ -333,6 +341,14 @@ package org.flexlite.domDll
 			}
 			dispatchEvent(dllEvent);
 			loadNextGroup();
+		}
+		/**
+		 * 检查配置文件里是否含有指定的资源
+		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 */		
+		private function hasKey(key:String):Boolean
+		{
+			return dllConfig.getType(key)!="";
 		}
 		
 		/**
