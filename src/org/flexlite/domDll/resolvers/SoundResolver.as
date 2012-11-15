@@ -5,6 +5,7 @@ package org.flexlite.domDll.resolvers
 	import flash.events.ProgressEvent;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
@@ -55,7 +56,12 @@ package org.flexlite.domDll.resolvers
 			dllItemDic[loader] = {item:dllItem,func:compFunc,progress:progressFunc};
 			loader.load(new URLRequest(dllItem.url));
 		}
-		
+		/**
+		 * 此方法无效,Sound在低版本的Flash Player上不能通过字节流加载。
+		 */
+		public function loadBytes(bytes:ByteArray,name:String):void
+		{
+		}
 		/**
 		 * 加载进度事件
 		 */		

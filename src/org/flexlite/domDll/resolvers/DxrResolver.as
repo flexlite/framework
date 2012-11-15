@@ -19,9 +19,15 @@ package org.flexlite.domDll.resolvers
 		/**
 		 * @inheritDoc
 		 */
-		override protected function cacheFileBytes(bytes:ByteArray,name:String):void
+		override public function loadBytes(bytes:ByteArray,name:String):void
 		{
-			super.cacheFileBytes(bytes,name);
+			if(fileDic[name]||!bytes)
+				return;
+			try
+			{
+				bytes.uncompress();
+			}
+			catch(e:Error){}
 			fileDic[name] = new DxrFile(bytes,name);
 		}
 		

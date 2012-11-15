@@ -101,18 +101,17 @@ package org.flexlite.domDll.resolvers
 			dllItem.loaded = (event.type==Event.COMPLETE);
 			if(dllItem.loaded)
 			{
-				if(!fileDic[dllItem.name])
-				{
-					cacheFileBytes(loader.data,dllItem.name);
-				}
+				loadBytes(loader.data,dllItem.name);
 			}
 			compFunc(dllItem);
 		}
 		/**
-		 * 缓存加载到的文件字节流
-		 */		
-		protected function cacheFileBytes(bytes:ByteArray,name:String):void
+		 * @inheritDoc
+		 */
+		public function loadBytes(bytes:ByteArray,name:String):void
 		{
+			if(fileDic[name]||!bytes)
+				return;
 			try
 			{
 				bytes.uncompress();

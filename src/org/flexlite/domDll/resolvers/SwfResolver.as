@@ -9,6 +9,7 @@ package org.flexlite.domDll.resolvers
 	import flash.system.ApplicationDomain;
 	import flash.system.Capabilities;
 	import flash.system.LoaderContext;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domDll.core.DllItem;
@@ -114,6 +115,33 @@ package org.flexlite.domDll.resolvers
 			compFunc(dllItem);
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
+		public function loadBytes(bytes:ByteArray,name:String):void
+		{
+			if(swfDic[name]||!bytes)
+				return;
+			try
+			{
+				bytes.uncompress();
+			}
+			catch(e:Error){}
+			var loader:Loader=new Loader();    
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bytesComplete); 
+			swfDic[name] = loader;
+			loader.loadBytes(bytes);
+		}
+		/**
+		 * 解析完成
+		 */		
+		private function bytesComplete(event:Event):void
+		{
+			var loader:Loader = (event.target as LoaderInfo).loader;
+			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bytesComplete); 
+			if(!inIOS)
+				appDomainList.push(loader.contentLoaderInfo.applicationDomain);
+		}
 		/**
 		 * @inheritDoc
 		 */

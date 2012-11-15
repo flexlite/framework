@@ -17,6 +17,12 @@ package org.flexlite.domDll.core
 		 */			
 		function loadFile(dllItem:DllItem,compFunc:Function,onProgress:Function):void;
 		/**
+		 * 通过字节流解析并缓存一个资源文件
+		 * @param bytes 资源文件字节流
+		 * @param name 配置文件中加载项的name属性
+		 */
+		function loadBytes(bytes:ByteArray,name:String):void
+		/**
 		 * 同步方式获取解析完成的数据
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */

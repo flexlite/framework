@@ -37,6 +37,10 @@ package org.flexlite.domDll.core
 		 * 声音文件
 		 */		
 		public static const TYPE_SOUND:String = "sound";
+		/**
+		 * 组资源文件
+		 */		
+		public static const TYPE_GROUP:String = "group";
 		
 		/**
 		 * 构造函数
