@@ -38,9 +38,9 @@ package org.flexlite.domDll.core
 		 */		
 		public static const TYPE_SOUND:String = "sound";
 		/**
-		 * 组资源文件
+		 * 组资源文件,多种类型文件打包合并成的文件。
 		 */		
-		public static const TYPE_GROUP:String = "group";
+		public static const TYPE_GRP:String = "grp";
 		
 		/**
 		 * 构造函数

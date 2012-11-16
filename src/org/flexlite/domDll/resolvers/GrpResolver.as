@@ -11,12 +11,12 @@ package org.flexlite.domDll.resolvers
 	 * 为了避免零碎文件造成的加载时间过长，可将预加载的资源组合并成一个字节流文件，通过此类加载并分拆。
 	 * @author DOM
 	 */
-	public class GroupResolver extends BinResolver
+	public class GrpResolver extends BinResolver
 	{
 		/**
 		 * 构造函数
 		 */		
-		public function GroupResolver()
+		public function GrpResolver()
 		{
 			super();
 		}

@@ -17,6 +17,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.AmfResolver;
 	import org.flexlite.domDll.resolvers.BinResolver;
 	import org.flexlite.domDll.resolvers.DxrResolver;
+	import org.flexlite.domDll.resolvers.GrpResolver;
 	import org.flexlite.domDll.resolvers.ImgResolver;
 	import org.flexlite.domDll.resolvers.SoundResolver;
 	import org.flexlite.domDll.resolvers.SwfResolver;
@@ -205,6 +206,8 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,SwfResolver,DllItem.TYPE_SWF);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_DXR))
 				Injector.mapClass(IResolver,DxrResolver,DllItem.TYPE_DXR);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_GRP))
+				Injector.mapClass(IResolver,GrpResolver,DllItem.TYPE_GRP);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SOUND))
 				Injector.mapClass(IResolver,SoundResolver,DllItem.TYPE_SOUND);
 			dllLoader = new DllLoader();
@@ -447,7 +450,7 @@ package org.flexlite.domDll
 			var resolver:IResolver = getResolverByType(type);
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTF(url+type);
-			var name:String = "URLRES__"+CRC32Util.getCRC32(bytes).toString(36);
+			var name:String = "URLRES__"+CRC32Util.getCRC32(bytes).toString(36).toUpperCase();
 
 			var args:Object = {key:name,compFunc:onUrlComp,
 				other:{name:name,type:type,compFunc:compFunc,other:other}};
