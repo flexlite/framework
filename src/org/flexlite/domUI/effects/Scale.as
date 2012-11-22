@@ -139,8 +139,8 @@ package org.flexlite.domUI.effects
 			var index:int = 0;
 			for each(var target:Object in _targets)
 			{
-				target["x"] = animation.currentValue["x"+index];
-				target["y"] = animation.currentValue["y"+index];
+				target["x"] = Math.round(animation.currentValue["x"+index]);
+				target["y"] = Math.round(animation.currentValue["y"+index]);
 				target["scaleX"] = animation.currentValue["scaleX"+index];
 				target["scaleY"] = animation.currentValue["scaleY"+index];
 				index++;

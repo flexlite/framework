@@ -101,8 +101,9 @@ package org.flexlite.domUI.effects
 			var index:int = 0;
 			for each(var target:Object in _targets)
 			{
-				target["x"] = animation.currentValue["x"+index];
-				target["y"] = animation.currentValue["y"+index];
+				trace("this.x:"+target.x,"this.y:"+target.y);
+				target["x"] = Math.round(animation.currentValue["x"+index]);
+				target["y"] = Math.round(animation.currentValue["y"+index]);
 				index++;
 			}
 		}
