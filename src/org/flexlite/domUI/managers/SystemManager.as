@@ -524,12 +524,7 @@ package org.flexlite.domUI.managers
 		}
 		dx_internal function raw_setElementIndex(element:IVisualElement, index:int):void
 		{
-			var oldIndex:int = super.getElementIndex(element);
-			if (oldIndex == index)
-				return;
-			
-			super.removeElementAt(oldIndex);
-			super.addElementAt(element, index);
+			super.setElementIndex(element,index);
 		}
 		dx_internal function raw_swapElements(element1:IVisualElement, element2:IVisualElement):void
 		{

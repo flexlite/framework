@@ -1,6 +1,5 @@
 package org.flexlite.domUI.managers.impl
 {
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domUI.components.Rect;
@@ -8,6 +7,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.ElementExistenceEvent;
 
 	[ExcludeClass]
 	
@@ -60,7 +60,7 @@ package org.flexlite.domUI.managers.impl
 			if(data)
 			{
 				data.modal = modal;
-				popUp.removeEventListener(Event.REMOVED,onRemoved);
+				popUp.removeEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
 			}
 			else
 			{
@@ -77,13 +77,13 @@ package org.flexlite.domUI.managers.impl
 			{
 				updateModal();
 			}
-			popUp.addEventListener(Event.REMOVED,onRemoved);
+			popUp.addEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
 		}
 		
 		/**
 		 * 从舞台移除
 		 */		
-		private function onRemoved(event:Event):void
+		private function onRemoved(event:ElementExistenceEvent):void
 		{
 			var index:int = 0;
 			for each(var data:PopUpData in popUpDataList)
@@ -92,7 +92,7 @@ package org.flexlite.domUI.managers.impl
 				{
 					if(data.popUp is IUIComponent)
 						IUIComponent(data.popUp).isPopUp = false;
-					data.popUp.removeEventListener(Event.REMOVED,onRemoved);
+					data.popUp.removeEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
 					popUpDataList.splice(index,1);
 					_popUpList.splice(index,1);
 					updateModal();
@@ -193,9 +193,7 @@ package org.flexlite.domUI.managers.impl
 			if(data&&popUp.parent)
 			{
 				var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-				popUp.removeEventListener(Event.REMOVED,onRemoved);
 				popUpContainer.setElementIndex(popUp,popUpContainer.numElements-1);
-				popUp.addEventListener(Event.REMOVED,onRemoved);
 				updateModal();
 			}
 		}

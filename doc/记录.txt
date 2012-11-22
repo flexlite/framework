@@ -21,8 +21,6 @@
 3.飘文字组件
 2.DragManager
 53.给ComboBox，DropDownList增加弹出特效
-11.PopUpManager需重新设计。
-12.各种Manager都改成可以由项目注入的。
 54.Tree
 55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
 56.用非可视化组件基类，虚拟化Skin和UIAsset
