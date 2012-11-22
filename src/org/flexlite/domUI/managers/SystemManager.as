@@ -84,6 +84,16 @@ package org.flexlite.domUI.managers
 			onResize();
 		}
 		/**
+		 * @inheritDoc
+		 */
+		override public function addEventListener(type:String, listener:Function,
+												useCapture:Boolean = false,
+												priority:int = 0,
+												useWeakReference:Boolean = true/*将弱引用的默认值改成true*/):void
+		{
+			super.addEventListener(type,listener,useCapture,priority,useWeakReference);
+		}
+		/**
 		 * 屏蔽FP原始的焦点处理过程
 		 */		
 		private function mouseFocusChangeHandler(event:FocusEvent):void

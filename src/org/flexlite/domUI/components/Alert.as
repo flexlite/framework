@@ -38,7 +38,7 @@ package org.flexlite.domUI.components
 		 */		
 		public static function show(text:String="",title:String="",closeHandler:Function=null,
 									firstButtonLabel:String="确定",secondButtonLabel:String="",
-									modal:Boolean=true):Alert
+									modal:Boolean=true,center:Boolean=true):Alert
 		{
 			var alert:Alert = new Alert();
 			alert.contentText = text;

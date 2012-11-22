@@ -5,6 +5,7 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.PopUpEvent;
 	import org.flexlite.domUI.managers.impl.PopUpManagerImpl;
 	
 	use namespace dx_internal;
@@ -56,6 +57,7 @@ package org.flexlite.domUI.managers
 		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,center:Boolean=true):void
 		{
 			impl.addPopUp(popUp,modal,center);
+			impl.dispatchEvent(new PopUpEvent(PopUpEvent.ADD_POPUP,false,false,popUp,modal));
 		}
 		
 		/**
@@ -65,6 +67,7 @@ package org.flexlite.domUI.managers
 		public static function removePopUp(popUp:IVisualElement):void
 		{
 			impl.removePopUp(popUp);
+			impl.dispatchEvent(new PopUpEvent(PopUpEvent.REMOVE_POPUP,false,false,popUp));
 		}
 		
 		/**
@@ -83,6 +86,28 @@ package org.flexlite.domUI.managers
 		public static function bringToFront(popUp:IVisualElement):void
 		{
 			impl.bringToFront(popUp);
+			impl.dispatchEvent(new PopUpEvent(PopUpEvent.BRING_TO_FRONT,false,false,popUp));
+		}
+		
+		/**
+		 * 添加事件监听,参考PopUpEvent定义的常量。
+		 * @see org.flexlite.domUI.events.PopUpEvent
+		 */		
+		public static function addEventListener(type:String, listener:Function,
+												useCapture:Boolean = false,
+												priority:int = 0,
+												useWeakReference:Boolean = true):void
+		{
+			impl.addEventListener(type,listener,useCapture,priority,useWeakReference);
+		}
+		/**
+		 * 移除事件监听,参考PopUpEvent定义的常量。
+		 * @see org.flexlite.domUI.events.PopUpEvent
+		 */	
+		public static function removeEventListener(type:String, listener:Function,
+															useCapture:Boolean = false):void
+		{
+			impl.removeEventListener(type,listener,useCapture);
 		}
 	}
 }

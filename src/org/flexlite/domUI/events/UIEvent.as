@@ -59,6 +59,5 @@ package org.flexlite.domUI.events
 		 * 下拉框关闭事件
 		 */		
 		public static const CLOSE:String = "close";
-		
 	}
 }

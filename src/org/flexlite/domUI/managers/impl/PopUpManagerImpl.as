@@ -3,16 +3,11 @@ package org.flexlite.domUI.managers.impl
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
-	import mx.managers.PopUpData;
-	
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Rect;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.events.ElementExistenceEvent;
-	import org.flexlite.domUI.managers.SystemManager;
 
 	[ExcludeClass]
 	
@@ -20,7 +15,7 @@ package org.flexlite.domUI.managers.impl
 	 * 窗口弹出管理器实现类
 	 * @author DOM
 	 */
-	public class PopUpManagerImpl
+	public class PopUpManagerImpl extends EventDispatcher
 	{
 		/**
 		 * 构造函数
