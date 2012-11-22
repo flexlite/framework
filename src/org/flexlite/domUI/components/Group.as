@@ -371,11 +371,18 @@ package org.flexlite.domUI.components
 		{
 			checkForRangeError(index);
 			
-			if (getElementIndex(element) == index)
+			var oldIndex:int = getElementIndex(element);
+			if (oldIndex==-1||oldIndex == index)
 				return;
 			
-			removeElement(element);
-			addElementAt(element, index);
+			if (!elementsContentChanged)
+				elementRemoved(element, oldIndex, false);
+			
+			_elementsContent.splice(oldIndex, 1);
+			_elementsContent.splice(index, 0, element);
+			
+			if (!elementsContentChanged)
+				elementAdded(element, index, false);
 		}
 		/**
 		 * @inheritDoc

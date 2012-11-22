@@ -71,7 +71,7 @@ package org.flexlite.domUI.managers
 				stage.align = StageAlign.TOP_LEFT;
 				stage.stageFocusRect=false;
 			}
-			DomGlobals.systemManager = this;
+			DomGlobals._systemManager = this;
 			stage.addEventListener(Event.RESIZE,onResize);
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
@@ -377,14 +377,6 @@ package org.flexlite.domUI.managers
 		//==========================================================================
 		//                                复写容器操作方法
 		//==========================================================================
-		/**
-		 * @inheritDoc
-		 */
-		override public function get numElements():int
-		{
-			return _noTopMostIndex;
-		}
-		
 		/**
 		 * @inheritDoc
 		 */

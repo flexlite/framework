@@ -18,6 +18,7 @@ package org.flexlite.domUI.components
 		public function Rect()
 		{
 			super();
+			mouseChildren = false;
 		}
 		
 		private var _color:uint = 0xFFFFFF;

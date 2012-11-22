@@ -1,11 +1,9 @@
 package org.flexlite.domUI.effects
 {
-	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
-	import org.flexlite.domUI.layouts.HorizontalLayout;
-	import org.flexlite.domUI.layouts.VerticalLayout;
+	import org.flexlite.domUI.effects.supportClasses.MovableEffect;
 
 	use namespace dx_internal;
 	
@@ -13,7 +11,7 @@ package org.flexlite.domUI.effects
 	 * 移动特效
 	 * @author DOM
 	 */
-	public class Move extends Effect
+	public class Move extends MovableEffect
 	{
 		/**
 		 * 构造函数
@@ -71,75 +69,28 @@ package org.flexlite.domUI.effects
 			var motionPaths:Vector.<MotionPath> = new Vector.<MotionPath>;
 			for each(var target:Object in _targets)
 			{
-				if(xCanMove(target))
-				{
-					if(xFromUseTarget)
-						xStart = target["x"];
-					if(xToUseTarget)
-						xEnd = target["x"];
-					else if(xToSet)
-						xEnd = xTo;
-					else
-						xEnd = xStart+xBy;
-					motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
-				}
+				if(xFromUseTarget)
+					xStart = target["x"];
+				if(xToUseTarget)
+					xEnd = target["x"];
+				else if(xToSet)
+					xEnd = xTo;
+				else
+					xEnd = xStart+xBy;
+				motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
 				
-				if(yCanMove(target))
-				{
-					if(yFromUseTarget)
-						yStart = target["y"];
-					if(xToUseTarget)
-						yEnd = target["y"];
-					else if(yToSet)
-						yEnd = yTo;
-					else
-						yEnd = yStart+yBy;
-					motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
-				}
+				if(yFromUseTarget)
+					yStart = target["y"];
+				if(xToUseTarget)
+					yEnd = target["y"];
+				else if(yToSet)
+					yEnd = yTo;
+				else
+					yEnd = yStart+yBy;
+				motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
 				index++;
 			}
 			return motionPaths;
-		}
-		
-		/**
-		 * 检查目标对象的x坐标是否可以移动
-		 */		
-		private static function xCanMove(target:Object):Boolean
-		{
-			if(target is ILayoutElement)
-			{
-				var element:ILayoutElement = target as ILayoutElement;
-				if(!isNaN(element.left)||!isNaN(element.right))
-					return false;
-			}
-			return checkParentLayout(target);
-		}
-		/**
-		 * 检查目标对象的y坐标是否可以移动
-		 */		
-		private static function yCanMove(target:Object):Boolean
-		{
-			if(target is ILayoutElement)
-			{
-				var element:ILayoutElement = target as ILayoutElement;
-				if(!isNaN(element.top)||!isNaN(element.bottom))
-					return false;
-			}
-			return checkParentLayout(target);
-		}
-		/**
-		 * 检查父级容器是否含有非基本布局
-		 */		
-		private static function checkParentLayout(target:Object):Boolean
-		{
-			if(target.hasOwnProperty("parent")&&target["parent"]&&
-				target["parent"].hasOwnProperty("layout"))
-			{
-				var layout:Object = target["parent"]["layout"];
-				if(layout is HorizontalLayout||layout is VerticalLayout)
-					return false;
-			}
-			return true;
 		}
 		
 		/**
@@ -150,12 +101,8 @@ package org.flexlite.domUI.effects
 			var index:int = 0;
 			for each(var target:Object in _targets)
 			{
-				var x:Number = animation.currentValue["x"+index];
-				if(!isNaN(x))
-					target["x"] = x;
-				var y:Number = animation.currentValue["y"+index];
-				if(!isNaN(y))
-					target["y"] = y;
+				target["x"] = animation.currentValue["x"+index];
+				target["y"] = animation.currentValue["y"+index];
 				index++;
 			}
 		}

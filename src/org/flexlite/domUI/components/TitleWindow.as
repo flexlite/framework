@@ -8,9 +8,10 @@ package org.flexlite.domUI.components
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
-	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.events.CloseEvent;
+	import org.flexlite.domUI.utils.LayoutUtil;
 	
 	use namespace dx_internal;
 	
@@ -103,7 +104,7 @@ package org.flexlite.domUI.components
 			{
 				offsetX = event.stageX - x;
 				offsetY = event.stageY - y;
-				
+				includeInLayout = false;
 				DomGlobals.stage.addEventListener(
 					MouseEvent.MOUSE_MOVE, moveArea_mouseMoveHandler);
 				DomGlobals.stage.addEventListener(
@@ -134,6 +135,8 @@ package org.flexlite.domUI.components
 				Event.MOUSE_LEAVE, moveArea_mouseUpHandler);
 			offsetX = NaN;
 			offsetY = NaN;
+			LayoutUtil.adjustRelativeByXY(this);
+			includeInLayout = true;
 		}
 	}
 }

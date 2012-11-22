@@ -1,4 +1,4 @@
-package org.flexlite.domUI.effects
+package org.flexlite.domUI.effects.supportClasses
 {
 	import flash.events.EventDispatcher;
 	
@@ -235,6 +235,8 @@ package org.flexlite.domUI.effects
 			{
 				this.targets = targets;
 			}
+			if(!this.targets)
+				return;
 			animator.motionPaths = createMotionPath();
 			animator.play();
 		}
@@ -261,6 +263,8 @@ package org.flexlite.domUI.effects
 		 */
 		public function reverse():void
 		{
+			if(!this.targets)
+				return;
 			animator.reverse();
 		}
 		/**

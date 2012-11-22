@@ -193,26 +193,18 @@ package org.flexlite.domUI.effects.animation
 		{
 			return _isReverse;
 		}
-
 		
 		/**
-		 * 开始反向播放动画,若动画已经在播放中，则从当前位置开始反向播放。
+		 * 仅当动画已经在播放中时有效，从当前位置开始沿motionPaths定义的路径反向播放。
 		 */		
 		public function reverse():void
 		{
-			var oldReverse:Boolean = _isReverse;
+			if(_isReverse||!_isPlaying)
+				return;
 			_isReverse = true;
-			if(!started)
-			{
-				start();
-			}
-			else if(!oldReverse&&_isPlaying)
-			{
-				var runningTime:Number = currentTime-startTime-_startDelay;
-				runningTime = Math.min(runningTime,duration);
-				
-				seek(duration - runningTime);
-			}
+			var runningTime:Number = currentTime-startTime-_startDelay;
+			runningTime = Math.min(runningTime,duration);
+			seek(duration - runningTime);
 		}
 		
 		/**
@@ -379,8 +371,6 @@ package org.flexlite.domUI.effects.animation
 				playedTimes++;
 				_isPlaying = false;
 				startTime =  currentTime;
-				if(endFunction!=null)
-					endFunction(this);
 				if(_repeatCount==0||playedTimes<_repeatCount)
 				{
 					if(_repeatBehavior=="reverse")
@@ -395,6 +385,10 @@ package org.flexlite.domUI.effects.animation
 					started = false;
 					playedTimes = 0;
 				}
+			}
+			if(isEnded&&endFunction!=null)
+			{
+				endFunction(this);
 			}
 			return isEnded;
 		}

@@ -1,18 +1,18 @@
 package org.flexlite.domUI.managers.impl
 {
-	import flash.display.Graphics;
 	import flash.events.Event;
-	import flash.utils.Dictionary;
+	import flash.events.EventDispatcher;
 	
+	import mx.managers.PopUpData;
+	
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.Rect;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
-	import org.flexlite.domUI.core.IEffect;
-	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.events.EffectEvent;
-	import org.flexlite.domUI.utils.callLater;
+	import org.flexlite.domUI.events.ElementExistenceEvent;
+	import org.flexlite.domUI.managers.SystemManager;
 
 	[ExcludeClass]
 	
@@ -22,424 +22,191 @@ package org.flexlite.domUI.managers.impl
 	 */
 	public class PopUpManagerImpl
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function PopUpManagerImpl()
 		{
 		}
 		
 		/**
-		 * 优先级队列
+		 * 模态窗口列表
 		 */		
-		private var priorityQueue:Array = [];
+		private var popUpList:Vector.<PopUpData> = new Vector.<PopUpData>();
 		/**
-		 * 插入数据到优先级队列
+		 * 根据popUp获取对应的popUpData
 		 */		
-		private function insert(data:PopUpData):void
+		private function findPopUpData(popUp:IVisualElement):PopUpData
+		{
+			for each(var data:PopUpData in popUpList)
+			{
+				if(data.popUp==popUp)
+					return data;
+			}
+			return null;
+		}
+		/**
+		 * 弹出一个窗口。<br/>
+		 * @param popUp 要弹出的窗口
+		 * @param modal 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
+		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+		 */		
+		public function addPopUp(popUp:IVisualElement,modal:Boolean=false,center:Boolean=true):void
+		{
+			var data:PopUpData = findPopUpData(popUp);
+			if(data)
+			{
+				data.modal = modal;
+				popUp.removeEventListener(Event.REMOVED,onRemoved);
+			}
+			else
+			{
+				data = new PopUpData(popUp,modal);
+				popUpList.push(data);
+			}
+			if(center)
+				centerPopUp(popUp);
+			DomGlobals.systemManager.popUpContainer.addElement(popUp);
+			if(popUp is IUIComponent)
+				IUIComponent(popUp).isPopUp = true;
+			if(modal)
+			{
+				updateModal();
+			}
+			popUp.addEventListener(Event.REMOVED,onRemoved);
+		}
+		
+		/**
+		 * 从舞台移除
+		 */		
+		private function onRemoved(event:Event):void
 		{
 			var index:int = 0;
-			if(priorityQueue.length>0)
+			for each(var data:PopUpData in popUpList)
 			{
-				index = findIndexAt(data.priority,0,priorityQueue.length-1);
-				var priority:int = priorityQueue[index][0].priority;
-				if(data.priority<priority)
+				if(data.popUp==event.target)
 				{
-					priorityQueue.splice(index,0,new Vector.<PopUpData>());
+					if(data.popUp is IUIComponent)
+						IUIComponent(data.popUp).isPopUp = false;
+					data.popUp.removeEventListener(Event.REMOVED,onRemoved);
+					popUpList.splice(index,1);
+					updateModal();
+					break;
 				}
-				else if(data.priority>priority)
-				{
-					index++;
-					priorityQueue.splice(index,0,new Vector.<PopUpData>());
-				}
+				index++;
 			}
-			else
-			{
-				priorityQueue.push(new Vector.<PopUpData>());
-			}
-			priorityQueue[index].push(data);
 		}
+		
+		private var _modalMask:IVisualElement;
 		/**
-		 * 折半查找法查询插入的索引,返回大于等于priority的第一个索引
-		 */		
-		private function findIndexAt(priority:int,i0:int,i1:int):int
+		 * 模态遮罩层对象。若不设置，默认创建一个填充色为白色，透明度0.5的Rect对象作为模态遮罩。
+		 */
+		public function get modalMask():IVisualElement
 		{
-			if(i0==i1)
-				return i0;
-			var index:int = Math.floor((i0 + i1)*0.5);
-			var p:int = priorityQueue[index][0].priority;
-			
-			if(priority==p)
-				return index;
-			else if (priority<p)
-				return findIndexAt(priority, i0, Math.max(i0, index-1));
-			else 
-				return findIndexAt(priority, Math.min(index+1, i1), i1);
+			return _modalMask;
 		}
-		/**
-		 * 从优先级队列移除数据
-		 */		
-		private function remove(data:PopUpData):void
+		public function set modalMask(value:IVisualElement):void
 		{
-			if(priorityQueue.length==0)
+			if(_modalMask==value)
 				return;
-			var index:int = findIndexAt(data.priority,0,priorityQueue.length-1);
-			var priority:int = priorityQueue[index][0].priority;
-			if(data.priority==priority)
+			if(_modalMask&&_modalMask.parent)
+				DomGlobals.systemManager.popUpContainer.removeElement(_modalMask);
+			_modalMask = value;
+			if(_modalMask)
 			{
-				var list:Vector.<PopUpData> = priorityQueue[index];
-				var dataIndex:int = list.indexOf(data);
-				list.splice(dataIndex,1);
-				if(list.length==0)
-					priorityQueue.splice(index,1);
+				_modalMask.percentHeight = _modalMask.percentWidth = NaN;
+				_modalMask.top = _modalMask.bottom = _modalMask.left = _modalMask.right = 0;
+				DomGlobals.systemManager.popUpContainer.addElement(_modalMask);
 			}
-		}
-		
-		private var popUpDataDic:Dictionary = new Dictionary;
-		/**
-		 * 当前显示的窗口数据列表
-		 */		
-		private var _currentPopUps:Vector.<PopUpData> = new Vector.<PopUpData>;
-		/**
-		 * 返回当前弹出并显示的窗口列表
-		 */		
-		public function get currentPopUps():Array
-		{
-			var arr:Array = [];
-			for each(var data:PopUpData in _currentPopUps)
-			{
-				arr.push(data.popUp);
-			}
-			return arr;
-		}
-		
-		private var resizeEventAttached:Boolean = false;
-		/**
-		 * 弹出一个窗口,请调用 removePopUp()来移除使用 addPopUp()方法弹出的窗口。<br/>
-		 * 注意：弹出层禁用了自动布局功能。所有相对位置属性在弹出层都是无效的。只能通过设置x,y绝对坐标来控制位置。
-		 * @param popUp 要弹出的窗口显示对象
-		 * @param modal 是否启用模态。禁用弹出层以下的鼠标事件。默认false。
-		 * @param center 是否居中窗口。默认true。
-		 * @param exclusive 是否独占。若为true，它总是不与任何窗口共存。当弹出时，将隐藏层级在它后面的所有窗口。
-		 * 若有层级在它前面的窗口弹出，无论新窗口是否独占，都将它和它后面的窗口全部隐藏。默认为false。
-		 * @param priority 弹出优先级。优先级高的窗口显示层级在低的前面。同一优先级的窗口，后添加的窗口层级在前面。
-		 * @param popUpEffect 窗口弹出时要播放的动画特效。
-		 */		
-		public function addPopUp(popUp:IVisualElement,modal:Boolean = false,center:Boolean=true,
-										exclusive:Boolean=false,priority:int=0,
-										popUpEffect:IEffect=null):void
-		{
-			var popUpData:PopUpData;
-			if(popUpDataDic[popUp]!=null)
-			{
-				popUpData = popUpDataDic[popUp];
-				popUpData.modal = modal;
-				popUpData.center = center;
-				popUpData.exclusive = exclusive;
-				popUpData.priority = priority;
-				popUpData.popUpEffect = popUpEffect;
-				remove(popUpData);
-			}
-			else
-			{
-				popUpData = new PopUpData(popUp,modal,center,exclusive,priority,popUpEffect);
-				popUpDataDic[popUp] = popUpData;
-			}
-			
-			if(popUp is IUIComponent)
-				(popUp as IUIComponent).isPopUp = true;
-			insert(popUpData);
-			updateCurrentPopUps();
-			if(!resizeEventAttached)
-			{
-				resizeEventAttached = true;
-				DomGlobals.stage.addEventListener(Event.RESIZE,onStageResize);
-			}
-		}
-		
-		/**
-		 * 舞台尺寸改变,重绘遮罩层。
-		 */		
-		private function onStageResize(event:Event=null):void
-		{
-			if(modalAttached)
-				updateModalSize();
-			for each(var data:PopUpData in _currentPopUps)
-			{
-				if(data.center&&lastCenterPopUps.indexOf(data.popUp)==-1)
-				{
-					setOnePopUpCenter(data.popUp)
-				}
-			}
-			updateCenterPopUps();
-		}
-		
-		/**
-		 * 模态层
-		 */		
-		private var modalLayer:UIComponent;
-		/**
-		 * 遮罩层已经添加的标志 
-		 */		
-		private var modalAttached:Boolean = false;
-		/**
-		 * 更新模态层的大小
-		 */		
-		private function updateModalSize():void
-		{
-			var g:Graphics = modalLayer.graphics;
-			g.clear();
-			g.beginFill(0xFFFFFF,0);
-			g.drawRect(0,0,DomGlobals.stage.stageWidth,DomGlobals.stage.stageHeight);
-			g.endFill();
+			updateModal();
 		}
 
+		
 		/**
-		 * 更新当前的窗口打开项
+		 * 更新窗口模态效果
 		 */		
-		private function updateCurrentPopUps():void
+		private function updateModal():void
 		{
-			var popUps:Vector.<PopUpData> = getCurrentPopUps();
 			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-			for each(var data:PopUpData in _currentPopUps)
+			if(!modalMask)
 			{
-				if(popUps.indexOf(data)==-1)
+				_modalMask = new Rect();
+				_modalMask.alpha = 0.5;
+				_modalMask.top = _modalMask.left = _modalMask.right = _modalMask.bottom = 0;
+				popUpContainer.addElement(_modalMask);
+			}
+			var found:Boolean = false;
+			for(var i:int = popUpContainer.numElements-1;i>=0;i--)
+			{
+				var element:IVisualElement = popUpContainer.getElementAt(i);
+				var data:PopUpData = findPopUpData(element);
+				if(data&&data.modal)
 				{
-					if(data.popUp.parent)
-						popUpContainer.removeElement(data.popUp);
+					found = true;
+					break;
 				}
 			}
-			var needModal:Boolean = false;
-			for each(data in popUps)
+			if(found)
 			{
-				popUpContainer.addElement(data.popUp);
-				if(data.center&&
-					lastCenterPopUps.indexOf(data.popUp)==-1)
-				{
-					setOnePopUpCenter(data.popUp)
-				}
-				if(data.popUpEffect&&_currentPopUps.indexOf(data)==-1)
-				{
-					showEffect(data.popUp,data.popUpEffect);
-				}
-				if(!needModal&&data.modal)
-					needModal = true;
+				if(popUpContainer.getElementIndex(modalMask)<i)
+					i--;
+				popUpContainer.setElementIndex(modalMask,i);
 			}
-			updateCenterPopUps();
-			_currentPopUps = popUps;
-			if(needModal==modalAttached)
-				return;
-			if(needModal)
-			{
-				if(!modalLayer)
-				{
-					modalLayer = new UIComponent();
-				}
-				popUpContainer.addElementAt(modalLayer,0);
-				updateModalSize();
-				modalAttached = true;
-			}
-			else
-			{
-				popUpContainer.removeElement(modalLayer);
-				modalAttached = false;
-			}
+			modalMask.visible = found;
 		}
 		
-		/**
-		 * 居中一个popUp
-		 */		
-		private function setOnePopUpCenter(popUp:IVisualElement):void
-		{
-			if(popUp is IInvalidating&&(popUp as IInvalidating).invalidateFlag)
-				(popUp as IInvalidating).validateNow();
-			popUp.x = (DomGlobals.stage.stageWidth-popUp.layoutBoundsWidth)*0.5;
-			popUp.y = (DomGlobals.stage.stageHeight-popUp.layoutBoundsHeight)*0.5;
-		}
-		/**
-		 * 播放动画特效
-		 */		
-		private function showEffect(popUp:IVisualElement,effect:IEffect):void
-		{
-			popUp.visible = false;
-			callLater(function():void{
-				effect.addEventListener(EffectEvent.EFFECT_START,onEffectStart);
-				effect.play([popUp]);
-			});
-		}
-		/**
-		 * 动画开始播放
-		 */		
-		private function onEffectStart(event:EffectEvent):void
-		{
-			var effect:IEffect = event.target as IEffect;
-			effect.removeEventListener(EffectEvent.EFFECT_START,onEffectStart);
-			(effect.target as IVisualElement).visible = true;
-		}
-		
-		/**
-		 * 获取当前应该弹出的窗口列表
-		 */		
-		private function getCurrentPopUps():Vector.<PopUpData>
-		{
-			var returnArr:Vector.<PopUpData> = new Vector.<PopUpData>();
-			if(priorityQueue.length==0)
-				return returnArr;
-			var isFirst:Boolean = true;
-			
-			for(var i:int=priorityQueue.length-1;i>=0;i--)
-			{
-				var list:Vector.<PopUpData> = priorityQueue[i];
-				for(var j:int=list.length-1;j>=0;j--)
-				{
-					if(isFirst)
-					{
-						returnArr.splice(0,0,list[j]);
-						if(list[j].exclusive)
-							return returnArr;
-						isFirst = false;
-					}
-					else if(list[j].exclusive)
-					{
-						return returnArr;
-					}
-					else
-					{
-						returnArr.splice(0,0,list[j]);
-					}
-				}
-			}
-			return returnArr;
-		}
-		/**
-		 * 上一次居中的窗口列表
-		 */		
-		private var lastCenterPopUps:Array=[];
-		private var centerGap:Number = 5;
-		private var centerOffsetX:Number;
-		private var centerOffsetY:Number;
-		/**
-		 * 设置指定的窗口位置居中。若窗口为多个，则将按水平排列窗口，并使其整体居中。
-		 * @param popUps 要居中显示的窗口列表
-		 * @param gap 若窗口为多个，此值为水平排列时的间隔
-		 * @param offsetX 整体水平位置偏移量
-		 * @param offsetY 整体竖直位置偏移量
-		 */
-		public function centerPopUps(popUps:Array,gap:Number=5,offsetX:Number=0,offsetY:Number=0):void
-		{
-			if(!popUps)
-				popUps = [];
-			lastCenterPopUps = popUps.concat();
-			centerGap = gap;
-			centerOffsetX = offsetX;
-			centerOffsetY = offsetY;
-			updateCenterPopUps();
-		}
-		/**
-		 * 更新当前的居中窗口队列
-		 */		
-		private function updateCenterPopUps():void
-		{
-			if(lastCenterPopUps.length==0)
-				return;
-			var popUp:IVisualElement;
-			var maxWidth:Number = 0;
-			for each(popUp in lastCenterPopUps)
-			{
-				if(!popUp.parent)
-					continue;
-				if((popUp is IInvalidating)&&(popUp as IInvalidating).invalidateFlag)
-					(popUp as IInvalidating).validateNow();
-				maxWidth += popUp.layoutBoundsWidth;
-			}
-			maxWidth += centerGap*lastCenterPopUps.length-1;
-			var startX:Number = (DomGlobals.stage.stageWidth-maxWidth)*0.5;
-			var layerHeight:Number = DomGlobals.stage.stageHeight;
-			var layerWidth:Number = DomGlobals.stage.stageWidth;
-			
-			for each(popUp in lastCenterPopUps)
-			{
-				if(!popUp.parent)
-					continue;
-				var w:Number = popUp.layoutBoundsWidth;
-				var h:Number = popUp.layoutBoundsHeight;
-				popUp.x = startX;
-				if(popUp.x+w>layerWidth)
-					popUp.x = layerWidth-w;
-				if(popUp.x<0)
-					popUp.x = 0;
-				startX += popUp.layoutBoundsWidth+centerGap;
-				popUp.y = (layerHeight-popUp.layoutBoundsHeight)*0.5;
-				if(popUp.y+h>layerHeight)
-					popUp.y = layerHeight-h;
-				if(popUp.y<0)
-					popUp.y = 0;
-			}
-		}
 		/**
 		 * 移除由addPopUp()方法弹出的窗口。
 		 * @param popUp 要移除的窗口
 		 */		
 		public function removePopUp(popUp:IVisualElement):void
 		{
-			var data:PopUpData = popUpDataDic[popUp];
-			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-			if(data)
+			if(popUp && popUp.parent&&findPopUpData(popUp))
 			{
-				delete popUpDataDic[popUp];
-				remove(data);
-				if(data.popUp is IUIComponent)
-					(data.popUp as IUIComponent).isPopUp = false;
-				var index:int = lastCenterPopUps.indexOf(data.popUp);
-				if(index!=-1)
-				{
-					lastCenterPopUps.splice(index,1);
-				}
-				updateCurrentPopUps();	
+				DomGlobals.systemManager.popUpContainer.removeElement(popUp);
+			}
+		}
+		
+		/**
+		 * 将指定窗口居中显示
+		 * @param popUp 要居中显示的窗口
+		 */
+		public function centerPopUp(popUp:IVisualElement):void
+		{
+			popUp.percentHeight = popUp.percentWidth = NaN;
+			popUp.top = popUp.bottom = popUp.left = popUp.right = NaN;
+			popUp.verticalCenter = popUp.horizontalCenter = 0;
+		}
+		
+		/**
+		 * 将指定窗口的层级调至最前
+		 * @param popUp 要最前显示的窗口
+		 */		
+		public function bringToFront(popUp:IVisualElement):void
+		{
+			var data:PopUpData = findPopUpData(popUp);
+			if(data&&popUp.parent)
+			{
+				var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
+				popUp.removeEventListener(Event.REMOVED,onRemoved);
+				popUpContainer.setElementIndex(popUp,popUpContainer.numElements-1);
+				popUp.addEventListener(Event.REMOVED,onRemoved);
+				updateModal();
 			}
 		}
 	}
 }
-
-
-import org.flexlite.domUI.core.IEffect;
 import org.flexlite.domUI.core.IVisualElement;
 
-/**
- * 弹出数据
- * @author DOM
- */
 class PopUpData
 {
-	public function PopUpData(popUp:IVisualElement,modal:Boolean,center:Boolean,
-							  exclusive:Boolean,priority:int,popUpEffect:IEffect)
+	public function PopUpData(popUp:IVisualElement,modal:Boolean)
 	{
 		this.popUp = popUp;
 		this.modal = modal;
-		this.center = center;
-		this.exclusive = exclusive;
-		this.priority = priority;
-		this.popUpEffect = popUpEffect;
 	}
-	/**
-	 * 弹出窗口
-	 */	
+	
 	public var popUp:IVisualElement;
-	/**
-	 * 是否启用模态
-	 */	
+	
 	public var modal:Boolean;
-	/**
-	 * 窗口居中
-	 */	
-	public var center:Boolean;
-	/**
-	 * 是否独占
-	 */	
-	public var exclusive:Boolean;
-	/**
-	 * 优先级
-	 */	
-	public var priority:int;
-	/**
-	 * 窗口弹出时要播放的特效
-	 */	
-	public var popUpEffect:IEffect;
 }

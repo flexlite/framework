@@ -1,18 +1,16 @@
 package org.flexlite.domUI.effects
 {
-	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
-	import org.flexlite.domUI.layouts.HorizontalLayout;
-	import org.flexlite.domUI.layouts.VerticalLayout;
+	import org.flexlite.domUI.effects.supportClasses.MovableEffect;
 
 	use namespace dx_internal;
 	/**
 	 * 缩放特效
 	 * @author DOM
 	 */
-	public class Scale extends Effect
+	public class Scale extends MovableEffect
 	{
 		/**
 		 * 构造函数
@@ -85,94 +83,52 @@ package org.flexlite.domUI.effects
 			var motionPaths:Vector.<MotionPath> = new Vector.<MotionPath>;
 			for each(var target:Object in _targets)
 			{
-				var result:Array = checkCanScale(target);
-				if(result[1])
+				if(scaleXFromUseTarget)
+					scaleXStart = target["scaleX"];
+				if(scaleXToUseTarget)
+					scaleXEnd = target["scaleX"];
+				else if(scaleXToSet)
+					scaleXEnd = scaleXTo;
+				else
+					scaleXEnd = scaleXStart+scaleXBy;
+				motionPaths.push(new MotionPath("scaleX"+index,scaleXStart,scaleXEnd));
+				
+				if(scaleYFromUseTarget)
+					scaleYStart = target["scaleY"];
+				if(scaleXToUseTarget)
+					scaleYEnd = target["scaleY"];
+				else if(scaleYToSet)
+					scaleYEnd = scaleYTo;
+				else
+					scaleYEnd = scaleYStart+scaleYBy;
+				motionPaths.push(new MotionPath("scaleY"+index,scaleYStart,scaleYEnd));
+				
+				if(originXSet)
+					orgX = originX;
+				else
+					orgX = target["width"]*0.5;
+				if(orgX!=0&&!isNaN(orgX))
 				{
-					if(scaleXFromUseTarget)
-						scaleXStart = target["scaleX"];
-					if(scaleXToUseTarget)
-						scaleXEnd = target["scaleX"];
-					else if(scaleXToSet)
-						scaleXEnd = scaleXTo;
-					else
-						scaleXEnd = scaleXStart+scaleXBy;
-					motionPaths.push(new MotionPath("scaleX"+index,scaleXStart,scaleXEnd));
+					var targetX:Number = target["x"]+(target["scaleX"]-1)*orgX;
+					var xStart:Number = targetX+(1-scaleXStart)*orgX;
+					var xEnd:Number = targetX+(1-scaleXEnd)*orgX;
+					motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
 				}
 				
-				if(result[3])
+				if(originYSet)
+					orgY = originY;
+				else
+					orgY = target["height"]*0.5;
+				if(orgY!=0&&!isNaN(orgY))
 				{
-					if(scaleYFromUseTarget)
-						scaleYStart = target["scaleY"];
-					if(scaleXToUseTarget)
-						scaleYEnd = target["scaleY"];
-					else if(scaleYToSet)
-						scaleYEnd = scaleYTo;
-					else
-						scaleYEnd = scaleYStart+scaleYBy;
-					motionPaths.push(new MotionPath("scaleY"+index,scaleYStart,scaleYEnd));
-				}
-				
-				if(result[0])
-				{
-					if(originXSet)
-						orgX = originX;
-					else
-						orgX = target["width"]*0.5;
-					if(orgX!=0&&!isNaN(orgX))
-					{
-						var targetX:Number = target["x"]+(target["scaleX"]-1)*orgX;
-						var xStart:Number = targetX+(1-scaleXStart)*orgX;
-						var xEnd:Number = targetX+(1-scaleXEnd)*orgX;
-						motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
-					}
-				}
-				
-				if(result[3])
-				{
-					if(originYSet)
-						orgY = originY;
-					else
-						orgY = target["height"]*0.5;
-					if(orgY!=0&&!isNaN(orgY))
-					{
-						var targetY:Number = target["y"]+(target["scaleY"]-1)*orgY;
-						var yStart:Number = targetY+(1-scaleYStart)*orgY;
-						var yEnd:Number = targetY+(1-scaleYEnd)*orgY;
-						motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
-					}
+					var targetY:Number = target["y"]+(target["scaleY"]-1)*orgY;
+					var yStart:Number = targetY+(1-scaleYStart)*orgY;
+					var yEnd:Number = targetY+(1-scaleYEnd)*orgY;
+					motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
 				}
 				index++;
 			}
 			return motionPaths;
-		}
-		/**
-		 * 检查对象是否可以缩放,返回一个数组:[x是否可以移动，x是否可以缩放，y是否可以移动，y是否可以缩放]
-		 */		
-		private function checkCanScale(target:Object):Array
-		{
-			var result:Array = [true,true,true,true];
-			
-			if(target is ILayoutElement)
-			{
-				var element:ILayoutElement = target as ILayoutElement;
-				result[0] = (isNaN(element.left)&&isNaN(element.right));
-				result[1] = (isNaN(element.left)||isNaN(element.right));
-				result[2] = (isNaN(element.top)&&isNaN(element.bottom));
-				result[3] = (isNaN(element.top)||isNaN(element.bottom));
-			}
-			if(!result[0]&&!result[2])
-				return result;
-			if(target.hasOwnProperty("parent")&&target["parent"]&&
-				target["parent"].hasOwnProperty("layout"))
-			{
-				var layout:Object = target["parent"]["layout"];
-				if(layout is HorizontalLayout||layout is VerticalLayout)
-				{
-					result[0] = false;
-					result[2] = false;
-				}
-			}
-			return result;
 		}
 		
 		/**
@@ -183,18 +139,10 @@ package org.flexlite.domUI.effects
 			var index:int = 0;
 			for each(var target:Object in _targets)
 			{
-				var x:Number = animation.currentValue["x"+index];
-				if(!isNaN(x))
-					target["x"] = x;
-				var y:Number = animation.currentValue["y"+index];
-				if(!isNaN(y))
-					target["y"] = y;
-				var scaleX:Number = animation.currentValue["scaleX"+index];
-				if(!isNaN(scaleX))
-					target["scaleX"] = scaleX;
-				var scaleY:Number = animation.currentValue["scaleY"+index];
-				if(!isNaN(scaleY))
-					target["scaleY"] = scaleY;
+				target["x"] = animation.currentValue["x"+index];
+				target["y"] = animation.currentValue["y"+index];
+				target["scaleX"] = animation.currentValue["scaleX"+index];
+				target["scaleY"] = animation.currentValue["scaleY"+index];
 				index++;
 			}
 		}

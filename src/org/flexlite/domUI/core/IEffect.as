@@ -40,7 +40,7 @@ package org.flexlite.domUI.core
 		 */	
 		function play(targets:Array=null):void;
 		/**
-		 * 开始反向播放动画,若动画已经在播放中，则从当前位置开始反向播放。
+		 * 仅当动画已经在播放中时有效，从当前位置开始沿motionPaths定义的路径反向播放。
 		 */	
 		function reverse():void;
 		/**
