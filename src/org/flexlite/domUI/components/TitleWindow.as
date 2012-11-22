@@ -11,6 +11,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.events.CloseEvent;
+	import org.flexlite.domUI.managers.PopUpManager;
 	import org.flexlite.domUI.utils.LayoutUtil;
 	
 	use namespace dx_internal;
@@ -32,6 +33,17 @@ package org.flexlite.domUI.components
 		public function TitleWindow()
 		{
 			super();
+			this.addEventListener(MouseEvent.MOUSE_DOWN,onWindowMouseDown);
+		}
+		/**
+		 * 在窗体上按下时前置窗口
+		 */		
+		private function onWindowMouseDown(event:MouseEvent):void
+		{
+			if(enabled&&isPopUp)
+			{
+				PopUpManager.bringToFront(this);
+			}
 		}
 		
 		/**
