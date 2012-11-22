@@ -31,6 +31,8 @@ package org.flexlite.domUI.events
 									modal:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
+			this.popUp = popUp;
+			this.modal = modal;
 		}
 		/**
 		 * 弹出框对象

@@ -24,16 +24,24 @@ package org.flexlite.domUI.managers.impl
 		{
 		}
 		
+		private var _popUpList:Array = [];
+		/**
+		 * 已经弹出的窗口列表
+		 */		
+		public function get popUpList():Array
+		{
+			return _popUpList.concat();
+		}
 		/**
 		 * 模态窗口列表
 		 */		
-		private var popUpList:Vector.<PopUpData> = new Vector.<PopUpData>();
+		private var popUpDataList:Vector.<PopUpData> = new Vector.<PopUpData>();
 		/**
 		 * 根据popUp获取对应的popUpData
 		 */		
 		private function findPopUpData(popUp:IVisualElement):PopUpData
 		{
-			for each(var data:PopUpData in popUpList)
+			for each(var data:PopUpData in popUpDataList)
 			{
 				if(data.popUp==popUp)
 					return data;
@@ -57,7 +65,8 @@ package org.flexlite.domUI.managers.impl
 			else
 			{
 				data = new PopUpData(popUp,modal);
-				popUpList.push(data);
+				popUpDataList.push(data);
+				_popUpList.push(popUp);
 			}
 			if(center)
 				centerPopUp(popUp);
@@ -77,14 +86,15 @@ package org.flexlite.domUI.managers.impl
 		private function onRemoved(event:Event):void
 		{
 			var index:int = 0;
-			for each(var data:PopUpData in popUpList)
+			for each(var data:PopUpData in popUpDataList)
 			{
 				if(data.popUp==event.target)
 				{
 					if(data.popUp is IUIComponent)
 						IUIComponent(data.popUp).isPopUp = false;
 					data.popUp.removeEventListener(Event.REMOVED,onRemoved);
-					popUpList.splice(index,1);
+					popUpDataList.splice(index,1);
+					_popUpList.splice(index,1);
 					updateModal();
 					break;
 				}

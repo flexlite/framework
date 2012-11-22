@@ -88,6 +88,13 @@ package org.flexlite.domUI.managers
 			impl.bringToFront(popUp);
 			impl.dispatchEvent(new PopUpEvent(PopUpEvent.BRING_TO_FRONT,false,false,popUp));
 		}
+		/**
+		 * 已经弹出的窗口列表
+		 */		
+		public static function get popUpList():Array
+		{
+			return impl.popUpList;
+		}
 		
 		/**
 		 * 添加事件监听,参考PopUpEvent定义的常量。
