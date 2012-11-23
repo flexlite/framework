@@ -33,7 +33,7 @@ package org.flexlite.domUI.components
 		public function TitleWindow()
 		{
 			super();
-			this.addEventListener(MouseEvent.MOUSE_DOWN,onWindowMouseDown);
+			this.addEventListener(MouseEvent.MOUSE_DOWN,onWindowMouseDown,true,100);
 		}
 		/**
 		 * 在窗体上按下时前置窗口
