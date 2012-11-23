@@ -106,7 +106,7 @@ package org.flexlite.domUI.managers.impl
 		
 		private var _modalMask:IVisualElement;
 		/**
-		 * 模态遮罩层对象。若不设置，默认创建一个填充色为白色，透明度0.5的Rect对象作为模态遮罩。
+		 * 模态遮罩层对象。若不设置，默认创建一个填充色为黑色，透明度0.5的Rect对象作为模态遮罩。
 		 */
 		public function get modalMask():IVisualElement
 		{
@@ -140,6 +140,7 @@ package org.flexlite.domUI.managers.impl
 			if(!_modalMask)
 			{
 				_modalMask = new Rect();
+				(_modalMask as Rect).color = 0x000000;
 				_modalMask.alpha = 0.5;
 				_modalMask.top = _modalMask.left = _modalMask.right = _modalMask.bottom = 0;
 			}
