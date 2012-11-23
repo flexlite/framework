@@ -1,5 +1,6 @@
 package org.flexlite.domUI.managers.impl
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domUI.components.Rect;
@@ -7,7 +8,6 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.events.ElementExistenceEvent;
 
 	[ExcludeClass]
 	
@@ -48,6 +48,8 @@ package org.flexlite.domUI.managers.impl
 			}
 			return null;
 		}
+		
+		private static const REMOVE_FROM_SYSTEMMANAGER:String = "removeFromSystemManager";
 		/**
 		 * 弹出一个窗口。<br/>
 		 * @param popUp 要弹出的窗口
@@ -60,7 +62,7 @@ package org.flexlite.domUI.managers.impl
 			if(data)
 			{
 				data.modal = modal;
-				popUp.removeEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
+				popUp.removeEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 			}
 			else
 			{
@@ -77,13 +79,13 @@ package org.flexlite.domUI.managers.impl
 			{
 				updateModal();
 			}
-			popUp.addEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
+			popUp.addEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 		}
 		
 		/**
 		 * 从舞台移除
 		 */		
-		private function onRemoved(event:ElementExistenceEvent):void
+		private function onRemoved(event:Event):void
 		{
 			var index:int = 0;
 			for each(var data:PopUpData in popUpDataList)
@@ -92,7 +94,7 @@ package org.flexlite.domUI.managers.impl
 				{
 					if(data.popUp is IUIComponent)
 						IUIComponent(data.popUp).isPopUp = false;
-					data.popUp.removeEventListener(ElementExistenceEvent.ELEMENT_REMOVE,onRemoved);
+					data.popUp.removeEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 					popUpDataList.splice(index,1);
 					_popUpList.splice(index,1);
 					updateModal();

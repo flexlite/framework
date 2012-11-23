@@ -441,9 +441,6 @@ package org.flexlite.domUI.components
 				if (hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
 					dispatchEvent(new ElementExistenceEvent(
 						ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
-				if(element.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
-					element.dispatchEvent(new ElementExistenceEvent(
-						ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
 			}
 			
 			invalidateSize();
@@ -458,9 +455,6 @@ package org.flexlite.domUI.components
 			{        
 				if (hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
 					dispatchEvent(new ElementExistenceEvent(
-						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
-				if (element.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
-					element.dispatchEvent(new ElementExistenceEvent(
 						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
 			}
 			

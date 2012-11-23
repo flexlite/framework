@@ -21,6 +21,7 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
@@ -403,11 +404,27 @@ package org.flexlite.domUI.managers
 		 */
 		override public function addElementAt(element:IVisualElement,index:int):IVisualElement
 		{
-			noTopMostIndex++;
+			if (element.parent==this)
+			{
+				var oldIndex:int = getElementIndex(element);
+				if(oldIndex<_noTopMostIndex)
+					noTopMostIndex--;
+				else if(oldIndex>=_noTopMostIndex&&oldIndex<_topMostIndex)
+					topMostIndex--;
+				else if(oldIndex>=_topMostIndex&&oldIndex<_toolTipIndex)
+					toolTipIndex--;
+				else 
+					cursorIndex--;
+			}
 			
-			var host:IVisualElementContainer = element.parent as IVisualElementContainer;
-			if (host)
-				host.removeElement(element);
+			if(index<=_noTopMostIndex)
+				noTopMostIndex++;
+			else if(index>_noTopMostIndex&&index<=_topMostIndex)
+				topMostIndex++;
+			else if(index>_topMostIndex&&index<=_toolTipIndex)
+				toolTipIndex++;
+			else 
+				cursorIndex++;
 			
 			return super.addElementAt(element,index);
 		}
@@ -425,6 +442,7 @@ package org.flexlite.domUI.managers
 		 */
 		override public function removeElementAt(index:int):IVisualElement
 		{
+			var element:IVisualElement = super.removeElementAt(index);
 			if(index<_noTopMostIndex)
 				noTopMostIndex--;
 			else if(index>=_noTopMostIndex&&index<_topMostIndex)
@@ -433,7 +451,7 @@ package org.flexlite.domUI.managers
 				toolTipIndex--;
 			else 
 				cursorIndex--;
-			return super.removeElementAt(index);
+			return element;
 		}
 		
 		/**
@@ -443,8 +461,8 @@ package org.flexlite.domUI.managers
 		{
 			while(_noTopMostIndex>0)
 			{
-				noTopMostIndex--;
 				super.removeElementAt(0);
+				noTopMostIndex--;
 			}
 		}
 
@@ -477,6 +495,16 @@ package org.flexlite.domUI.managers
 			return false;
 		}
 		
+		
+		override dx_internal function elementRemoved(element:IVisualElement, index:int, notifyListeners:Boolean=true):void
+		{
+			if(notifyListeners)
+			{
+				element.dispatchEvent(new Event("removeFromSystemManager"));
+			}
+			super.elementRemoved(element,index,notifyListeners);
+		}
+		
 		//==========================================================================
 		//                                保留容器原始操作方法
 		//==========================================================================
@@ -497,10 +525,18 @@ package org.flexlite.domUI.managers
 		}
 		dx_internal function raw_addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
-			var host:IVisualElementContainer = element.parent as IVisualElementContainer;
-			if (host)
-				host.removeElement(element);
-			
+			if (element.parent==this)
+			{
+				var oldIndex:int = getElementIndex(element);
+				if(oldIndex<_noTopMostIndex)
+					noTopMostIndex--;
+				else if(oldIndex>=_noTopMostIndex&&oldIndex<_topMostIndex)
+					topMostIndex--;
+				else if(oldIndex>=_topMostIndex&&oldIndex<_toolTipIndex)
+					toolTipIndex--;
+				else 
+					cursorIndex--;
+			}
 			return super.addElementAt(element,index);
 		}
 		dx_internal function raw_removeElement(element:IVisualElement):IVisualElement

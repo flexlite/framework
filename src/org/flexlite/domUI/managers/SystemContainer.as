@@ -87,8 +87,8 @@ package org.flexlite.domUI.managers
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				owner[upperBoundReference]--;
 				owner.raw_removeElement(element);
+				owner[upperBoundReference]--;
 			}
 			return element;
 		}
@@ -102,8 +102,8 @@ package org.flexlite.domUI.managers
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				owner[upperBoundReference]--;
 				element = owner.raw_removeElementAt(index);
+				owner[upperBoundReference]--;
 			}
 			return element;
 		}
