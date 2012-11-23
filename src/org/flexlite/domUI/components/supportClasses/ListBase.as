@@ -305,8 +305,6 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		override protected function commitProperties():void
 		{
-			var e:IndexChangeEvent; 
-			
 			super.commitProperties();
 			
 			if (dataProviderChanged)

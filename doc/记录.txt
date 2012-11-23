@@ -25,6 +25,6 @@
 55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
 56.用非可视化组件基类，虚拟化Skin和UIAsset
 57.Group和ViewStack容器要增加对非可视元素的兼容,防止索引报错。elementAdded(),elementRemoved().
-58.让ViewStack继承Group，TabNavigator继承TabBar
+58.让ViewStack继承Group，TabNavigator继承SkinnableContainer
 
 

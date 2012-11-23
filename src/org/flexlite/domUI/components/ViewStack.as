@@ -2,6 +2,7 @@ package org.flexlite.domUI.components
 {
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.layouts.BasicLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
@@ -9,6 +10,10 @@ package org.flexlite.domUI.components
 	
 	[DXML(show="true")]
 	
+	/**
+	 * 指示索引已更改  
+	 */	
+	[Event(name="change", type="org.flexlite.domUI.events.IndexChangeEvent")]
 	/**
 	 * 层级堆叠容器,一次只显示一个子对象。
 	 * @author DOM
@@ -89,10 +94,11 @@ package org.flexlite.domUI.components
 		/**
 		 * 设置选中项索引
 		 */		
-		dx_internal function setSelectedIndex(value:int):void
+		dx_internal function setSelectedIndex(value:int,notifyListeners:Boolean=true):void
 		{
 			if(_selectedIndex==value)
 				return;
+			var oldIndex:int = _selectedIndex;
 			if(value>=0&&value<numElements)
 			{
 				_selectedIndex = value;
@@ -102,11 +108,18 @@ package org.flexlite.domUI.components
 					_selectedChild.includeInLayout = false;
 				}
 				_selectedChild = getElementAt(_selectedIndex);
+				_selectedChild.visible = true;
+				_selectedChild.includeInLayout = true;
 			}
 			else
 			{
 				_selectedChild = null;
 				_selectedIndex = -1;
+			}
+			if(notifyListeners)
+			{
+				dispatchEvent(new IndexChangeEvent(IndexChangeEvent.CHANGE,
+					false,false,oldIndex,_selectedIndex));
 			}
 			invalidateSize();
 			invalidateDisplayList();
