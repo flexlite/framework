@@ -41,11 +41,11 @@ package org.flexlite.domUI.managers
 		 */
 		public static function get modalMask():IVisualElement
 		{
-			return _impl.modalMask;
+			return impl.modalMask;
 		}
 		public static function set modalMask(value:IVisualElement):void
 		{
-			_impl.modalMask = value;
+			impl.modalMask = value;
 		}
 		
 		/**

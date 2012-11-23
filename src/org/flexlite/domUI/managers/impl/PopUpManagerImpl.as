@@ -116,15 +116,17 @@ package org.flexlite.domUI.managers.impl
 		{
 			if(_modalMask==value)
 				return;
-			if(_modalMask&&_modalMask.parent)
-				DomGlobals.systemManager.popUpContainer.removeElement(_modalMask);
+			var oldModalMask:IVisualElement = _modalMask;
 			_modalMask = value;
 			if(_modalMask)
 			{
 				_modalMask.percentHeight = _modalMask.percentWidth = NaN;
 				_modalMask.top = _modalMask.bottom = _modalMask.left = _modalMask.right = 0;
-				DomGlobals.systemManager.popUpContainer.addElement(_modalMask);
 			}
+			if(!DomGlobals.systemManager)
+				return;
+			if(oldModalMask&&oldModalMask.parent==DomGlobals.systemManager)
+				DomGlobals.systemManager.popUpContainer.removeElement(oldModalMask);
 			updateModal();
 		}
 
@@ -135,13 +137,14 @@ package org.flexlite.domUI.managers.impl
 		private function updateModal():void
 		{
 			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-			if(!modalMask)
+			if(!_modalMask)
 			{
 				_modalMask = new Rect();
 				_modalMask.alpha = 0.5;
 				_modalMask.top = _modalMask.left = _modalMask.right = _modalMask.bottom = 0;
-				popUpContainer.addElement(_modalMask);
 			}
+			if(_modalMask.parent!=DomGlobals.systemManager)
+				popUpContainer.addElement(_modalMask);
 			var found:Boolean = false;
 			for(var i:int = popUpContainer.numElements-1;i>=0;i--)
 			{
