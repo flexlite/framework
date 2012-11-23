@@ -1,9 +1,9 @@
 package org.flexlite.domUI.components
 {
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
@@ -264,19 +264,17 @@ package org.flexlite.domUI.components
 		/**
 		 * 容器添加元素事件
 		 */		
-		private function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
+		dx_internal function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
 		{
 			event.element.owner = this
-			
 			dispatchEvent(event);
 		}
 		/**
 		 * 容器移除元素事件
 		 */		
-		private function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
+		dx_internal function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
 		{
 			event.element.owner = null;
-			
 			dispatchEvent(event);
 		}
 

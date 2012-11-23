@@ -14,7 +14,11 @@ package org.flexlite.domUI.core
 		 */		
 		function get owner():DisplayObjectContainer;
 		function set owner(value:DisplayObjectContainer):void;
-		
+		/**
+		 * 元素名称。此属性在TabNavigator里作为选项卡显示的字符串。
+		 */		
+		function get name():String;
+		function set name(value:String):void;
 		/**
 		 * 此组件的父容器或组件。
 		 * 只有可视元素应该具有 parent 属性。

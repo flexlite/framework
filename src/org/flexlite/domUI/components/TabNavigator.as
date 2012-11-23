@@ -1,13 +1,8 @@
 package org.flexlite.domUI.components
 {
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ArrayCollection;
-	import org.flexlite.domUI.core.INavigatorContent;
-	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.IndexChangeEvent;
 	
 	use namespace dx_internal;
@@ -16,12 +11,10 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * Tab导航容器。<br/>
-	 * 注意:虽然扩展自ViewStack，但此容器只接受实现了INavigatorContent的组件作为子项,
-	 * 非INavigatorContent子项将会被过滤并忽略。
-	 * @see org.flexlite.domUI.core.INavigatorContent
+	 * 使用子项的name属性作为选项卡上显示的字符串。
 	 * @author DOM
 	 */
-	public class TabNavigator extends ViewStack
+	public class TabNavigator extends SkinnableContainer
 	{
 		/**
 		 * 构造函数
@@ -31,38 +24,17 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
-		private var _tabBarSkinName:Object;
 		/**
-		 * tabBar的skinName属性值
+		 * [SkinPart]选项卡组件
 		 */
-		public function get tabBarSkinName():Object
-		{
-			return _tabBarSkinName;
-		}
-		public function set tabBarSkinName(value:Object):void
-		{
-			if(_tabBarSkinName==value)
-				return;
-			_tabBarSkinName = value;
-			if(tabBar)
-			{
-				tabBar.skinName = value;
-			}
-		}
-
-		private var _tabBar:TabBar;
+		public var tabBar:TabBar;
 		/**
-		 * TabBar组件的引用
-		 */
-		public function get tabBar():TabBar
-		{
-			return _tabBar;
-		}
-		/**
-		 * 内容区域
+		 * viewStack引用
 		 */		
-		private var content:UIComponent = new UIComponent;
-		
+		private function get viewStack():ViewStack
+		{
+			return contentGroup as ViewStack;
+		}
 		/**
 		 * TabBar数据源
 		 */		
@@ -70,143 +42,62 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */
-		override protected function createChildren():void
+		override protected function partAdded(partName:String, instance:Object):void
 		{
-			_tabBar = new TabBar();
-			_tabBar.skinName = _tabBarSkinName;
-			_tabBar.dataProvider = tabBarData;
-			_tabBar.addEventListener(IndexChangeEvent.CHANGE,onIndexChange);
-			addToDisplyListAt(_tabBar,0);
-			addToDisplyListAt(content,0);
-			super.createChildren();
-			
-			var elements:Array = getElementsContent();
-			for each(var element:INavigatorContent in elements)
+			super.partAdded(partName,instance);
+			if(instance==tabBar)
 			{
-				tabBarData.addItem(element.navigatorLabel);
+				tabBar.dataProvider = tabBarData;
+				tabBar.addEventListener(IndexChangeEvent.CHANGE,onIndexChange);
 			}
-			
+		}
+		
+		override protected function partRemoved(partName:String, instance:Object):void
+		{
+			super.partRemoved(partName,instance);
+			if(instance==tabBar)
+			{
+				tabBar.dataProvider = null;
+				tabBar.removeEventListener(IndexChangeEvent.CHANGE,onIndexChange);
+			}
 		}
 		/**
 		 * 选中项改变事件
 		 */		
 		private function onIndexChange(event:IndexChangeEvent):void
 		{
-			setSelectedIndex(event.newIndex);
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function setSelectedIndex(value:int):void
-		{
-			super.setSelectedIndex(value);
-			tabBar.selectedIndex = _selectedIndex;
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override public function set elementsContent(value:Array):void
-		{
-			if(value)
-			{
-				value = value.concat();
-				for(var i:int=0;i<value.length;i++)
-				{
-					if(!(value[i] is INavigatorContent))
-					{
-						value.splice(i,1);
-						i--
-					}
-				}
-			}
-			super.elementsContent = value;
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override public function addElementAt(element:IVisualElement,index:int):IVisualElement
-		{
-			if(!(element is INavigatorContent))
-				return element;
-			return super.addElementAt(element,index);
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override public function addElement(element:IVisualElement):IVisualElement
-		{
-			if(!(element is INavigatorContent))
-				return element;
-			return super.addElement(element);
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function elementAdded(element:IVisualElement,index:int):void
-		{
-			if(element is DisplayObject)
-				content.addChildAt(DisplayObject(element), index);
-			element.visible = false;
-			if(_selectedIndex==-1)
-				setSelectedIndex(0);
-			tabBarData.addItemAt((element as INavigatorContent).navigatorLabel,index);
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function elementRemoved(element:IVisualElement,index:int):void
-		{
-			if(element is DisplayObject)
-				content.addChildAt(DisplayObject(element), index);
-			element.visible = false;
-			if(_selectedIndex==-1)
-				setSelectedIndex(0);
-			tabBarData.removeItemAt(index);
-		}
-		
-		private var _gap:Number = 0;
-		/**
-		 * tabBar和内容区域的垂直间隔,默认值0。
-		 */
-		public function get gap():Number
-		{
-			return _gap;
-		}
-		public function set gap(value:Number):void
-		{
-			if(isNaN(value))
-				value = 0;
-			if(_gap==value)
-				return;
-			_gap = value;
-			invalidateSize();
-			invalidateDisplayList();
+			if(viewStack)
+				viewStack.selectedIndex = event.newIndex;
 		}
 
-		
 		/**
 		 * @inheritDoc
 		 */
-		override protected function measure():void
+		override dx_internal function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
 		{
-			super.measure();
-			if(_tabBar)
-			{
-				measuredWidth = Math.max(_tabBar.preferredWidth,measuredWidth);
-				measuredHeight += _tabBar.preferredHeight+_gap;
-			}
+			super.contentGroup_elementAddedHandler(event);
+			tabBarData.addItemAt(event.element.name,event.index);
 		}
 		/**
 		 * @inheritDoc
 		 */
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		override dx_internal function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
 		{
-			var offsetY:Number = _tabBar.layoutBoundsHeight+_gap;
-			unscaledHeight -= offsetY;
-			unscaledHeight = Math.max(0,unscaledHeight);
-			content.y = offsetY;
-			super.updateDisplayList(unscaledWidth,unscaledHeight);
+			super.contentGroup_elementRemovedHandler(event);
+			tabBarData.removeItemAt(event.index);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override dx_internal function createSkinParts():void
+		{
+		}
+		/**
+		 * @inheritDoc
+		 */
+		override dx_internal function removeSkinParts():void
+		{
 		}
 	}
 }

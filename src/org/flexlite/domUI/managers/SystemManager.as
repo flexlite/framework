@@ -1,6 +1,5 @@
 package org.flexlite.domUI.managers
 {
-	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -20,9 +19,6 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
-	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.events.ElementExistenceEvent;
-	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
 	
@@ -112,6 +108,7 @@ package org.flexlite.domUI.managers
 			}
 			event.preventDefault();
 		}
+		
 		/**
 		 * 当前的焦点对象。
 		 */		
@@ -272,8 +269,11 @@ package org.flexlite.domUI.managers
 		 * @inheritDoc
 		 */
 		override public function setLayoutBoundsSize(layoutWidth:Number, layoutHeight:Number):void{}
-		
-		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set name(value:String):void{}
+
 		private var _popUpContainer:SystemContainer;
 		/**
 		 * 弹出窗口层容器。

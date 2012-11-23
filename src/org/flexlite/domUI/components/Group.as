@@ -3,10 +3,10 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	
 	use namespace dx_internal;
@@ -170,7 +170,7 @@ package org.flexlite.domUI.components
 		/**
 		 * createChildren()方法已经执行过的标志
 		 */		
-		private var createChildrenCalled:Boolean = false;
+		dx_internal var createChildrenCalled:Boolean = false;
 		
 		/**
 		 * @inheritDoc
@@ -434,7 +434,7 @@ package org.flexlite.domUI.components
 		dx_internal function elementAdded(element:IVisualElement, index:int, notifyListeners:Boolean = true):void
 		{
 			if(element is DisplayObject)
-				addDisplayObjectToDisplayList(DisplayObject(element), index);
+				addToDisplayList(DisplayObject(element), index);
 			
 			if (notifyListeners)
 			{
@@ -471,7 +471,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 添加对象到显示列表
 		 */		
-		private function addDisplayObjectToDisplayList(child:DisplayObject, index:int = -1):void
+		final dx_internal function addToDisplayList(child:DisplayObject, index:int = -1):void
 		{
 			if (child.parent == this)
 				super.setChildIndex(child, index != -1 ? index : super.numChildren - 1);
