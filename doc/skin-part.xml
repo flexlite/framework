@@ -12,6 +12,12 @@
 		<skinpart>overSkin</skinpart>
 		<skinpart>downSkin</skinpart>
 	</component>
+	<component id="RadioButton">
+		<skinpart >labelDisplay</skinpart>
+		<skinpart>upSkin</skinpart>
+		<skinpart>overSkin</skinpart>
+		<skinpart>downSkin</skinpart>
+	</component>
 	<component id="ComboBox">
 		<skinpart>popUp</skinpart>
 		<skinpart type="TextInput">textInput</skinpart>
@@ -51,6 +57,10 @@
 	<component id="Panel">
 		<skinpart>titleDisplay</skinpart>
 		<skinpart>contentGroup</skinpart>
+	</component>
+	<component id="TabNavigator">
+		<skinpart>contentGroup</skinpart>
+		<skinpart type="TabBar">tabBar</skinpart>
 	</component>
 	<component id="Scroller">
 		<skinpart type="HScrollBar">horizontalScrollBar</skinpart>

@@ -16,6 +16,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
@@ -39,9 +40,14 @@ package org.flexlite.domUI.components.supportClasses
 	 */	
 	[Event(name="changing", type="org.flexlite.domUI.events.IndexChangeEvent")]
 	/**
-	 * 指示索引已更改  
+	 * 选中项改变事件。仅当用户与此控件交互时才抛出此事件。 
+	 * 以编程方式更改 selectedIndex 或 selectedItem 属性的值时，该控件并不抛出change事件，而是抛出valueCommit事件。
 	 */	
 	[Event(name="change", type="org.flexlite.domUI.events.IndexChangeEvent")]
+	/**
+	 * 属性提交事件
+	 */	
+	[Event(name="valueCommit", type="org.flexlite.domUI.events.UIEvent")]
 
 	[DXML(show="false")]
 	
@@ -350,8 +356,19 @@ package org.flexlite.domUI.components.supportClasses
 				_pendingSelectedItem = undefined;
 			}
 			
+			var changedSelection:Boolean = false;
 			if (_proposedSelectedIndex != NO_PROPOSED_SELECTION)
-				commitSelection();
+				changedSelection = commitSelection();
+			
+			if (selectedIndexAdjusted)
+			{
+				selectedIndexAdjusted = false;
+				if (!changedSelection)
+				{
+					dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+				}
+			}
+			
 			if(dispatchChangeAfterSelection)
 				dispatchChangeAfterSelection = false;
 			
@@ -565,11 +582,13 @@ package org.flexlite.domUI.components.supportClasses
 					dispatchEvent(e);
 					dispatchChangeAfterSelection = false;
 				}
+				dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
 			}
 			
 			return true;
 		}
 		
+		private var selectedIndexAdjusted:Boolean = false;
 		/**
 		 * 仅调整选中索引值而不更新选中项,即在提交属性阶段itemSelected方法不会被调用，也不会触发changing和change事件。
 		 * @param newIndex 新索引。
@@ -581,6 +600,7 @@ package org.flexlite.domUI.components.supportClasses
 				_proposedSelectedIndex = newIndex;
 			else
 				_selectedIndex = newIndex;
+			selectedIndexAdjusted = true;
 			invalidateProperties();
 		}
 		

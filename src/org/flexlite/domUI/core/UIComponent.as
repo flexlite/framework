@@ -910,7 +910,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * 更新显式列表
+		 * 更新显示列表
 		 */		
 		protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{

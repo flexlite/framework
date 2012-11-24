@@ -16,14 +16,14 @@
 
 6.考虑下是否让移动版本针对Starling封装，桌面版本由于有较多老PC，无法开启GPU加速，而且很长时间内都无法改变，所以继续保持传统显示列表+位图优化。
 8.为了保持后续版本有持续的向后兼容性，审查每一个public和protected方法，让对外暴露的接口数量最小化。
-9.优化整理Layout类大小。
-4.聊天用的图文混排组件
-3.飘文字组件
-2.DragManager
-53.给ComboBox，DropDownList增加弹出特效
-54.Tree,RadioButton
-55.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
-56.用非可视化组件基类，虚拟化Skin和UIAsset
-57.Group和ViewStack容器要增加对非可视元素的兼容,防止索引报错。elementAdded(),elementRemoved().
+13.聊天用的图文混排组件
+14.飘文字组件
+15.让素材支持LZMA的解压
+16.DragManager
+52.让TextBase直接继承TextField，减少嵌套层级，移除无用功能。
+53.用非可视化组件基类，虚拟化Skin和UIAsset
+54.优化整理Layout类大小。
+55.给ComboBox，DropDownList增加弹出特效
+57.Tree,RadioButton
 
 
