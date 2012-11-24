@@ -13,9 +13,9 @@ package org.flexlite.domUI.skins.vector
 	 * CheckBox默认皮肤
 	 * @author DOM
 	 */
-	public class CheckBoxSkin extends VectorSkin
+	public class RadioButtonSkin extends VectorSkin
 	{
-		public function CheckBoxSkin()
+		public function RadioButtonSkin()
 		{
 			super();
 			states = ["up","over","down","disabled","upAndSelected","overAndSelected"
@@ -65,25 +65,25 @@ package org.flexlite.domUI.skins.vector
 			var selectedColor:uint = 0xFFFFFF;
 			switch (currentState)
 			{
-				case "up":
 				case "upAndSelected":
+				case "up":
 				case "disabled":
 					drawCurrentState(0,startY,w,h,borderColors[0],bottomLineColors[0],
-						[fillColors[0],fillColors[1]]);
-					selectedColor = fillColors[4];
+						[fillColors[0],fillColors[1]],7);
 					selected = (currentState=="upAndSelected");
+					selectedColor = fillColors[4];
 					break;
 				case "over":
 				case "overAndSelected":
 					drawCurrentState(0,startY,w,h,borderColors[1],bottomLineColors[1],
-						[fillColors[2],fillColors[3]]);
+						[fillColors[2],fillColors[3]],7);
 					selected = (currentState!="over");
 					break;
 				case "down":
 				case "downAndSelected":
 				case "disabledAndSelected":
 					drawCurrentState(0,startY,w,h,borderColors[2],bottomLineColors[2],
-						[fillColors[4],fillColors[5]]);
+						[fillColors[4],fillColors[5]],7);
 					selected = (currentState!="down");
 					break;
 			}
@@ -92,15 +92,7 @@ package org.flexlite.domUI.skins.vector
 			{
 				g.lineStyle(0,0,0);
 				g.beginFill(selectedColor);
-				g.moveTo(3, startY+5);
-				g.lineTo(5, startY+10);
-				g.lineTo(7, startY+10);
-				g.lineTo(12, startY+2);
-				g.lineTo(13, startY+1);
-				g.lineTo(11, startY+1);
-				g.lineTo(6.5, startY+7);
-				g.lineTo(5, startY+5);
-				g.lineTo(3, startY+5);
+				g.drawCircle(7,startY+7,3);
 				g.endFill();
 			}
 			

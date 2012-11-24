@@ -25,6 +25,11 @@ package org.flexlite.domUI.components
 			super();
 			groupName = "radioGroup";
 		}
+		
+		override protected function get hostComponentKey():Object
+		{
+			return RadioButton;
+		}
 		/**
 		 * 在RadioButtonGroup中的索引
 		 */		
