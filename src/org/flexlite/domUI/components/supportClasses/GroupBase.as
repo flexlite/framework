@@ -449,5 +449,14 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			return visibleIndices;
 		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function set scrollRect(value:Rectangle):void
+		{
+			super.scrollRect = value;
+			if(hasEventListener("scrollRectChange"))
+				dispatchEvent(new Event("scrollRectChange"));
+		}
 	}
 }

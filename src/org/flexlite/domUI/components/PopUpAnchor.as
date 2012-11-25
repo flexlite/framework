@@ -4,12 +4,16 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IInvalidating;
+	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.effects.animation.Animation;
+	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.managers.PopUpManager;
 	import org.flexlite.domUI.utils.callLater;
 	
@@ -180,15 +184,109 @@ package org.flexlite.domUI.components
 			registrationPoint = localToGlobal(registrationPoint);
 			return registrationPoint;
 		}
+		
+		/**
+		 * 正在播放动画的标志
+		 */		
+		private var inAnimation:Boolean = false;
+		
+		private var _animator:Animation = null;
+		/**
+		 * 动画类实例
+		 */		
+		private function get animator():Animation
+		{
+			if (_animator)
+				return _animator;
+			_animator = new Animation(animationUpdateHandler);
+			_animator.endFunction = animationEndHandler;
+			_animator.startFunction = animationStartHandler;
+			return _animator;
+		}
+		
+		private var _openDuration:Number = 150;
+		/**
+		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值150。
+		 */
+		public function get openDuration():Number
+		{
+			return _openDuration;
+		}
+		
+		public function set openDuration(value:Number):void
+		{
+			_openDuration = value;
+		}
+		
+		private var _closeDuration:Number = 250;
+		/**
+		 * 窗口关闭的动画时间(以毫秒为单位)，设置为0则直接关闭窗口而不播放动画效果。默认值150。
+		 */
+		public function get closeDuration():Number
+		{
+			return _closeDuration;
+		}
+
+		public function set closeDuration(value:Number):void
+		{
+			_closeDuration = value;
+		}
+
+		/**
+		 * 动画开始播放触发的函数
+		 */		
+		private function animationStartHandler(animation:Animation):void
+		{
+			inAnimation = true;
+			popUp.addEventListener("scrollRectChange",onScrollRectChange);
+			if(popUp is IUIComponent)
+				IUIComponent(popUp).enabled = false;
+		}
+		/**
+		 * 防止外部修改popUp的scrollRect属性
+		 */		
+		private function onScrollRectChange(event:Event):void
+		{
+			if(inUpdating)
+				return;
+			inUpdating = true;
+			(popUp as DisplayObject).scrollRect = new Rectangle(animator.currentValue["x"],animator.currentValue["y"],
+				popUp.width, popUp.height);
+			inUpdating = false;
+		}
+		
+		private var inUpdating:Boolean = false;
+		/**
+		 * 动画播放过程中触发的更新数值函数
+		 */		
+		private function animationUpdateHandler(animation:Animation):void
+		{
+			inUpdating = true;
+			(popUp as DisplayObject).scrollRect = new Rectangle(animation.currentValue["x"],animation.currentValue["y"],
+				popUp.width, popUp.height);
+			inUpdating = false;
+		}
+		
+		/**
+		 * 动画播放完成触发的函数
+		 */		
+		private function animationEndHandler(animation:Animation):void
+		{
+			inAnimation = false;
+			popUp.removeEventListener("scrollRectChange",onScrollRectChange);
+			if(popUp is IUIComponent)
+				IUIComponent(popUp).enabled = true;
+			DisplayObject(popUp).scrollRect = null;
+			if(!popUpIsDisplayed)
+				PopUpManager.removePopUp(popUp);
+		}
+		
 		/**
 		 * 添加或移除popUp
 		 */		
 		private function addOrRemovePopUp():void
 		{
-			if (!addedToStage)
-				return;
-			
-			if (popUp == null)
+			if (!addedToStage||!popUp)
 				return;
 			
 			if (popUp.parent == null && displayPopUp)
@@ -196,7 +294,10 @@ package org.flexlite.domUI.components
 				PopUpManager.addPopUp(popUp,false,false);
 				popUp.owner = this;
 				popUpIsDisplayed = true;
-				applyPopUpTransform(width, height);
+				if(inAnimation)
+					animator.end();
+				if(initialized)
+					applyPopUpTransform(width, height);
 			}
 			else if (popUp.parent != null && !displayPopUp)
 			{
@@ -208,8 +309,17 @@ package org.flexlite.domUI.components
 		 */		
 		private function removeAndResetPopUp():void
 		{
-			PopUpManager.removePopUp(popUp);
+			if(inAnimation)
+				animator.end();
 			popUpIsDisplayed = false;
+			if(_closeDuration>0)
+			{
+				startAnimation();
+			}
+			else
+			{
+				PopUpManager.removePopUp(popUp);
+			}
 		}
 		/**
 		 * 对popUp应用尺寸和位置调整
@@ -232,6 +342,68 @@ package org.flexlite.domUI.components
 			var popUpPoint:Point = calculatePopUpPosition();
 			popUp.x = popUpPoint.x;
 			popUp.y = popUpPoint.y;
+			if(_openDuration>0)
+				startAnimation();
+		}
+		/**
+		 * 开始播放动画
+		 */		
+		private function startAnimation():void
+		{
+			if(popUpIsDisplayed)
+			{
+				animator.duration = _closeDuration;
+			}
+			else
+			{
+				animator.duration = _openDuration;
+			}
+			animator.motionPaths = createMotionPath();
+			animator.play();
+		}
+		/**
+		 * 创建动画轨迹
+		 */		
+		private function createMotionPath():Vector.<MotionPath>
+		{
+			var xPath:MotionPath = new MotionPath("x");
+			var yPath:MotionPath = new MotionPath("y");
+			var path:Vector.<MotionPath> = new <MotionPath>[xPath,yPath];
+			switch(_popUpPosition)
+			{
+				case PopUpPosition.TOP_LEFT:
+				case PopUpPosition.CENTER:
+				case PopUpPosition.BELOW:
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = popUp.height;
+					yPath.valueTo = 0;
+					break;
+				case PopUpPosition.ABOVE:
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = -popUp.height;
+					yPath.valueTo = 0;
+					break;
+				case PopUpPosition.LEFT:
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = -popUp.width;
+					xPath.valueTo = 0;
+					break;
+				case PopUpPosition.RIGHT:
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = popUp.width;
+					xPath.valueTo = 0;
+					break;            
+			}
+			if(!popUpIsDisplayed)
+			{
+				var tempValue:Number = xPath.valueFrom;
+				xPath.valueFrom = xPath.valueTo;
+				xPath.valueTo = tempValue;
+				tempValue = yPath.valueFrom;
+				yPath.valueFrom = yPath.valueTo;
+				yPath.valueTo = tempValue;
+			}
+			return path;
 		}
 		/**
 		 * 添加到舞台事件

@@ -498,7 +498,7 @@ package org.flexlite.domUI.effects.animation
 			{
 				timer.stop();
 			}
-			event.updateAfterEvent();
+//			event.updateAfterEvent();
 		}
 		
 	}
