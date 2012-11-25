@@ -45,7 +45,13 @@ package org.flexlite.domUI.effects
 		 * 移动结束时x轴要到的坐标。若不设置，则使用目标对象的当前x坐标或根据其他值计算出此值。
 		 */	
 		public var xTo:Number = NaN;
-
+		/**
+		 * 重置所有移动属性为初始状态
+		 */
+		public function reset():void
+		{
+			yBy = yFrom = yTo = xBy = xFrom = xTo = NaN;
+		}
 		/**
 		 * @inheritDoc
 		 */

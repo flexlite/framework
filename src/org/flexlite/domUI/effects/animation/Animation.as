@@ -231,6 +231,7 @@ package org.flexlite.domUI.effects.animation
 			_currentValue = {};
 			caculateCurrentValue(0);
 			startTime = getTimer();
+			currentTime = getTimer();
 			doInterval();
 			addAnimation(this);
 		}
@@ -343,7 +344,7 @@ package org.flexlite.domUI.effects.animation
 		{
 			var delay:Number = playedTimes>0?_repeatDelay:_startDelay;
 			var runningTime:Number = currentTime-startTime-delay;
-			if(runningTime<=0)
+			if(runningTime<0)
 			{
 				return false;
 			}
@@ -402,10 +403,10 @@ package org.flexlite.domUI.effects.animation
 				fraction = 1-fraction;
 			}
 			var finalFraction:Number = fraction;
+			if(easer!=null)
+				finalFraction = easer.ease(fraction);
 			for each(var motionPath:MotionPath in motionPaths)
 			{
-				if(easer!=null)
-					finalFraction = easer.ease(fraction);
 				currentValue[motionPath.property] = motionPath.valueFrom+(motionPath.valueTo-motionPath.valueFrom)*finalFraction;
 			}
 		}

@@ -35,13 +35,13 @@ package org.flexlite.domUI.effects.easing
 		
 		public function ease(fraction:Number):Number
 		{
-			var easeOutFraction:Number = 1 - easeInFraction;
+			var easeOutFraction:Number = 1 - _easeInFraction;
 			
-			if (fraction <= easeInFraction && easeInFraction > 0)
-				return easeInFraction * easeIn(fraction/easeInFraction);
+			if (fraction <= _easeInFraction && _easeInFraction > 0)
+				return _easeInFraction * easeIn(fraction/_easeInFraction);
 			else
-				return easeInFraction + easeOutFraction *
-					easeOut((fraction - easeInFraction)/easeOutFraction);
+				return _easeInFraction + easeOutFraction *
+					easeOut((fraction - _easeInFraction)/easeOutFraction);
 		}
 		/**
 		 * 在动画的缓入阶段期间计算已经缓动部分要映射到的值。

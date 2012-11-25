@@ -7,7 +7,7 @@ package org.flexlite.domUI.effects
 
 	use namespace dx_internal;
 	/**
-	 * 缩放特效
+	 * 缩放特效,此动画作用于对象的scaleX,scaleY属性。
 	 * @author DOM
 	 */
 	public class Scale extends MovableEffect
@@ -22,11 +22,11 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * 缩放中心点x坐标。若并不设置，默认为target.width/2。 
+		 * 缩放中心点x坐标(相对于scaleX为1时的位置)。若不设置，默认为target.width/2。 
 		 */		
 		public var originX:Number;
 		/**
-		 * 缩放中心点y坐标,若不设置，默认为target.height/2。
+		 * 缩放中心点y坐标(相对于scaleY为1时的位置),若不设置，默认为target.height/2。
 		 */		
 		public var originY:Number;
 		
@@ -54,7 +54,13 @@ package org.flexlite.domUI.effects
 		 * 在x方向上要缩放的量，负值代表缩小。
 		 */	
 		public var scaleXBy:Number;
-		
+		/**
+		 * 重置所有缩放属性为初始状态。
+		 */		
+		public function reset():void
+		{
+			originX = originY = scaleYFrom = scaleYTo = scaleYBy = scaleXFrom = scaleXTo = scaleXBy = NaN;
+		}
 		/**
 		 * @inheritDoc
 		 */
@@ -95,7 +101,7 @@ package org.flexlite.domUI.effects
 				
 				if(scaleYFromUseTarget)
 					scaleYStart = target["scaleY"];
-				if(scaleXToUseTarget)
+				if(scaleYToUseTarget)
 					scaleYEnd = target["scaleY"];
 				else if(scaleYToSet)
 					scaleYEnd = scaleYTo;
@@ -107,25 +113,19 @@ package org.flexlite.domUI.effects
 					orgX = originX;
 				else
 					orgX = target["width"]*0.5;
-				if(orgX!=0&&!isNaN(orgX))
-				{
-					var targetX:Number = target["x"]+(target["scaleX"]-1)*orgX;
-					var xStart:Number = targetX+(1-scaleXStart)*orgX;
-					var xEnd:Number = targetX+(1-scaleXEnd)*orgX;
-					motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
-				}
+				var targetX:Number = target["x"]+(target["scaleX"]-1)*orgX;
+				var xStart:Number = targetX+(1-scaleXStart)*orgX;
+				var xEnd:Number = targetX+(1-scaleXEnd)*orgX;
+				motionPaths.push(new MotionPath("x"+index,xStart,xEnd));
 				
 				if(originYSet)
 					orgY = originY;
 				else
 					orgY = target["height"]*0.5;
-				if(orgY!=0&&!isNaN(orgY))
-				{
-					var targetY:Number = target["y"]+(target["scaleY"]-1)*orgY;
-					var yStart:Number = targetY+(1-scaleYStart)*orgY;
-					var yEnd:Number = targetY+(1-scaleYEnd)*orgY;
-					motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
-				}
+				var targetY:Number = target["y"]+(target["scaleY"]-1)*orgY;
+				var yStart:Number = targetY+(1-scaleYStart)*orgY;
+				var yEnd:Number = targetY+(1-scaleYEnd)*orgY;
+				motionPaths.push(new MotionPath("y"+index,yStart,yEnd));
 				index++;
 			}
 			return motionPaths;
