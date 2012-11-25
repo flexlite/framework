@@ -278,8 +278,8 @@ package org.flexlite.domUI.components.supportClasses
 				
 				_isOpen = true;
 				
-				if (openButton)
-					openButton.keepDown(true); 
+//				if (openButton)
+//					openButton.keepDown(true); 
 				
 				dispatchEvent(new UIEvent(UIEvent.OPEN));
 			}
@@ -292,8 +292,8 @@ package org.flexlite.domUI.components.supportClasses
 			if (isOpen)
 			{   
 				_isOpen = false;
-				if (openButton)
-					openButton.keepDown(false);
+//				if (openButton)
+//					openButton.keepDown(false);
 				
 				var dde:UIEvent = new UIEvent(UIEvent.CLOSE, false, true);
 				
