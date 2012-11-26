@@ -250,8 +250,8 @@ package org.flexlite.domUI.components
 			if(inUpdating)
 				return;
 			inUpdating = true;
-			(popUp as DisplayObject).scrollRect = new Rectangle(animator.currentValue["x"],animator.currentValue["y"],
-				popUp.width, popUp.height);
+			(popUp as DisplayObject).scrollRect = new Rectangle(Math.round(animator.currentValue["x"]),
+				Math.round(animator.currentValue["y"]),popUp.width, popUp.height);
 			inUpdating = false;
 		}
 		
@@ -262,8 +262,8 @@ package org.flexlite.domUI.components
 		private function animationUpdateHandler(animation:Animation):void
 		{
 			inUpdating = true;
-			(popUp as DisplayObject).scrollRect = new Rectangle(animation.currentValue["x"],animation.currentValue["y"],
-				popUp.width, popUp.height);
+			(popUp as DisplayObject).scrollRect = new Rectangle(Math.round(animation.currentValue["x"]),
+				Math.round(animation.currentValue["y"]),popUp.width, popUp.height);
 			inUpdating = false;
 		}
 		
