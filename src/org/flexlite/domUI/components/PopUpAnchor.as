@@ -297,7 +297,18 @@ package org.flexlite.domUI.components
 				if(inAnimation)
 					animator.end();
 				if(initialized)
+				{
 					applyPopUpTransform(width, height);
+					if(_openDuration>0)
+						startAnimation();
+				}
+				else
+				{
+					callLater(function():void{
+						if(_openDuration>0)
+							startAnimation();
+					});
+				}
 			}
 			else if (popUp.parent != null && !displayPopUp)
 			{
@@ -342,8 +353,6 @@ package org.flexlite.domUI.components
 			var popUpPoint:Point = calculatePopUpPosition();
 			popUp.x = popUpPoint.x;
 			popUp.y = popUpPoint.y;
-			if(_openDuration>0)
-				startAnimation();
 		}
 		/**
 		 * 开始播放动画
