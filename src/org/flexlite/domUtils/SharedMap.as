@@ -88,6 +88,8 @@ package org.flexlite.domUtils
 				valueDic = lastValueDic;
 				totalKeys++;
 			}
+			if(valueDic[value]!==undefined)
+				valueDic = lastValueDic = new Dictionary(true);
 			keyDic[key] = valueDic;
 			valueDic[value] = key;
 		}
