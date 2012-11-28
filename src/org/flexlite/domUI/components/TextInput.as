@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	
 	use namespace dx_internal;
 
-	[DefaultProperty("text")]
+	[DefaultProperty(name="text",array="false")]
 	
 	[DXML(show="true")]
 	
