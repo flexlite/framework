@@ -28,7 +28,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DXML(show="false")]
 	
-	[DefaultProperty("label")]
+	[DefaultProperty(name="label",array="false")]
 	
 	/**
 	 * 按钮组件基类
