@@ -18,8 +18,6 @@ package org.flexlite.domUI.components.supportClasses
 	
 	use namespace dx_internal;
 	
-	[DXML(show="false")]
-	
 	/**
 	 * 当用户按下ButtonBase控件时分派。如果 autoRepeat属性为 true，则只要按钮处于按下状态，就将重复分派此事件。 
 	 */	
