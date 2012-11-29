@@ -79,16 +79,16 @@ package org.flexlite.domUI.skins.vector
 			g.clear();
 			var crr1:Number = cornerRadius>0?cornerRadius-1:0;
 			drawRoundRect(
-				x, y, w, h, cornerRadius,
+				0, 0, w, h, cornerRadius,
 				borderColors[0], 1,
-				verticalGradientMatrix(x, y, w, h ),
+				verticalGradientMatrix(0,0, w, h ),
 				GradientType.LINEAR, null, 
-				{ x: x+1, y: y+1, w: w - 2, h: h - 2, r: crr1},g); 
+				{ x: 1, y: 1, w: w - 2, h: h - 2, r: crr1},g); 
 			//绘制填充
 			drawRoundRect(
-				x+1, y+1, w - 2, h - 2, crr1,
+				1, 1, w - 2, h - 2, crr1,
 				0xFFFFFF, 1,
-				verticalGradientMatrix(x+1, y+1, w - 2, h - 2)); 
+				verticalGradientMatrix(1, 1, w - 2, h - 2),"linear",null,null,g); 
 		}
 		
 		/**
