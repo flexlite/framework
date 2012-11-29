@@ -46,6 +46,7 @@ package org.flexlite.domDll.resolvers
 			if(!dllItem.inGroupLoading)
 			{
 				soundDic[dllItem.name] = new Sound(new URLRequest(dllItem.url));
+				dllItem.loaded = true;
 				compFunc(dllItem);
 				return;
 			}
