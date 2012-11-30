@@ -49,7 +49,6 @@ package org.flexlite.domUI.collections
 		 * 数据源
 		 * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。
 		 * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
-		 * 直接对source赋值将会导致对应视图重置为初始状态。
 		 */
 		public function get source():Array
 		{
@@ -65,7 +64,6 @@ package org.flexlite.domUI.collections
 		}
 		/**
 		 * 在对数据源进行排序或过滤操作后可以手动调用此方法刷新所有数据,以更新视图。
-		 * 此刷新方法与直接给source赋值不同,它不会导致视图重置为初始状态,性能更高。
 		 */		
 		public function refresh():void
 		{
@@ -188,6 +186,29 @@ package org.flexlite.domUI.collections
 			var oldItem:Object = _source.splice(index,1,item)[0];
 			dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item]);
 			return oldItem;
+		}
+		/**
+		 * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
+		 * @param newSource 新的数据源
+		 */		
+		public function replaceAll(newSource:Array):void
+		{
+			if(!newSource)
+				newSource = [];
+			var newLength:int = newSource.length;
+			var oldLenght:int = _source.length;
+			for(var i:int = newLength;i<oldLenght;i++)
+			{
+				removeItemAt(newLength);
+			}
+			for(i=0;i<newLength;i++)
+			{
+				if(i>=oldLenght)
+					addItemAt(newSource[i],i);
+				else
+					replaceItemAt(newSource[i],i);
+			}
+			_source = newSource;
 		}
 		/**
 		 * @inheritDoc

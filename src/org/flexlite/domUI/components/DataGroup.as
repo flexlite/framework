@@ -293,10 +293,6 @@ package org.flexlite.domUI.components
 					itemUpdatedHandler(event.items[0],event.location);
 					break;
 				case CollectionEventKind.RESET:
-					cleanFreeRenderer = true;
-					dataProviderChanged = true;
-					invalidateProperties();
-					break;
 				case CollectionEventKind.REFRESH:
 					for(var index:* in indexToRenderer)
 					{
