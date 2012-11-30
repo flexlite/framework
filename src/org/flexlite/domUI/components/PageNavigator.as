@@ -327,6 +327,10 @@ package org.flexlite.domUI.components
 		 */		
 		private var totalPagesChanged:Boolean = false;
 		/**
+		 * 内部正在调整滚动位置的标志
+		 */		
+		private var adjustingScrollPostion:Boolean = false;
+		/**
 		 * 视域组件的属性改变
 		 */		
 		private function viewport_propertyChangeHandler(event:PropertyChangeEvent):void
@@ -335,6 +339,13 @@ package org.flexlite.domUI.components
 			{
 				case "contentWidth": 
 				case "contentHeight": 
+					totalPagesChanged = true;
+					invalidateProperties();
+					break;
+				case "horizontalScrollPosition":
+				case "verticalScrollPosition":
+					if(adjustingScrollPostion||(_animator&&_animator.isPlaying))
+						break;
 					totalPagesChanged = true;
 					invalidateProperties();
 					break;
@@ -379,6 +390,7 @@ package org.flexlite.domUI.components
 			totalPagesChanged = false;
 			if(!_viewport||(_animator&&_animator.isPlaying))
 				return;
+			adjustingScrollPostion = true;
 			_totalPages = 1;
 			var oldScrollPostion:Number;
 			var maxScrollPostion:Number;
@@ -434,6 +446,7 @@ package org.flexlite.domUI.components
 			}
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+			adjustingScrollPostion = false;
 		}
 		
 		/**
@@ -449,6 +462,7 @@ package org.flexlite.domUI.components
 				index = _totalPages-1;
 			if(_currentPage==index)
 				return;
+			adjustingScrollPostion = true;
 			var length:int = Math.abs(_currentPage-index);
 			var i:int;
 			var navigatorUint:uint;
@@ -520,6 +534,7 @@ package org.flexlite.domUI.components
 				}
 				startAnimation(oldScrollPostion,destScrollPostion);
 			}
+			adjustingScrollPostion = false;
 		}
 		/**
 		 * 检查页码并设置按钮禁用状态
