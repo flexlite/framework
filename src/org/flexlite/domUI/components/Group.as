@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import org.flexlite.domCore.dx_internal;
@@ -466,6 +467,15 @@ package org.flexlite.domUI.components
 			
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		
+		override protected function invalidateParentSizeAndDisplayList():void
+		{
+			super.invalidateParentSizeAndDisplayList();
+			if(hasEventListener("invalidateParentSizeAndDisplayList"))
+			{
+				dispatchEvent(new Event("invalidateParentSizeAndDisplayList"));
+			}
 		}
 
 		/**
