@@ -21,21 +21,87 @@ package org.flexlite.domUI.components
 			mouseChildren = false;
 		}
 		
-		private var _color:uint = 0xFFFFFF;
+		private var _fillColor:uint = 0xFFFFFF;
 		/**
-		 * 填充的颜色
+		 * 填充颜色
 		 */
-		public function get color():uint
+		public function get fillColor():uint
 		{
-			return _color;
+			return _fillColor;
 		}
-		public function set color(value:uint):void
+		public function set fillColor(value:uint):void
 		{
-			if(_color==value)
+			if(_fillColor==value)
 				return;
-			_color = value;
+			_fillColor = value;
 			invalidateDisplayList();
 		}
+		
+		private var _fillAlpha:Number = 1;
+		/**
+		 * 填充透明度,默认值为0。
+		 */
+		public function get fillAlpha():Number
+		{
+			return _fillAlpha;
+		}
+		public function set fillAlpha(value:Number):void
+		{
+			if(_fillAlpha==value)
+				return;
+			_fillAlpha = value;
+			invalidateDisplayList();
+		}
+		
+		private var _strokeColor:uint = 0x444444;
+		/**
+		 * 边框颜色,注意：当strokeAlpha为0时，不显示边框。
+		 */
+		public function get strokeColor():uint
+		{
+			return _strokeColor;
+		}
+
+		public function set strokeColor(value:uint):void
+		{
+			if(_strokeColor==value)
+				return;
+			_strokeColor = value;
+			invalidateDisplayList();
+		}
+
+		private var _strokeAlpha:Number = 0;
+		/**
+		 * 边框透明度，默认值为0。
+		 */
+		public function get strokeAlpha():Number
+		{
+			return _strokeAlpha;
+		}
+		public function set strokeAlpha(value:Number):void
+		{
+			if(_strokeAlpha==value)
+				return;
+			_strokeAlpha = value;
+			invalidateDisplayList();
+		}
+		
+		private var _strokeWeight:Number = 1;
+		/**
+		 * 边框粗细(像素),注意：当strokeAlpha为0时，不显示边框。
+		 */
+		public function get strokeWeight():Number
+		{
+			return _strokeWeight;
+		}
+		public function set strokeWeight(value:Number):void
+		{
+			if(_strokeWeight==value)
+				return;
+			_strokeWeight = value;
+			invalidateDisplayList();
+		}
+
 		
 		private var _radius:Number = 0;
 		/**
@@ -143,7 +209,14 @@ package org.flexlite.domUI.components
 			super.updateDisplayList(unscaledWidth,unscaledWidth);
 			var g:Graphics = graphics;
 			g.clear();
-			g.beginFill(_color,1);
+			if(_fillAlpha>0)
+			{
+				g.beginFill(_fillColor,1);
+			}
+			if(_strokeAlpha>0)
+			{
+				g.lineStyle(_strokeWeight,_strokeColor,_strokeAlpha,true,"normal","square","miter");
+			}
 			if(_radius>0)
 			{
 				var ellipseSize:Number = _radius * 2;

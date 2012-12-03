@@ -140,7 +140,7 @@ package org.flexlite.domUI.managers.impl
 			if(!_modalMask)
 			{
 				_modalMask = new Rect();
-				(_modalMask as Rect).color = 0x000000;
+				(_modalMask as Rect).fillColor = 0x000000;
 				_modalMask.alpha = 0.5;
 				_modalMask.top = _modalMask.left = _modalMask.right = _modalMask.bottom = 0;
 			}

@@ -2,6 +2,8 @@ package org.flexlite.domUI.managers.impl
 {
 	
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -374,7 +376,10 @@ package org.flexlite.domUI.managers.impl
 				currentToolTip = new tipClass();
 				toolTipCacheMap.set(key,currentToolTip);
 			}
-			
+			if(currentToolTip is InteractiveObject)
+				InteractiveObject(currentToolTip).mouseEnabled = false;
+			if(currentToolTip is DisplayObjectContainer)
+				DisplayObjectContainer(currentToolTip).mouseChildren = false;
 			currentToolTip.visible = false;
 			DomGlobals.systemManager.toolTipContainer.addElement(currentToolTip);
 		}
