@@ -382,7 +382,7 @@ package org.flexlite.domUI.effects.animation
 				}
 				else
 				{
-					activeAnimations.splice(currentIntervalIndex,1);
+					removeAnimation(this);
 					started = false;
 					playedTimes = 0;
 				}
@@ -449,24 +449,14 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		private static function removeAnimation(animation:Animation):void
 		{
-			var found:Boolean = false;
-			var index:int = 0;
-			for each(var ani:Animation in activeAnimations)
-			{
-				if(ani==animation)
-				{
-					found = true;
-					break;
-				}
-				index++;
-			}
-			if(found)
+			var index:int = activeAnimations.indexOf(animation);
+			if(index!=-1)
 			{
 				activeAnimations.splice(index,1);
 				if(index<=currentIntervalIndex)
 					currentIntervalIndex--;
 			}
-			if(activeAnimations.length==0&&timer!=null&&timer.running)
+			if(activeAnimations.length==0&&timer&&timer.running)
 			{
 				timer.stop();
 			}
@@ -488,17 +478,14 @@ package org.flexlite.domUI.effects.animation
 			{
 				var animation:Animation = activeAnimations[currentIntervalIndex];
 				var isEnded:Boolean = animation.doInterval();
-				if(!isEnded)
-				{
-					currentIntervalIndex++;
-				}
+				currentIntervalIndex++;
 			}
 			currentIntervalIndex = -1;
-			if(activeAnimations.length==0)
+			if(activeAnimations.length==0&&timer.running)
 			{
 				timer.stop();
 			}
-//			event.updateAfterEvent();
+			event.updateAfterEvent();
 		}
 		
 	}

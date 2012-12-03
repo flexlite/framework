@@ -21,24 +21,31 @@ package org.flexlite.domUI.effects.supportClasses
 		}
 		
 		/**
-		 * 记录的旧的布局属性值列表
-		 */		
-		private var includeInLayoutList:Vector.<Boolean>;
+		 * @inheritDoc
+		 */
+		override protected function animationStopHandler(animation:Animation):void
+		{
+			for each(var target:* in _targets)
+			{
+				if(target is IVisualElement)
+				{
+					(target as IVisualElement).includeInLayout = true;
+					LayoutUtil.adjustRelativeByXY(target as IVisualElement);
+				}
+			}
+			super.animationStopHandler(animation);
+		}
 		/**
 		 * @inheritDoc
 		 */
 		override protected function animationStartHandler(animation:Animation):void
 		{
-			includeInLayoutList = new Vector.<Boolean>();
 			for each(var target:* in _targets)
 			{
-				var includeInLayout:Boolean = false;
 				if(target is IVisualElement)
 				{
-					includeInLayout = (target as IVisualElement).includeInLayout;
 					(target as IVisualElement).includeInLayout = false;
 				}
-				includeInLayoutList.push(includeInLayout);
 			}
 			super.animationStartHandler(animation);
 		}
@@ -47,17 +54,13 @@ package org.flexlite.domUI.effects.supportClasses
 		 */
 		override protected function animationEndHandler(animation:Animation):void
 		{
-			var element:IVisualElement;
-			var index:int = 0;
-			for each(var target:Object in _targets)
+			for each(var target:* in _targets)
 			{
-				element = target as IVisualElement;
-				if(element)
+				if(target is IVisualElement)
 				{
-					LayoutUtil.adjustRelativeByXY(element);
-					element.includeInLayout = includeInLayoutList[index];
+					(target as IVisualElement).includeInLayout = true;
+					LayoutUtil.adjustRelativeByXY(target as IVisualElement);
 				}
-				index++;
 			}
 			super.animationEndHandler(animation);
 		}
