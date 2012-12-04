@@ -33,6 +33,10 @@ package org.flexlite.domDll.core
 		 * 二进制序列化对象 
 		 */		
 		public static const TYPE_AMF:String = "amf";
+		/** 
+		 * 文本文件(解析为字符串)
+		 */		
+		public static const TYPE_TXT:String = "txt";
 		/**
 		 * 声音文件
 		 */		

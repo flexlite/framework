@@ -149,13 +149,13 @@ package org.flexlite.domDll
 		 * 通过URL方式获取外部资源。<br/>
 		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
 		 * @param url 要加载文件的外部路径。
-		 * @param type 文件类型。请使用DllItem类中定义的静态常量。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param type 文件类型(可选)。请使用DllItem类中定义的静态常量。若不设置将根据文件扩展名生成。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
-		public static function getResByUrl(url:String,type:String,compFunc:Function,other:Object=null):void
+		public static function getResByUrl(url:String,compFunc:Function,type:String="",other:Object=null):void
 		{
-			instance.getResByUrl(url,type,compFunc,other);
+			instance.getResByUrl(url,compFunc,type,other);
 		}
 		/**
 		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
@@ -434,19 +434,21 @@ package org.flexlite.domDll
 		 * 通过URL方式获取外部资源。<br/>
 		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
 		 * @param url 要加载文件的外部路径。
-		 * @param type 文件类型。请使用DllItem类中定义的静态常量。
 		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param type 文件类型(可选)。请使用DllItem类中定义的静态常量。若不设置将根据文件扩展名判断，未知的扩展名默认作为字节流类型。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
-		 */		
-		private function getResByUrl(url:String,type:String,compFunc:Function,other:Object=null):void
+		 */	
+		private function getResByUrl(url:String,compFunc:Function,type:String="",other:Object=null):void
 		{
 			if(compFunc==null)
 				return;
-			if(!url||!type)
+			if(!url)
 			{
 				doCompFunc(compFunc,null,other);
 				return;
 			}
+			if(!type)
+				type = getTypeByUrl(url);
 			var resolver:IResolver = getResolverByType(type);
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTF(url+type);
@@ -469,6 +471,39 @@ package org.flexlite.domDll
 				dllItem.compFunc = onDllItemComp;
 				dllLoader.loadItem(dllItem);
 			}
+		}
+		
+		/**
+		 * 通过url获取文件类型
+		 */			
+		private function getTypeByUrl(url:String):String
+		{
+			var suffix:String = url.substr(url.lastIndexOf(".")+1);
+			var type:String;
+			switch(suffix)
+			{
+				case DllItem.TYPE_AMF:
+				case DllItem.TYPE_DXR:
+				case DllItem.TYPE_SWF:
+				case DllItem.TYPE_XML:
+				case DllItem.TYPE_TXT:
+					type = suffix;
+					break;
+				case "png":
+				case "jpg":
+				case "gif":
+					type = DllItem.TYPE_IMG;
+					break;
+				case "mp3":
+					type = DllItem.TYPE_SOUND;
+					break;
+				case "json":
+					type = DllItem.TYPE_TXT;
+				default:
+					type = DllItem.TYPE_BIN;
+					break;
+			}
+			return type;
 		}
 		/**
 		 * 通过URL方式加载的资源完成
