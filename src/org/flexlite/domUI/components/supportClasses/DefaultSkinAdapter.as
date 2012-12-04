@@ -7,6 +7,7 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
+	import flash.utils.ByteArray;
 	
 	import org.flexlite.domUI.core.ISkinAdapter;
 	
@@ -32,7 +33,7 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				compFunc(new skinName(),skinName);
 			}
-			else if(skinName is String)
+			else if(skinName is String||skinName is ByteArray)
 			{
 				var loader:Loader = new Loader;
 				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,function(event:Event):void{
@@ -49,7 +50,10 @@ package org.flexlite.domUI.components.supportClasses
 						compFunc(loader.content,skinName);
 					}
 				});
-				loader.load(new URLRequest(skinName as String));
+				if(skinName is String)
+					loader.load(new URLRequest(skinName as String));
+				else
+					loader.loadBytes(skinName as ByteArray);
 			}
 			else if(skinName is BitmapData)
 			{
