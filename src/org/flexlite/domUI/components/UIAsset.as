@@ -1,6 +1,6 @@
 package org.flexlite.domUI.components
 {
-	import flash.display.BitmapData;
+
 	import flash.display.DisplayObject;
 	import flash.text.TextField;
 	

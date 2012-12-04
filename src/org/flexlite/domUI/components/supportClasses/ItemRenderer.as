@@ -1,8 +1,6 @@
 package org.flexlite.domUI.components.supportClasses
 {
-	import flash.display.Graphics;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+
 	
 	import org.flexlite.domUI.components.IItemRenderer;
 	

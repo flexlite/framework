@@ -12,7 +12,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IDisplayText;
-	import org.flexlite.domUI.core.ISkinPartHost;
+
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	

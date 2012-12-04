@@ -1,6 +1,6 @@
 package org.flexlite.domUI.skins.vector
 {
-	import org.flexlite.domUI.components.Group;
+
 	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.skins.VectorSkin;

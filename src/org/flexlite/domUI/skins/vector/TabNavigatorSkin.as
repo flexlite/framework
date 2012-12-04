@@ -2,9 +2,9 @@ package org.flexlite.domUI.skins.vector
 {
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
-	import org.flexlite.domUI.components.HScrollBar;
+
 	import org.flexlite.domUI.components.TabBar;
-	import org.flexlite.domUI.components.VScrollBar;
+
 	import org.flexlite.domUI.components.ViewStack;
 	import org.flexlite.domUI.skins.VectorSkin;
 	

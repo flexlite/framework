@@ -6,10 +6,10 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
-	import org.flexlite.domUI.components.DataGroup;
+
 	import org.flexlite.domUI.components.IItemRenderer;
 	import org.flexlite.domUI.components.SkinnableDataContainer;
-	import org.flexlite.domUI.core.ISkinPartHost;
+
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
@@ -17,7 +17,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.events.UIEvent;
-	import org.flexlite.domUI.layouts.VerticalLayout;
+
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;

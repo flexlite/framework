@@ -1,7 +1,7 @@
 package org.flexlite.domDll.core
 {
 	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
+
 	
 	/**
 	 * 文件解析器接口

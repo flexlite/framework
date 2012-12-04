@@ -19,7 +19,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-	import org.flexlite.domUtils.Recycler;
+
 
 	use namespace dx_internal;
 	

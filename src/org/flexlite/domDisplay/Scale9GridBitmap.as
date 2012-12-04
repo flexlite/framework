@@ -7,8 +7,7 @@ package org.flexlite.domDisplay
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	import org.flexlite.domCore.IBitmapAsset;
+
 	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;

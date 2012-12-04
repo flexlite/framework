@@ -2,11 +2,11 @@ package org.flexlite.domUI.components
 {
 	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
+
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
+
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;

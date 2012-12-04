@@ -1,9 +1,9 @@
 package org.flexlite.domUI.managers
 {
-	import flash.events.EventDispatcher;
+
 	
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.core.IEffect;
+
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.PopUpEvent;
 	import org.flexlite.domUI.managers.impl.PopUpManagerImpl;

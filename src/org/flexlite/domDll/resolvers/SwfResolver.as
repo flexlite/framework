@@ -14,7 +14,7 @@ package org.flexlite.domDll.resolvers
 	
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.IResolver;
-	import org.flexlite.domUtils.Recycler;
+
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**

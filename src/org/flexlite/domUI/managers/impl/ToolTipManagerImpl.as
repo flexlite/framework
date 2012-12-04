@@ -11,7 +11,7 @@ package org.flexlite.domUI.managers.impl
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
+
 	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	

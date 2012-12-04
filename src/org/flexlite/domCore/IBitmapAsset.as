@@ -1,7 +1,7 @@
 package org.flexlite.domCore
 {
 	import flash.display.BitmapData;
-	import flash.geom.Point;
+
 	
 	/**
 	 * 位图素材显示对象接口

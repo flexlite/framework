@@ -5,7 +5,7 @@ package org.flexlite.domDll.resolvers
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
+
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	

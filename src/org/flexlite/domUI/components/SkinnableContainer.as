@@ -1,7 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.core.ISkinPartHost;
+
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.events.ElementExistenceEvent;

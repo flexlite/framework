@@ -1,6 +1,6 @@
 package org.flexlite.domUI.skins.vector
 {
-	import flash.display.Graphics;
+
 	import flash.text.TextFormatAlign;
 	
 	import org.flexlite.domCore.dx_internal;

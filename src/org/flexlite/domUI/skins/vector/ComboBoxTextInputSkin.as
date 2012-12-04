@@ -1,6 +1,6 @@
 package org.flexlite.domUI.skins.vector
 {
-	import flash.display.GradientType;
+
 	
 	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domCore.dx_internal;
