@@ -16,7 +16,7 @@ package org.flexlite.domUI.events
 		public function CollectionEvent(type:String, bubbles:Boolean = false,
 										cancelable:Boolean = false,
 										kind:String = null, location:int = -1,
-										oldLocation:int = -1, items:Array = null)
+										oldLocation:int = -1, items:Array = null,oldItems:Array=null)
 		{
 			super(type, bubbles, cancelable);
 			
@@ -24,6 +24,7 @@ package org.flexlite.domUI.events
 			this.location = location;
 			this.oldLocation = oldLocation;
 			this.items = items ? items : [];
+			this.oldItems = oldItems?oldItems:[];
 		}
 		/**
 		 * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。 
@@ -33,6 +34,10 @@ package org.flexlite.domUI.events
 		 * 受事件影响的项目的列表
 		 */		
 		public var items:Array;
+		/**
+		 * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
+		 */		
+		public var oldItems:Array;
 		/**
 		 * 如果 kind 值为 CollectionEventKind.ADD、 CollectionEventKind.MOVE、
 		 * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
@@ -61,7 +66,7 @@ package org.flexlite.domUI.events
 		 */
 		override public function clone():Event
 		{
-			return new CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items);
+			return new CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items,oldItems);
 		}
 	}
 }

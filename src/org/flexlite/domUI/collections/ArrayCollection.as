@@ -184,7 +184,7 @@ package org.flexlite.domUI.collections
 		{
 			checkIndex(index);
 			var oldItem:Object = _source.splice(index,1,item)[0];
-			dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item]);
+			dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item],[oldItem]);
 			return oldItem;
 		}
 		/**
@@ -227,10 +227,10 @@ package org.flexlite.domUI.collections
 		 * 抛出事件
 		 */		
 		private function dispatchCoEvent(kind:String = null, location:int = -1,
-										 oldLocation:int = -1, items:Array = null):void
+										 oldLocation:int = -1, items:Array = null,oldItems:Array=null):void
 		{
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE,false,false,
-				kind,location,oldLocation,items);
+				kind,location,oldLocation,items,oldItems);
 			dispatchEvent(event);
 		}
 		

@@ -33,7 +33,7 @@ package org.flexlite.domUI.collections
 		 */		
 		function getItemIndex(item:Object):int;
 		/**
-		 * 通知视图，某个项目已更新。
+		 * 通知视图，某个项目的属性已更新。
 		 */		
 		function itemUpdated(item:Object):void;
 		/**

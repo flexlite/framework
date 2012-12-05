@@ -289,8 +289,11 @@ package org.flexlite.domUI.components
 					itemRemovedHandler(event.items,event.location);
 					break;
 				case CollectionEventKind.UPDATE:
-				case CollectionEventKind.REPLACE:
 					itemUpdatedHandler(event.items[0],event.location);
+					break;
+				case CollectionEventKind.REPLACE:
+					itemRemoved(event.oldItems[0],event.location);
+					itemAdded(event.items[0], event.location);
 					break;
 				case CollectionEventKind.RESET:
 				case CollectionEventKind.REFRESH:

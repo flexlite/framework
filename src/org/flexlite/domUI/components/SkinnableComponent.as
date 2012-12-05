@@ -13,6 +13,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.Theme;
 	import org.flexlite.domUI.events.SkinPartEvent;
+	import org.flexlite.domUI.utils.callLater;
 	
 	use namespace dx_internal;
 	
@@ -117,6 +118,8 @@ package org.flexlite.domUI.components
 			if(skin is DisplayObject)
 			{
 				_skin = skin as DisplayObject;
+				_skin.visible = false;
+				callLater(onNextFrame,[_skin],1);
 				addToDisplyListAt(_skin,0);
 			}
 			else
@@ -127,6 +130,13 @@ package org.flexlite.domUI.components
 			attachSkin(newSkin);
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		/**
+		 * 延迟一帧显示皮肤,防止首次显示闪烁问题
+		 */		
+		private function onNextFrame(skin:DisplayObject):void
+		{
+			skin.visible = true;
 		}
 		/**
 		 * 获取当前的skin对象，当附加的皮肤为非显示对象时，并不存储在skin属性中。返回非显示对象版本skin。
@@ -385,7 +395,7 @@ package org.flexlite.domUI.components
 			else
 			{
 				layout.target = null;
-				layout = null;
+ 				layout = null;
 			}
 		}
 		

@@ -14,6 +14,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.events.UIEvent;
+	import org.flexlite.domUI.utils.callLater;
 
 	use namespace dx_internal;
 	
@@ -92,12 +93,21 @@ package org.flexlite.domUI.components
 			_skin = skin as DisplayObject;
 			if(_skin)
 			{
+				_skin.visible = false;
+				callLater(onNextFrame,[_skin],1);
 				super.addChildAt(_skin,0);
 			}
 			invalidateSize();
 			invalidateDisplayList();
 			if(stage)
 				validateNow();
+		}
+		/**
+		 * 延迟一帧显示皮肤
+		 */		
+		dx_internal function onNextFrame(skin:DisplayObject):void
+		{
+			skin.visible = true;
 		}
 		
 		/**
