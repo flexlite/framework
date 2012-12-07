@@ -1008,8 +1008,9 @@ package org.flexlite.domUI.core
 		{
 			if(_includeInLayout==value)
 				return;
-			_includeInLayout = value;
+			_includeInLayout = true;
 			invalidateParentSizeAndDisplayList();
+			_includeInLayout = value;
 		}
 
 		
