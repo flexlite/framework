@@ -5,7 +5,7 @@ package org.flexlite.domDll.resolvers
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
-
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
@@ -67,12 +67,16 @@ package org.flexlite.domDll.resolvers
 					}
 					compFuncList = compFuncDic[key] =  new Vector.<Function>();
 					compFuncList.push(compFunc);
-					var loader:Loader=new Loader();    
-					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bytesComplete); 
+					
+					var loader:Loader = new Loader();
+					var loaderContext:LoaderContext = new LoaderContext();
+					if(loaderContext.hasOwnProperty("imageDecodingPolicy"))//如果是FP11以上版本，开启异步位图解码
+						loaderContext["imageDecodingPolicy"] = "onLoad";
+					loader.contentLoaderInfo.addEventListener(Event.COMPLETE,bytesComplete);
 					if(!keyDic)
 						keyDic = new Dictionary();
 					keyDic[loader] = key;
-					loader.loadBytes(bytes); 
+					loader.loadBytes(bytes,loaderContext);
 				}
 				else
 				{

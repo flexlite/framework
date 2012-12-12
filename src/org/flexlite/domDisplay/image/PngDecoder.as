@@ -5,6 +5,7 @@ package org.flexlite.domDisplay.image
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
@@ -23,6 +24,7 @@ package org.flexlite.domDisplay.image
 		public function PngDecoder()
 		{
 		}
+		
 		/**
 		 * @inheritDoc
 		 */	
@@ -38,11 +40,14 @@ package org.flexlite.domDisplay.image
 		public function decode(byteArray:ByteArray,onComp:Function):void
 		{
 			var loader:Loader = new Loader();
+			var loaderContext:LoaderContext = new LoaderContext();
+			if(loaderContext.hasOwnProperty("imageDecodingPolicy"))//如果是FP11以上版本，开启异步位图解码
+				loaderContext["imageDecodingPolicy"] = "onLoad";
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onLoadComp);
 			if(onCompDic==null)
 				onCompDic = new Dictionary;
 			onCompDic[loader] = onComp;
-			loader.loadBytes(byteArray);
+			loader.loadBytes(byteArray,loaderContext);
 		}
 		/**
 		 * 解码完成
