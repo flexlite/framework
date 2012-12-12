@@ -49,6 +49,7 @@ package org.flexlite.domDisplay
 				filterWidth = sizeOffset.x;
 				filterHeight = sizeOffset.y;
 				super.bitmapData = dxrData.frameList[0];
+				smoothing = true;
 				if(widthExplicitSet)
 					super.width = _width==0?0:_width+filterWidth;
 				else
