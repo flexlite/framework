@@ -182,6 +182,8 @@ package org.flexlite.domUI.components
 				return;
 			if(_skin is ILayoutElement)
 			{
+				if(!(_skin as ILayoutElement).includeInLayout)
+					return;
 				measuredWidth = (_skin as ILayoutElement).preferredWidth;
 				measuredHeight = (_skin as ILayoutElement).preferredHeight;
 			}
@@ -239,7 +241,8 @@ package org.flexlite.domUI.components
 			{
 				if(_skin is ILayoutElement)
 				{
-					(_skin as ILayoutElement).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
+					if((_skin as ILayoutElement).includeInLayout)
+						(_skin as ILayoutElement).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 				}
 				else
 				{
