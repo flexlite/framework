@@ -14,7 +14,6 @@ package org.flexlite.domDll.resolvers
 	
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.IResolver;
-
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**
@@ -70,6 +69,7 @@ package org.flexlite.domDll.resolvers
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onLoadFinish);
 			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,onProgress);
 			dllItemDic[loader] = {item:dllItem,func:compFunc,progress:progressFunc};
+			loadingCount++;
 			if(inIOS)
 			{
 				var loaderContext:LoaderContext = 
@@ -112,9 +112,13 @@ package org.flexlite.domDll.resolvers
 						appDomainList.push(loader.contentLoaderInfo.applicationDomain);
 				}
 			}
+			checkAsyncList();
 			compFunc(dllItem);
 		}
-		
+		/**
+		 * 正在加载的文件个数
+		 */		
+		private var loadingCount:int = 0;
 		/**
 		 * @inheritDoc
 		 */
@@ -129,9 +133,12 @@ package org.flexlite.domDll.resolvers
 			catch(e:Error){}
 			var loader:Loader=new Loader();    
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bytesComplete); 
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,checkAsyncList); 
 			swfDic[name] = loader;
+			loadingCount++;
 			loader.loadBytes(bytes);
 		}
+		
 		/**
 		 * 解析完成
 		 */		
@@ -141,6 +148,22 @@ package org.flexlite.domDll.resolvers
 			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bytesComplete); 
 			if(!inIOS)
 				appDomainList.push(loader.contentLoaderInfo.applicationDomain);
+			checkAsyncList();
+		}
+		/**
+		 * 加载结束
+		 */		
+		private function checkAsyncList(event:IOErrorEvent=null):void
+		{
+			loadingCount--;
+			if(loadingCount==0)
+			{
+				for each(var item:Object in asyncList)
+				{
+					getResAsync(item.key,item.compFunc);
+				}
+				asyncList = [];
+			}
 		}
 		/**
 		 * @inheritDoc
@@ -165,6 +188,10 @@ package org.flexlite.domDll.resolvers
 			return null;
 		}
 		/**
+		 * 待加载队列
+		 */		
+		private var asyncList:Array = [];
+		/**
 		 * @inheritDoc
 		 */
 		public function getResAsync(key:String,compFunc:Function):void
@@ -172,7 +199,14 @@ package org.flexlite.domDll.resolvers
 			if(compFunc==null)
 				return;
 			var res:* = getRes(key);
-			compFunc(res);
+			if(!res&&loadingCount>0)
+			{
+				asyncList.push({key:key,compFunc:compFunc});
+			}
+			else
+			{
+				compFunc(res);
+			}
 		}
 		/**
 		 * @inheritDoc
