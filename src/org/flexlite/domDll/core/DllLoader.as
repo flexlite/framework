@@ -61,6 +61,10 @@ package org.flexlite.domDll.core
 		 */		
 		private var numLoadedDic:Dictionary = new Dictionary;
 		/**
+		 * 组列表字典
+		 */		
+		private var itemListDic:Dictionary = new Dictionary;
+		/**
 		 * 优先级队列
 		 */		
 		private var priorityQueue:Object = {};
@@ -69,7 +73,7 @@ package org.flexlite.domDll.core
 		 */		
 		public function isGroupInLoading(groupName:String):Boolean
 		{
-			return totalSizeDic[groupName]!==undefined;
+			return itemListDic[groupName]!==undefined;
 		}
 		/**
 		 * 开始加载一组文件
@@ -79,7 +83,7 @@ package org.flexlite.domDll.core
 		 */			
 		public function loadGroup(list:Vector.<DllItem>,groupName:String,priority:int=0):void
 		{
-			if(totalSizeDic[groupName]||!groupName)
+			if(itemListDic[groupName]||!groupName)
 				return;
 			if(!list||list.length==0)
 			{
@@ -88,10 +92,10 @@ package org.flexlite.domDll.core
 				return;
 			}
 			if(priorityQueue[priority])
-				priorityQueue[priority].push(list);
+				priorityQueue[priority].push(groupName);
 			else
-				priorityQueue[priority] = [list];
-			
+				priorityQueue[priority] = [groupName];
+			itemListDic[groupName] = list;
 			var totalSize:int = 0;
 			for each(var dllItem:DllItem in list)
 			{
@@ -177,24 +181,20 @@ package org.flexlite.domDll.core
 					return null;
 				return lazyLoadList.shift();
 			}
-			var list:Vector.<DllItem> = queue[queueIndex];
-			var item:DllItem = list.shift();
-			if(list.length==0)
+			var length:int = queue.length;
+			var list:Vector.<DllItem>;
+			for(var i:int=0;i<length;i++)
 			{
-				queue.splice(queueIndex,1);
-				if(queue.length==0)
-				{
-					delete priorityQueue[maxPriority];
+				if(queueIndex>=length)
 					queueIndex = 0;
-				}
+				list = itemListDic[queue[queueIndex]];
+				if(list.length>0)
+					break;
+				queueIndex++;
 			}
-			else
-			{
-				queueIndex ++;
-			}
-			if(queueIndex>0&&queueIndex>=queue.length)
-				queueIndex = 0;
-			return item;
+			if(list.length==0)
+				return null;
+			return list.shift();
 		}
 		/**
 		 * 加载进度更新
@@ -238,16 +238,50 @@ package org.flexlite.domDll.core
 				dispatchEvent(progressEvent);
 				if(numLoadedDic[groupName]==groupTotalDic[groupName])
 				{
+					removeGroupName(groupName);
 					delete totalSizeDic[groupName];
 					delete loadedSizeDic[groupName];
 					delete groupTotalDic[groupName];
 					delete numLoadedDic[groupName];
+					delete itemListDic[groupName];
+					
 					var event:DllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
 					event.groupName = groupName;
 					dispatchEvent(event);
 				}
 			}
 			next();
+		}
+		/**
+		 * 从优先级队列中移除指定的组名
+		 */		
+		private function removeGroupName(groupName:String):void
+		{
+			for(var p:* in priorityQueue)
+			{
+				var queue:Array = priorityQueue[p];
+				var length:int = queue.length;
+				var index:int = 0;
+				var found:Boolean = false;
+				for each(var name:String in queue)
+				{
+					if(name==groupName)
+					{
+						queue.splice(index,1);
+						found = true;
+						break;
+					}
+					index++;
+				}
+				if(found)
+				{
+					if(queue.length==0)
+					{
+						delete priorityQueue[p];
+					}
+					break;
+				}
+			}
 		}
 	}
 }
