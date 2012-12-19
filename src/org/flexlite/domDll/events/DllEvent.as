@@ -60,6 +60,7 @@ package org.flexlite.domDll.events
 			event.bytesLoaded = bytesLoaded;
 			event.bytesTotal = bytesTotal;
 			event.dllItem = dllItem;
+			event.groupName = groupName;
 			return event;
 		}
 	}

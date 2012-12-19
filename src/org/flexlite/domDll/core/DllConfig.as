@@ -187,7 +187,7 @@ package org.flexlite.domDll.core
 		public function parseDllItem(data:Object):DllItem
 		{
 			var url:String = data.url;
-			if(version)
+			if(version&&url.indexOf("?v=")==-1)
 			{
 				if(url.indexOf("?")==-1)
 					url += "?v="+version;

@@ -14,11 +14,11 @@ package org.flexlite.domDll.core
 	/**
 	 * 队列加载进度事件
 	 */	
-	[Event(name="progress",type="flash.events.ProgressEvent")]
+	[Event(name="groupProgress",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * 队列加载完成事件
 	 */	
-	[Event(name="complete",type="flash.events.Event")]
+	[Event(name="groupComplete",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * 一个加载项加载结束事件，可能是加载成功也可能是加载失败。
 	 */	
@@ -37,67 +37,72 @@ package org.flexlite.domDll.core
 		{
 			super();
 			this.thread = thread;
-			currentLoadList = lazyLoadList;
 		}
 		
-		private var _inGroupLoading:Boolean;
-		/**
-		 * 正在进行组加载的标志
-		 */
-		public function get inGroupLoading():Boolean
-		{
-			return _inGroupLoading;
-		}
-
 		/**
 		 * 最大并发加载数 
 		 */		
 		private var thread:int = 2;
 		
 		/**
-		 * 当前正在加载的队列
-		 */		
-		private var currentLoadList:Vector.<DllItem>;
-		/**
 		 * 当前队列总文件大小
 		 */		
-		private var totalSize:int;
+		private var totalSizeDic:Dictionary = new Dictionary;
 		/**
 		 * 已经加载的字节数
 		 */		
-		private var loadedSize:int;
+		private var loadedSizeDic:Dictionary = new Dictionary;
 		/**
 		 * 当前组加载的项个数
 		 */		
-		private var groupTotal:int = 0;
+		private var groupTotalDic:Dictionary = new Dictionary;
 		/**
 		 * 已经加载的项个数
 		 */		
-		private var loadedIndex:int = 0;
+		private var numLoadedDic:Dictionary = new Dictionary;
+		/**
+		 * 优先级队列
+		 */		
+		private var priorityQueue:Object = {};
+		/**
+		 * 检查指定的组是否正在加载中
+		 */		
+		public function isGroupInLoading(groupName:String):Boolean
+		{
+			return totalSizeDic[groupName]!==undefined;
+		}
 		/**
 		 * 开始加载一组文件
-		 * @param list
-		 */		
-		public function loadGroup(list:Vector.<DllItem>):void
+		 * @param list 加载项列表
+		 * @param groupName 组名
+		 * @param priority 加载优先级
+		 */			
+		public function loadGroup(list:Vector.<DllItem>,groupName:String,priority:int=0):void
 		{
+			if(totalSizeDic[groupName]||!groupName)
+				return;
 			if(!list||list.length==0)
 			{
 				var event:Event = new Event(Event.COMPLETE);
 				dispatchEvent(event);
 				return;
 			}
-			totalSize = 0;
-			loadedSize = 0;
-			_inGroupLoading = true;
+			if(priorityQueue[priority])
+				priorityQueue[priority].push(list);
+			else
+				priorityQueue[priority] = [list];
+			
+			var totalSize:int = 0;
 			for each(var dllItem:DllItem in list)
 			{
-				dllItem._inGroupLoading = true;
+				dllItem._groupName = groupName;
 				dllItem.bytesLoaded = 0;
 				totalSize += dllItem.size;
 			}
-			currentLoadList = list;
-			groupTotal = list.length;
-			loadedIndex = 0;
+			totalSizeDic[groupName] = totalSize;
+			loadedSizeDic[groupName] = 0;
+			groupTotalDic[groupName] = list.length;
+			numLoadedDic[groupName] = 0;
 			next();
 		}
 		/**
@@ -111,7 +116,7 @@ package org.flexlite.domDll.core
 		public function loadItem(dllItem:DllItem):void
 		{
 			lazyLoadList.push(dllItem);
-			dllItem._inGroupLoading = false;
+			dllItem._groupName = "";
 			next();
 		}
 		/**
@@ -127,18 +132,12 @@ package org.flexlite.domDll.core
 		 */		
 		private function next():void
 		{
-			if(currentLoadList!=lazyLoadList&&currentLoadList.length==0)
+			while(loadingCount<thread)
 			{
-				currentLoadList = lazyLoadList;
-			}
-			if(currentLoadList.length==0)
-				return;
-			while(currentLoadList.length>0)
-			{
-				if(loadingCount>=thread)
+				var dllItem:DllItem = getOneDllItem();
+				if(!dllItem)
 					break;
 				loadingCount++;
-				var dllItem:DllItem = currentLoadList.shift();
 				dllItem.startTime = getTimer();
 				if(dllItem.loaded)
 				{
@@ -156,15 +155,61 @@ package org.flexlite.domDll.core
 				}
 			}
 		}
+		
+		/**
+		 * 当前应该加载同优先级队列的第几列
+		 */		
+		private var queueIndex:int = 0;
+		/**
+		 * 获取下一个待加载项
+		 */		
+		private function getOneDllItem():DllItem
+		{
+			var maxPriority:int = int.MIN_VALUE;
+			for(var p:* in priorityQueue)
+			{
+				maxPriority = Math.max(maxPriority,int(p));
+			}
+			var queue:Array = priorityQueue[maxPriority];
+			if(!queue||queue.length==0)
+			{
+				if(lazyLoadList.length==0)
+					return null;
+				return lazyLoadList.shift();
+			}
+			var list:Vector.<DllItem> = queue[queueIndex];
+			var item:DllItem = list.shift();
+			if(list.length==0)
+			{
+				queue.splice(queueIndex,1);
+				if(queue.length==0)
+				{
+					delete priorityQueue[maxPriority];
+					queueIndex = 0;
+				}
+			}
+			else
+			{
+				queueIndex ++;
+			}
+			if(queueIndex>0&&queueIndex>=queue.length)
+				queueIndex = 0;
+			return item;
+		}
 		/**
 		 * 加载进度更新
 		 */		
 		private function onItemProgress(bytesLoaded:int,dllItem:DllItem):void
 		{
-			loadedSize += bytesLoaded - dllItem.bytesLoaded;
+			if(!dllItem._groupName)
+				return;
+			var groupName:String = dllItem._groupName;
+			loadedSizeDic[groupName] += bytesLoaded - dllItem.bytesLoaded;
 			dllItem.bytesLoaded = bytesLoaded;
-			var progressEvent:ProgressEvent = 
-				new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
+			var progressEvent:DllEvent = new DllEvent(DllEvent.GROUP_PROGRESS);
+			progressEvent.groupName = groupName;
+			progressEvent.bytesLoaded = loadedSizeDic[groupName];
+			progressEvent.bytesTotal = totalSizeDic[groupName];
 			dispatchEvent(progressEvent);
 		}
 		/**
@@ -174,23 +219,31 @@ package org.flexlite.domDll.core
 		{
 			loadingCount--;
 			dllItem._loadTime = getTimer()-dllItem.startTime;
+			var groupName:String = dllItem._groupName;
 			var itemLoadEvent:DllEvent = new DllEvent(DllEvent.ITEM_LOAD_FINISHED);
+			itemLoadEvent.groupName = groupName;
 			itemLoadEvent.dllItem = dllItem;
 			dispatchEvent(itemLoadEvent);
 			if(dllItem.compFunc!=null)
 				dllItem.compFunc(dllItem);
-			if(dllItem.inGroupLoading)
+			if(groupName)
 			{
-				loadedIndex++;
+				numLoadedDic[groupName]++;
 				if(!dllItem.loaded)
-					loadedSize += dllItem.size;
-				var progressEvent:ProgressEvent = 
-					new ProgressEvent(ProgressEvent.PROGRESS,false,false,loadedSize,totalSize);
+					loadedSizeDic[groupName] += dllItem.size;
+				var progressEvent:DllEvent = new DllEvent(DllEvent.GROUP_PROGRESS);
+				progressEvent.groupName = groupName;
+				progressEvent.bytesLoaded = loadedSizeDic[groupName];
+				progressEvent.bytesTotal = totalSizeDic[groupName];
 				dispatchEvent(progressEvent);
-				if(loadedIndex==groupTotal)
+				if(numLoadedDic[groupName]==groupTotalDic[groupName])
 				{
-					_inGroupLoading = false;
-					var event:Event = new Event(Event.COMPLETE);
+					delete totalSizeDic[groupName];
+					delete loadedSizeDic[groupName];
+					delete groupTotalDic[groupName];
+					delete numLoadedDic[groupName];
+					var event:DllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
+					event.groupName = groupName;
 					dispatchEvent(event);
 				}
 			}

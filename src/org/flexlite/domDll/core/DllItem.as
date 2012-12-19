@@ -78,19 +78,21 @@ package org.flexlite.domDll.core
 		 * 加载项文件大小(单位:字节)
 		 */		
 		public var size:int = 0;
+		
+		dx_internal var _groupName:String;
+		/**
+		 * 所属组名
+		 */
+		public function get groupName():String
+		{
+			return _groupName;
+		}
+
 		/**
 		 * 加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：compFunc(dllItem:DllItem):void;
 		 */		
 		dx_internal var compFunc:Function;
 
-		dx_internal var _inGroupLoading:Boolean = false;
-		/**
-		 * 处于组加载中的标志
-		 */		
-		public function get inGroupLoading():Boolean
-		{
-			return _inGroupLoading;
-		}
 		/**
 		 * 已经加载的字节数
 		 */		

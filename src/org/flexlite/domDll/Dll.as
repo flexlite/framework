@@ -1,8 +1,6 @@
 package org.flexlite.domDll
 {
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.ProgressEvent;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
@@ -94,12 +92,14 @@ package org.flexlite.domDll
 			instance.loadConfig(configList,version,language);
 		}
 		/**
-		 * 根据组名加载一组资源,可多次调用此方法，Dll将会根据调用顺序依次加载每个组。
+		 * 根据组名加载一组资源
 		 * @param name 要加载资源组的组名
+		 * @param priority 加载优先级,可以为负数,默认值为0。
+		 * 低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
 		 */	
-		public static function loadGroup(name:String):void
+		public static function loadGroup(name:String,priority:int=0):void
 		{
-			instance.loadGroup(name);
+			instance.loadGroup(name,priority);
 		}
 		/**
 		 * 检查某个资源组是否已经加载完成
@@ -214,22 +214,15 @@ package org.flexlite.domDll
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SOUND))
 				Injector.mapClass(IResolver,SoundResolver,DllItem.TYPE_SOUND);
 			dllLoader = new DllLoader();
-			dllLoader.addEventListener(ProgressEvent.PROGRESS,onGroupProgress);
-			dllLoader.addEventListener(Event.COMPLETE,onGroupComp);
-			dllLoader.addEventListener(DllEvent.ITEM_LOAD_FINISHED,onItemLoadFinished)
-		}
-		/**
-		 * 重抛事件
-		 */		
-		private function onItemLoadFinished(event:DllEvent):void
-		{
-			dispatchEvent(event);
+			dllLoader.addEventListener(DllEvent.GROUP_PROGRESS,dispatchEvent);
+			dllLoader.addEventListener(DllEvent.GROUP_COMPLETE,onGroupComp);
+			dllLoader.addEventListener(DllEvent.ITEM_LOAD_FINISHED,dispatchEvent)
 		}
 		
 		/**
 		 * 配置文件组组名
 		 */		
-		private static const GROUP_CONFIG:String = "config";
+		private static const GROUP_CONFIG:String = "DLL__CONFIG";
 		/**
 		 * 配置文件名列表
 		 */		
@@ -254,14 +247,14 @@ package org.flexlite.domDll
 			var index:int = 0;
 			for each(var config:ConfigItem in configList)
 			{
-				config.name = "DLL__CONFIG"+index;
+				config.name = GROUP_CONFIG+index;
 				configItemList.push(config);
-				var dllItem:DllItem = new DllItem(config.name,config.url,config.type);
+				var dllItem:DllItem = dllConfig.parseDllItem(
+					{name:config.name,url:config.url,type:config.type,size:0});
 				itemList.push(dllItem);
 				index++;
 			}
-			groupName = GROUP_CONFIG;
-			dllLoader.loadGroup(itemList);
+			dllLoader.loadGroup(itemList,GROUP_CONFIG,int.MAX_VALUE);
 		}
 		/**
 		 * 已经加载过组名列表
@@ -275,48 +268,27 @@ package org.flexlite.domDll
 		{
 			return loadedGroups.indexOf(name)!=-1;
 		}
-		/**
-		 * 待加载的组名列表
-		 */		
-		private var groupList:Vector.<String> = new Vector.<String>();
-		/**
-		 * 根据组名加载一组资源,可多次调用此方法，Dll将会根据调用顺序依次加载每个组。
-		 * @param name 要加载资源组的组名
-		 */		
-		public function loadGroup(name:String):void
-		{
-			if(groupName==name||groupList.indexOf(name)!=-1||loadedGroups.indexOf(name)!=-1)
-				return;
-			groupList.push(name);
-			loadNextGroup();
-		}
-		/**
-		 * 正在加载的组名
-		 */		
-		private var groupName:String = GROUP_CONFIG;
-		/**
-		 * 加载下一组资源
-		 */		
-		private function loadNextGroup():void
-		{
-			if(!configComplete||dllLoader.inGroupLoading||groupList.length==0)
-				return;
-			groupName = groupList.shift();
-			var group:Vector.<DllItem> = dllConfig.getGroupByName(groupName);
-			dllLoader.loadGroup(group);
-		}
-		/**
-		 * 队列加载进度事件
-		 */		
-		private function onGroupProgress(event:ProgressEvent):void
-		{
-			var dllEvent:DllEvent = new DllEvent(DllEvent.GROUP_PROGRESS);
-			dllEvent.bytesTotal = event.bytesTotal;
-			dllEvent.bytesLoaded = event.bytesLoaded;
-			dllEvent.groupName = groupName;
-			dispatchEvent(dllEvent);
-		}
 		
+		private var groupNameList:Array = [];
+		/**
+		 * 根据组名加载一组资源
+		 * @param name 要加载资源组的组名
+		 * @param priority 加载优先级,低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组同时加载。
+		 */		
+		private function loadGroup(name:String,priority:int=0):void
+		{
+			if(loadedGroups.indexOf(name)!=-1||dllLoader.isGroupInLoading(name))
+				return;
+			if(configComplete)
+			{
+				var group:Vector.<DllItem> = dllConfig.getGroupByName(name);
+				dllLoader.loadGroup(group,name,priority);
+			}
+			else
+			{
+				groupNameList.push({name:name,priority:priority});
+			}
+		}
 		/**
 		 * dll配置数据
 		 */		
@@ -324,10 +296,9 @@ package org.flexlite.domDll
 		/**
 		 * 队列加载完成事件
 		 */		
-		private function onGroupComp(event:Event):void
+		private function onGroupComp(event:DllEvent):void
 		{
-			var dllEvent:DllEvent;
-			if(groupName==GROUP_CONFIG)
+			if(event.groupName==GROUP_CONFIG)
 			{
 				for each(var config:ConfigItem in configItemList)
 				{
@@ -337,16 +308,19 @@ package org.flexlite.domDll
 					dllConfig.parseConfig(data,config.folder);
 				}
 				configComplete = true;
-				dllEvent = new DllEvent(DllEvent.CONFIG_COMPLETE);
+				configItemList = null;
+				event = new DllEvent(DllEvent.CONFIG_COMPLETE);
+				for each(var item:Object in groupNameList)
+				{
+					loadGroup(item.name,item.priority);
+				}
+				groupNameList = [];
 			}
 			else
 			{
-				loadedGroups.push(groupName);
-				dllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
-				dllEvent.groupName = groupName;
+				loadedGroups.push(event.groupName);
 			}
-			dispatchEvent(dllEvent);
-			loadNextGroup();
+			dispatchEvent(event);
 		}
 		/**
 		 * 检查配置文件里是否含有指定的资源
@@ -370,6 +344,7 @@ package org.flexlite.domDll
 		 * "img" key是name返回:BitmapData<br/>
 		 * "sound" key是name返回:Sound<br/>
 		 * "bin" key是name返回:ByteArray
+		 * "txt" key是name返回:String
 		 */		
 		private function getRes(key:String):*
 		{
