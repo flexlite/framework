@@ -1,6 +1,7 @@
 package org.flexlite.domDll
 {
 	import flash.events.EventDispatcher;
+	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
@@ -21,6 +22,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.SwfResolver;
 	import org.flexlite.domDll.resolvers.TxtResolver;
 	import org.flexlite.domDll.resolvers.XmlResolver;
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUtils.CRC32Util;
 	
 	use namespace dx_internal;
@@ -355,6 +357,7 @@ package org.flexlite.domDll
 			return resolver.getRes(key);
 		}
 		
+		private var stageText:TextField;
 		/**
 		 * 异步获取资源参数缓存字典
 		 */		
@@ -371,8 +374,27 @@ package org.flexlite.domDll
 			if(compFunc==null)
 				return;
 			var type:String = dllConfig.getType(key);
+			var text:TextField;
+			if(key=="nActionDec_DustRun")
+			{
+				if(stageText)
+					text = stageText;
+				else
+				{
+					text = stageText = new TextField();
+					text.text = "";
+					text.width = 1000;
+					text.height = 100;
+					text.selectable = true;
+					DomGlobals.stage.addChild(text);
+				}
+			}
+			if(text)
+				text.text += "type:"+type+"\n";
 			if(type=="")
 			{
+				if(text)
+					text.text += "type==\"\",doCompFunc:\n";
 				doCompFunc(compFunc,null,other);
 				return;
 			}
@@ -380,12 +402,16 @@ package org.flexlite.domDll
 			var res:* = resolver.getRes(key);
 			if(res)
 			{
+				if(text)
+					text.text += "res!=null,doCompFunc:\n";
 				doCompFunc(compFunc,res,other);
 				return;
 			}
 			var name:String = dllConfig.getName(key);
 			if(resolver.hasRes(name))
 			{
+				if(text)
+					text.text += "resolver.hasRes(name)\n";
 				doGetResAsync(resolver,key,compFunc,other);
 			}
 			else
@@ -393,6 +419,8 @@ package org.flexlite.domDll
 				var args:Object = {key:key,compFunc:compFunc,other:other};
 				if(asyncDic[name])
 				{
+					if(text)
+						text.text += "asyncDic[name]\n";
 					asyncDic[name].push(args);
 				}
 				else
@@ -518,6 +546,7 @@ package org.flexlite.domDll
 		 */		
 		private function doGetResAsync(resolver:IResolver,key:String,compFunc:Function,other:Object):void
 		{
+			
 			resolver.getResAsync(key,function(data:*):void{
 				if(other)
 					compFunc(data,other);
@@ -533,10 +562,29 @@ package org.flexlite.domDll
 			var argsList:Array = asyncDic[item.name];
 			delete asyncDic[item.name];
 			var resolver:IResolver = getResolverByType(item.type);
+			var found:Boolean = false;
 			for each(var args:Object in argsList)
 			{
+				if(args.key == "nActionDec_DustRun")
+					found = true;
 				doGetResAsync(resolver,args.key,args.compFunc,args.other);
 			}
+			if(!found)
+				return;
+			var text:TextField;
+			
+			if(stageText)
+				text = stageText;
+			else
+			{
+				text = stageText = new TextField();
+				text.text = "";
+				text.width = 1000;
+				text.height = 100;
+				text.selectable = true;
+				DomGlobals.stage.addChild(text);
+			}
+			text.text += "onDllItemComp\n";
 		}
 		/**
 		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
