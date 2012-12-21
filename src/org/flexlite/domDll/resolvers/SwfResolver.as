@@ -119,6 +119,8 @@ package org.flexlite.domDll.resolvers
 		 * 正在加载的文件个数
 		 */		
 		private var loadingCount:int = 0;
+		
+		private var nameDic:Dictionary = new Dictionary();
 		/**
 		 * @inheritDoc
 		 */
@@ -134,7 +136,7 @@ package org.flexlite.domDll.resolvers
 			var loader:Loader=new Loader();    
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, bytesComplete); 
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,checkAsyncList); 
-			swfDic[name] = loader;
+			nameDic[loader] = name;
 			loadingCount++;
 			loader.loadBytes(bytes);
 		}
@@ -145,6 +147,9 @@ package org.flexlite.domDll.resolvers
 		private function bytesComplete(event:Event):void
 		{
 			var loader:Loader = (event.target as LoaderInfo).loader;
+			var name:String = nameDic[loader];
+			delete nameDic[loader];
+			swfDic[name] = loader;
 			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bytesComplete); 
 			if(!inIOS)
 				appDomainList.push(loader.contentLoaderInfo.applicationDomain);
