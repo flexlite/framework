@@ -674,11 +674,13 @@ package org.flexlite.domUI.layouts
 				}
 				else
 				{
+					var layoutElementHeight:Number = NaN;
 					if(!isNaN(layoutElement.percentHeight))
 					{
 						var percent:Number = Math.min(100,layoutElement.percentHeight);
-						layoutElement.setLayoutBoundsSize(widthDic[layoutElement],Math.round(targetHeight*percent*0.01));
+						layoutElementHeight = Math.round(targetHeight*percent*0.01);
 					}
+					layoutElement.setLayoutBoundsSize(widthDic[layoutElement],layoutElementHeight);
 					exceesHeight = (targetHeight - layoutElement.layoutBoundsHeight)*vAlign;
 					exceesHeight = exceesHeight>0?exceesHeight:0;
 					y = _paddingTop+Math.round(exceesHeight);
