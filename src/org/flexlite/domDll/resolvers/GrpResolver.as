@@ -31,7 +31,7 @@ package org.flexlite.domDll.resolvers
 		 */
 		override public function loadBytes(bytes:ByteArray,name:String):void
 		{
-			if(fileDic[name]||!bytes)
+			if(keyMap[name]||!bytes)
 				return;
 			try
 			{
@@ -50,21 +50,22 @@ package org.flexlite.domDll.resolvers
 			{
 				return;
 			}
-			for(var name:String in resList)
+			keyMap[name] = this;
+			for(var subName:String in resList)
 			{
-				if(keyMap[name])
+				if(keyMap[subName])
 					continue;
-				var item:Object = resList[name];
+				var item:Object = resList[subName];
 				var resolver:IResolver = getResolverByType(item.type);
 				var subkeys:Array = String(item.subkeys).split(",");
-				subkeys.push(name);
+				subkeys.push(subName);
 				for each(var key:String in subkeys)
 				{
 					if(keyMap[key]!=null)
 						continue;
 					keyMap[key] = resolver;
 				}
-				resolver.loadBytes(item.bytes,name);
+				resolver.loadBytes(item.bytes,subName);
 			}
 		}
 		/**
@@ -73,7 +74,7 @@ package org.flexlite.domDll.resolvers
 		override public function getRes(key:String):*
 		{
 			var resolver:IResolver = keyMap[key];
-			if(resolver)
+			if(resolver&&resolver!=this)
 				return resolver.getRes(key);
 			else
 				return null;
@@ -84,7 +85,7 @@ package org.flexlite.domDll.resolvers
 		override public function getResAsync(key:String,compFunc:Function):void
 		{
 			var resolver:IResolver = keyMap[key];
-			if(resolver)
+			if(resolver&&resolver!=this)
 				resolver.getResAsync(key,compFunc);
 			else
 				compFunc(null);
@@ -102,7 +103,7 @@ package org.flexlite.domDll.resolvers
 		override public function destroyRes(name:String):Boolean
 		{
 			var resolver:IResolver = keyMap[name];
-			if(resolver)
+			if(resolver&&resolver!=this)
 				return resolver.destroyRes(name);
 			else
 				return false;
