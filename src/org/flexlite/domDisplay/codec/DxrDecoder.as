@@ -205,7 +205,10 @@ package org.flexlite.domDisplay.codec
 				data.readBytes(dxrBytes);
 				if(compressStr!="false")
 				{
-					dxrBytes.uncompress(compressStr);
+					if(compressStr=="zlib")
+						dxrBytes.uncompress();
+					else
+						dxrBytes["uncompress"](compressStr);
 				}
 				var keyObject:Object = dxrBytes.readObject();
 				if(keyObject["keyList"]==null)
