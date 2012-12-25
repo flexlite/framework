@@ -37,7 +37,7 @@ package org.flexlite.domUI.skins.studio
 			if(hasOwnProperty("overSkin"))
 				this["overSkin"]["visible"] = false;
 			if(hasOwnProperty("downSkin"))
-				this["disabledSkin"]["visible"] = false;
+				this["downSkin"]["visible"] = false;
 			if(hasOwnProperty("disabledSkin"))
 				this["disabledSkin"]["visible"] = false;
 			
