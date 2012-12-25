@@ -43,7 +43,7 @@ package org.flexlite.domUI.skins.studio
 			
 			
 			var currentSkin:Object;
-			if(hasDisabledState&&currentSkin=="disabled")
+			if(hasDisabledState&&_currentState=="disabled")
 			{
 				if(hasOwnProperty("disabledSkin"))
 					currentSkin = this["disabledSkin"];
