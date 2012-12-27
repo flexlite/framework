@@ -53,8 +53,7 @@ package org.flexlite.domCore
 		public static function hasMapRule(whenAskedFor:Class,named:String=""):Boolean
 		{
 			var requestName:String = getQualifiedClassName(whenAskedFor)+"#"+named;
-			if((mapValueDic&&mapValueDic[requestName])||
-				(mapClassDic&&mapClassDic[requestName]))
+			if(mapValueDic[requestName]||mapClassDic[requestName])
 			{
 				return true;
 			}
@@ -68,21 +67,15 @@ package org.flexlite.domCore
 		public static function getInstance(clazz:Class,named:String=""):*
 		{
 			var requestName:String = getQualifiedClassName(clazz)+"#"+named;
-			if(mapValueDic)
+			if(mapValueDic[requestName])
+				return mapValueDic[requestName];
+			var returnClass:Class = mapClassDic[requestName] as Class;
+			if(returnClass)
 			{
-				if(mapValueDic[requestName])
-					return mapValueDic[requestName];
-			}
-			if(mapClassDic)
-			{
-				var returnClass:Class = mapClassDic[requestName] as Class;
-				if(returnClass)
-				{
-					var instance:* = new returnClass();
-					mapValueDic[requestName] = instance;
-					delete mapClassDic[requestName];
-					return instance;
-				}
+				var instance:* = new returnClass();
+				mapValueDic[requestName] = instance;
+				delete mapClassDic[requestName];
+				return instance;
 			}
 			throw new Error("调用了未配置的注入规则！Class#named:"+requestName+"。 请先在项目初始化里配置指定的注入规则，再调用对应单例。");
 		}
