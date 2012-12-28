@@ -26,6 +26,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function TextBase()
 		{
 			super();
+			mouseChildren = false;
 		}
 		
 		/**
