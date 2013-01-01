@@ -209,10 +209,7 @@ package org.flexlite.domUI.components
 			super.updateDisplayList(unscaledWidth,unscaledWidth);
 			var g:Graphics = graphics;
 			g.clear();
-			if(_fillAlpha>0)
-			{
-				g.beginFill(_fillColor,1);
-			}
+			g.beginFill(_fillColor,_fillAlpha);
 			if(_strokeAlpha>0)
 			{
 				g.lineStyle(_strokeWeight,_strokeColor,_strokeAlpha,true,"normal","square","miter");
