@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dx:Skin  xmlns:dx="http://www.flexlite.org/dxml/2012">
+	<dx:Group width="70"  height="70"/>
+	<dx:HScrollBar/>
+	<dx:TextInput y="100">
+		<dx:String>Label文字</dx:String>
+	</dx:TextInput>
+	<dx:Group>
+		<dx:HSlider y="150.5" x="69"/>
+		<dx:Group y="124.5"  x="102">
+			<dx:Group  y="58.5"  x="71" >
+				<dx:Button x="253" y="75.5" label="按钮"/>
+				<dx:CheckBox y="113.5" x="196"/>
+				<dx:DataGroup width="70" y="160.5" height="70" x="105" dataProvider="{dp}">
+					<dx:layout>
+						<dx:HorizontalLayout gap = "0"/>
+					</dx:layout>
+				</dx:DataGroup>
+				<dx:EditableText y="183.5" x="254"/>
+			</dx:Group>
+			<dx:HSlider y="150.5" x="69"/>
+		</dx:Group>
+	</dx:Group>	
+	<dx:Declarations>
+		<dx:ArrayCollection id="dp">
+			<dx:source>
+				<dx:Array>
+					<dx:String>数据1</dx:String>
+					<dx:String>数据2</dx:String>
+				</dx:Array>
+			</dx:source>
+		</dx:ArrayCollection>
+	</dx:Declarations>
+</dx:Skin>
