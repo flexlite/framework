@@ -13,6 +13,7 @@ package org.flexlite.domUI.core
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
+	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUI.managers.ToolTipManager;
 	
@@ -175,6 +176,52 @@ package org.flexlite.domUI.core
 			_owner = value;
 		}
 		
+		private var _systemManager:ISystemManager;
+		/**
+		 * @inheritDoc
+		 */
+		public function get systemManager():ISystemManager
+		{
+			if(!_systemManager)
+			{
+				if(this is ISystemManager)
+				{
+					_systemManager = ISystemManager(this);
+				}
+				else
+				{
+					var o:DisplayObjectContainer = parent;
+					while (o)
+					{
+						var ui:IUIComponent = o as IUIComponent;
+						if (ui)
+						{
+							_systemManager = ui.systemManager;
+							break;
+						}
+						else if (o is ISystemManager)
+						{
+							_systemManager = o as ISystemManager;
+							break;
+						}
+						o = o.parent;
+					}
+				}
+			}
+			return _systemManager;
+		}
+		public function set systemManager(value:ISystemManager):void
+		{
+			_systemManager = value;
+			var length:int = numChildren;
+			for(var i:int=0;i<length;i++)
+			{
+				var ui:IUIComponent = getChildAt(i) as IUIComponent;
+				if(ui)
+					ui.systemManager = value;
+			}
+		}
+		
 		private var _hasParent:Boolean = false;
 		
 		/**
@@ -219,6 +266,7 @@ package org.flexlite.domUI.core
 				addEventListener(Event.ADDED,onAdded);
 				_nestLevel = 0;
 				_hasParent = false;
+				systemManager = null;
 			}
 		}
 		
@@ -693,16 +741,8 @@ package org.flexlite.domUI.core
 			if (_includeInLayout&&parent && parent is UIComponent)
 				UIComponent(parent).childXYChanged();
 		}
-		/**
-		 * @inheritDoc
-		 */
-		public function get invalidateFlag():Boolean
-		{
-			return invalidatePropertiesFlag||invalidateSizeFlag||invalidateDisplayListFlag;
-		}
 		
 		dx_internal var invalidatePropertiesFlag:Boolean = false;
-		
 		/**
 		 * @inheritDoc
 		 */		

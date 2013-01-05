@@ -23,10 +23,10 @@ package org.flexlite.domUI.managers
 	use namespace dx_internal;
 	
 	/**
-	 * 系统管理器,应用程序顶级容器。
+	 * 系统管理器,应用程序顶级容器。管理弹窗，鼠标样式，工具提示的显示层级。
 	 * @author DOM
 	 */	
-	public class SystemManager extends Group
+	public class SystemManager extends Group implements ISystemManager
 	{
 		/**
 		 * 构造函数

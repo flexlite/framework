@@ -469,15 +469,6 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}
 		
-		override protected function invalidateParentSizeAndDisplayList():void
-		{
-			super.invalidateParentSizeAndDisplayList();
-			if(hasEventListener("invalidateParentSizeAndDisplayList"))
-			{
-				dispatchEvent(new Event("invalidateParentSizeAndDisplayList"));
-			}
-		}
-
 		/**
 		 * 添加对象到显示列表
 		 */		

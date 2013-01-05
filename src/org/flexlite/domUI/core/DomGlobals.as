@@ -3,8 +3,8 @@ package org.flexlite.domUI.core
 	import flash.display.Stage;
 	
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.LayoutManager;
-	import org.flexlite.domUI.managers.SystemManager;
 
 	use namespace dx_internal;
 	
@@ -42,11 +42,11 @@ package org.flexlite.domUI.core
 		 */		
 		dx_internal static var layoutManager:LayoutManager;
 		
-		dx_internal static var _systemManager:SystemManager;
+		dx_internal static var _systemManager:ISystemManager;
 		/**
 		 * 顶级应用容器
 		 */
-		public static function get systemManager():SystemManager
+		public static function get systemManager():ISystemManager
 		{
 			return _systemManager;
 		}

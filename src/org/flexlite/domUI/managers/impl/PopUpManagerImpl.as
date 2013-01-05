@@ -1,13 +1,17 @@
 package org.flexlite.domUI.managers.impl
 {
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.Dictionary;
 	
 	import org.flexlite.domUI.components.Rect;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.managers.ISystemManager;
 
 	[ExcludeClass]
 	
@@ -55,9 +59,15 @@ package org.flexlite.domUI.managers.impl
 		 * @param popUp 要弹出的窗口
 		 * @param modal 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
 		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+		 * @param systemManager 要弹出到的系统管理器。若项目中只含有一个系统管理器，则可以留空。
 		 */		
-		public function addPopUp(popUp:IVisualElement,modal:Boolean=false,center:Boolean=true):void
+		public function addPopUp(popUp:IVisualElement,modal:Boolean=false,
+								 center:Boolean=true,systemManager:ISystemManager=null):void
 		{
+			if(!systemManager)
+				systemManager = DomGlobals.systemManager;
+			if(!systemManager)
+				return;
 			var data:PopUpData = findPopUpData(popUp);
 			if(data)
 			{
@@ -72,12 +82,12 @@ package org.flexlite.domUI.managers.impl
 			}
 			if(center)
 				centerPopUp(popUp);
-			DomGlobals.systemManager.popUpContainer.addElement(popUp);
+			systemManager.popUpContainer.addElement(popUp);
 			if(popUp is IUIComponent)
 				IUIComponent(popUp).isPopUp = true;
 			if(modal)
 			{
-				updateModal();
+				updateModal(systemManager);
 			}
 			popUp.addEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 		}
@@ -97,55 +107,63 @@ package org.flexlite.domUI.managers.impl
 					data.popUp.removeEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 					popUpDataList.splice(index,1);
 					_popUpList.splice(index,1);
-					updateModal();
+					updateModal(data.popUp.parent as ISystemManager);
 					break;
 				}
 				index++;
 			}
 		}
 		
-		private var _modalMask:IVisualElement;
-		/**
-		 * 模态遮罩层对象。若不设置，默认创建一个填充色为黑色，透明度0.5的Rect对象作为模态遮罩。
-		 */
-		public function get modalMask():IVisualElement
-		{
-			return _modalMask;
-		}
-		public function set modalMask(value:IVisualElement):void
-		{
-			if(_modalMask==value)
-				return;
-			var oldModalMask:IVisualElement = _modalMask;
-			_modalMask = value;
-			if(_modalMask)
-			{
-				_modalMask.percentHeight = _modalMask.percentWidth = NaN;
-				_modalMask.top = _modalMask.bottom = _modalMask.left = _modalMask.right = 0;
-			}
-			if(!DomGlobals.systemManager)
-				return;
-			if(oldModalMask&&oldModalMask.parent==DomGlobals.systemManager)
-				DomGlobals.systemManager.popUpContainer.removeElement(oldModalMask);
-			updateModal();
-		}
-
 		
+		private var _modalColor:uint = 0x000000;
+		/**
+		 * 模态遮罩的填充颜色
+		 */
+		public function get modalColor():uint
+		{
+			return _modalColor;
+		}
+		public function set modalColor(value:uint):void
+		{
+			if(_modalColor==value)
+				return;
+			_modalColor = value;
+		}
+		
+		private var _modalAlpha:Number = 0.5;
+		/**
+		 * 模态遮罩的透明度
+		 */
+		public function get modalAlpha():Number
+		{
+			return _modalAlpha;
+		}
+		public function set modalAlpha(value:Number):void
+		{
+			if(_modalAlpha==value)
+				return;
+			_modalAlpha = value;
+		}
+		
+		private var modalMaskDic:Dictionary = new Dictionary(true);
 		/**
 		 * 更新窗口模态效果
 		 */		
-		private function updateModal():void
+		private function updateModal(systemManager:ISystemManager):void
 		{
-			var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-			if(!_modalMask)
+			if(!systemManager)
+				return;
+			var popUpContainer:IContainer = systemManager.popUpContainer;
+			var modalMask:Rect = modalMaskDic[systemManager];
+			if(!modalMask)
 			{
-				_modalMask = new Rect();
-				(_modalMask as Rect).fillColor = 0x000000;
-				_modalMask.alpha = 0.5;
-				_modalMask.top = _modalMask.left = _modalMask.right = _modalMask.bottom = 0;
+				modalMaskDic[systemManager] = modalMask = new Rect();
+				(modalMask as Rect).fillColor = _modalColor;
+				modalMask.alpha = _modalAlpha;
+				modalMask.top = modalMask.left = modalMask.right = modalMask.bottom = 0;
 			}
-			if(_modalMask.parent!=DomGlobals.systemManager)
-				popUpContainer.addElement(_modalMask);
+			if(modalMask.parent!=systemManager)
+				popUpContainer.addElement(modalMask);
 			var found:Boolean = false;
 			for(var i:int = popUpContainer.numElements-1;i>=0;i--)
 			{
@@ -174,7 +192,10 @@ package org.flexlite.domUI.managers.impl
 		{
 			if(popUp && popUp.parent&&findPopUpData(popUp))
 			{
-				DomGlobals.systemManager.popUpContainer.removeElement(popUp);
+				if(popUp.parent is IVisualElementContainer)
+					IVisualElementContainer(popUp.parent).removeElement(popUp);
+				else if(popUp is DisplayObject)
+					popUp.parent.removeChild(DisplayObject(popUp));
 			}
 		}
 		
@@ -184,7 +205,6 @@ package org.flexlite.domUI.managers.impl
 		 */
 		public function centerPopUp(popUp:IVisualElement):void
 		{
-			popUp.percentHeight = popUp.percentWidth = NaN;
 			popUp.top = popUp.bottom = popUp.left = popUp.right = NaN;
 			popUp.verticalCenter = popUp.horizontalCenter = 0;
 		}
@@ -196,11 +216,11 @@ package org.flexlite.domUI.managers.impl
 		public function bringToFront(popUp:IVisualElement):void
 		{
 			var data:PopUpData = findPopUpData(popUp);
-			if(data&&popUp.parent)
+			if(data&&popUp.parent is ISystemManager)
 			{
-				var popUpContainer:IContainer = DomGlobals.systemManager.popUpContainer;
-				popUpContainer.setElementIndex(popUp,popUpContainer.numElements-1);
-				updateModal();
+				var sm:ISystemManager = popUp.parent as ISystemManager;
+				sm.popUpContainer.setElementIndex(popUp,sm.popUpContainer.numElements-1);
+				updateModal(sm);
 			}
 		}
 	}

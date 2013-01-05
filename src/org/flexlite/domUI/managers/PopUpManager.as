@@ -37,15 +37,27 @@ package org.flexlite.domUI.managers
 		}
 		
 		/**
-		 * 模态遮罩层对象。若不设置，默认创建一个填充色为白色，透明度0.5的Rect对象作为模态遮罩。
+		 * 模态遮罩的填充颜色
 		 */
-		public static function get modalMask():IVisualElement
+		public function get modalColor():uint
 		{
-			return impl.modalMask;
+			return impl.modalColor;
 		}
-		public static function set modalMask(value:IVisualElement):void
+		public function set modalColor(value:uint):void
 		{
-			impl.modalMask = value;
+			impl.modalColor = value;
+		}
+		
+		/**
+		 * 模态遮罩的透明度
+		 */
+		public function get modalAlpha():Number
+		{
+			return impl.modalAlpha;
+		}
+		public function set modalAlpha(value:Number):void
+		{
+			impl.modalAlpha = value;
 		}
 		
 		/**
@@ -53,8 +65,10 @@ package org.flexlite.domUI.managers
 		 * @param popUp 要弹出的窗口
 		 * @param modal 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
 		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+		 * @param systemManager 要弹出到的系统管理器。若项目中只含有一个系统管理器，可以留空。
 		 */		
-		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,center:Boolean=true):void
+		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,
+										center:Boolean=true,systemManager:ISystemManager=null):void
 		{
 			impl.addPopUp(popUp,modal,center);
 			impl.dispatchEvent(new PopUpEvent(PopUpEvent.ADD_POPUP,false,false,popUp,modal));

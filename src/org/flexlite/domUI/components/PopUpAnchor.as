@@ -182,6 +182,7 @@ package org.flexlite.domUI.components
 					break;
 			}
 			registrationPoint = localToGlobal(registrationPoint);
+			registrationPoint = popUp.parent.globalToLocal(registrationPoint);
 			return registrationPoint;
 		}
 		
@@ -291,7 +292,7 @@ package org.flexlite.domUI.components
 			
 			if (popUp.parent == null && displayPopUp)
 			{
-				PopUpManager.addPopUp(popUp,false,false);
+				PopUpManager.addPopUp(popUp,false,false,systemManager);
 				popUp.owner = this;
 				popUpIsDisplayed = true;
 				if(inAnimation)

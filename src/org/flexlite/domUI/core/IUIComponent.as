@@ -1,5 +1,7 @@
 package org.flexlite.domUI.core
 {
+	import org.flexlite.domUI.managers.ISystemManager;
+
 	/**
 	 * UI组件接口
 	 * @author DOM
@@ -38,6 +40,11 @@ package org.flexlite.domUI.core
 		 * 设置当前组件为焦点对象
 		 */		
 		function setFocus():void;
+		/**
+		 * 所属的系统管理器
+		 */		
+		function get systemManager():ISystemManager;
+		function set systemManager(value:ISystemManager):void;
 	}
 	
 }

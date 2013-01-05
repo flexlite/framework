@@ -258,8 +258,6 @@ package org.flexlite.domUI.components
 			
 			if (!aParent || !bParent)
 				return 0;
-			if (aParent == DomGlobals.systemManager || bParent == DomGlobals.systemManager)
-				return 0;    
 			
 			var aNestLevel:int = (a is UIComponent) ? UIComponent(a).nestLevel : -1;
 			var bNestLevel:int = (b is UIComponent) ? UIComponent(b).nestLevel : -1;

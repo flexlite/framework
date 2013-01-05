@@ -11,18 +11,22 @@ package org.flexlite.domUI.managers.impl
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	import flash.sensors.Accelerometer;
 	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.ToolTip;
 	import org.flexlite.domUI.core.DomGlobals;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IToolTip;
+	import org.flexlite.domUI.core.IUIComponent;
+	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.PopUpPosition;
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
+	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUtils.SharedMap;
 	
@@ -381,14 +385,25 @@ package org.flexlite.domUI.managers.impl
 			if(currentToolTip is DisplayObjectContainer)
 				DisplayObjectContainer(currentToolTip).mouseChildren = false;
 			currentToolTip.visible = false;
-			DomGlobals.systemManager.toolTipContainer.addElement(currentToolTip);
+			toolTipContainer.addElement(currentToolTip);
+		}
+		/**
+		 * 获取工具提示弹出层
+		 */		
+		private function get toolTipContainer():IContainer
+		{
+			var sm:ISystemManager;
+			if(_currentTarget is IUIComponent)
+				sm = IUIComponent(_currentTarget).systemManager;
+			if(!sm)
+				sm = DomGlobals.systemManager;
+			return sm.toolTipContainer;
 		}
 		/**
 		 * 初始化ToolTip显示对象
 		 */		
 		private function initializeTip():void
 		{
-			
 			if (currentToolTip is IToolTip)
 				IToolTip(currentToolTip).toolTipData = currentTipData;
 			
@@ -408,12 +423,12 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function positionTip():void
 		{
-			var stage:Stage = DomGlobals.stage;
 			var x:Number;
 			var y:Number;
 			var dp:DisplayObject = currentToolTip as DisplayObject;
+			var sm:DisplayObjectContainer = dp.parent;
 			var toolTipRect:Rectangle = dp.getBounds(dp);
-			var rect:Rectangle = DisplayObject(currentTarget).getRect(stage);
+			var rect:Rectangle = DisplayObject(currentTarget).getRect(sm);
 			var centerX:Number = rect.left+(rect.width - toolTipRect.width)*0.5;
 			var centetY:Number = rect.top+(rect.height - toolTipRect.height)*0.5;
 			switch(currentTarget.toolTipPosition)
@@ -443,8 +458,8 @@ package org.flexlite.domUI.managers.impl
 					y = rect.top;
 					break;
 				default:
-					x = stage.mouseX + 10; 
-					y = stage.mouseY + 20;
+					x = sm.mouseX + 10; 
+					y = sm.mouseY + 20;
 					break;
 			}
 			x -= toolTipRect.left;
@@ -455,8 +470,8 @@ package org.flexlite.domUI.managers.impl
 				x += offset.x;
 				y = offset.y;
 			}
-			var screenWidth:Number = stage.stageWidth;
-			var screenHeight:Number = stage.stageHeight;
+			var screenWidth:Number = sm.width;
+			var screenHeight:Number = sm.height;
 			if (x + toolTipRect.width > screenWidth)
 				x = screenWidth - toolTipRect.width;
 			if (y + toolTipRect.height > screenHeight)
@@ -507,9 +522,14 @@ package org.flexlite.domUI.managers.impl
 		{
 			showTimer.reset();
 			hideTimer.reset();
-			if (currentToolTip)
+			if(currentToolTip)
 			{
-				DomGlobals.systemManager.toolTipContainer.removeElement(currentToolTip);
+				var tipParent:DisplayObjectContainer = currentToolTip.parent;
+				if(tipParent is IVisualElementContainer)
+					IVisualElementContainer(tipParent).removeElement(currentToolTip);
+				else if(tipParent)
+					tipParent.removeChild(_currentToolTip);
+					
 				currentToolTip = null;
 				
 				scrubTimer.delay = scrubDelay;
@@ -533,14 +553,14 @@ package org.flexlite.domUI.managers.impl
 		{
 			var toolTip:IToolTip = new toolTipClass() as IToolTip;
 			
-			DomGlobals.systemManager.toolTipContainer.addElement(toolTip);
+			toolTipContainer.addElement(toolTip);
 			
 			toolTip.toolTipData = toolTipData;
 			
 			sizeTip(toolTip);
-			
-			toolTip.x = x;
-			toolTip.y = y;
+			var pos:Point = toolTip.parent.globalToLocal(new Point(x,y));
+			toolTip.x = pos.x;
+			toolTip.y = pos.y;
 			return toolTip;
 		}
 		
@@ -550,7 +570,11 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		public function destroyToolTip(toolTip:IToolTip):void
 		{
-			DomGlobals.systemManager.toolTipContainer.removeElement(toolTip);
+			var tipParent:DisplayObjectContainer = toolTip.parent;
+			if(tipParent is IVisualElementContainer)
+				IVisualElementContainer(tipParent).removeElement(toolTip);
+			else if(tipParent&&toolTip is DisplayObject)
+				tipParent.removeChild(toolTip as DisplayObject);
 		}
 		
 		/**
