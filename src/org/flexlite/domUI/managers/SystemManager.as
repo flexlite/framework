@@ -139,7 +139,7 @@ package org.flexlite.domUI.managers
 		 */		
 		private function getTopLevelFocusTarget(target:InteractiveObject):IUIComponent
 		{
-			while (target != this)
+			while(target)
 			{
 				if (target is IUIComponent&&
 					IUIComponent(target).focusEnabled&&
@@ -148,8 +148,6 @@ package org.flexlite.domUI.managers
 					return target as IUIComponent;
 				}
 				target = target.parent;
-				if (target == null)
-					break;
 			}
 			return null;
 		}
