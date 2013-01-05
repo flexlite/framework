@@ -17,7 +17,7 @@ package org.flexlite.domUI.managers
 		/**
 		 * 构造函数
 		 */		
-		public function SystemContainer(owner:SystemManager,
+		public function SystemContainer(owner:ISystemManager,
 										lowerBoundReference:QName,
 										upperBoundReference:QName)
 		{
@@ -28,7 +28,7 @@ package org.flexlite.domUI.managers
 		/**
 		 * 实体容器
 		 */		
-		private var owner:SystemManager;
+		private var owner:ISystemManager;
 		
 		/**
 		 * 容器下边界属性
@@ -46,13 +46,20 @@ package org.flexlite.domUI.managers
 		{
 			return owner[upperBoundReference] - owner[lowerBoundReference];
 		}
+		
+		private var raw_getElementAt:QName = new QName(dx_internal, "raw_getElementAt");
+		private var raw_addElementAt:QName = new QName(dx_internal, "raw_addElementAt");
+		private var raw_getElementIndex:QName = new QName(dx_internal, "raw_getElementIndex");
+		private var raw_removeElement:QName = new QName(dx_internal, "raw_removeElement");
+		private var raw_removeElementAt:QName = new QName(dx_internal, "raw_removeElementAt");
+		private var raw_setElementIndex:QName = new QName(dx_internal, "raw_setElementIndex");
 		/**
 		 * @inheritDoc
 		 */
 		public function getElementAt(index:int):IVisualElement
 		{
 			var retval:IVisualElement =
-				owner.raw_getElementAt(
+				owner[raw_getElementAt](
 					owner[lowerBoundReference] + index);
 			return retval;
 		}
@@ -65,7 +72,7 @@ package org.flexlite.domUI.managers
 			if(element.parent==owner)
 				index--;
 			owner[upperBoundReference]++;
-			owner.raw_addElementAt(element,index);
+			owner[raw_addElementAt](element,index);
 			return element;
 		}
 		/**
@@ -74,7 +81,7 @@ package org.flexlite.domUI.managers
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
 			owner[upperBoundReference]++;
-			owner.raw_addElementAt(
+			owner[raw_addElementAt](
 				element, owner[lowerBoundReference] + index);
 			return element;
 		}
@@ -83,11 +90,11 @@ package org.flexlite.domUI.managers
 		 */
 		public function removeElement(element:IVisualElement):IVisualElement
 		{
-			var index:int = owner.raw_getElementIndex(element);
+			var index:int = owner[raw_getElementIndex](element);
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				owner.raw_removeElement(element);
+				owner[raw_removeElement](element);
 				owner[upperBoundReference]--;
 			}
 			return element;
@@ -102,7 +109,7 @@ package org.flexlite.domUI.managers
 			if (owner[lowerBoundReference] <= index &&
 				index < owner[upperBoundReference])
 			{
-				element = owner.raw_removeElementAt(index);
+				element = owner[raw_removeElementAt](index);
 				owner[upperBoundReference]--;
 			}
 			return element;
@@ -112,7 +119,7 @@ package org.flexlite.domUI.managers
 		 */
 		public function getElementIndex(element:IVisualElement):int
 		{
-			var retval:int = owner.raw_getElementIndex(element);
+			var retval:int = owner[raw_getElementIndex](element);
 			retval -= owner[lowerBoundReference];
 			return retval;
 		}
@@ -121,7 +128,7 @@ package org.flexlite.domUI.managers
 		 */
 		public function setElementIndex(element:IVisualElement, index:int):void
 		{
-			owner.raw_setElementIndex(
+			owner[raw_setElementIndex](
 				element, owner[lowerBoundReference] + index);
 		}
 	}
