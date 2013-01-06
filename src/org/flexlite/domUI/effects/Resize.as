@@ -4,14 +4,14 @@ package org.flexlite.domUI.effects
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
-	import org.flexlite.domUI.effects.supportClasses.MovableEffect;
+	import org.flexlite.domUI.effects.supportClasses.Effect;
 
 	use namespace dx_internal;
 	/**
 	 * 尺寸调整特效。此动画作用于对象的width，height属性。
 	 * @author DOM
 	 */
-	public class Resize extends MovableEffect
+	public class Resize extends Effect
 	{
 		/**
 		 * 构造函数

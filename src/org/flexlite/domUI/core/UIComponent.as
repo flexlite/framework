@@ -1036,7 +1036,7 @@ package org.flexlite.domUI.core
 					this, prop, oldValue, value));
 		}
 		
-		private var _includeInLayout:Boolean = true;
+		dx_internal var _includeInLayout:Boolean = true;
 		/**
 		 * @inheritDoc
 		 */

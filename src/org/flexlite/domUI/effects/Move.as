@@ -3,7 +3,7 @@ package org.flexlite.domUI.effects
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
-	import org.flexlite.domUI.effects.supportClasses.MovableEffect;
+	import org.flexlite.domUI.effects.supportClasses.Effect;
 
 	use namespace dx_internal;
 	
@@ -11,7 +11,7 @@ package org.flexlite.domUI.effects
 	 * 移动特效
 	 * @author DOM
 	 */
-	public class Move extends MovableEffect
+	public class Move extends Effect
 	{
 		/**
 		 * 构造函数

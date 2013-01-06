@@ -116,7 +116,7 @@ package org.flexlite.domUI.components
 			{
 				offsetX = event.stageX - x;
 				offsetY = event.stageY - y;
-				includeInLayout = false;
+				_includeInLayout = false;
 				DomGlobals.stage.addEventListener(
 					MouseEvent.MOUSE_MOVE, moveArea_mouseMoveHandler);
 				DomGlobals.stage.addEventListener(

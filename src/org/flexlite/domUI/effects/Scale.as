@@ -3,14 +3,14 @@ package org.flexlite.domUI.effects
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
-	import org.flexlite.domUI.effects.supportClasses.MovableEffect;
+	import org.flexlite.domUI.effects.supportClasses.Effect;
 
 	use namespace dx_internal;
 	/**
 	 * 缩放特效,此动画作用于对象的scaleX,scaleY属性。
 	 * @author DOM
 	 */
-	public class Scale extends MovableEffect
+	public class Scale extends Effect
 	{
 		/**
 		 * 构造函数

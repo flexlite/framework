@@ -164,6 +164,9 @@ package org.flexlite.domUI.managers
 		private function attachListeners():void
 		{
 			DomGlobals.stage.addEventListener(Event.ENTER_FRAME,doPhasedInstantiation);
+			DomGlobals.stage.addEventListener(Event.RENDER, doPhasedInstantiation);
+			if(DomGlobals.stage)
+				DomGlobals.stage.invalidate();
 			listenersAttached = true;
 		}
 		/**
@@ -172,6 +175,7 @@ package org.flexlite.domUI.managers
 		private function doPhasedInstantiation(event:Event=null):void
 		{
 			DomGlobals.stage.removeEventListener(Event.ENTER_FRAME,doPhasedInstantiation);
+			DomGlobals.stage.removeEventListener(Event.RENDER, doPhasedInstantiation);
 			if (invalidatePropertiesFlag)
 			{
 				validateProperties();
