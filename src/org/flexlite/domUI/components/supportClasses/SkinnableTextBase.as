@@ -5,11 +5,12 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.events.Event;
 	import flash.events.TextEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domUI.components.SkinnableComponent;
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IEditableText;
 	import org.flexlite.domUI.core.ISkinPartHost;
-	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
 	
@@ -410,8 +411,10 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		override public function setFocus():void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				textDisplay.setFocus();
+			else
+				super.setFocus();
 		}
 		
 		/**

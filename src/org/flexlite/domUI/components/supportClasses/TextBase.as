@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	import flash.events.Event;
+	import flash.system.IME;
 	import flash.text.AntiAliasType;
 	import flash.text.Font;
 	import flash.text.TextFormat;
@@ -26,7 +27,6 @@ package org.flexlite.domUI.components.supportClasses
 		public function TextBase()
 		{
 			super();
-			mouseChildren = false;
 		}
 		
 		/**
@@ -623,7 +623,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		override public function setFocus():void
 		{
-			if(textField!=null)
+			if(textField&&DomGlobals.stage)
 			{
 				DomGlobals.stage.focus = textField;
 			}
