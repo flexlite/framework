@@ -57,6 +57,7 @@ package org.flexlite.domUI.core
 		public function UIComponent()
 		{
 			super();
+			focusRect = false;
 			if(DomGlobals.stage==null)
 			{
 				if(stage)
