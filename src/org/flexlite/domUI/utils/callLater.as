@@ -63,7 +63,7 @@ class DelayCall extends Shape
 		}
 		if(!listenForRender&&DomGlobals.stage)
 		{
-			DomGlobals.stage.addEventListener(Event.RENDER,onCallBack);
+			DomGlobals.stage.addEventListener(Event.RENDER,onCallBack,false,-1000);
 			DomGlobals.stage.invalidate();
 			listenForRender = true;
 		}
