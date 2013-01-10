@@ -2,6 +2,7 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import flash.geom.Point;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Scroller;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IViewport;
@@ -9,7 +10,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
-	
+	use namespace dx_internal;
 	/**
 	 * 滚动条布局类
 	 * @author DOM
@@ -71,7 +72,7 @@ package org.flexlite.domUI.components.supportClasses
 			if(hsb.visible == value)
 				return;
 			hsb.visible = value;
-			hsb.includeInLayout = value;
+			hsb._includeInLayout = value;
 		}
 		
 		/**
@@ -120,7 +121,7 @@ package org.flexlite.domUI.components.supportClasses
 			if(vsb.visible == value)
 				return;
 			vsb.visible = value;
-			vsb.includeInLayout = value;
+			vsb._includeInLayout = value;
 		}
 		
 		/**
