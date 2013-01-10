@@ -250,6 +250,13 @@ package org.flexlite.domUI.components.supportClasses
 		 * 布局计数，防止发生无限循环。
 		 */		
 		private var invalidationCount:int = 0;
+//		/**
+//		 * 当viewport含有相对布局元素的子项(content尺寸跟随viewport尺寸而变，这是不规范的用法)，且水平和垂直滚动条同时到达临界显示值时，会出现无限循环验证的情况。
+//		 * (显示滚动条会导致content尺寸变小，继而导致关闭滚动条，content尺寸又变大，又开启滚动条...)暂时没有根治的解决方案，只能通过计数检查的方式断开循环。
+//		 */		
+//		private var loopCount:int = 0;
+//		private var lastUnscaledWidth:Number;
+//		private var lastUnscaledHeight:Number;
 		
 		/**
 		 * @inheritDoc
@@ -259,7 +266,11 @@ package org.flexlite.domUI.components.supportClasses
 			var scroller:Scroller = getScroller();
 			if (!scroller) 
 				return;
-			
+//			if(loopCount>4)
+//			{
+//				loopCount = 0;
+//				return;
+//			}
 			var viewport:IViewport = scroller.viewport;
 			var hsb:ScrollBarBase = scroller.horizontalScrollBar;
 			var vsb:ScrollBarBase = scroller.verticalScrollBar;
@@ -417,6 +428,17 @@ package org.flexlite.domUI.components.supportClasses
 				invalidationCount = 0;
 			
 			target.setContentSize(w, h);
+//			if(w==lastUnscaledWidth&&h==lastUnscaledHeight&&vsbVisible==hsbVisible&&vAuto&&hAuto&&
+//				vsbVisible!=oldShowVSB&&hsbVisible!=oldShowHSB)
+//			{
+//				loopCount++;
+//			}
+//			else
+//			{
+//				lastUnscaledWidth = w;
+//				lastUnscaledHeight = h;
+//				loopCount = 0;
+//			}
 		}
 		
 	}
