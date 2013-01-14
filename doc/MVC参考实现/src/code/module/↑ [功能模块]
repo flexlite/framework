@@ -1,0 +1,6 @@
+能够按具体功能独立解耦出来的模块放置在module包下。以模块名命名子包名。模块包下创建一个控制器，和两个子包,包名为view和model。
+一个模块只有一个控制器，但是可以有多个model，和多个view。控制器实例化并持有多个model和view。创建的包结构大致如下：
+module/sample/SampleController.as
+module/sample/view/SampleView.as
+module/sample/view/events/SampleEvent.as
+module/sample/model/SampleModel.as
