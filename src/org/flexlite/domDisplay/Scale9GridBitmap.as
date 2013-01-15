@@ -220,15 +220,11 @@ package org.flexlite.domDisplay
 			if(!invalidateFlag)
 			{
 				invalidateFlag = true;
+				addEventListener(Event.ENTER_FRAME,validateProperties);
 				if(stage)
 				{
 					addEventListener(Event.RENDER,validateProperties);
-					if(stage) 
-						stage.invalidate();
-				}
-				else
-				{
-					addEventListener(Event.ENTER_FRAME,validateProperties);
+					stage.invalidate();
 				}
 			}
 		}

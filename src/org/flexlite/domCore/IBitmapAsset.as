@@ -21,5 +21,9 @@ package org.flexlite.domCore
 		 * 素材的默认高度（以像素为单位）。
 		 */
 		function get measuredHeight():Number;
+		/**
+		 * 立即验证属性的改变
+		 */		
+		function validateNow():void;
 	}
 }

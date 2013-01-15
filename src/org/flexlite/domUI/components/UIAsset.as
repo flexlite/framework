@@ -238,6 +238,8 @@ package org.flexlite.domUI.components
 				{
 					_skin.width = unscaledWidth;
 					_skin.height = unscaledHeight;
+					if(_skin is IBitmapAsset)
+						IBitmapAsset(_skin).validateNow();
 				}
 			}
 		}

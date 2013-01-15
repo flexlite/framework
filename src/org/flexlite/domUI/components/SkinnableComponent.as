@@ -26,7 +26,7 @@ package org.flexlite.domUI.components
 	 */	
 	[Event(name="partRemoved", type="org.flexlite.domUI.events.SkinPartEvent")]
 	
-	[DXML(show="true")]
+	[DXML(show="false")]
 	
 	/**
 	 * 复杂可设置外观组件的基类，接受ISkin类或任何显示对象作为皮肤。
