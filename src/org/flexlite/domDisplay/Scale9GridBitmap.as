@@ -7,7 +7,8 @@ package org.flexlite.domDisplay
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
+	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
@@ -16,7 +17,7 @@ package org.flexlite.domDisplay
 	 * 注意：此类不具有鼠标事件
 	 * @author DOM
 	 */
-	public class Scale9GridBitmap extends Shape
+	public class Scale9GridBitmap extends Shape implements IInvalidateDisplay
 	{
 		/**
 		 * 构造函数

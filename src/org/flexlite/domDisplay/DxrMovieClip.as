@@ -9,6 +9,7 @@ package org.flexlite.domDisplay
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.IBitmapAsset;
+	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.IMovieClip;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domDisplay.events.MoveClipPlayEvent;
@@ -25,7 +26,8 @@ package org.flexlite.domDisplay
 	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
 	 * @author DOM
 	 */	
-	public class DxrMovieClip extends Sprite implements IMovieClip,IBitmapAsset,IDxrDisplay
+	public class DxrMovieClip extends Sprite implements 
+		IMovieClip,IBitmapAsset,IDxrDisplay,IInvalidateDisplay
 	{
 		/**
 		 * 构造函数

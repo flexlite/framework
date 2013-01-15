@@ -5,6 +5,7 @@ package org.flexlite.domUI.components
 	import flash.text.TextField;
 	
 	import org.flexlite.domCore.IBitmapAsset;
+	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.DefaultSkinAdapter;
@@ -238,8 +239,8 @@ package org.flexlite.domUI.components
 				{
 					_skin.width = unscaledWidth;
 					_skin.height = unscaledHeight;
-					if(_skin is IBitmapAsset)
-						IBitmapAsset(_skin).validateNow();
+					if(_skin is IInvalidateDisplay)
+						IInvalidateDisplay(_skin).validateNow();
 				}
 			}
 		}
