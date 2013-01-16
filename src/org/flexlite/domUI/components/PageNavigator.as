@@ -364,24 +364,23 @@ package org.flexlite.domUI.components
 			}
 		}
 		
-		private var _autoButtonEnabled:Boolean = true;
+		private var _autoButtonVisibility:Boolean = false;
 		/**
-		 * 当已经到达页尾或页首时，自动启用或禁用翻页按钮。默认值为true。
+		 * 当已经到达页尾或页首时，是否自动隐藏或显示翻页按钮。默认值为false。
 		 */
-		public function get autoButtoEnabled():Boolean
+		public function get autoButtonVisibility():Boolean
 		{
-			return _autoButtonEnabled;
+			return _autoButtonVisibility;
 		}
-		public function set autoButtoEnabled(value:Boolean):void
+
+		public function set autoButtonVisibility(value:Boolean):void
 		{
-			if(_autoButtonEnabled==value)
+			if(_autoButtonVisibility==value)
 				return;
-			_autoButtonEnabled = value;
-			if(value)
-			{
-				checkButtonEnabled();
-			}
+			_autoButtonVisibility = value;
+			checkButtonEnabled();
 		}
+
 		/**
 		 * 更新总页码
 		 */		
@@ -440,10 +439,7 @@ package org.flexlite.domUI.components
 			{
 				_currentPage = totalPages-1;
 			}
-			if(_autoButtonEnabled)
-			{
-				checkButtonEnabled();
-			}
+			checkButtonEnabled();
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
 			adjustingScrollPostion = false;
@@ -514,10 +510,7 @@ package org.flexlite.domUI.components
 				}
 			}
 			_currentPage = index;
-			if(_autoButtonEnabled)
-			{
-				checkButtonEnabled();
-			}
+			checkButtonEnabled();
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
 			if(_pageDuration>0&&stage)
@@ -557,13 +550,29 @@ package org.flexlite.domUI.components
 				}
 			}
 			if(prevPageButton)
+			{
 				prevPageButton.enabled = prev;
+				prevPageButton.visible = !_autoButtonVisibility||prev;
+				prevPageButton.includeInLayout = !_autoButtonVisibility||prev;
+			}
 			if(nextPageButton)
+			{
 				nextPageButton.enabled = next;
+				nextPageButton.visible = !_autoButtonVisibility||next;
+				nextPageButton.includeInLayout = !_autoButtonVisibility||next;
+			}
 			if(firstPageButton)
+			{
 				firstPageButton.enabled = first;
+				firstPageButton.visible = !_autoButtonVisibility||first;
+				firstPageButton.includeInLayout = !_autoButtonVisibility||first;
+			}
 			if(lastPageButton)
+			{
 				lastPageButton.enabled = last;
+				lastPageButton.visible = !_autoButtonVisibility||last;
+				lastPageButton.includeInLayout = !_autoButtonVisibility||last;
+			}
 		}
 		
 		/**
