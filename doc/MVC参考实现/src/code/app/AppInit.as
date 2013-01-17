@@ -5,15 +5,11 @@ package code.app
 	
 	import flash.display.Stage;
 	
-	import org.flexlite.domCore.Injector;
-	import org.flexlite.domUI.core.Theme;
-	import org.flexlite.domUI.skins.themes.VectorTheme;
-	
 	/**
 	 * 程序初始化启动类
 	 * @author DOM
 	 */
-	public class AppInit
+	public class AppInit extends Actor
 	{
 		/**
 		 * 构造函数
