@@ -1,6 +1,0 @@
-<!-- 工程中UI组件配置文件示例  -->
-<project xmlns:view="org.flexlite.test.view.*"
-		xmlns:view2="org.flexlite.view.*">
-	<view:CustomUI p="org.flexlite.test.view.CustomUI",s="org.flexlite.domUI.core.UIComponent" d="elementsContent" array="true"/>
-	<view2:CustomUI p="org.flexlite.view.CustomUI",s="org.flexlite.domUI.core.UIComponent"/>
-</project>
