@@ -20,6 +20,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.layouts.TileLayout;
 	import org.flexlite.domUI.layouts.TileOrientation;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
+	import org.flexlite.domUI.utils.callLater;
 	
 	use namespace dx_internal;
 	
@@ -186,7 +187,8 @@ package org.flexlite.domUI.components
 		
 		public function set currentPage(value:int):void
 		{
-			gotoPage(value);
+			_currentPage = value;
+			callLater(gotoPage,[value]);
 		}
 		
 		private var _totalPages:int = 0;
@@ -456,8 +458,6 @@ package org.flexlite.domUI.components
 				index = 0;
 			if(index>_totalPages-1)
 				index = _totalPages-1;
-			if(_currentPage==index)
-				return;
 			adjustingScrollPostion = true;
 			var length:int = Math.abs(_currentPage-index);
 			var i:int;
