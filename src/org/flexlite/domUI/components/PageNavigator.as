@@ -691,9 +691,9 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented() || !vp || !vp.visible)
 				return;
 			if(event.delta>0)
-				gotoPage(_currentPage+1);
-			else
 				gotoPage(_currentPage-1);
+			else
+				gotoPage(_currentPage+1);
 			event.preventDefault();
 			
 		}

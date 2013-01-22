@@ -1,6 +1,10 @@
 package org.flexlite.domUI.skins.studio
 {
 	import org.flexlite.domCore.IMovieClip;
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.UIAsset;
+	
+	use namespace dx_internal;
 
 	[DXML(show="false")]
 	/**
@@ -12,7 +16,11 @@ package org.flexlite.domUI.skins.studio
 		public function ToggleButtonSkin()
 		{
 			super();
-			states = ["up","over","down","upAndSelected","overAndSelected","downAndSelected"];
+			if(hasDisabledState)
+				states = ["up","over","down","upAndSelected","overAndSelected","downAndSelected","disabled"];
+			else
+				states = ["up","over","down","upAndSelected","overAndSelected","downAndSelected"];
+			this.currentState = "up";
 		}
 		
 		/**
@@ -20,47 +28,69 @@ package org.flexlite.domUI.skins.studio
 		 */
 		override protected function commitCurrentState():void
 		{
-			if(hasOwnProperty("upSkin"))
-				this["upSkin"]["visible"] = false;
-			if(hasOwnProperty("overSkin"))
-				this["overSkin"]["visible"] = false;
-			if(hasOwnProperty("downSkin"))
-				this["downSkin"]["visible"] = false;
-			if(hasOwnProperty("selectedSkin"))
-				this["selectedSkin"]["visible"] = false;
-			var currentSkin:Object;
-			switch(currentState)
+			var upSkin:* = hasOwnProperty("upSkin")?this["upSkin"]:null;
+			var overSkin:* = hasOwnProperty("overSkin")?this["overSkin"]:null;
+			var downSkin:* = hasOwnProperty("downSkin")?this["downSkin"]:null;
+			var disabledSkin:* = hasOwnProperty("disabledSkin")?this["disabledSkin"]:null;
+			if(upSkin)
+				upSkin.visible = false;
+			if(overSkin)
+				overSkin.visible = false;
+			if(downSkin)
+				downSkin.visible = false;
+			if(disabledSkin)
+				disabledSkin.visible = false;
+			
+			
+			var currentSkin:*;
+			if(hasDisabledState&&_currentState=="disabled")
 			{
-				case "up":
-					if(hasOwnProperty("upSkin"))
-						currentSkin = this["upSkin"];
-					break;
-				case "over":
-					if(hasOwnProperty("overSkin"))
-						currentSkin = this["overSkin"];
-					else if(hasOwnProperty("upSkin"))
-						currentSkin = this["upSkin"];
-					break;
-				case "down":
-				case "upAndSelected":
-				case "overAndSelected":
-				case "downAndSelected":
-					if(hasOwnProperty("downSkin"))
-						currentSkin = this["downSkin"];
-					else if(hasOwnProperty("overSkin"))
-						currentSkin = this["overSkin"];
-					else if(hasOwnProperty("upSkin"))
-						currentSkin = this["upSkin"];
-					break;
-				default:
-					if(hasOwnProperty("upSkin"))
-						currentSkin = this["upSkin"];
-					break;
+				if(disabledSkin)
+					currentSkin = disabledSkin;
+				else
+					currentSkin = upSkin;
 			}
+			else
+			{
+				switch(_currentState)
+				{
+					case "up":
+						if(upSkin)
+							currentSkin = upSkin;
+						break;
+					case "over":
+						if(overSkin)
+							currentSkin = overSkin;
+						else if(upSkin)
+							currentSkin = upSkin;
+						break;
+					case "down":
+					case "upAndSelected":
+					case "overAndSelected":
+					case "downAndSelected":
+						if(downSkin)
+							currentSkin = downSkin;
+						else if(overSkin)
+							currentSkin = overSkin;
+						else if(upSkin)
+							currentSkin = upSkin;
+						break;
+					default:
+						if(upSkin)
+							currentSkin = upSkin;
+						break;
+				}
+			}
+			
 			if(currentSkin)
 			{
-				currentSkin["visible"] = true;
-				if(currentSkin is IMovieClip)
+				currentSkin.visible = true;
+				if(currentSkin is UIAsset&&currentSkin.skin is IMovieClip)
+				{
+					(currentSkin.skin as IMovieClip).repeatPlay = false;
+					(currentSkin.skin as IMovieClip).gotoAndPlay(0);
+				}
+				else if(currentSkin is IMovieClip)
 				{
 					(currentSkin as IMovieClip).repeatPlay = false;
 					(currentSkin as IMovieClip).gotoAndPlay(0);

@@ -22,11 +22,12 @@ package org.flexlite.domUI.skins.studio
 		override protected function commitCurrentState():void
 		{
 			super.commitCurrentState();
-			if(hasOwnProperty("popUp")&&this["popUp"]&&this["popUp"] is PopUpAnchor)
+			var popUp:* = hasOwnProperty("popUp")?this["popUp"]:null;
+			if(popUp&&popUp is PopUpAnchor)
 			{
-				if(!(this["popUp"] as PopUpAnchor).parent)
-					addElement((this["popUp"] as PopUpAnchor));
-				(this["popUp"] as PopUpAnchor).displayPopUp = (currentState=="open");
+				if(!(popUp as PopUpAnchor).parent)
+					addElement((popUp as PopUpAnchor));
+				(popUp as PopUpAnchor).displayPopUp = (currentState=="open");
 			}
 		}
 	}

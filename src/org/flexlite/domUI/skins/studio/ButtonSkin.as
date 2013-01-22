@@ -25,67 +25,71 @@ package org.flexlite.domUI.skins.studio
 			this.currentState = "up";
 		}
 		
-		private var hasDisabledState:Boolean;
+		protected var hasDisabledState:Boolean;
 
 		/**
 		 * @inheritDoc
 		 */
 		override protected function commitCurrentState():void
 		{
-			if(hasOwnProperty("upSkin"))
-				this["upSkin"]["visible"] = false;
-			if(hasOwnProperty("overSkin"))
-				this["overSkin"]["visible"] = false;
-			if(hasOwnProperty("downSkin"))
-				this["downSkin"]["visible"] = false;
-			if(hasOwnProperty("disabledSkin"))
-				this["disabledSkin"]["visible"] = false;
+			var upSkin:* = hasOwnProperty("upSkin")?this["upSkin"]:null;
+			var overSkin:* = hasOwnProperty("overSkin")?this["overSkin"]:null;
+			var downSkin:* = hasOwnProperty("downSkin")?this["downSkin"]:null;
+			var disabledSkin:* = hasOwnProperty("disabledSkin")?this["disabledSkin"]:null;
+			if(upSkin)
+				upSkin.visible = false;
+			if(overSkin)
+				overSkin.visible = false;
+			if(downSkin)
+				downSkin.visible = false;
+			if(disabledSkin)
+				disabledSkin.visible = false;
 			
 			
-			var currentSkin:Object;
+			var currentSkin:*;
 			if(hasDisabledState&&_currentState=="disabled")
 			{
-				if(hasOwnProperty("disabledSkin"))
-					currentSkin = this["disabledSkin"];
+				if(disabledSkin)
+					currentSkin = disabledSkin;
 				else
-					currentSkin = this["upSkin"];
+					currentSkin = upSkin;
 			}
 			else
 			{
 				switch(_currentState)
 				{
 					case "up":
-						if(hasOwnProperty("upSkin"))
-							currentSkin = this["upSkin"];
+						if(upSkin)
+							currentSkin = upSkin;
 						break;
 					case "over":
-						if(hasOwnProperty("overSkin"))
-							currentSkin = this["overSkin"];
-						else if(hasOwnProperty("upSkin"))
-							currentSkin = this["upSkin"];
+						if(overSkin)
+							currentSkin = overSkin;
+						else if(upSkin)
+							currentSkin = upSkin;
 						break;
 					case "down":
-						if(hasOwnProperty("downSkin"))
-							currentSkin = this["downSkin"];
-						else if(hasOwnProperty("overSkin"))
-							currentSkin = this["overSkin"];
-						else if(hasOwnProperty("upSkin"))
-							currentSkin = this["upSkin"];
+						if(downSkin)
+							currentSkin = downSkin;
+						else if(overSkin)
+							currentSkin = overSkin;
+						else if(upSkin)
+							currentSkin = upSkin;
 						break;
 					default:
-						if(hasOwnProperty("upSkin"))
-							currentSkin = this["upSkin"];
+						if(upSkin)
+							currentSkin = upSkin;
 						break;
 				}
 			}
 			
 			if(currentSkin)
 			{
-				currentSkin["visible"] = true;
-				if(currentSkin is UIAsset&&currentSkin["skin"] is IMovieClip)
+				currentSkin.visible = true;
+				if(currentSkin is UIAsset&&currentSkin.skin is IMovieClip)
 				{
-					(currentSkin["skin"] as IMovieClip).repeatPlay = false;
-					(currentSkin["skin"] as IMovieClip).gotoAndPlay(0);
+					(currentSkin.skin as IMovieClip).repeatPlay = false;
+					(currentSkin.skin as IMovieClip).gotoAndPlay(0);
 				}
 				else if(currentSkin is IMovieClip)
 				{
