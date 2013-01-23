@@ -3,9 +3,13 @@ package org.flexlite.domUI.components
 	import flash.display.MovieClip;
 	import flash.utils.Dictionary;
 	
-	import org.flexlite.domUI.components.supportClasses.ButtonBase;
 	import org.flexlite.domCore.IMovieClip;
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.supportClasses.ButtonBase;
 	import org.flexlite.domUI.utils.MovieClipUtil;
+	
+	use namespace dx_internal;
+	
 	
 	[DXML(show="true")]
 	

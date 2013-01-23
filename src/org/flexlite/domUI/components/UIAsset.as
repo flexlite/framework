@@ -72,7 +72,7 @@ package org.flexlite.domUI.components
 		
 		dx_internal var _skin:DisplayObject;
 		/**
-		 * 皮肤显示对象。赋值到此属性上的显示对象，会添加到显示列表，并自动跟随组件缩放。
+		 * 显示对象皮肤。
 		 */
 		public function get skin():DisplayObject
 		{

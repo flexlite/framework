@@ -4,7 +4,6 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Scroller;
-	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.ScrollPolicy;
 	import org.flexlite.domUI.core.UIComponent;
@@ -35,8 +34,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private function getScroller():Scroller
 		{
-			var g:ISkin = target as ISkin;
-			return g.hostComponent as Scroller;
+			return  target.parent as Scroller;
 		}
 		
 		/**

@@ -3,14 +3,16 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ScrollerLayout;
 	import org.flexlite.domUI.core.IInvalidating;
-	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.NavigationUnit;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
+	
+	use namespace dx_internal;
 	
 	[DXML(show="true")]
 	
@@ -31,6 +33,36 @@ package org.flexlite.domUI.components
 			focusEnabled = true;
 		}
 		
+		/**
+		 * 实体容器
+		 */		
+		private var contentGroup:Group
+		/**
+		 * @inheritDoc
+		 */
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			contentGroup = new Group();
+			contentGroup.layout = new ScrollerLayout();
+			addToDisplyList(contentGroup);
+			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
+		}
+		/**
+		 * @inheritDoc
+		 */
+		override protected function measure():void
+		{
+			measuredWidth = contentGroup.preferredWidth;
+			measuredHeight = contentGroup.preferredHeight;
+		}
+		/**
+		 * @inheritDoc
+		 */
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			contentGroup.setLayoutBoundsSize(unscaledWidth,unscaledHeight);
+		}
 		/**
 		 * @inheritDoc
 		 */
@@ -66,7 +98,6 @@ package org.flexlite.domUI.components
 		{
 			return _horizontalScrollPolicy;
 		}
-
 		public function set horizontalScrollPolicy(value:String):void
 		{
 			if(_horizontalScrollPolicy == value)
@@ -106,7 +137,6 @@ package org.flexlite.domUI.components
 		{       
 			return _viewport;
 		}
-		
 		public function set viewport(value:IViewport):void
 		{
 			if (value == _viewport)
@@ -124,9 +154,9 @@ package org.flexlite.domUI.components
 		private function installViewport():void
 		{
 			if (skin && viewport)
-			{
+			{ 
 				viewport.clipAndEnableScrolling = true;
-				(skin as ISkin).addElementAt(viewport, 0);
+				contentGroup.addElementAt(viewport,0);
 				viewport.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 			}
 			if (verticalScrollBar)
@@ -147,7 +177,7 @@ package org.flexlite.domUI.components
 			if (skin && viewport)
 			{
 				viewport.clipAndEnableScrolling = false;
-				(skin as ISkin).removeElement(viewport);
+				contentGroup.removeElement(viewport);
 				viewport.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 			}
 		}
@@ -164,7 +194,6 @@ package org.flexlite.domUI.components
 		{
 			return _minViewportInset;
 		}
-		
 		public function set minViewportInset(value:Number):void
 		{
 			if (value == _minViewportInset)
@@ -182,7 +211,6 @@ package org.flexlite.domUI.components
 		{
 			return _measuredSizeIncludesScrollBars;
 		}
-		
 		public function set measuredSizeIncludesScrollBars(value:Boolean):void
 		{
 			if (value == _measuredSizeIncludesScrollBars)
@@ -218,7 +246,9 @@ package org.flexlite.domUI.components
 		{
 			throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementAt(index:int):IVisualElement
 		{
 			if (viewport && index == 0)
@@ -228,7 +258,9 @@ package org.flexlite.domUI.components
 			return null;
 		}
 		
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function getElementIndex(element:IVisualElement):int
 		{
 			if (element != null && element == viewport)
@@ -236,7 +268,9 @@ package org.flexlite.domUI.components
 			else
 				return -1;
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function containsElement(element:IVisualElement):Boolean
 		{
 			if (element != null && element == viewport)
@@ -248,39 +282,62 @@ package org.flexlite.domUI.components
 		{
 			throw new Error("此方法在Scroller组件内不可用!");
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
 		public function addElement(element:IVisualElement):IVisualElement
 		{
 			throwNotSupportedError();
 			return null;
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function addElementAt(element:IVisualElement, index:int):IVisualElement
 		{
 			throwNotSupportedError();
 			return null;
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElement(element:IVisualElement):IVisualElement
 		{
 			throwNotSupportedError();
 			return null;
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function removeElementAt(index:int):IVisualElement
 		{
 			throwNotSupportedError();
 			return null;
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function removeAllElements():void
 		{
 			throwNotSupportedError();
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function setElementIndex(element:IVisualElement, index:int):void
 		{
 			throwNotSupportedError();
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElements(element1:IVisualElement, element2:IVisualElement):void
 		{
 			throwNotSupportedError();
 		}
+		/**
+		 * @inheritDoc
+		 */
 		public function swapElementsAt(index1:int, index2:int):void
 		{
 			throwNotSupportedError();
@@ -292,9 +349,7 @@ package org.flexlite.domUI.components
 		override protected function attachSkin(skin:Object):void
 		{
 			super.attachSkin(skin);
-			(skin as ISkin).layout = new ScrollerLayout();
 			installViewport();
-			(skin as ISkin).addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
 		}
 		
 		/**
@@ -303,8 +358,6 @@ package org.flexlite.domUI.components
 		override protected function detachSkin(skin:Object):void
 		{    
 			uninstallViewport();
-			(skin as ISkin).layout = null;
-			(skin as ISkin).removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
 			super.detachSkin(skin);
 		}
 		
@@ -316,10 +369,16 @@ package org.flexlite.domUI.components
 			super.partAdded(partName, instance);
 			
 			if (instance == verticalScrollBar)
+			{
 				verticalScrollBar.viewport = viewport;
+				contentGroup.addElement(verticalScrollBar);
+			}
 				
 			else if (instance == horizontalScrollBar)
+			{
 				horizontalScrollBar.viewport = viewport;
+				contentGroup.addElement(horizontalScrollBar);
+			}
 		}
 		
 		/**
@@ -330,10 +389,17 @@ package org.flexlite.domUI.components
 			super.partRemoved(partName, instance);
 			
 			if (instance == verticalScrollBar)
+			{
 				verticalScrollBar.viewport = null;
-				
+				if(verticalScrollBar.parent==contentGroup)
+					contentGroup.removeElement(verticalScrollBar);
+			}
 			else if (instance == horizontalScrollBar)
+			{
 				horizontalScrollBar.viewport = null;
+				if(horizontalScrollBar.parent==contentGroup)
+					contentGroup.removeElement(horizontalScrollBar);
+			}
 		}
 		
 		

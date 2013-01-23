@@ -3,9 +3,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.ISkin;
-	import org.flexlite.domUI.core.ISkinPartHost;
 	import org.flexlite.domUI.core.IStateClient;
-	import org.flexlite.domUI.utils.SkinPartUtil;
 
 	use namespace dx_internal;
 	
@@ -18,7 +16,7 @@ package org.flexlite.domUI.components.supportClasses
 	 * @author DOM
 	 */
 	public class Skin extends Group 
-		implements IStateClient,ISkin,ISkinPartHost
+		implements IStateClient,ISkin
 	{
 		public function Skin()
 		{
@@ -39,14 +37,6 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			_hostComponent = value;
 		}
-		/**
-		 * @inheritDoc
-		 */
-		public function getSkinParts():Vector.<String>
-		{
-			return SkinPartUtil.getSkinParts(this,Skin);
-		}
-
 		
 		/**
 		 * @inheritDoc
