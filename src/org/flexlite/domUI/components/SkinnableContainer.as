@@ -63,6 +63,8 @@ package org.flexlite.domUI.components
 				if (_placeHolderGroup==null)
 				{
 					_placeHolderGroup = new Group();
+					_placeHolderGroup.visible = false;
+					addToDisplyList(_placeHolderGroup);
 				}
 				_placeHolderGroup.addEventListener(
 					ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
@@ -221,8 +223,8 @@ package org.flexlite.domUI.components
 					{
 						_placeHolderGroup.removeElementAt(0);  
 					}
+					removeFromDisplayList(_placeHolderGroup);
 					_placeHolderGroup = null;
-					
 				}
 				contentGroup.addEventListener(
 					ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
