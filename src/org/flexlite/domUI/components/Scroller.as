@@ -42,11 +42,11 @@ package org.flexlite.domUI.components
 		 */
 		override protected function createChildren():void
 		{
-			super.createChildren();
 			contentGroup = new Group();
 			contentGroup.layout = new ScrollerLayout();
 			addToDisplyList(contentGroup);
 			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
+			super.createChildren();
 		}
 		/**
 		 * @inheritDoc
