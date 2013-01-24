@@ -125,6 +125,10 @@ package org.flexlite.domUI.components
 				{
 					viewStack.selectedChild = viewStackProperties.selectedChild;
 				}
+				for(var index:int=0;index<viewStack.numElements;index++)
+				{
+					tabBarData.addItem(viewStack.getElementAt(index).name);
+				}
 				viewStackProperties = {};
 			}
 		}
@@ -142,6 +146,7 @@ package org.flexlite.domUI.components
 			{
 				viewStack.removeEventListener(IndexChangeEvent.CHANGE,onViewStackIndexChange);
 				viewStackProperties.selectedIndex = viewStack.selectedIndex;
+				tabBarData.removeAll();
 			}
 		}
 		/**
