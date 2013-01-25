@@ -292,7 +292,7 @@ package org.flexlite.domDll
 		/**
 		 * dll配置数据
 		 */		
-		private var dllConfig:DllConfig = new DllConfig();
+		dx_internal var dllConfig:DllConfig = new DllConfig();
 		/**
 		 * 队列加载完成事件
 		 */		
