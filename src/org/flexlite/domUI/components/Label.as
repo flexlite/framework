@@ -452,6 +452,8 @@ package org.flexlite.domUI.components
 					return;
 				}
 			}
+			if(!textField.visible)//解决初始化时文本闪烁问题
+				textField.visible = true;
 			if(_isTruncated)
 			{
 				textField.$text = _text;
@@ -586,6 +588,7 @@ package org.flexlite.domUI.components
 			{
 				super.createTextField();
 				textField.wordWrap = true;
+				textField.visible = false;
 			}
 		}
 		
