@@ -45,7 +45,7 @@ package org.flexlite.domUI.components
 			contentGroup = new Group();
 			contentGroup.layout = new ScrollerLayout();
 			addToDisplyList(contentGroup);
-			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
+			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, contentGroup_mouseWheelHandler);
 			super.createChildren();
 		}
 		/**
@@ -111,11 +111,8 @@ package org.flexlite.domUI.components
 		 */		
 		private function invalidateSkin():void
 		{
-			if (skin is IInvalidating)
-			{
-				(skin as IInvalidating).invalidateSize();
-				(skin as IInvalidating).invalidateDisplayList();
-			}
+			contentGroup.invalidateSize();
+			contentGroup.invalidateDisplayList();
 		}    
 		
 		/**
@@ -406,7 +403,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 皮肤上鼠标滚轮事件
 		 */		
-		private function skin_mouseWheelHandler(event:MouseEvent):void
+		private function contentGroup_mouseWheelHandler(event:MouseEvent):void
 		{
 			const vp:IViewport = viewport;
 			if (event.isDefaultPrevented() || !vp || !vp.visible)
