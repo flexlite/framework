@@ -111,8 +111,11 @@ package org.flexlite.domUI.components
 		 */		
 		private function invalidateSkin():void
 		{
-			contentGroup.invalidateSize();
-			contentGroup.invalidateDisplayList();
+			if(contentGroup)
+			{
+				contentGroup.invalidateSize();
+				contentGroup.invalidateDisplayList();
+			}
 		}    
 		
 		/**
