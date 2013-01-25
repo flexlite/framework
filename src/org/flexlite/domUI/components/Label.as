@@ -437,6 +437,8 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
 		{
 			$updateDisplayList(unscaledWidth,unscaledHeight);
+			textField.x = _paddingLeft;
+			textField.y = _paddingTop;
 			if (isSpecialCase())
 			{
 				var firstTime:Boolean = isNaN(lastUnscaledWidth) ||
@@ -463,8 +465,6 @@ package org.flexlite.domUI.components
 			var unscaledTextHeight:Number = unscaledHeight - _paddingTop - _paddingBottom;
 			textField.$height = unscaledTextHeight;
 			
-			textField.x = _paddingLeft;
-			textField.y = _paddingTop;
 			
 			if (Math.floor(width) < Math.floor(measuredWidth))
 				textField.wordWrap = true;
