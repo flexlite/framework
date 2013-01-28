@@ -44,6 +44,16 @@ package org.flexlite.domDll.core
 		 */		
 		private var thread:int = 2;
 		
+		private var _version:String;
+		/**
+		 * 设置当前的资源版本号
+		 */
+		public function setVersion(value:String):void
+		{
+			_version = value;
+		}
+
+		
 		/**
 		 * 当前队列总文件大小
 		 */		
@@ -154,6 +164,15 @@ package org.flexlite.domDll.core
 					if(!resolver)
 					{
 						resolver = resolverDic[dllItem.type] = Injector.getInstance(IResolver,dllItem.type);
+					}
+					var url:String = dllItem.url;
+					if(_version&&url.indexOf("?v=")==-1)
+					{
+						if(url.indexOf("?")==-1)
+							url += "?v="+_version;
+						else
+							url += "&v="+_version;
+						dllItem.url = url;
 					}
 					resolver.loadFile(dllItem,onItemComplete,onItemProgress);
 				}

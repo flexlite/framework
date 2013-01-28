@@ -10,6 +10,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.core.DllConfig;
 	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.DllLoader;
+	import org.flexlite.domDll.core.IDllConfig;
 	import org.flexlite.domDll.core.IResolver;
 	import org.flexlite.domDll.events.DllEvent;
 	import org.flexlite.domDll.resolvers.AmfResolver;
@@ -213,6 +214,9 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,GrpResolver,DllItem.TYPE_GRP);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SOUND))
 				Injector.mapClass(IResolver,SoundResolver,DllItem.TYPE_SOUND);
+			if(!Injector.hasMapRule(IDllConfig))
+				Injector.mapClass(IDllConfig,DllConfig);
+			dllConfig = new DllConfig();
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(DllEvent.GROUP_PROGRESS,dispatchEvent);
 			dllLoader.addEventListener(DllEvent.GROUP_COMPLETE,onGroupComp);
@@ -241,16 +245,15 @@ package org.flexlite.domDll
 		{
 			if(configComplete)
 				return;
-			dllConfig.language = language;
-			dllConfig.version = version;
+			dllLoader.setVersion(version);
+			dllConfig.setLanguage(language);
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
 			var index:int = 0;
 			for each(var config:ConfigItem in configList)
 			{
 				config.name = GROUP_CONFIG+index;
 				configItemList.push(config);
-				var dllItem:DllItem = dllConfig.parseDllItem(
-					{name:config.name,url:config.url,type:config.type,size:0});
+				var dllItem:DllItem = new DllItem(config.name,config.url,config.type,0);
 				itemList.push(dllItem);
 				index++;
 			}
@@ -292,7 +295,7 @@ package org.flexlite.domDll
 		/**
 		 * dll配置数据
 		 */		
-		dx_internal var dllConfig:DllConfig = new DllConfig();
+		private var dllConfig:IDllConfig;
 		/**
 		 * 队列加载完成事件
 		 */		
@@ -445,7 +448,7 @@ package org.flexlite.domDll
 			else
 			{
 				asyncDic[name] = [args];
-				var dllItem:DllItem = dllConfig.parseDllItem({name:name,url:url,type:type,size:0});
+				var dllItem:DllItem = new DllItem(name,url,type,0);
 				dllItem.compFunc = onDllItemComp;
 				dllLoader.loadItem(dllItem);
 			}

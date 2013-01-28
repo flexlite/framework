@@ -7,10 +7,10 @@ package org.flexlite.domDll.core
 	
 	use namespace dx_internal;
 	/**
-	 * Dll配置文件解析类
+	 * Dll配置文件解析器
 	 * @author DOM
 	 */
-	public class DllConfig
+	public class DllConfig implements IDllConfig
 	{
 		/**
 		 * 构造函数
@@ -19,17 +19,17 @@ package org.flexlite.domDll.core
 		{
 		}
 		
+		private var _language:String;
 		/**
-		 * 当前的语言环境
-		 */		
-		public var language:String;
+		 * @inheritDoc
+		 */
+		public function setLanguage(value:String):void
+		{
+			_language = value;
+		}
+
 		/**
-		 * 当前的资源版本号
-		 */		
-		public var version:String;
-		/**
-		 * 根据组名获取组加载项列表
-		 * @param name
+		 * @inheritDoc
 		 */		
 		public function getGroupByName(name:String):Vector.<DllItem>
 		{
@@ -51,8 +51,8 @@ package org.flexlite.domDll.core
 		 */		
 		private var groupDic:Dictionary = new Dictionary();
 		/**
-		 * 解析一个配置数据,构造查询表
-		 */		
+		 * @inheritDoc
+		 */	
 		public function parseConfig(data:Object,folder:String):void
 		{
 			if(!data)
@@ -106,7 +106,7 @@ package org.flexlite.domDll.core
 			for each(var item:XML in xml.children())
 			{
 				var lang:String = String(item.@language);
-				if(lang!=language&&lang!="all")
+				if(lang!=_language&&lang!="all")
 					continue;
 				var obj:Object = {name:String(item.@name),url:folder+String(item.@url),
 					type:String(item.@type),size:String(item.@size)};
@@ -125,7 +125,7 @@ package org.flexlite.domDll.core
 			for each(var item:Object in list)
 			{
 				var lang:String = item.language;
-				if(lang!=language&&lang!="all")
+				if(lang!=_language&&lang!="all")
 					continue;
 				delete item.language;
 				item.url = folder+item.url;
@@ -154,8 +154,7 @@ package org.flexlite.domDll.core
 			}
 		}
 		/**
-		 * 获取加载项类型。
-		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @inheritDoc
 		 */		
 		public function getType(key:String):String
 		{
@@ -163,17 +162,16 @@ package org.flexlite.domDll.core
 			return data?data.type:"";
 		}
 		/**
-		 * 获取加载项名称
-		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function getName(key:String):String
 		{
 			var data:Object = keyMap[key];
 			return data?data.name:"";
 		}
 		/**
-		 * 根据一级键名或二级键名获取加载项信息对象
-		 */		
+		 * @inheritDoc
+		 */	
 		public function getDllItem(key:String):DllItem
 		{
 			var data:Object = keyMap[key];
@@ -184,17 +182,9 @@ package org.flexlite.domDll.core
 		/**
 		 * 转换Object数据为DllItem对象
 		 */		
-		public function parseDllItem(data:Object):DllItem
+		private function parseDllItem(data:Object):DllItem
 		{
-			var url:String = data.url;
-			if(version&&url.indexOf("?v=")==-1)
-			{
-				if(url.indexOf("?")==-1)
-					url += "?v="+version;
-				else
-					url += "&v="+version;
-			}
-			var dllItem:DllItem = new DllItem(data.name,url,data.type,data.size);
+			var dllItem:DllItem = new DllItem(data.name,data.url,data.type,data.size);
 			dllItem.data = data;
 			return dllItem;
 		}
