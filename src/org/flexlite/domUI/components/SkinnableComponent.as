@@ -99,10 +99,7 @@ package org.flexlite.domUI.components
 		override protected function onGetSkin(skin:Object,skinName:Object):void
 		{
 			var oldSkin:Object = getCurrentSkin();
-			if(oldSkin)
-			{
-				detachSkin(oldSkin);
-			}
+			detachSkin(oldSkin);
 			if(_skin)
 			{
 				if(_skin.parent==this)
