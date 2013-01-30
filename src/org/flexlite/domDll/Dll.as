@@ -243,8 +243,6 @@ package org.flexlite.domDll
 		 */	
 		private function loadConfig(configList:Vector.<ConfigItem>,version:String="",language:String="cn"):void
 		{
-			if(configComplete)
-				return;
 			dllLoader.setVersion(version);
 			dllConfig.setLanguage(language);
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
