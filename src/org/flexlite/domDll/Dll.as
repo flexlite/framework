@@ -216,7 +216,7 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,SoundResolver,DllItem.TYPE_SOUND);
 			if(!Injector.hasMapRule(IDllConfig))
 				Injector.mapClass(IDllConfig,DllConfig);
-			dllConfig = new DllConfig();
+			dllConfig = Injector.getInstance(IDllConfig);
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(DllEvent.GROUP_PROGRESS,dispatchEvent);
 			dllLoader.addEventListener(DllEvent.GROUP_COMPLETE,onGroupComp);
