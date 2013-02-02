@@ -168,6 +168,7 @@ package org.flexlite.domUI.components
 		{
 			if(viewStack)
 				viewStack.setSelectedIndex(event.newIndex,false);
+			dispatchEvent(event);
 		}
 
 		/**
