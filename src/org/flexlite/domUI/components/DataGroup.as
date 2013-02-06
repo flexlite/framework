@@ -117,7 +117,7 @@ package org.flexlite.domUI.components
 				return indexToRenderer[index];
 			}
 			
-			var item:Object = dataProvider[index];
+			var item:Object = dataProvider.getItemAt(index);
 			var renderer:IItemRenderer = createVirtualRenderer(index);
 			indexToRenderer[index] = renderer;
 			updateRenderer(renderer,index,item);
@@ -173,7 +173,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function createVirtualRenderer(index:int):IItemRenderer
 		{
-			var item:Object = dataProvider[index];
+			var item:Object = dataProvider.getItemAt(index);
 			var renderer:IItemRenderer;
 			var rendererClass:Class = itemToRendererClass(item);
 			if(freeRenderers[rendererClass]!=null

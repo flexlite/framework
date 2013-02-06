@@ -34,7 +34,7 @@ package org.flexlite.domUI.collections
 		{
 			super();
 			eventDispatcher = new EventDispatcher(this);
-			if(source!=null)
+			if(source)
 			{
 				_source = source;
 			}
@@ -57,7 +57,7 @@ package org.flexlite.domUI.collections
 
 		public function set source(value:Array):void
 		{
-			if(value==null)
+			if(!value)
 				value = [];
 			_source = value;
 			dispatchCoEvent(CollectionEventKind.RESET);
@@ -69,7 +69,9 @@ package org.flexlite.domUI.collections
 		{
 			dispatchCoEvent(CollectionEventKind.REFRESH);
 		}
-		
+		/**
+		 * 是否包含某项数据
+		 */		
 		public function contains(item:Object):Boolean
 		{
 			return getItemIndex(item)!=-1;
@@ -99,16 +101,18 @@ package org.flexlite.domUI.collections
 			return _source.length;
 		}
 		/**
-		 * @inheritDoc
-		 */
+		 * 向列表末尾添加指定项目。等效于 addItemAt(item, length)。
+		 */	
 		public function addItem(item:Object):void
 		{
 			_source.push(item);
 			dispatchCoEvent(CollectionEventKind.ADD,_source.length-1,-1,[item]);
 		}
 		/**
-		 * @inheritDoc
-		 */
+		 * 在指定的索引处添加项目。
+		 * 任何大于已添加项目的索引的项目索引都会增加 1。
+		 * @throws RangeError 如果索引小于 0 或大于长度。
+		 */	
 		public function addItemAt(item:Object, index:int):void
 		{
 			if(index<0||index>_source.length)
@@ -130,25 +134,18 @@ package org.flexlite.domUI.collections
 		 */
 		public function getItemIndex(item:Object):int
 		{
-			var found:Boolean = false;
-			var index:int = 0;
-			for each(var obj:Object in _source)
+			var length:int = _source.length;
+			for(var i:int=0;i<length;i++)
 			{
-				if(obj===item)
+				if(_source[i]===item)
 				{
-					found = true;
-					break;
+					return i;
 				}
-				index++;
-			}
-			if(found)
-			{
-				return index;
 			}
 			return -1;
 		}
 		/**
-		 * @inheritDoc
+		 * 通知视图，某个项目的属性已更新。
 		 */
 		public function itemUpdated(item:Object):void
 		{
@@ -159,7 +156,7 @@ package org.flexlite.domUI.collections
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * 删除列表中的所有项目。
 		 */
 		public function removeAll():void
 		{
@@ -168,7 +165,8 @@ package org.flexlite.domUI.collections
 			dispatchCoEvent(CollectionEventKind.REMOVE,0,-1,items);
 		}
 		/**
-		 * @inheritDoc
+		 * 删除指定索引处的项目并返回该项目。原先位于此索引之后的所有项目的索引现在都向前移动一个位置。
+		 * @throws RangeError 如果索引小于 0 或大于长度。
 		 */
 		public function removeItemAt(index:int):Object
 		{
@@ -178,7 +176,8 @@ package org.flexlite.domUI.collections
 			return item;
 		}
 		/**
-		 * @inheritDoc
+		 * 替换在指定索引处的项目，并返回该项目。
+		 * @throws RangeError 如果索引小于 0 或大于长度。
 		 */
 		public function replaceItemAt(item:Object, index:int):Object
 		{
@@ -211,8 +210,13 @@ package org.flexlite.domUI.collections
 			_source = newSource;
 		}
 		/**
-		 * @inheritDoc
-		 */
+		 * 移动一个项目
+		 * 在oldIndex和newIndex之间的项目，
+		 * 若oldIndex小于newIndex,索引会减1
+		 * 若oldIndex大于newIndex,索引会加1
+		 * @return 被移动的项目
+		 * @throws RangeError 如果索引小于 0 或大于长度。
+		 */	
 		public function moveItemAt(oldIndex:int,newIndex:int):Object
 		{
 			checkIndex(oldIndex);
