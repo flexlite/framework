@@ -116,10 +116,10 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private var embedFonts:Boolean = false;
 		
-		private var _fontFamily:String = "Times New Roman";
+		private var _fontFamily:String = "SimSun";
 		
 		/**
-		 * 字体名称 。默认值：Times New Roman
+		 * 字体名称 。默认值：SimSun
 		 */
 		public function get fontFamily():String
 		{
