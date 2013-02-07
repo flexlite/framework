@@ -163,13 +163,13 @@ package org.flexlite.domDisplay.codec
 		/**
 		 * 每帧最大解码字节流总大小
 		 */		
-		dx_internal static var MAX_DECODE_LENGTH:int = 5000;
+		public static var maxDecodeLength:int = 5000;
 		/**
 		 * EnterFrame事件处理函数
 		 */		
 		private static function onEnterFrame(event:Event):void
 		{
-			var max:int = MAX_DECODE_LENGTH;
+			var max:int = maxDecodeLength;
 			var total:int = 0;
 			while(total<max&&decodeList.length>0)
 			{
