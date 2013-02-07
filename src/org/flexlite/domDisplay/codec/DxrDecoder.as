@@ -2,11 +2,11 @@ package org.flexlite.domDisplay.codec
 {
 	import flash.display.BitmapData;
 	import flash.display.FrameLabel;
-	import flash.display.Sprite;
-	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
@@ -140,9 +140,9 @@ package org.flexlite.domDisplay.codec
 		}
 		
 		/**
-		 * EnterFrame事件抛出者
-		 */		
-		private static var eventDispatcher:Sprite = new Sprite();
+		 * Timer事件抛出者
+		 */
+		private static var timer:Timer = new Timer(40);
 		/**
 		 * 待解码列表
 		 */		
@@ -157,7 +157,8 @@ package org.flexlite.domDisplay.codec
 			decodeList.push(decoder);
 			if(decodeList.length==1)
 			{
-				eventDispatcher.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+				timer.addEventListener(TimerEvent.TIMER, onTimer);
+				timer.start();
 			}
 		}
 		/**
@@ -165,9 +166,9 @@ package org.flexlite.domDisplay.codec
 		 */		
 		public static var maxDecodeLength:int = 5000;
 		/**
-		 * EnterFrame事件处理函数
+		 * Timer事件处理函数
 		 */		
-		private static function onEnterFrame(event:Event):void
+		private static function onTimer(event:TimerEvent):void
 		{
 			var max:int = maxDecodeLength;
 			var total:int = 0;
@@ -182,7 +183,9 @@ package org.flexlite.domDisplay.codec
 			}
 			if(decodeList.length==0)
 			{
-				eventDispatcher.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
+				timer.stop();
+				timer.removeEventListener(TimerEvent.TIMER, onTimer);
+				timer.reset();
 			}
 		}
 		
