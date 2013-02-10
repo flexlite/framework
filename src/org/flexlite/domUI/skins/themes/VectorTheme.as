@@ -22,6 +22,7 @@ package org.flexlite.domUI.skins.themes
 	import org.flexlite.domUI.skins.vector.TextInputSkin;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
 	import org.flexlite.domUI.skins.vector.ToggleButtonSkin;
+	import org.flexlite.domUI.skins.vector.TreeItemRendererSkin;
 	import org.flexlite.domUI.skins.vector.VScrollBarSkin;
 	import org.flexlite.domUI.skins.vector.VSliderSkin;
 	
@@ -60,6 +61,8 @@ package org.flexlite.domUI.skins.themes
 			mapSkin("org.flexlite.domUI.components::TextInput",TextInputSkin);
 			mapSkin("org.flexlite.domUI.components::TitleWindow",TitleWindowSkin);
 			mapSkin("org.flexlite.domUI.components::ToggleButton",ToggleButtonSkin);
+			mapSkin("org.flexlite.domUI.components::Tree",ListSkin);
+			mapSkin("org.flexlite.domUI.components.supportClasses::TreeItemRenderer",TreeItemRendererSkin);
 			mapSkin("org.flexlite.domUI.components::VScrollBar",VScrollBarSkin);
 			mapSkin("org.flexlite.domUI.components::VSlider",VSliderSkin);
 			mapSkin("org.flexlite.domUI.components.supportClasses::ItemRenderer",ItemRendererSkin);

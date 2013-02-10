@@ -30,7 +30,7 @@ package org.flexlite.domUI.components
 		 */
 		override protected function createChildren():void
 		{
-			if(itemRenderer==null)
+			if(!itemRenderer)
 				itemRenderer = ItemRenderer;
 			super.createChildren();
 		}
