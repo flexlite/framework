@@ -50,16 +50,19 @@ package org.flexlite.domUI.components.supportClasses
 			else
 				return super.getCurrentSkinState() + "AndSelected";
 		}
-		
+		/**
+		 * 是否根据鼠标事件自动变换选中状态,默认true。
+		 */		
+		dx_internal var autoSelected:Boolean = true;
 		/**
 		 * @inheritDoc
 		 */
 		override protected function buttonReleased():void
 		{
 			super.buttonReleased();
-			
+			if(!autoSelected)
+				return;
 			selected = !selected;
-			
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 	}

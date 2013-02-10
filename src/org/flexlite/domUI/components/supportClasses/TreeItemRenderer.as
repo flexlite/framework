@@ -129,10 +129,9 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				disclosureButton.visible = _hasChildren;
 				disclosureButton.selected = _isOpen;
+				disclosureButton.autoSelected = false;
 				disclosureButton.addEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
-				disclosureButton.addEventListener(MouseEvent.MOUSE_UP, 
-					disclosureButton_mouseUpHandler,false,1000);
 			}
 		}
 		
@@ -147,8 +146,7 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				disclosureButton.removeEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
-				disclosureButton.removeEventListener(MouseEvent.MOUSE_UP, 
-					disclosureButton_mouseUpHandler);
+				disclosureButton.autoSelected = true;
 				disclosureButton.visible = true;
 			}
 		}
@@ -160,14 +158,6 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(new TreeEvent(TreeEvent.ITEM_OPENING,
 				false,true,data,this,!disclosureButton.selected));
 			event.preventDefault();//防止当前项被选中。
-		}
-		/**
-		 * 鼠标在disclosureButton上弹起
-		 */		
-		protected function disclosureButton_mouseUpHandler(event:MouseEvent):void
-		{
-			//屏蔽disclosureButton由于交互产生的选中状态改变。
-			event.stopImmediatePropagation();
 		}
 		
 		/**
