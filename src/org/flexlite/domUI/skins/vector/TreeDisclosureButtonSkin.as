@@ -58,10 +58,10 @@ package org.flexlite.domUI.skins.vector
 			if(selected)
 			{
 				g.lineStyle(0,0,0);
-				g.moveTo(1, 7.5);
-				g.lineTo(7.5, 7.5);
-				g.lineTo(7.5, 0);
-				g.lineTo(1, 7.5);
+				g.moveTo(1, 7);
+				g.lineTo(7, 7);
+				g.lineTo(7, 0);
+				g.lineTo(1, 7);
 				g.endFill();
 			}
 			else
