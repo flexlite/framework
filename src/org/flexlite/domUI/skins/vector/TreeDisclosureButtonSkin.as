@@ -1,5 +1,6 @@
 package org.flexlite.domUI.skins.vector
 {
+	import flash.display.CapsStyle;
 	import flash.display.Graphics;
 	
 	import org.flexlite.domCore.dx_internal;
@@ -39,9 +40,9 @@ package org.flexlite.domUI.skins.vector
 				case "up":
 				case "disabled":
 				case "over":
+				case "down":
 					arrowColor = themeColors[1];
 					break;
-				case "down":
 				case "overAndSelected":
 				case "upAndSelected":
 				case "downAndSelected":
@@ -50,16 +51,17 @@ package org.flexlite.domUI.skins.vector
 					arrowColor = themeColors[0];
 					break;
 			}
+			trace(currentState);
 			this.alpha = currentState=="disabled"||currentState=="disabledAndSelected"?0.5:1;
 			g.beginFill(arrowColor);
-			g.lineStyle(1,0xa6a6a6);
+			g.lineStyle(1,0xa6a6a6,1,true,"normal",CapsStyle.SQUARE);
 			if(selected)
 			{
 				g.lineStyle(0,0,0);
-				g.moveTo(1, 8);
-				g.lineTo(7, 8);
-				g.lineTo(7, 1);
-				g.lineTo(1, 8);
+				g.moveTo(1, 7.5);
+				g.lineTo(7.5, 7.5);
+				g.lineTo(7.5, 0);
+				g.lineTo(1, 7.5);
 				g.endFill();
 			}
 			else
