@@ -44,7 +44,7 @@ package org.flexlite.domUI.components
 		{
 			contentGroup = new Group();
 			contentGroup.layout = new ScrollerLayout();
-			addToDisplyList(contentGroup);
+			addToDisplayList(contentGroup);
 			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, contentGroup_mouseWheelHandler);
 			super.createChildren();
 		}

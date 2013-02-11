@@ -113,7 +113,7 @@ package org.flexlite.domUI.components
 			if(skin is DisplayObject)
 			{
 				_skin = skin as DisplayObject;
-				addToDisplyListAt(_skin,0);
+				addToDisplayListAt(_skin,0);
 			}
 			else
 			{

@@ -64,7 +64,7 @@ package org.flexlite.domUI.components
 				{
 					_placeHolderGroup = new Group();
 					_placeHolderGroup.visible = false;
-					addToDisplyList(_placeHolderGroup);
+					addToDisplayList(_placeHolderGroup);
 				}
 				_placeHolderGroup.addEventListener(
 					ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
@@ -288,7 +288,7 @@ package org.flexlite.domUI.components
 			contentGroup = new Group();
 			contentGroup.percentWidth = 100;
 			contentGroup.percentHeight = 100;
-			addToDisplyList(contentGroup);
+			addToDisplayList(contentGroup);
 			partAdded("contentGroup",contentGroup);
 		}
 				

@@ -176,7 +176,7 @@ package org.flexlite.domUI.components
 			textDisplay = new EditableText();
 			textDisplay.widthInChars = 15;
 			textDisplay.heightInLines = 10;
-			addToDisplyList(DisplayObject(textDisplay));
+			addToDisplayList(DisplayObject(textDisplay));
 			partAdded("textDisplay",textDisplay);
 		}
 		

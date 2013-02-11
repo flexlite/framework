@@ -101,10 +101,18 @@ package org.flexlite.domUI.components
 			if(dispatchEvent(event))
 			{
 				renderer.opened = !renderer.opened;
+				var evt:TreeEvent;
 				if(renderer.opened)
+				{
 					XMLCollection(dataProvider).openNode(item);
+					evt = new TreeEvent(TreeEvent.ITEM_OPEN,false,false,renderer.itemIndex,item,renderer);
+				}
 				else
+				{
 					XMLCollection(dataProvider).closeNode(item);
+					evt = new TreeEvent(TreeEvent.ITEM_CLOSE,false,false,renderer.itemIndex,item,renderer);
+				}
+				dispatchEvent(evt);
 			}
 		}
 		

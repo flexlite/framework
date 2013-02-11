@@ -83,7 +83,7 @@ package org.flexlite.domUI.components
 			textDisplay.right = 1;
 			textDisplay.top = 1;
 			textDisplay.bottom = 1;
-			addToDisplyList(DisplayObject(textDisplay));
+			addToDisplayList(DisplayObject(textDisplay));
 			partAdded("textDisplay",textDisplay);
 		}
 	}

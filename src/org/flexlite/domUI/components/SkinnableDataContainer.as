@@ -344,7 +344,7 @@ package org.flexlite.domUI.components
 			dataGroup.layout = temp;
 			temp.gap = 0;
 			temp.horizontalAlign = "contentJustify";
-			addToDisplyList(dataGroup);
+			addToDisplayList(dataGroup);
 			partAdded("dataGroup",dataGroup);
 		}
 		

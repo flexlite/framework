@@ -250,7 +250,7 @@ package org.flexlite.domUI.components
 		 * 添加对象到显示列表,此接口仅预留给皮肤不为ISkinPart而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
 		 */		
-		final dx_internal function addToDisplyList(child:DisplayObject):DisplayObject
+		final dx_internal function addToDisplayList(child:DisplayObject):DisplayObject
 		{
 			return super.addChild(child);
 		}
@@ -258,7 +258,7 @@ package org.flexlite.domUI.components
 		 * 添加对象到指定的索引,此接口仅预留给皮肤不为ISkinPart而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
 		 */		
-		final dx_internal function addToDisplyListAt(child:DisplayObject,index:int):DisplayObject
+		final dx_internal function addToDisplayListAt(child:DisplayObject,index:int):DisplayObject
 		{
 			return super.addChildAt(child,index);
 		}

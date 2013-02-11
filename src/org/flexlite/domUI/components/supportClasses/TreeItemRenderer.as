@@ -156,7 +156,7 @@ package org.flexlite.domUI.components.supportClasses
 		protected function disclosureButton_mouseDownHandler(event:MouseEvent):void
 		{
 			dispatchEvent(new TreeEvent(TreeEvent.ITEM_OPENING,
-				false,true,data,this,!disclosureButton.selected));
+				false,true,itemIndex,data,this));
 			event.preventDefault();//防止当前项被选中。
 		}
 		

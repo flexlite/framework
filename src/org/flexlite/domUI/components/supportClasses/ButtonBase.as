@@ -505,7 +505,7 @@ package org.flexlite.domUI.components.supportClasses
 			text.right = 10;
 			text.top = 2;
 			text.bottom = 2;
-			addToDisplyList(text);
+			addToDisplayList(text);
 			labelDisplay = text;
 			partAdded("labelDisplay",labelDisplay);
 		}

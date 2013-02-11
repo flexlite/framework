@@ -26,12 +26,12 @@ package org.flexlite.domUI.events
 		public static const ITEM_OPENING:String = "itemOpening";
 		
 		public function TreeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=true,
-								  item:Object = null,itemRenderer:TreeItemRenderer = null,opening:Boolean=true)
+								  itemIndex:int = -1,item:Object = null,itemRenderer:TreeItemRenderer = null)
 		{
 			super(type, bubbles, cancelable);
 			this.item = item;
 			this.itemRenderer = itemRenderer;
-			this.opening = opening;
+			this.itemIndex = itemIndex;
 		}
 		
 		/**
@@ -43,19 +43,17 @@ package org.flexlite.domUI.events
 		 * 触发鼠标事件的项呈示器。 
 		 */		
 		public var itemRenderer:TreeItemRenderer;
-		
 		/**
-		 * 当事件类型为ITEM_OPENING是，表示是即将打开节点还是关闭它。
+		 * 触发鼠标事件的项索引
 		 */		
-		public var opening:Boolean = true;
-		
+		public var itemIndex:int;
 		/**
 		 * @inheritDoc
 		 */
 		override public function clone():Event
 		{
 			return new TreeEvent(type, bubbles, cancelable,
-				item, itemRenderer,opening);
+				itemIndex,item, itemRenderer);
 		}
 	}
 }
