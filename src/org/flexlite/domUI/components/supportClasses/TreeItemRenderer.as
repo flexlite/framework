@@ -7,7 +7,9 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.ISkinnableClient;
+	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.TreeEvent;
+	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
 	/**
@@ -121,15 +123,21 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if(instance==iconDisplay)
+			if(instance==labelDisplay)
+			{
+				labelDisplay.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
+			}
+			else if(instance==iconDisplay)
 			{
 				iconDisplay.skinName = _iconSkinName;
+				iconDisplay.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
 			}
 			else if(instance==disclosureButton)
 			{
 				disclosureButton.visible = _hasChildren;
 				disclosureButton.selected = _isOpen;
 				disclosureButton.autoSelected = false;
+				disclosureButton.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
 				disclosureButton.addEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
 			}
@@ -138,17 +146,31 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-			if(instance==iconDisplay)
+			if(instance==labelDisplay)
+			{
+				labelDisplay.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
+			}
+			else if(instance==iconDisplay)
 			{
 				iconDisplay.skinName = null;
+				iconDisplay.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
 			}
 			else if(instance==disclosureButton)
 			{
 				disclosureButton.removeEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
 				disclosureButton.autoSelected = true;
+				disclosureButton.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
 				disclosureButton.visible = true;
 			}
+		}
+		/**
+		 * 子项皮肤发生改变
+		 */		
+		private function onSizeChanged(event:ResizeEvent):void
+		{
+			invalidateSize();
+			invalidateDisplayList();
 		}
 		/**
 		 * 鼠标在disclosureButton上按下
@@ -158,6 +180,25 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(new TreeEvent(TreeEvent.ITEM_OPENING,
 				false,true,itemIndex,data,this));
 			event.preventDefault();//防止当前项被选中。
+		}
+		
+		override protected function measure():void
+		{
+			super.measure();
+			var minX:Number = 0;
+			if(disclosureButton&&disclosureButton.preferredWidth>0)
+			{
+				minX += disclosureButton.preferredWidth+gap;
+			} 
+			if(iconDisplay&&iconDisplay.preferredWidth>0)
+			{
+				minX += iconDisplay.preferredWidth+gap;
+			}
+			if(labelDisplay)
+			{
+				minX += labelDisplay.preferredWidth;
+			}
+			measuredWidth = Math.max(measuredWidth,minX);
 		}
 		
 		/**
@@ -181,8 +222,9 @@ package org.flexlite.domUI.components.supportClasses
 			if(disclosureButton)
 			{
 				disclosureButton.x = startX;
-				startX += disclosureButton.layoutBoundsWidth+gap;
-			}
+				if(disclosureButton.layoutBoundsWidth>0)
+					startX += disclosureButton.layoutBoundsWidth+gap;
+			} 
 			if(iconDisplay)
 			{
 				iconDisplay.x = startX;

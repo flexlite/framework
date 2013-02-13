@@ -155,7 +155,7 @@ package org.flexlite.domUI.components.supportClasses
 			if (value == _labelFunction)
 				return 
 				
-				_labelFunction = value;
+			_labelFunction = value;
 			labelFieldOrFunctionChanged = true;
 			invalidateProperties(); 
 		}

@@ -51,7 +51,6 @@ package org.flexlite.domUI.skins.vector
 					arrowColor = themeColors[0];
 					break;
 			}
-			trace(currentState);
 			this.alpha = currentState=="disabled"||currentState=="disabledAndSelected"?0.5:1;
 			g.beginFill(arrowColor);
 			g.lineStyle(1,0xa6a6a6,1,true,"normal",CapsStyle.SQUARE);

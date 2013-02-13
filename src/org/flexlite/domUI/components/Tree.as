@@ -76,8 +76,49 @@ package org.flexlite.domUI.components
 				treeRenderer.hasChildren = XML(data).children().length()>0;
 				treeRenderer.opened = XMLCollection(dataProvider).isOpen(data as XML);
 				treeRenderer.indentation = XMLCollection(dataProvider).getDepth(data as XML)*_indentation;
+				treeRenderer.iconSkinName = itemToIcon(data);
 			}
 			return super.updateRenderer(renderer, itemIndex, data); 
+		}
+		/**
+		 * 根据数据项返回项呈示器中图标的skinName属性值
+		 */		
+		public function itemToIcon(data:Object):Object
+		{
+			if(!data)
+				return null;
+			
+			if(_iconFunction!=null)
+				return _iconFunction(data);
+			
+			var skinName:Object;
+			if(data is XML)
+			{
+				try
+				{
+					if(data[iconField].length() != 0)
+					{
+						skinName = String(data[iconField]);
+					}
+				}
+				catch(e:Error)
+				{
+				}
+			}
+			else if(data is Object)
+			{
+				try
+				{
+					if(data[iconField])
+					{
+						skinName = data[iconField];
+					}
+				}
+				catch(e:Error)
+				{
+				}
+			}
+			return skinName;
 		}
 		
 		/**
@@ -124,6 +165,83 @@ package org.flexlite.domUI.components
 			super.dataGroup_rendererRemoveHandler(event);
 			if(event.renderer is TreeItemRenderer)
 				event.renderer.removeEventListener(TreeEvent.ITEM_OPENING,onItemOpening);
+		}
+		/**
+		 * 图标字段或函数改变标志
+		 */		
+		private var iconFieldOrFunctionChanged:Boolean = false;
+		
+		private var _iconField:String;
+		/**
+		 * 数据项中用来确定图标skinName属性值的字段名称。另请参考UIAsset.skinName。
+		 * 若设置了iconFunction，则设置此属性无效。
+		 */		
+		public function get iconField():String
+		{
+			return _iconField;
+		}
+		public function set iconField(value:String):void
+		{
+			if(_iconField==value)
+				return;
+			_iconField = value;
+			iconFieldOrFunctionChanged = true;
+			invalidateProperties();
+		}
+		
+		private var _iconFunction:Function;
+		/**
+		 * 用户提供的函数，在每个数据项目上运行以确定其图标的skinName值。另请参考UIAsset.skinName。
+		 * 示例：iconFunction(item:Object):Object
+		 */		
+		public function get iconFunction():Function
+		{
+			return _iconFunction;
+		}
+		public function set iconFunction(value:Function):void
+		{
+			if(_iconFunction==value)
+				return;
+			_iconFunction = value;
+			iconFieldOrFunctionChanged = true;
+			invalidateProperties();
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(iconFieldOrFunctionChanged)
+			{
+				if(dataGroup!=null)
+				{
+					var itemIndex:int;
+					if(layout && layout.useVirtualLayout)
+					{
+						for each (itemIndex in dataGroup.getElementIndicesInView())
+						{
+							updateRendererIconProperty(itemIndex);
+						}
+					}
+					else
+					{
+						var n:int = dataGroup.numElements;
+						for (itemIndex = 0; itemIndex < n; itemIndex++)
+						{
+							updateRendererIconProperty(itemIndex);
+						}
+					}
+				}
+				iconFieldOrFunctionChanged = false; 
+			}
+		}
+		/**
+		 * 更新指定索引项的图标
+		 */		
+		private function updateRendererIconProperty(itemIndex:int):void
+		{
+			var renderer:TreeItemRenderer = dataGroup.getElementAt(itemIndex) as TreeItemRenderer; 
+			if (renderer)
+				renderer.iconSkinName = itemToIcon(renderer.data); 
 		}
 	}
 }
