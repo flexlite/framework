@@ -41,19 +41,18 @@ package org.flexlite.domUI.skins.vector
 				case "disabled":
 				case "over":
 				case "down":
-					arrowColor = themeColors[1];
+					arrowColor = 0x666666;
 					break;
 				case "overAndSelected":
 				case "upAndSelected":
 				case "downAndSelected":
 				case "disabledAndSelected":
 					selected = true;
-					arrowColor = themeColors[0];
+					arrowColor = 0x333333;
 					break;
 			}
 			this.alpha = currentState=="disabled"||currentState=="disabledAndSelected"?0.5:1;
 			g.beginFill(arrowColor);
-			g.lineStyle(1,0xa6a6a6,1,true,"normal",CapsStyle.SQUARE);
 			if(selected)
 			{
 				g.lineStyle(0,0,0);
@@ -65,10 +64,10 @@ package org.flexlite.domUI.skins.vector
 			}
 			else
 			{
-				g.moveTo(3, 0);
-				g.lineTo(3, 9);
+				g.moveTo(2, 0);
+				g.lineTo(2, 9);
 				g.lineTo(7, 5);
-				g.lineTo(3, 0);
+				g.lineTo(2, 0);
 				g.endFill();
 			}
 			
