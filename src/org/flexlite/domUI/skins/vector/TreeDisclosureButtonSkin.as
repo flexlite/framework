@@ -1,6 +1,5 @@
 package org.flexlite.domUI.skins.vector
 {
-	import flash.display.CapsStyle;
 	import flash.display.Graphics;
 	
 	import org.flexlite.domCore.dx_internal;

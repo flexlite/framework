@@ -157,14 +157,28 @@ package org.flexlite.domUI.collections
 		/**
 		 * 指定的节点是否打开
 		 */		
-		public function isOpen(item:XML):Boolean
+		public function isOpen(item:Object):Boolean
 		{
 			return _openNodes.indexOf(item)!=-1;
-		}		
+		}	
+		/**
+		 * 打开或关闭一个节点
+		 * @param item 要打开或关闭的节点
+		 * @param open true表示打开节点，反之关闭。
+		 */		
+		public function expandNode(item:Object,open:Boolean=true):void
+		{
+			if(!(item is XML))
+				return;
+			if(open)
+				openNode(item as XML);
+			else
+				closeNode(item as XML);
+		}
 		/**
 		 * 打开一个节点
 		 */		
-		public function openNode(item:XML):void
+		private function openNode(item:XML):void
 		{
 			var index:int = nodeList.indexOf(item);
 			if(index!=-1&&_openNodes.indexOf(item)==-1)
@@ -184,7 +198,7 @@ package org.flexlite.domUI.collections
 		/**
 		 * 关闭一个节点
 		 */		
-		public function closeNode(item:XML):void
+		private function closeNode(item:XML):void
 		{
 			var index:int = nodeList.indexOf(item);
 			if(index!=-1&&_openNodes.indexOf(item)!=-1)

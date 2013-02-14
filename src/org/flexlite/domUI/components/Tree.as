@@ -142,17 +142,9 @@ package org.flexlite.domUI.components
 			if(dispatchEvent(event))
 			{
 				renderer.opened = !renderer.opened;
-				var evt:TreeEvent;
-				if(renderer.opened)
-				{
-					XMLCollection(dataProvider).openNode(item);
-					evt = new TreeEvent(TreeEvent.ITEM_OPEN,false,false,renderer.itemIndex,item,renderer);
-				}
-				else
-				{
-					XMLCollection(dataProvider).closeNode(item);
-					evt = new TreeEvent(TreeEvent.ITEM_CLOSE,false,false,renderer.itemIndex,item,renderer);
-				}
+				var type:String = renderer.opened?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
+				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
+				XMLCollection(dataProvider).expandNode(item,renderer.opened);
 				dispatchEvent(evt);
 			}
 		}
@@ -205,6 +197,33 @@ package org.flexlite.domUI.components
 			_iconFunction = value;
 			iconFieldOrFunctionChanged = true;
 			invalidateProperties();
+		}
+		/**
+		 * 打开或关闭一个节点
+		 * @param item 要打开或关闭的节点
+		 * @param open true表示打开节点，反之关闭。
+		 * @param cancelable 是否抛出TreeEvent.ITEM_OPENING事件(通过监听此事件可以阻止本次操作)。
+		 */		
+		public function expandItem(item:Object,open:Boolean = true,cancelable:Boolean = true):void
+		{
+			if(!(dataProvider is XMLCollection))
+				return;
+			var hasOpen:Boolean = XMLCollection(dataProvider).isOpen(item);
+			if(hasOpen==open)
+				return;
+			var itemIndex:int = dataProvider.getItemIndex(item);
+			if(itemIndex==-1)
+				return;
+			if(cancelable)
+			{
+				var renderer:TreeItemRenderer = 
+					dataGroup?dataGroup.getElementAt(itemIndex) as TreeItemRenderer:null;
+				var evt:TreeEvent = new TreeEvent(TreeEvent.ITEM_OPENING,
+					false,true,itemIndex,item,renderer);
+				if(!dispatchEvent(evt))
+					return;
+			}
+			XMLCollection(dataProvider).expandNode(item,open);
 		}
 		
 		override protected function commitProperties():void

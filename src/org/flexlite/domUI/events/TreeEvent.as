@@ -48,12 +48,18 @@ package org.flexlite.domUI.events
 		 */		
 		public var itemIndex:int;
 		/**
+		 * 当事件类型为ITEM_OPENING时，true表示即将打开节点，反之关闭。
+		 */		
+		public var opening:Boolean;
+		/**
 		 * @inheritDoc
 		 */
 		override public function clone():Event
 		{
-			return new TreeEvent(type, bubbles, cancelable,
+			var evt:TreeEvent = new TreeEvent(type, bubbles, cancelable,
 				itemIndex,item, itemRenderer);
+			evt.opening = opening;
+			return evt;
 		}
 	}
 }
