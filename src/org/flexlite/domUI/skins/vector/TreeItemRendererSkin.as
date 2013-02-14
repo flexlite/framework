@@ -2,8 +2,11 @@ package org.flexlite.domUI.skins.vector
 {
 	import flash.display.Graphics;
 	
+	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.ToggleButton;
 	import org.flexlite.domUI.components.UIAsset;
+	import org.flexlite.domUI.layouts.HorizontalLayout;
+	import org.flexlite.domUI.layouts.VerticalAlign;
 
 	/**
 	 * TreeItemRenderer默认皮肤
@@ -17,6 +20,7 @@ package org.flexlite.domUI.skins.vector
 		public function TreeItemRendererSkin()
 		{
 			super();
+			this.minHeight = 22;
 		}
 		
 		/**
@@ -27,6 +31,10 @@ package org.flexlite.domUI.skins.vector
 		 * [SkinPart]子节点开启按钮
 		 */
 		public var disclosureButton:ToggleButton;
+		/**
+		 * [SkinPart]用于调整缩进值的容器对象。
+		 */
+		public var contentGroup:Group;
 		
 		/**
 		 * @inheritDoc
@@ -34,17 +42,22 @@ package org.flexlite.domUI.skins.vector
 		override protected function createChildren():void
 		{
 			super.createChildren();
-			labelDisplay.left = NaN;
-			labelDisplay.right = NaN;
-			
-			iconDisplay = new UIAsset();
-			iconDisplay.verticalCenter = 0;
-			addElement(iconDisplay);
+			contentGroup = new Group();
+			contentGroup.top = 0;
+			contentGroup.bottom = 0;
+			var layout:HorizontalLayout = new HorizontalLayout();
+			layout.gap = 1;
+			layout.verticalAlign = VerticalAlign.MIDDLE;
+			contentGroup.layout = layout;
+			addElement(contentGroup);
 			
 			disclosureButton = new ToggleButton();
 			disclosureButton.skinName = TreeDisclosureButtonSkin;
-			disclosureButton.verticalCenter = 0;
-			addElement(disclosureButton);
+			contentGroup.addElement(disclosureButton);
+			
+			iconDisplay = new UIAsset();
+			contentGroup.addElement(iconDisplay);
+			contentGroup.addElement(labelDisplay);
 		}
 	}
 }

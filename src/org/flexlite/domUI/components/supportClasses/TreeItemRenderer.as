@@ -1,5 +1,6 @@
 package org.flexlite.domUI.components.supportClasses
 {
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
 	import org.flexlite.domCore.IInvalidateDisplay;
@@ -7,6 +8,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.UIAsset;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.ISkinnableClient;
+	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
@@ -41,6 +43,10 @@ package org.flexlite.domUI.components.supportClasses
 		 * [SkinPart]子节点开启按钮
 		 */
 		public var disclosureButton:ToggleButtonBase;
+		/**
+		 * [SkinPart]用于调整缩进值的容器对象。
+		 */
+		public var contentGroup:DisplayObject;
 		
 		private var _iconSkinName:Object;
 		/**
@@ -77,7 +83,8 @@ package org.flexlite.domUI.components.supportClasses
 			if(value==_indent)
 				return;
 			_indent = value;
-			invalidateDisplayList();
+			if(contentGroup)
+				contentGroup.x = _indent;
 		}
 		
 		private var _hasChildren:Boolean = false;
@@ -123,54 +130,38 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if(instance==labelDisplay)
-			{
-				labelDisplay.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
-			}
-			else if(instance==iconDisplay)
+			if(instance==iconDisplay)
 			{
 				iconDisplay.skinName = _iconSkinName;
-				iconDisplay.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
 			}
 			else if(instance==disclosureButton)
 			{
 				disclosureButton.visible = _hasChildren;
 				disclosureButton.selected = _isOpen;
 				disclosureButton.autoSelected = false;
-				disclosureButton.addEventListener(ResizeEvent.RESIZE,onSizeChanged);
 				disclosureButton.addEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
+			}
+			else if(instance==contentGroup)
+			{
+				contentGroup.x = _indent;
 			}
 		}
 		
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-			if(instance==labelDisplay)
-			{
-				labelDisplay.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
-			}
-			else if(instance==iconDisplay)
+			if(instance==iconDisplay)
 			{
 				iconDisplay.skinName = null;
-				iconDisplay.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
 			}
 			else if(instance==disclosureButton)
 			{
 				disclosureButton.removeEventListener(MouseEvent.MOUSE_DOWN,
 					disclosureButton_mouseDownHandler);
 				disclosureButton.autoSelected = true;
-				disclosureButton.removeEventListener(ResizeEvent.RESIZE,onSizeChanged);
 				disclosureButton.visible = true;
 			}
-		}
-		/**
-		 * 子项皮肤发生改变
-		 */		
-		private function onSizeChanged(event:ResizeEvent):void
-		{
-			invalidateSize();
-			invalidateDisplayList();
 		}
 		/**
 		 * 鼠标在disclosureButton上按下
@@ -183,61 +174,5 @@ package org.flexlite.domUI.components.supportClasses
 			dispatchEvent(evt);
 			event.preventDefault();//防止当前项被选中。
 		}
-		
-		override protected function measure():void
-		{
-			super.measure();
-			var minX:Number = 0;
-			if(disclosureButton&&disclosureButton.preferredWidth>0)
-			{
-				minX += disclosureButton.preferredWidth+gap;
-			} 
-			if(iconDisplay&&iconDisplay.preferredWidth>0)
-			{
-				minX += iconDisplay.preferredWidth+gap;
-			}
-			if(labelDisplay)
-			{
-				minX += labelDisplay.preferredWidth;
-			}
-			measuredWidth = Math.max(measuredWidth,minX);
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
-		{
-			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			updateSkinDisplayList();
-		}
-		/**
-		 * 图标和文字的水平间隔
-		 */		
-		dx_internal var gap:Number = 2;
-		/**
-		 * 更新皮肤部件的缩进布局
-		 */
-		protected function updateSkinDisplayList():void
-		{
-			var startX:Number = Math.round(_indent);
-			if(disclosureButton)
-			{
-				disclosureButton.x = startX;
-				if(disclosureButton.layoutBoundsWidth>0)
-					startX += disclosureButton.layoutBoundsWidth+gap;
-			} 
-			if(iconDisplay)
-			{
-				iconDisplay.x = startX;
-				if(iconDisplay.layoutBoundsWidth>0)
-					startX += iconDisplay.layoutBoundsWidth+gap;
-			}
-			if(labelDisplay)
-			{
-				labelDisplay.x = startX;
-			}
-		}
-		
 	}
 }

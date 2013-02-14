@@ -2,6 +2,7 @@ package org.flexlite.domUI.components.supportClasses
 {
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
+	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IStateClient;
 
@@ -23,17 +24,17 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 		}
 		
-		private var _hostComponent:Object;
+		private var _hostComponent:SkinnableComponent;
 
 		/**
 		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
 		 */
-		public function get hostComponent():Object
+		public function get hostComponent():SkinnableComponent
 		{
 			return _hostComponent;
 		}
 
-		public function set hostComponent(value:Object):void
+		public function set hostComponent(value:SkinnableComponent):void
 		{
 			_hostComponent = value;
 		}
