@@ -200,10 +200,14 @@ package org.flexlite.domUI.collections
 		 */		
 		private function closeNode(item:XML):void
 		{
-			var index:int = nodeList.indexOf(item);
-			if(index!=-1&&_openNodes.indexOf(item)!=-1)
+			var index:int = _openNodes.indexOf(item);
+			if(index==-1)
+				return;
+			_openNodes.splice(index,1);
+			index = nodeList.indexOf(item);
+			if(index!=-1)
 			{
-				_openNodes.splice(index,1);
+				
 				var list:Array = [];
 				addChildren(item,list);
 				index++;
