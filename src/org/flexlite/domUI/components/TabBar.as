@@ -2,11 +2,12 @@ package org.flexlite.domUI.components
 {
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
 	import org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	use namespace dx_internal;  
 	
@@ -18,7 +19,9 @@ package org.flexlite.domUI.components
 	 */	
 	public class TabBar extends ListBase
 	{
-		
+		/**
+		 * 构造函数
+		 */		
 		public function TabBar()
 		{
 			super();
@@ -34,6 +37,18 @@ package org.flexlite.domUI.components
 		override protected function get hostComponentKey():Object
 		{
 			return TabBar;
+		}
+		/**
+		 * 布局对象，TabBar只支持TabBarHorizontalLayout，
+		 * 设置其他类型无效，不设置将会默认添加一个。
+		 */		
+		override public function get layout():LayoutBase
+		{
+			return super.layout;
+		}
+		override public function set layout(value:LayoutBase):void
+		{
+			super.layout = value;
 		}
 		
 		/**
