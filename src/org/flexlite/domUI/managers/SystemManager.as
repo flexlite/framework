@@ -19,6 +19,8 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.layouts.BasicLayout;
+	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
 	
@@ -271,6 +273,18 @@ package org.flexlite.domUI.managers
 		 * @inheritDoc
 		 */
 		override public function set name(value:String):void{}
+		/**
+		 * 布局对象,SystemManager只接受BasicLayout
+		 */		
+		override public function get layout():LayoutBase
+		{
+			return super.layout;
+		}
+		override public function set layout(value:LayoutBase):void
+		{
+			if(value is BasicLayout)
+				super.layout = value;
+		}
 
 		private var _popUpContainer:SystemContainer;
 		/**
