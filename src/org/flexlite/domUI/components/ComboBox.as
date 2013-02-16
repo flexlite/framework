@@ -3,9 +3,9 @@ package org.flexlite.domUI.components
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.DropDownListBase;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
@@ -81,6 +81,29 @@ package org.flexlite.domUI.components
 		public function get labelToItemFunction():Function
 		{
 			return _labelToItemFunction;
+		}
+		
+		private var _prompt:String;
+		
+		private var promptChanged:Boolean = false;
+		/**
+		 * 当text属性为空字符串时要显示的文本内容。 <p/>
+		 * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+		 * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。 <p/>
+		 * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+		 * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+		 */
+		public function get prompt():String
+		{
+			return _prompt;
+		}
+		public function set prompt(value:String):void
+		{
+			if(_prompt==value)
+				return;
+			_prompt = value;
+			promptChanged = true;
+			invalidateProperties();       
 		}
 		
 		private var _maxChars:int = 0;
@@ -278,6 +301,11 @@ package org.flexlite.domUI.components
 			
 			if (textInput)
 			{
+				if(promptChanged)
+				{
+					textInput.prompt = _prompt;
+					promptChanged = false;
+				}
 				if (maxCharsChanged)
 				{
 					textInput.maxChars = _maxChars;

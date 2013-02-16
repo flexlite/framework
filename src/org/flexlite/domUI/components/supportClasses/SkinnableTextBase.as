@@ -2,13 +2,18 @@ package org.flexlite.domUI.components.supportClasses
 {
 	
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.TextEvent;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.EditableText;
 	import org.flexlite.domUI.components.SkinnableComponent;
+	import org.flexlite.domUI.core.DomGlobals;
+	import org.flexlite.domUI.core.IDisplayText;
 	import org.flexlite.domUI.core.IEditableText;
+	import org.flexlite.domUI.core.IStateClient;
 	
 	use namespace dx_internal;
 	
@@ -35,6 +40,29 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super();
 			focusEnabled = true;
+			addEventListener(FocusEvent.FOCUS_IN, focusInHandler);
+			addEventListener(FocusEvent.FOCUS_OUT, focusOutHandler);
+		}
+		/**
+		 * 焦点移入
+		 */		
+		private function focusInHandler(event:FocusEvent):void
+		{
+			if (event.target == this)
+			{
+				setFocus();
+				return;
+			}
+			invalidateSkinState();
+		}
+		/**
+		 * 焦点移出
+		 */		
+		private function focusOutHandler(event:FocusEvent):void
+		{
+			if (event.target == this)
+				return;
+			invalidateSkinState();
 		}
 		
 		/**
@@ -45,13 +73,42 @@ package org.flexlite.domUI.components.supportClasses
 		 * textDisplay改变时传递的参数
 		 */		
 		private var textDisplayProperties:Object = {};
+		/**
+		 * [SkinPart]当text属性为空字符串时要显示的文本。
+		 */		
+		public var promptDisplay:IDisplayText;
+		
+		private var _prompt:String;
+		/**
+		 * 当text属性为空字符串时要显示的文本内容。 <p/>
+		 * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+		 * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
+		 * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+		 * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+		 */
+		public function get prompt():String
+		{
+			return _prompt;
+		}
+		public function set prompt(value:String):void
+		{
+			if(_prompt==value)
+				return;
+			_prompt = value;
+			if(promptDisplay)
+			{
+				promptDisplay.text = value;
+			}
+			invalidateProperties();       
+			invalidateSkinState();
+		}
 		
 		/**
 		 * @inheritDoc
 		 */
 		override public function get maxWidth():Number
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.maxWidth;
 			var v:* = textDisplayProperties.maxWidth;
 			return (v === undefined) ? super.maxWidth : v;        
@@ -62,7 +119,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		override public function set maxWidth(value:Number):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.maxWidth = value;
 				textDisplayProperties.maxWidth = true;
@@ -81,7 +138,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */	
 		public function get displayAsPassword():Boolean
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.displayAsPassword;
 			var v:* = textDisplayProperties.displayAsPassword
 			return (v === undefined) ? false : v;
@@ -89,7 +146,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set displayAsPassword(value:Boolean):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.displayAsPassword = value;
 				textDisplayProperties.displayAsPassword = true;
@@ -106,7 +163,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		public function get editable():Boolean
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.editable;
 			var v:* = textDisplayProperties.editable;
 			return (v === undefined) ? true : v;
@@ -114,7 +171,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set editable(value:Boolean):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.editable = value;
 				textDisplayProperties.editable = true;
@@ -132,7 +189,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */	
 		public function get maxChars():int 
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.maxChars;
 			var v:* = textDisplayProperties.maxChars;
 			return (v === undefined) ? 0 : v;
@@ -140,7 +197,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set maxChars(value:int):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.maxChars = value;
 				textDisplayProperties.maxChars = true;
@@ -162,7 +219,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function get restrict():String 
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.restrict;
 			var v:* = textDisplayProperties.restrict;
 			return (v === undefined) ? null : v;
@@ -170,7 +227,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set restrict(value:String):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.restrict = value;
 				textDisplayProperties.restrict = true;
@@ -192,7 +249,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function get selectable():Boolean
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.selectable;
 			var v:* = textDisplayProperties.selectable;
 			return (v === undefined) ? true : v;
@@ -200,7 +257,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set selectable(value:Boolean):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.selectable = value;
 				textDisplayProperties.selectable = true;
@@ -218,7 +275,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function get selectionBeginIndex():int
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.selectionBeginIndex;
 			if(textDisplayProperties.selectionBeginIndex===undefined)
 				return -1;
@@ -231,7 +288,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function get selectionEndIndex():int
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.selectionEndIndex;
 			if(textDisplayProperties.selectionEndIndex===undefined)
 				return -1;
@@ -244,7 +301,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function get caretIndex():int
 		{
-			return textDisplay!=null?textDisplay.caretIndex:0;
+			return textDisplay?textDisplay.caretIndex:0;
 		}
 		
 		/**
@@ -253,7 +310,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function setSelection(beginIndex:int,endIndex:int):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.setSelection(beginIndex,endIndex);
 			}
@@ -269,7 +326,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function selectAll():void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.selectAll();
 			}
@@ -284,7 +341,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		public function get text():String
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 				return textDisplay.text;
 			var v:* = textDisplayProperties.text;
 			return (v === undefined) ? "" : v;
@@ -292,7 +349,7 @@ package org.flexlite.domUI.components.supportClasses
 		
 		public function set text(value:String):void
 		{
-			if(textDisplay!=null)
+			if(textDisplay)
 			{
 				textDisplay.text = value;
 				textDisplayProperties.text = true;
@@ -364,6 +421,22 @@ package org.flexlite.domUI.components.supportClasses
 			invalidateProperties();                    
 		}
 		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function getCurrentSkinState():String
+		{
+			var focus:InteractiveObject = DomGlobals.stage.focus;
+			if(_prompt&&skin is IStateClient&&
+				(!focus||!contains(focus))&&text=="")
+			{
+				if (enabled&&IStateClient(skin).hasState("normalWithPrompt"))
+					return "normalWithPrompt";
+				if (!enabled&&IStateClient(skin).hasState("disabledWithPrompt"))
+					return "disabledWithPrompt";
+			}
+			return super.getCurrentSkinState();
+		}
 		
 		/**
 		 * @inheritDoc
@@ -381,6 +454,10 @@ package org.flexlite.domUI.components.supportClasses
 				
 				textDisplay.addEventListener(Event.CHANGE,
 					textDisplay_changeHandler);
+			}
+			else if(instance==promptDisplay)
+			{
+				promptDisplay.text = _prompt;
 			}
 		}
 		

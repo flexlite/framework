@@ -15,8 +15,6 @@ package org.flexlite.domUI.skins.vector
 		public function ScrollerSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
-			this.currentState = "normal";
 		}
 		
 		public var horizontalScrollBar:HScrollBar;

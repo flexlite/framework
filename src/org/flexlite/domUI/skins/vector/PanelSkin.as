@@ -20,7 +20,6 @@ package org.flexlite.domUI.skins.vector
 		public function PanelSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
 		}
 		
 		public var titleDisplay:Label;

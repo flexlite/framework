@@ -18,8 +18,6 @@ package org.flexlite.domUI.skins.vector
 		public function TabNavigatorSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
-			this.currentState = "normal";
 		}
 
 		public var contentGroup:Group;	

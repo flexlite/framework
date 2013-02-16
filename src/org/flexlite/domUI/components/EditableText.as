@@ -558,7 +558,7 @@ package org.flexlite.domUI.components
 				else
 				{
 					var wInChars:int = int(_widthInChars);
-					defaultWidth = size*wInChars+4;
+					defaultWidth = size*wInChars+5;
 				}
 			}
 		}
@@ -683,7 +683,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				measuredHeight = DEFAULT_MEASURED_HEIGHT;
+				measuredHeight = textField.textHeight;
 			}
 		}
 		/**
