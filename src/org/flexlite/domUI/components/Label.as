@@ -24,7 +24,6 @@ package org.flexlite.domUI.components
 		public function Label()
 		{
 			super();
-			mouseChildren = false;
 			addEventListener(UIEvent.UPDATE_COMPLETE, updateCompleteHandler);
 		}
 		
