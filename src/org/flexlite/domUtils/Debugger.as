@@ -11,8 +11,10 @@ package org.flexlite.domUtils
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
+	import flash.utils.getQualifiedClassName;
 	
 	import org.flexlite.domUI.components.Group;
+	import org.flexlite.domUI.components.Label;
 	import org.flexlite.domUI.components.TitleWindow;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
 	
@@ -46,6 +48,13 @@ package org.flexlite.domUtils
 			appStage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 			init();
 		}
+		
+		private var xLabel:Label = new Label();
+		private var yLabel:Label = new Label();
+		private var widthLabel:Label = new Label();
+		private var heightLabel:Label = new Label();
+		private var nameLabel:Label = new Label();
+		
 		/**
 		 * 初始化
 		 */		
@@ -55,6 +64,23 @@ package org.flexlite.domUtils
 			window.skinName = TitleWindowSkin;
 			window.isPopUp = true;
 			window.showCloseButton = false;
+			window.right = 0;
+			window.minWidth = 180;
+			window.title = "控制面板";
+			nameLabel.text = "";
+			xLabel.y = 18;
+			xLabel.text = "x:";
+			yLabel.y = 36;
+			yLabel.text = "y:";
+			widthLabel.y = 54;
+			widthLabel.text = "width:";
+			heightLabel.y = 72;
+			heightLabel.text = "height:";
+			window.addElement(nameLabel);
+			window.addElement(xLabel);
+			window.addElement(yLabel);
+			window.addElement(widthLabel);
+			window.addElement(heightLabel);
 			addElement(window);
 		}
 		/**
@@ -135,6 +161,16 @@ package org.flexlite.domUtils
 			if(currentTarget)
 			{
 				var pos:Point = currentTarget.localToGlobal(new Point());
+				xLabel.text = "x: "+pos.x;
+				yLabel.text = "y: "+pos.y;
+				widthLabel.text = "width: "+currentTarget.width;
+				heightLabel.text = "height: "+currentTarget.height;
+				var className:String = getQualifiedClassName(currentTarget);
+				if(className.indexOf("::")!=-1)
+					nameLabel.text = className.split("::")[1];
+				else
+					nameLabel.text = className;
+				nameLabel.text += " : "+currentTarget.name;
 				g.drawRect(pos.x,pos.y,currentTarget.width,currentTarget.height);
 				g.endFill();
 				g.beginFill(0x009aff,0);
@@ -155,6 +191,7 @@ package org.flexlite.domUtils
 			if(contains(event.target as DisplayObject))
 				return;
 			currentTarget = event.target as DisplayObject;
+			
 			invalidateDisplayList();
 		}
 		
