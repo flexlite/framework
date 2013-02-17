@@ -20,6 +20,8 @@ package org.flexlite.domUI.skins.vector
 		public function PanelSkin()
 		{
 			super();
+			this.minHeight = 60;
+			this.minWidth = 80;
 		}
 		
 		public var titleDisplay:Label;

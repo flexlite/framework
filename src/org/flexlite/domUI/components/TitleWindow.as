@@ -2,11 +2,9 @@ package org.flexlite.domUI.components
 {
 	
 	import flash.display.DisplayObject;
-
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
@@ -62,6 +60,25 @@ package org.flexlite.domUI.components
 		 * [SkinPart]可移动区域
 		 */		
 		public var moveArea:InteractiveObject;
+		
+		private var _showCloseButton:Boolean = true;
+		/**
+		 * 是否显示关闭按钮,默认true。
+		 */
+		public function get showCloseButton():Boolean
+		{
+			return _showCloseButton;
+		}
+
+		public function set showCloseButton(value:Boolean):void
+		{
+			if(_showCloseButton==value)
+				return;
+			_showCloseButton = value;
+			if(closeButton)
+				closeButton.visible = _showCloseButton;
+		}
+
 
 		/**
 		 * @inheritDoc
@@ -77,6 +94,7 @@ package org.flexlite.domUI.components
 			else if (instance == closeButton)
 			{
 				closeButton.addEventListener(MouseEvent.CLICK, closeButton_clickHandler);   
+				closeButton.visible = _showCloseButton;
 			}
 		}
 		
