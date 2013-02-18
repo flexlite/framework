@@ -20,6 +20,7 @@ package org.flexlite.domUtils
 	import org.flexlite.domUI.components.TitleWindow;
 	import org.flexlite.domUI.components.ToggleButton;
 	import org.flexlite.domUI.components.Tree;
+	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.skins.vector.ListSkin;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
@@ -71,7 +72,7 @@ package org.flexlite.domUtils
 			window.skinName = TitleWindowSkin;
 			window.isPopUp = true;
 			window.showCloseButton = false;
-			window.minWidth = 250;
+			window.width = 250;
 			window.title = "控制面板";
 			var infoGroup:Group = new Group();
 			nameLabel.text = "";
@@ -104,8 +105,32 @@ package org.flexlite.domUtils
 			infoTree.minHeight = 200;
 			infoTree.dataProvider = infoDp;
 			infoTree.labelFunction = labelFunc;
+			infoTree.addEventListener(TreeEvent.ITEM_OPENING,onTreeOpening);
 			window.addElement(infoTree);
 			addElement(window);
+		}
+		
+		private function onTreeOpening(event:TreeEvent):void
+		{
+			var item:XML = event.item as XML;
+			if(item.children().length()==1&&
+				item.children()[0].localName()=="child")
+			{
+				var keys:Array = [String(item.@key)];
+				var parent:XML = item.parent();
+				while(parent&&parent.parent())
+				{
+					if(parent.localName()!="others")
+						keys.push(String(parent.@key));
+					parent = parent.parent();
+				}
+				var target:Object = currentTarget;
+				while(keys.length>0)
+				{
+					target = target[keys.pop()];
+				}
+				item.setChildren(describe(target).children());
+			}
 		}
 		
 		private function labelFunc(item:Object):String
@@ -326,30 +351,90 @@ package org.flexlite.domUtils
 			var info:XML = describeType(target);
 			var xml:XML = <root/>;
 			var node:XML;
+			var others:Array = [];
+			var items:Array = [];
 			for each(node in info.variable)
 			{
 				var item:XML = <item/>;
 				var key:String = node.@name.toString();
 				item.@key = key;
-				xml.appendChild(item);
-				var type:String = getQualifiedClassName(target[key]);
-				if(basicTypes.indexOf(type)!=-1)
+				if(layoutProps.indexOf(key)==-1)
+					others.push(item);
+				else
+					items.push(item);
+				try
+				{
+					var type:String = getQualifiedClassName(target[key]);
+				}
+				catch(e:Error){}
+				if(target[key]===null||target[key]===undefined||
+					basicTypes.indexOf(type)!=-1)
 					item.@value = target[key];
+				else
+				{
+					item.@value = "["+type+"]";
+					item.appendChild(<child/>);
+				}
 			}
 			for each(node in info.accessor)
 			{
 				if(node.@access=="writeonly")
 					continue;
-				item = <item/>;
 				key = node.@name.toString();
+				if(key=="stage")
+					continue;
+				item = <item/>;
 				item.@key = key;
-				xml.appendChild(item);
-				type = getQualifiedClassName(target[key]);
-				if(basicTypes.indexOf(type)!=-1)
+				if(layoutProps.indexOf(key)==-1)
+					others.push(item);
+				else
+					items.push(item);
+				try
+				{
+					type = getQualifiedClassName(target[key]);
+				}
+				catch(e:Error){}
+				if(target[key]===null||target[key]===undefined||
+					basicTypes.indexOf(type)!=-1)
 					item.@value = target[key];
+				else
+				{
+					item.@value = "["+type+"]";
+					item.appendChild(<child/>);
+				}
 			}
+			items.sortOn("@key");
+			others.sortOn("@key");
+			if(items.length==0)
+			{
+				items = others;
+				others = [];
+			}
+			if(others.length>0)
+			{
+				var other:XML = <others key="其他属性"/>;
+				while(others.length>0)
+				{
+					other.appendChild(others.shift());
+				}
+				xml.appendChild(other);
+			}
+			while(items.length>0)
+			{
+				xml.appendChild(items.shift());
+			}
+			
 			return xml;
 		}
+		
+		private var layoutProps:Vector.<String> = 
+			new <String>["x","y","width","height","measuredWidth","measuredHeight",
+			"layoutBoundsWidth","layoutBoundsHeight","preferredWidth","preferredHeight",
+			"left","right","top","bottom","percentWidth","percentHeight","verticalCenter",
+			"horizontalCenter","explicitWidth","explicitHeight","paddingTop","paddingLeft",
+			"paddingRight","paddingBottom","includeInLayout","preferredX","preferredY",
+			"layoutBoundsX","layoutBoundsY","scaleX","scaleY","maxWidth","minWidth",
+			"maxHeight","maxHeight","visible","alpha"];
 		/**
 		 * 基本数据类型列表
 		 */		
