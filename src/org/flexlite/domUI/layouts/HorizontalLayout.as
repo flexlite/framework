@@ -543,7 +543,7 @@ package org.flexlite.domUI.layouts
 				contentHeight = Math.max(contentHeight,layoutElement.layoutBoundsHeight);
 				if(!needInvalidateSize&&elementSizeTable[i]!=layoutElement.layoutBoundsHeight)
 					needInvalidateSize = true;
-				if(i==0&&elementSizeTable[i]!=layoutElement.layoutBoundsWidth)
+				if(i==0&&elementSizeTable.length>0&&elementSizeTable[i]!=layoutElement.layoutBoundsWidth)
 					typicalLayoutRect = null;
 				elementSizeTable[i] = layoutElement.layoutBoundsWidth;
 				x = getStartPosition(i);

@@ -420,7 +420,7 @@ package org.flexlite.domUI.layouts.supportClasses
 		
 		public function set typicalLayoutRect(value:Rectangle):void
 		{
-			if(typicalLayoutRect==value)
+			if(_typicalLayoutRect==value)
 				return;
 			_typicalLayoutRect = value;
 			if (target)
