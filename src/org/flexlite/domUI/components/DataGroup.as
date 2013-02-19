@@ -675,6 +675,7 @@ package org.flexlite.domUI.components
 			var rect:Rectangle = new Rectangle(0,0,
 				Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
 			super.removeChild(displayObj);
+			doFreeRenderer(typicalRenderer);
 			setTypicalLayoutRect(rect);
 		} 
 		
