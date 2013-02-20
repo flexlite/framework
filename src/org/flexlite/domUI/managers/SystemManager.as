@@ -67,7 +67,7 @@ package org.flexlite.domUI.managers
 		 */		
 		private function onAddToStage(event:Event=null):void
 		{
-			if(!DomGlobals.systemManager)
+			if(DomGlobals._systemManagers.length==0)
 			{
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;
