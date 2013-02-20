@@ -49,6 +49,9 @@ package org.flexlite.domUI.managers
 		 */		
 		private function onRemoved(event:Event):void
 		{
+			var index:int = DomGlobals._systemManagers.indexOf(this);
+			if(index!=-1)
+				DomGlobals._systemManagers.splice(index,1);
 			stage.removeEventListener(Event.RESIZE,onResize);
 			stage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true);
@@ -70,7 +73,9 @@ package org.flexlite.domUI.managers
 				stage.align = StageAlign.TOP_LEFT;
 				stage.stageFocusRect=false;
 			}
-			DomGlobals._systemManager = this;
+			var index:int = DomGlobals._systemManagers.indexOf(this);
+			if(index==-1)
+				DomGlobals._systemManagers.push(this);
 			stage.addEventListener(Event.RESIZE,onResize);
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
