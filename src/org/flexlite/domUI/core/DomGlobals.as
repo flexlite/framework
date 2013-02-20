@@ -42,13 +42,18 @@ package org.flexlite.domUI.core
 		 */		
 		dx_internal static var layoutManager:LayoutManager;
 		
-		dx_internal static var _systemManager:ISystemManager;
+		dx_internal static var _systemManagers:Vector.<ISystemManager> = new Vector.<ISystemManager>();
 		/**
 		 * 顶级应用容器
 		 */
 		public static function get systemManager():ISystemManager
 		{
-			return _systemManager;
+			for(var i:int=_systemManagers.length-1;i>=0;i--)
+			{
+				if(_systemManagers[i].stage)
+					return _systemManagers[i];
+			}
+			return null;
 		}
 	}
 }
