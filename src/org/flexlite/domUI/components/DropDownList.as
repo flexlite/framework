@@ -40,6 +40,24 @@ package org.flexlite.domUI.components
 		 */		
 		private var labelChanged:Boolean = false;
 		
+		private var _prompt:String = "";
+		/**
+		 * 当没有选中项时在DropDownList上要显示的字符串。<p/>
+		 * 它通常是一个类似于“请选择一项...”的文本。当下拉列表中的某个项目被选中后，会被替换为该选定项目中的文本。
+		 */		
+		public function get prompt():String
+		{
+			return _prompt;
+		}
+		public function set prompt(value:String):void
+		{
+			if (_prompt == value)
+				return;
+			
+			_prompt = value;
+			labelChanged = true;
+			invalidateProperties();
+		}
 		/**
 		 * @inheritDoc
 		 */
@@ -80,7 +98,7 @@ package org.flexlite.domUI.components
 				if (displayItem != null && displayItem != undefined)
 					labelDisplay.text = itemToLabel(displayItem);
 				else
-					labelDisplay.text = "";
+					labelDisplay.text = _prompt;
 			}   
 		}
 		
