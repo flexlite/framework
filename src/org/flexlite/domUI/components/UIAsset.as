@@ -155,6 +155,8 @@ package org.flexlite.domUI.components
 		 */		
 		private function skinChnaged(skin:Object,skinName:Object):void
 		{
+			if(skinName!==_skinName)
+				return;
 			onGetSkin(skin,skinName);
 			if(hasEventListener(UIEvent.SKIN_CHANGED))
 			{
