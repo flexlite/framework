@@ -22,8 +22,13 @@ package org.flexlite.domUtils
 	import org.flexlite.domUI.components.Tree;
 	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
+	import org.flexlite.domUI.skins.vector.HScrollBarSkin;
 	import org.flexlite.domUI.skins.vector.ListSkin;
+	import org.flexlite.domUI.skins.vector.ScrollerSkin;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
+	import org.flexlite.domUI.skins.vector.ToggleButtonSkin;
+	import org.flexlite.domUI.skins.vector.TreeItemRendererSkin;
+	import org.flexlite.domUI.skins.vector.VScrollBarSkin;
 	
 	
 	/**
@@ -95,6 +100,7 @@ package org.flexlite.domUtils
 			selectBtn.label = "选择";
 			selectBtn.y = 5;
 			selectBtn.x = 5;
+			selectBtn.skinName = ToggleButtonSkin;
 			selectBtn.addEventListener(Event.CHANGE,onSelectedChange);
 			window.addElement(selectBtn);
 			infoTree.skinName = ListSkin;
@@ -106,8 +112,17 @@ package org.flexlite.domUtils
 			infoTree.dataProvider = infoDp;
 			infoTree.labelFunction = labelFunc;
 			infoTree.addEventListener(TreeEvent.ITEM_OPENING,onTreeOpening);
+			infoTree.addEventListener(UIEvent.CREATION_COMPLETE,onTreeComp);
 			window.addElement(infoTree);
 			addElement(window);
+		}
+		
+		private function onTreeComp(event:UIEvent):void
+		{
+			infoTree.removeEventListener(UIEvent.CREATION_COMPLETE,onTreeComp);
+			infoTree.dataGroup.itemRendererSkinName = TreeItemRendererSkin;
+			(infoTree.skin as ListSkin).scroller.verticalScrollBar.skinName = VScrollBarSkin;
+			(infoTree.skin as ListSkin).scroller.horizontalScrollBar.skinName = HScrollBarSkin;
 		}
 		
 		private function onTreeOpening(event:TreeEvent):void
