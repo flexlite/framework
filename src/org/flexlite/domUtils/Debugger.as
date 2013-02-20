@@ -225,6 +225,14 @@ package org.flexlite.domUtils
 					close();
 				}
 			}
+			if(!currentTarget)
+				return;
+			if(event.keyCode==Keyboard.B&&event.ctrlKey&&event.shiftKey)
+			{
+				selectBtn.selected = false;
+				mouseEnabled = true;
+				infoDp.source = describe(currentTarget);
+			}
 		}
 		
 		/**
@@ -232,11 +240,12 @@ package org.flexlite.domUtils
 		 */		
 		private function show():void
 		{
+			var list:Array = appStage.getObjectsUnderPoint(new Point(appStage.mouseX,appStage.mouseY));
+			if(list.length>0)
+			{
+				currentTarget = list[list.length-1];
+			}
 			appStage.addChild(this);
-			selectBtn.selected = true;
-			mouseEnabled = false;
-			currentTarget = null;
-			infoDp.source = null;
 			invalidateDisplayList();
 			appStage.addEventListener(Event.ADDED,onAdded);
 			appStage.addEventListener(Event.RESIZE,onResize);
@@ -256,6 +265,10 @@ package org.flexlite.domUtils
 		{
 			if(parent)
 				parent.removeChild(this);
+			currentTarget = null;
+			infoDp.source = null;
+			selectBtn.selected = true;
+			mouseEnabled = false;
 			appStage.removeEventListener(Event.ADDED,onAdded);
 			appStage.removeEventListener(Event.RESIZE,onResize);
 			appStage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
