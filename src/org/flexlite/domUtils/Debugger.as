@@ -433,6 +433,7 @@ package org.flexlite.domUtils
 		private function describe(target:Object):XML
 		{
 			var xml:XML = <root/>;
+			var items:Array = [];
 			try
 			{
 				var type:String = getQualifiedClassName(target);
@@ -482,13 +483,17 @@ package org.flexlite.domUtils
 						}
 					}
 					catch(e:Error){}
-					xml.appendChild(item);
+					items.push(item);
+				}
+				items.sortOn("@key");
+				while(items.length>0)
+				{
+					xml.appendChild(items.shift());
 				}
 				return xml;
 			}
 			var info:XML = describeType(target);
 			var others:Array = [];
-			var items:Array = [];
 			var children:Array = [];
 			var childXMLList:XMLList = info.variable+info.accessor;
 			for each(var node:XML in childXMLList)
