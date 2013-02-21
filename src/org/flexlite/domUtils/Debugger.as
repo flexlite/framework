@@ -433,7 +433,12 @@ package org.flexlite.domUtils
 		private function describe(target:Object):XML
 		{
 			var xml:XML = <root/>;
-			if(target is Array)
+			try
+			{
+				var type:String = getQualifiedClassName(target);
+			}
+			catch(e:Error){}
+			if(type=="Array")
 			{
 				var length:int = (target as Array).length;
 				for(var i:int=0;i<length;i++)
@@ -443,10 +448,33 @@ package org.flexlite.domUtils
 					item.@key = "["+i+"]";
 					try
 					{
-						var type:String = getQualifiedClassName(childValue);
+						type = getQualifiedClassName(childValue);
 						if(childValue===null||childValue===undefined||
 							basicTypes.indexOf(type)!=-1)
 							item.@value = childValue;
+						else
+						{
+							item.@value = "["+type+"]";
+							item.appendChild(<child/>);
+						}
+					}
+					catch(e:Error){}
+					xml.appendChild(item);
+				}
+				return xml;
+			}
+			else if(type=="Object")
+			{
+				for(var key:String in target)
+				{
+					item = <item/>;
+					item.@key = key;
+					try
+					{
+						type = getQualifiedClassName(target[key]);
+						if(target[key]===null||target[key]===undefined||
+							basicTypes.indexOf(type)!=-1)
+							item.@value = target[key];
 						else
 						{
 							item.@value = "["+type+"]";
@@ -468,7 +496,7 @@ package org.flexlite.domUtils
 				if(node.@access=="writeonly")
 					continue;
 				var item:XML = <item/>;
-				var key:String = node.@name.toString();
+				key = node.@name.toString();
 				if(key=="stage")
 					continue;
 				item.@key = key;
