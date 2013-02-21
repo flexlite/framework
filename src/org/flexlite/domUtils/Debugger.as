@@ -257,7 +257,7 @@ package org.flexlite.domUtils
 					close();
 				}
 			}
-			if(!currentTarget)
+			if(!parent)
 				return;
 			if(event.keyCode==Keyboard.F2)
 			{
