@@ -365,10 +365,7 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
-			if(child is ILayoutManagerClient)
-			{
-				(child as ILayoutManagerClient).nestLevel = _nestLevel+1;
-			}
+			addingChild(child);
 			return super.addChild(child);
 		}
 		
@@ -377,11 +374,23 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
+			addingChild(child);
+			return super.addChildAt(child,index);
+		}
+		/**
+		 * 即将添加一个子项
+		 */		
+		dx_internal function addingChild(child:DisplayObject):void
+		{
 			if(child is ILayoutManagerClient)
 			{
 				(child as ILayoutManagerClient).nestLevel = _nestLevel+1;
 			}
-			return super.addChildAt(child,index);
+			if(child is InteractiveObject)
+			{
+				if(doubleClickEnabled)
+					InteractiveObject(child).doubleClickEnabled = true;
+			}
 		}
 		
 		/**
