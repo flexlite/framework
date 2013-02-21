@@ -730,43 +730,37 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 数据源发生改变
 		 */
-		protected function dataProvider_collectionChangeHandler(event:Event):void
+		protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
 		{
-			if (event is CollectionEvent)
+			if (event.kind == CollectionEventKind.ADD)
 			{
-				var ce:CollectionEvent = CollectionEvent(event);
-				
-				if (ce.kind == CollectionEventKind.ADD)
+				itemAdded(event.location);
+			}
+			else if (event.kind == CollectionEventKind.REMOVE)
+			{
+				itemRemoved(event.location);
+			}
+			else if (event.kind == CollectionEventKind.RESET)
+			{
+				if (dataProvider.length == 0)
 				{
-					itemAdded(ce.location);
+					setSelectedIndex(NO_SELECTION, false);
 				}
-				else if (ce.kind == CollectionEventKind.REMOVE)
+				else
 				{
-					itemRemoved(ce.location);
-				}
-				else if (ce.kind == CollectionEventKind.RESET)
-				{
-					if (dataProvider.length == 0)
-					{
-						setSelectedIndex(NO_SELECTION, false);
-					}
-					else
-					{
-						dataProviderChanged = true; 
-						invalidateProperties(); 
-					}
-				}
-				else if (ce.kind == CollectionEventKind.REFRESH)
-				{
-					dataProviderRefreshed();
-				}
-				else if (ce.kind == CollectionEventKind.REPLACE ||
-					ce.kind == CollectionEventKind.MOVE)
-				{
-					
+					dataProviderChanged = true; 
+					invalidateProperties(); 
 				}
 			}
-			
+			else if (event.kind == CollectionEventKind.REFRESH)
+			{
+				dataProviderRefreshed();
+			}
+			else if (event.kind == CollectionEventKind.REPLACE ||
+				event.kind == CollectionEventKind.MOVE)
+			{
+				
+			}
 		}
 	}
 }

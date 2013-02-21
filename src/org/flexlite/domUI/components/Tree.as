@@ -2,6 +2,8 @@ package org.flexlite.domUI.components
 {
 	import org.flexlite.domUI.collections.XMLCollection;
 	import org.flexlite.domUI.components.supportClasses.TreeItemRenderer;
+	import org.flexlite.domUI.events.CollectionEvent;
+	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.events.TreeEvent;
 	
@@ -10,11 +12,11 @@ package org.flexlite.domUI.components
 	 */	
 	[Event(name="itemOpening", type="org.flexlite.domUI.events.TreeEvent")]
 	/**
-	 * 节点打开
+	 * 节点打开，注意：只有通过交互操作引起的节点打开才会抛出此事件。
 	 */	
 	[Event(name="itemOpen", type="org.flexlite.domUI.events.TreeEvent")]
 	/**
-	 * 节点关闭
+	 * 节点关闭,注意：只有通过交互操作引起的节点关闭才会抛出此事件。
 	 */	
 	[Event(name="itemClose", type="org.flexlite.domUI.events.TreeEvent")]
 	
@@ -141,11 +143,11 @@ package org.flexlite.domUI.components
 				return;
 			if(dispatchEvent(event))
 			{
-				renderer.opened = !renderer.opened;
-				var type:String = renderer.opened?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
-				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
-				XMLCollection(dataProvider).expandItem(item,renderer.opened);
+				var opend:Boolean = !renderer.opened;
+				XMLCollection(dataProvider).expandItem(item,opend);
 				dispatchEvent(evt);
+				var type:String = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
+				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
 			}
 		}
 		
@@ -199,32 +201,14 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		/**
-		 * 打开或关闭一个节点
+		 * 打开或关闭一个节点,注意，此操作不会抛出open或close事件。
 		 * @param item 要打开或关闭的节点
 		 * @param open true表示打开节点，反之关闭。
-		 * @param cancelable 是否抛出TreeEvent.ITEM_OPENING事件(通过监听此事件可以阻止本次操作)。
 		 */		
-		public function expandItem(item:Object,open:Boolean = true,cancelable:Boolean = true):void
+		public function expandItem(item:Object,open:Boolean = true):void
 		{
 			if(!(dataProvider is XMLCollection))
 				return;
-			var hasOpen:Boolean = XMLCollection(dataProvider).isItemOpen(item);
-			if(hasOpen==open)
-				return;
-			var itemIndex:int = dataProvider.getItemIndex(item);
-			if(itemIndex==-1)
-				return;
-			var renderer:TreeItemRenderer;
-			if(cancelable)
-			{
-				renderer = dataGroup?dataGroup.getElementAt(itemIndex) as TreeItemRenderer:null;
-				var evt:TreeEvent = new TreeEvent(TreeEvent.ITEM_OPENING,
-					false,true,itemIndex,item,renderer);
-				if(!dispatchEvent(evt))
-					return;
-			}
-			if(renderer)
-				renderer.opened = open;
 			XMLCollection(dataProvider).expandItem(item,open);
 		}
 		/**
@@ -235,6 +219,21 @@ package org.flexlite.domUI.components
 			if(!(dataProvider is XMLCollection))
 				return false;
 			return XMLCollection(dataProvider).isItemOpen(item);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
+		{       
+			super.dataProvider_collectionChangeHandler(event);
+			if(event.kind == CollectionEventKind.OPEN||event.kind == CollectionEventKind.CLOSE)
+			{
+				var renderer:TreeItemRenderer = dataGroup?
+					dataGroup.getElementAt(event.location) as TreeItemRenderer:null;
+				if(renderer)
+					updateRenderer(renderer,event.location,event.items[0]);
+			}
 		}
 		
 		override protected function commitProperties():void

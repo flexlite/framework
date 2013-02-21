@@ -13,11 +13,11 @@ package org.flexlite.domUI.events
 	public class TreeEvent extends Event
 	{
 		/**
-		 * 节点关闭
+		 * 节点关闭,注意：只有通过交互操作引起的节点关闭才会抛出此事件。
 		 */		
 		public static const ITEM_CLOSE:String = "itemClose";
 		/**
-		 * 节点打开
+		 * 节点打开,注意：只有通过交互操作引起的节点打开才会抛出此事件。
 		 */		
 		public static const ITEM_OPEN:String = "itemOpen";
 		/**

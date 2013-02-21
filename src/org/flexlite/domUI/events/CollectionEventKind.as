@@ -35,5 +35,13 @@ package org.flexlite.domUI.events
 		 * 指示集合中一个或多个项目进行了更新。受影响的项目将存储在  CollectionEvent.items 属性中。 
 		 */		
 		public static const UPDATE:String = "update";
+		/**
+		 * 指示集合中某个节点的子项列表已打开，通常应用于Tree的数据源XMLCollection。
+		 */		
+		public static const OPEN:String = "open";
+		/**
+		 * 指示集合中某个节点的子项列表已关闭，通常应用于Tree的数据源XMLCollection。
+		 */		
+		public static const CLOSE:String = "close";
 	}
 }

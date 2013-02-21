@@ -249,15 +249,12 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		override protected function dataProvider_collectionChangeHandler(event:Event):void
+		override protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
 		{       
 			super.dataProvider_collectionChangeHandler(event);
 			
-			if (event is CollectionEvent)
-			{
-				labelChanged = true;
-				invalidateProperties();         
-			}
+			labelChanged = true;
+			invalidateProperties();
 		}
 		
 		/**

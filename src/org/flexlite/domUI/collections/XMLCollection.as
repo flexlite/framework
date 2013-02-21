@@ -186,13 +186,15 @@ package org.flexlite.domUI.collections
 				_openNodes.push(item);
 				var list:Array = [];
 				addChildren(item,list);
+				var i:int = index;
 				while(list.length)
 				{
-					index++;
+					i++;
 					var node:XML = list.shift();
-					nodeList.splice(index,0,node);
-					dispatchCoEvent(CollectionEventKind.ADD,index,-1,[node]);
+					nodeList.splice(i,0,node);
+					dispatchCoEvent(CollectionEventKind.ADD,i,-1,[node]);
 				}
+				dispatchCoEvent(CollectionEventKind.OPEN,index,index,[item]);
 			}
 		}
 		/**
@@ -217,6 +219,8 @@ package org.flexlite.domUI.collections
 					dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[node]);
 					list.shift();
 				}
+				index--;
+				dispatchCoEvent(CollectionEventKind.CLOSE,index,index,[item]);
 			}
 		}
 		/**
