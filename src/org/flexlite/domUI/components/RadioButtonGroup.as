@@ -166,7 +166,14 @@ package org.flexlite.domUI.components
 		/**
 		 * 从组里移除单选按钮
 		 */		
-		private function removeInstance(instance:RadioButton):void
+		dx_internal function removeInstance(instance:RadioButton):void
+		{
+			doRemoveInstance(instance,false);
+		}
+		/**
+		 * 执行从组里移除单选按钮
+		 */		
+		private function doRemoveInstance(instance:RadioButton,addListener:Boolean=true):void
 		{
 			if (instance)
 			{
@@ -182,7 +189,8 @@ package org.flexlite.domUI.components
 					}
 					else if (rb == instance)
 					{
-						instance.addEventListener(Event.ADDED, radioButton_addedHandler);
+						if(addListener)
+							instance.addEventListener(Event.ADDED, radioButton_addedHandler);
 						if (instance == _selection)
 							_selection = null;
 						
@@ -308,7 +316,7 @@ package org.flexlite.domUI.components
 			if (rb)
 			{
 				rb.removeEventListener(Event.REMOVED, radioButton_removedHandler);
-				removeInstance(rb);
+				doRemoveInstance(rb);
 			}
 		}
 	}

@@ -77,8 +77,8 @@ package org.flexlite.domUI.components
 		{
 			if (_group == value)
 				return;
-			this.dispatchEvent(new Event(Event.REMOVED));
-			
+			if(radioButtonGroup)
+				radioButtonGroup.removeInstance(this);
 			_group = value;  
 			_groupName = value ? group.name : "radioGroup";    
 			groupChanged = true;
