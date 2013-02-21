@@ -11,6 +11,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.core.NavigationUnit;
 	import org.flexlite.domUI.events.PropertyChangeEvent;
+	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	use namespace dx_internal;
 	
@@ -33,6 +34,25 @@ package org.flexlite.domUI.components
 			focusEnabled = true;
 		}
 		
+		private var _layout:LayoutBase;
+		/**
+		 * 此容器的布局对象,若不设置，默认使用ScrollerLayout。
+		 */
+		public function get layout():LayoutBase
+		{
+			return _layout;
+		}
+		
+		public function set layout(value:LayoutBase):void
+		{
+			if(_layout==value)
+				return;
+			_layout = value;
+			if (contentGroup)
+			{
+				contentGroup.layout = _layout;
+			}
+		}
 		/**
 		 * 实体容器
 		 */		
@@ -43,7 +63,9 @@ package org.flexlite.domUI.components
 		override protected function createChildren():void
 		{
 			contentGroup = new Group();
-			contentGroup.layout = new ScrollerLayout();
+			if(!_layout)
+				_layout = new ScrollerLayout();
+			contentGroup.layout = _layout;
 			addToDisplayList(contentGroup);
 			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, contentGroup_mouseWheelHandler);
 			super.createChildren();
