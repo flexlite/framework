@@ -554,8 +554,8 @@ package org.flexlite.domUtils
 			"horizontalCenter","explicitWidth","explicitHeight","paddingTop","paddingLeft",
 			"paddingRight","paddingBottom","includeInLayout","preferredX","preferredY",
 			"layoutBoundsX","layoutBoundsY","scaleX","scaleY","maxWidth","minWidth",
-			"maxHeight","minHeight","visible","alpha","parent","skinName","enabled",
-			"initialized","isPopUp","mouseEnabled","mouseChildren","focusEnabled","id"];
+			"maxHeight","minHeight","visible","alpha","parent","skinName","skin","enabled",
+			"initialized","isPopUp","mouseEnabled","mouseChildren","focusEnabled"];
 		/**
 		 * 基本数据类型列表
 		 */		
