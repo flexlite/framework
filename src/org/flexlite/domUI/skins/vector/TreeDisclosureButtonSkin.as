@@ -20,6 +20,39 @@ package org.flexlite.domUI.skins.vector
 			this.width = 9;
 		}
 		
+		private var _overColor:uint = 0x666666;
+		/**
+		 * 鼠标经过时的箭头颜色,默认0x666666。
+		 */
+		public function get overColor():uint
+		{
+			return _overColor;
+		}
+		public function set overColor(value:uint):void
+		{
+			if(_overColor==value)
+				return;
+			_overColor = value;
+			invalidateDisplayList();
+		}
+		
+		private var _selectedColor:uint = 0x333333;
+		/**
+		 * 节点开启时的箭头颜色,默认0x333333。
+		 */
+		public function get selectedColor():uint
+		{
+			return _selectedColor;
+		}
+		public function set selectedColor(value:uint):void
+		{
+			if(_selectedColor==value)
+				return;
+			_selectedColor = value;
+			invalidateDisplayList();
+		}
+
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -40,14 +73,14 @@ package org.flexlite.domUI.skins.vector
 				case "disabled":
 				case "over":
 				case "down":
-					arrowColor = 0x666666;
+					arrowColor = _overColor;
 					break;
 				case "overAndSelected":
 				case "upAndSelected":
 				case "downAndSelected":
 				case "disabledAndSelected":
 					selected = true;
-					arrowColor = 0x333333;
+					arrowColor = _selectedColor;
 					break;
 			}
 			this.alpha = currentState=="disabled"||currentState=="disabledAndSelected"?0.5:1;
