@@ -74,7 +74,7 @@ package org.flexlite.domUI.components
 			{
 				var treeRenderer:TreeItemRenderer = renderer as TreeItemRenderer;
 				treeRenderer.hasChildren = XML(data).children().length()>0;
-				treeRenderer.opened = XMLCollection(dataProvider).isOpen(data as XML);
+				treeRenderer.opened = XMLCollection(dataProvider).isItemOpen(data as XML);
 				treeRenderer.indentation = XMLCollection(dataProvider).getDepth(data as XML)*_indentation;
 				treeRenderer.iconSkinName = itemToIcon(data);
 			}
@@ -144,7 +144,7 @@ package org.flexlite.domUI.components
 				renderer.opened = !renderer.opened;
 				var type:String = renderer.opened?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
 				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
-				XMLCollection(dataProvider).expandNode(item,renderer.opened);
+				XMLCollection(dataProvider).expandItem(item,renderer.opened);
 				dispatchEvent(evt);
 			}
 		}
@@ -208,22 +208,33 @@ package org.flexlite.domUI.components
 		{
 			if(!(dataProvider is XMLCollection))
 				return;
-			var hasOpen:Boolean = XMLCollection(dataProvider).isOpen(item);
+			var hasOpen:Boolean = XMLCollection(dataProvider).isItemOpen(item);
 			if(hasOpen==open)
 				return;
 			var itemIndex:int = dataProvider.getItemIndex(item);
 			if(itemIndex==-1)
 				return;
+			var renderer:TreeItemRenderer;
 			if(cancelable)
 			{
-				var renderer:TreeItemRenderer = 
-					dataGroup?dataGroup.getElementAt(itemIndex) as TreeItemRenderer:null;
+				renderer = dataGroup?dataGroup.getElementAt(itemIndex) as TreeItemRenderer:null;
 				var evt:TreeEvent = new TreeEvent(TreeEvent.ITEM_OPENING,
 					false,true,itemIndex,item,renderer);
 				if(!dispatchEvent(evt))
 					return;
 			}
-			XMLCollection(dataProvider).expandNode(item,open);
+			if(renderer)
+				renderer.opened = open;
+			XMLCollection(dataProvider).expandItem(item,open);
+		}
+		/**
+		 * 指定的节点是否打开
+		 */		
+		public function isItemOpen(item:Object):Boolean
+		{
+			if(!(dataProvider is XMLCollection))
+				return false;
+			return XMLCollection(dataProvider).isItemOpen(item);
 		}
 		
 		override protected function commitProperties():void

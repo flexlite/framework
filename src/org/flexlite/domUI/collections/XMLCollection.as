@@ -149,7 +149,7 @@ package org.flexlite.domUI.collections
 			for (var i:int = 0; i < length; i++)
 			{
 				list.push(children[i]);
-				if (isOpen(children[i]))
+				if (isItemOpen(children[i]))
 					addChildren(children[i], list);
 			}
 		}
@@ -157,7 +157,7 @@ package org.flexlite.domUI.collections
 		/**
 		 * 指定的节点是否打开
 		 */		
-		public function isOpen(item:Object):Boolean
+		public function isItemOpen(item:Object):Boolean
 		{
 			return _openNodes.indexOf(item)!=-1;
 		}	
@@ -166,7 +166,7 @@ package org.flexlite.domUI.collections
 		 * @param item 要打开或关闭的节点
 		 * @param open true表示打开节点，反之关闭。
 		 */		
-		public function expandNode(item:Object,open:Boolean=true):void
+		public function expandItem(item:Object,open:Boolean=true):void
 		{
 			if(!(item is XML))
 				return;
