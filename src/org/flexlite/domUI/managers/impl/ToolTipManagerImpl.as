@@ -425,12 +425,12 @@ package org.flexlite.domUI.managers.impl
 		{
 			var x:Number;
 			var y:Number;
-			var dp:DisplayObject = currentToolTip as DisplayObject;
-			var sm:DisplayObjectContainer = dp.parent;
-			var toolTipRect:Rectangle = dp.getBounds(dp);
+			var sm:DisplayObjectContainer = currentToolTip.parent;
+			var toolTipWidth:Number = currentToolTip.layoutBoundsWidth;
+			var toolTipHeight:Number = currentToolTip.layoutBoundsHeight;
 			var rect:Rectangle = DisplayObject(currentTarget).getRect(sm);
-			var centerX:Number = rect.left+(rect.width - toolTipRect.width)*0.5;
-			var centetY:Number = rect.top+(rect.height - toolTipRect.height)*0.5;
+			var centerX:Number = rect.left+(rect.width - toolTipWidth)*0.5;
+			var centetY:Number = rect.top+(rect.height - toolTipHeight)*0.5;
 			switch(currentTarget.toolTipPosition)
 			{
 				case PopUpPosition.BELOW:
@@ -439,10 +439,10 @@ package org.flexlite.domUI.managers.impl
 					break;
 				case PopUpPosition.ABOVE:
 					x = centerX;
-					y = rect.top-toolTipRect.height;
+					y = rect.top-toolTipHeight;
 					break;
 				case PopUpPosition.LEFT:
-					x = rect.left-toolTipRect.width;
+					x = rect.left-toolTipWidth;
 					y = centetY;
 					break;
 				case PopUpPosition.RIGHT:
@@ -462,8 +462,6 @@ package org.flexlite.domUI.managers.impl
 					y = sm.mouseY + 20;
 					break;
 			}
-			x -= toolTipRect.left;
-			y -= toolTipRect.top;
 			var offset:Point = currentTarget.toolTipOffset;
 			if(offset)
 			{
@@ -472,10 +470,10 @@ package org.flexlite.domUI.managers.impl
 			}
 			var screenWidth:Number = sm.width;
 			var screenHeight:Number = sm.height;
-			if (x + toolTipRect.width > screenWidth)
-				x = screenWidth - toolTipRect.width;
-			if (y + toolTipRect.height > screenHeight)
-				y = screenHeight - toolTipRect.height;
+			if (x + toolTipWidth > screenWidth)
+				x = screenWidth - toolTipWidth;
+			if (y + toolTipHeight > screenHeight)
+				y = screenHeight - toolTipHeight;
 			currentToolTip.x = x;
 			currentToolTip.y = y;
 		}
