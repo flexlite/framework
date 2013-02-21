@@ -259,7 +259,15 @@ package org.flexlite.domUtils
 			}
 			if(!parent)
 				return;
-			if(event.keyCode==Keyboard.F2)
+			if(event.keyCode==Keyboard.F5)
+			{
+				onWindowDoubleClick();
+			}
+			else if(!currentTarget)
+			{
+				return;
+			}
+			else if(event.keyCode==Keyboard.F2)
 			{
 				var item:XML = infoTree.selectedItem as XML;
 				if(item)
@@ -274,10 +282,6 @@ package org.flexlite.domUtils
 				{
 					System.setClipboard(String(item.@value));
 				}
-			}
-			else if(event.keyCode==Keyboard.F5)
-			{
-				onWindowDoubleClick();
 			}
 			else if(event.keyCode==Keyboard.F12)
 			{
