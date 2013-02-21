@@ -140,9 +140,16 @@ package org.flexlite.domUtils
 					parent = parent.parent();
 				}
 				var target:Object = currentTarget;
-				while(keys.length>0)
+				try
 				{
-					target = target[keys.pop()];
+					while(keys.length>0)
+					{
+						target = target[keys.pop()];
+					}
+				}
+				catch(e:Error)
+				{
+					return;
 				}
 				item.setChildren(describe(target).children());
 			}
@@ -395,14 +402,18 @@ package org.flexlite.domUtils
 					var type:String = getQualifiedClassName(target[key]);
 				}
 				catch(e:Error){}
-				if(target[key]===null||target[key]===undefined||
-					basicTypes.indexOf(type)!=-1)
-					item.@value = target[key];
-				else
+				try
 				{
-					item.@value = "["+type+"]";
-					item.appendChild(<child/>);
+					if(target[key]===null||target[key]===undefined||
+						basicTypes.indexOf(type)!=-1)
+						item.@value = target[key];
+					else
+					{
+						item.@value = "["+type+"]";
+						item.appendChild(<child/>);
+					}
 				}
+				catch(e:Error){}
 			}
 			for each(node in info.accessor)
 			{
@@ -422,14 +433,18 @@ package org.flexlite.domUtils
 					type = getQualifiedClassName(target[key]);
 				}
 				catch(e:Error){}
-				if(target[key]===null||target[key]===undefined||
-					basicTypes.indexOf(type)!=-1)
-					item.@value = target[key];
-				else
+				try
 				{
-					item.@value = "["+type+"]";
-					item.appendChild(<child/>);
+					if(target[key]===null||target[key]===undefined||
+						basicTypes.indexOf(type)!=-1)
+						item.@value = target[key];
+					else
+					{
+						item.@value = "["+type+"]";
+						item.appendChild(<child/>);
+					}
 				}
+				catch(e:Error){}
 			}
 			items.sortOn("@key");
 			others.sortOn("@key");
