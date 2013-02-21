@@ -145,9 +145,9 @@ package org.flexlite.domUI.components
 			{
 				var opend:Boolean = !renderer.opened;
 				XMLCollection(dataProvider).expandItem(item,opend);
-				dispatchEvent(evt);
 				var type:String = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
 				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
+				dispatchEvent(evt);
 			}
 		}
 		
