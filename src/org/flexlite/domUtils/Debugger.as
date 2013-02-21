@@ -1,6 +1,7 @@
 package org.flexlite.domUtils
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -8,6 +9,7 @@ package org.flexlite.domUtils
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.system.System;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
@@ -32,7 +34,9 @@ package org.flexlite.domUtils
 	
 	
 	/**
-	 * 运行时调试工具
+	 * 运行时显示列表调试工具。
+	 * 快捷键：F11：开启或关闭调试;F12:选取鼠标下对象;F2:复制选中的属性名;F3:复制选中属性值;
+	 * F5:最大化或还原属性窗口;
 	 * @author DOM
 	 */
 	public class Debugger extends Group
@@ -58,6 +62,7 @@ package org.flexlite.domUtils
 			appStage = stage;
 			visible = false;
 			appStage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+			
 			init();
 		}
 		
@@ -100,6 +105,7 @@ package org.flexlite.domUtils
 			selectBtn.label = "选择";
 			selectBtn.y = 5;
 			selectBtn.x = 5;
+			selectBtn.selected = true;
 			selectBtn.skinName = ToggleButtonSkin;
 			selectBtn.addEventListener(Event.CHANGE,onSelectedChange);
 			window.addElement(selectBtn);
@@ -127,6 +133,8 @@ package org.flexlite.domUtils
 		
 		private function onTreeOpening(event:TreeEvent):void
 		{
+			if(!event.opening)
+				return;
 			var item:XML = event.item as XML;
 			if(item.children().length()==1&&
 				item.children()[0].localName()=="child")
@@ -144,7 +152,24 @@ package org.flexlite.domUtils
 				{
 					while(keys.length>0)
 					{
-						target = target[keys.pop()];
+						var key:String = keys.pop();
+						if(key.substr(0,8)=="children")
+						{
+							var index:int = int(key.substring(9,key.length-1));
+							target = DisplayObjectContainer(target).getChildAt(index);
+						}
+						else
+						{
+							if(key.charAt(0)=="["&&key.charAt(key.length-1)=="]")
+							{
+								index = int(key.substring(9,key.length-1));
+								target = target[index];
+							}
+							else
+							{
+								target = target[key];
+							}
+						}
 					}
 				}
 				catch(e:Error)
@@ -189,7 +214,7 @@ package org.flexlite.domUtils
 		/**
 		 * 双击窗口放大或还原
 		 */		
-		private function onWindowDoubleClick(event:MouseEvent):void
+		private function onWindowDoubleClick(event:MouseEvent=null):void
 		{
 			window.isPopUp = !window.isPopUp;
 			if(window.isPopUp)
@@ -234,7 +259,27 @@ package org.flexlite.domUtils
 			}
 			if(!currentTarget)
 				return;
-			if(event.keyCode==Keyboard.B&&event.ctrlKey&&event.shiftKey)
+			if(event.keyCode==Keyboard.F2)
+			{
+				var item:XML = infoTree.selectedItem as XML;
+				if(item)
+				{
+					System.setClipboard(String(item.@key));
+				}
+			}
+			else if(event.keyCode==Keyboard.F3)
+			{
+				item = infoTree.selectedItem as XML;
+				if(item)
+				{
+					System.setClipboard(String(item.@value));
+				}
+			}
+			else if(event.keyCode==Keyboard.F5)
+			{
+				onWindowDoubleClick();
+			}
+			else if(event.keyCode==Keyboard.F12)
 			{
 				selectBtn.selected = false;
 				mouseEnabled = true;
@@ -383,46 +428,45 @@ package org.flexlite.domUtils
 		}
 		private function describe(target:Object):XML
 		{
-			var info:XML = describeType(target);
 			var xml:XML = <root/>;
-			var node:XML;
+			if(target is Array)
+			{
+				var length:int = (target as Array).length;
+				for(var i:int=0;i<length;i++)
+				{
+					var childValue:* = target[i];
+					item = <item></item>;
+					item.@key = "["+i+"]";
+					try
+					{
+						var type:String = getQualifiedClassName(childValue);
+						if(childValue===null||childValue===undefined||
+							basicTypes.indexOf(type)!=-1)
+							item.@value = childValue;
+						else
+						{
+							item.@value = "["+type+"]";
+							item.appendChild(<child/>);
+						}
+					}
+					catch(e:Error){}
+					xml.appendChild(item);
+				}
+				return xml;
+			}
+			var info:XML = describeType(target);
 			var others:Array = [];
 			var items:Array = [];
-			for each(node in info.variable)
-			{
-				var item:XML = <item/>;
-				var key:String = node.@name.toString();
-				item.@key = key;
-				if(layoutProps.indexOf(key)==-1)
-					others.push(item);
-				else
-					items.push(item);
-				try
-				{
-					var type:String = getQualifiedClassName(target[key]);
-				}
-				catch(e:Error){}
-				try
-				{
-					if(target[key]===null||target[key]===undefined||
-						basicTypes.indexOf(type)!=-1)
-						item.@value = target[key];
-					else
-					{
-						item.@value = "["+type+"]";
-						item.appendChild(<child/>);
-					}
-				}
-				catch(e:Error){}
-			}
-			for each(node in info.accessor)
+			var children:Array = [];
+			var childXMLList:XMLList = info.variable+info.accessor;
+			for each(var node:XML in childXMLList)
 			{
 				if(node.@access=="writeonly")
 					continue;
-				key = node.@name.toString();
+				var item:XML = <item/>;
+				var key:String = node.@name.toString();
 				if(key=="stage")
 					continue;
-				item = <item/>;
 				item.@key = key;
 				if(layoutProps.indexOf(key)==-1)
 					others.push(item);
@@ -446,11 +490,40 @@ package org.flexlite.domUtils
 				}
 				catch(e:Error){}
 			}
+			if(target is DisplayObjectContainer)
+			{
+				var dc:DisplayObjectContainer = DisplayObjectContainer(target);
+				var numChildren:int = dc.numChildren;
+				for(i=0;i<numChildren;i++)
+				{
+					var child:DisplayObject = dc.getChildAt(i);
+					item = <item><child/></item>;
+					item.@key = "children["+i+"]";
+					try
+					{
+						item.@value = "["+getQualifiedClassName(child)+"]";
+					}
+					catch(e:Error){}
+					children.push(item);
+				}
+			}
+			if(children.length>0)
+			{
+				while(children.length>0)
+				{
+					xml.appendChild(children.shift());
+				}
+			}
 			items.sortOn("@key");
 			others.sortOn("@key");
 			if(items.length==0)
 			{
 				items = others;
+				others = [];
+			}
+			else if(!(target is DisplayObject))
+			{
+				items = items.concat(others);
 				others = [];
 			}
 			if(others.length>0)
@@ -477,7 +550,8 @@ package org.flexlite.domUtils
 			"horizontalCenter","explicitWidth","explicitHeight","paddingTop","paddingLeft",
 			"paddingRight","paddingBottom","includeInLayout","preferredX","preferredY",
 			"layoutBoundsX","layoutBoundsY","scaleX","scaleY","maxWidth","minWidth",
-			"maxHeight","maxHeight","visible","alpha"];
+			"maxHeight","minHeight","visible","alpha","parent","skinName","enabled",
+			"initialized","isPopUp","mouseEnabled","mouseChildren","focusEnabled","id"];
 		/**
 		 * 基本数据类型列表
 		 */		
