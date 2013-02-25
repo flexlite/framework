@@ -144,7 +144,7 @@ package org.flexlite.domDll.core
 			if(item.hasOwnProperty("subkeys"))
 			{
 				var subkeys:Array = String(item.subkeys).split(",");
-				delete item.subkeys;
+				item.subkeys = subkeys;
 				for each(var key:String in subkeys)
 				{
 					if(keyMap[key]!=null)

@@ -111,6 +111,14 @@ package org.flexlite.domDll
 			return instance.isGroupLoaded(name);
 		}
 		/**
+		 * 根据组名获取组加载项列表
+		 * @param name 组名
+		 */		
+		public static function getGroupByName(name:String):Vector.<DllItem>
+		{
+			return instance.getGroupByName(name);
+		}
+		/**
 		 * 检查配置文件里是否含有指定的资源
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 */		
@@ -268,6 +276,14 @@ package org.flexlite.domDll
 		private function isGroupLoaded(name:String):Boolean
 		{
 			return loadedGroups.indexOf(name)!=-1;
+		}
+		/**
+		 * 根据组名获取组加载项列表
+		 * @param name 组名
+		 */		
+		private function getGroupByName(name:String):Vector.<DllItem>
+		{
+			return dllConfig.getGroupByName(name);
 		}
 		
 		private var groupNameList:Array = [];

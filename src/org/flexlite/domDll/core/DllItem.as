@@ -78,6 +78,13 @@ package org.flexlite.domDll.core
 		 * 加载项文件大小(单位:字节)
 		 */		
 		public var size:int = 0;
+		/**
+		 * 二级键名列表
+		 */		
+		public function get subkeys():Array
+		{
+			return data?data.subkeys:null;
+		}
 		
 		dx_internal var _groupName:String;
 		/**
