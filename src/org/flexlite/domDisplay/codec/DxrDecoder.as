@@ -11,6 +11,8 @@ package org.flexlite.domDisplay.codec
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domDisplay.DxrData;
+	import org.flexlite.domDisplay.image.Jpeg32Decoder;
+	import org.flexlite.domDisplay.image.PngDecoder;
 	
 	use namespace dx_internal;
 	
@@ -20,10 +22,31 @@ package org.flexlite.domDisplay.codec
 	 */	
 	public class DxrDecoder
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function DxrDecoder()
 		{
+			if(!injected)
+			{
+				injected = true;
+				doInject();
+			}
 		}
 		
+		private static var injected:Boolean = false;
+		/**
+		 * 执行位图解码器注入
+		 */		
+		private static function doInject():void
+		{
+			if(!Injector.hasMapRule(IBitmapDecoder,"png"))
+				Injector.mapClass(IBitmapDecoder,PngDecoder,"png");
+			if(!Injector.hasMapRule(IBitmapDecoder,"jpegxr"))
+				Injector.mapClass(IBitmapDecoder,PngDecoder,"jpegxr");
+			if(!Injector.hasMapRule(IBitmapDecoder,"jpeg32"))
+				Injector.mapClass(IBitmapDecoder,Jpeg32Decoder,"jpeg32");
+		}
 		/**
 		 * 解码完成回调函数
 		 */		
@@ -61,7 +84,7 @@ package org.flexlite.domDisplay.codec
 			currentIndex = 0;
 			dxrSourceData = data;
 			bitmapDataList = new Vector.<BitmapData>();
-			this.bitmapDecoder =Injector.getInstance(IBitmapDecoder,dxrData.codecKey);
+			this.bitmapDecoder = Injector.getInstance(IBitmapDecoder,dxrData.codecKey);
 			addToDecodeList(this);
 		}
 		/**

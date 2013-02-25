@@ -13,7 +13,7 @@ package org.flexlite.domDisplay.image
 	
 	
 	/**
-	 * PNG位图解码器
+	 * PNG位图解码器,此解码器同样适用于其他所有普通位图解码。比如jpegxr。
 	 * @author DOM
 	 */
 	public class PngDecoder implements IBitmapDecoder
