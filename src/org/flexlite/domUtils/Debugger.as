@@ -10,22 +10,26 @@ package org.flexlite.domUtils
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.system.System;
-	import flash.ui.ContextMenu;
-	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
 	
+	import org.flexlite.domUI.collections.ArrayCollection;
 	import org.flexlite.domUI.collections.XMLCollection;
+	import org.flexlite.domUI.components.DropDownList;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.components.Label;
+	import org.flexlite.domUI.components.RadioButton;
+	import org.flexlite.domUI.components.RadioButtonGroup;
 	import org.flexlite.domUI.components.TitleWindow;
 	import org.flexlite.domUI.components.ToggleButton;
 	import org.flexlite.domUI.components.Tree;
 	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
+	import org.flexlite.domUI.skins.vector.DropDownListSkin;
 	import org.flexlite.domUI.skins.vector.HScrollBarSkin;
 	import org.flexlite.domUI.skins.vector.ListSkin;
+	import org.flexlite.domUI.skins.vector.RadioButtonSkin;
 	import org.flexlite.domUI.skins.vector.ScrollerSkin;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
 	import org.flexlite.domUI.skins.vector.ToggleButtonSkin;
@@ -73,6 +77,7 @@ package org.flexlite.domUtils
 		private var heightLabel:Label = new Label();
 		private var nameLabel:Label = new Label();
 		private var selectBtn:ToggleButton = new ToggleButton();
+		private var selectMode:RadioButtonGroup = new RadioButtonGroup();
 		private var infoTree:Tree = new Tree();
 		/**
 		 * 初始化
@@ -102,13 +107,34 @@ package org.flexlite.domUtils
 			infoGroup.addElement(heightLabel);
 			window.addElement(infoGroup);
 			window.addEventListener(UIEvent.CREATION_COMPLETE,onWindowComp);
-			selectBtn.label = "选择";
+			selectBtn.label = "开启选择";
 			selectBtn.y = 5;
-			selectBtn.x = 5;
+			selectBtn.x = 3;
 			selectBtn.selected = true;
 			selectBtn.skinName = ToggleButtonSkin;
 			selectBtn.addEventListener(Event.CHANGE,onSelectedChange);
 			window.addElement(selectBtn);
+			var label:Label = new Label();
+			label.text = "模式:";
+			label.y = 8;
+			label.x = 75;
+			window.addElement(label);
+			var displayRadio:RadioButton = new RadioButton();
+			displayRadio.group = selectMode;
+			displayRadio.skinName = RadioButtonSkin;
+			displayRadio.x = 110;
+			displayRadio.y = 5;
+			displayRadio.value = displayRadio.label = "显示列表";
+			window.addElement(displayRadio);
+			var mouseRadio:RadioButton = new RadioButton();
+			mouseRadio.skinName = RadioButtonSkin;
+			mouseRadio.group = selectMode;
+			mouseRadio.x = 180;
+			mouseRadio.y = 5;
+			mouseRadio.value = mouseRadio.label = "鼠标事件";
+			window.addElement(mouseRadio);
+			selectMode.selectedValue = "显示列表";
+			selectMode.addEventListener(Event.CHANGE,onSelectModeChange);
 			infoTree.skinName = ListSkin;
 			infoTree.left = 0;
 			infoTree.right = 0;
@@ -122,7 +148,27 @@ package org.flexlite.domUtils
 			window.addElement(infoTree);
 			addElement(window);
 		}
-		
+		/**
+		 * 选择模式发生改变
+		 */		
+		private function onSelectModeChange(event:Event):void
+		{
+			if(selectMode.selectedValue=="显示列表")
+			{
+				appStage.removeEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
+				appStage.removeEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+				appStage.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			}
+			else
+			{
+				appStage.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+				appStage.addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
+				appStage.addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+			}
+		}
+		/**
+		 * 树列表创建完成
+		 */		
 		private function onTreeComp(event:UIEvent):void
 		{
 			infoTree.removeEventListener(UIEvent.CREATION_COMPLETE,onTreeComp);
@@ -130,7 +176,9 @@ package org.flexlite.domUtils
 			(infoTree.skin as ListSkin).scroller.verticalScrollBar.skinName = VScrollBarSkin;
 			(infoTree.skin as ListSkin).scroller.horizontalScrollBar.skinName = HScrollBarSkin;
 		}
-		
+		/**
+		 * 即将打开树的一个节点,生成子节点内容。
+		 */		
 		private function onTreeOpening(event:TreeEvent):void
 		{
 			if(!event.opening)
@@ -179,14 +227,16 @@ package org.flexlite.domUtils
 				item.setChildren(describe(target).children());
 			}
 		}
-		
+		/**
+		 * 树列表项显示文本格式化函数
+		 */		
 		private function labelFunc(item:Object):String
 		{
 			if(item.hasOwnProperty("@value"))
 				return item.@key+" : "+item.@value;
 			return item.@key;
 		}
-		
+
 		private function onSelectedChange(event:Event):void
 		{
 			if(selectBtn.selected)
@@ -306,13 +356,19 @@ package org.flexlite.domUtils
 			appStage.addEventListener(Event.ADDED,onAdded);
 			appStage.addEventListener(Event.RESIZE,onResize);
 			appStage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
-			appStage.addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-			appStage.addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+			if(selectMode.selectedValue=="显示列表")
+			{
+				appStage.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			}
+			else
+			{
+				appStage.addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
+				appStage.addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+			}
 			appStage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 			onResize();
 			window.x = width-window.width;
 		}
-		
 		
 		/**
 		 * 关闭
@@ -328,6 +384,7 @@ package org.flexlite.domUtils
 			appStage.removeEventListener(Event.ADDED,onAdded);
 			appStage.removeEventListener(Event.RESIZE,onResize);
 			appStage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+			appStage.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
 			appStage.removeEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
 			appStage.removeEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
 			appStage.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
@@ -354,6 +411,36 @@ package org.flexlite.domUtils
 				window.height = height;
 			}
 			window.maxHeight = height;
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(mouseMoved)
+			{
+				mouseMoved = false;
+				var target:DisplayObject;
+				if(!window.hitTestPoint(appStage.mouseX,appStage.mouseY)
+					&&appStage.numChildren>1)
+				{
+					var dp:DisplayObject = appStage.getChildAt(appStage.numChildren-2);
+					if(dp is DisplayObjectContainer)
+					{
+						var list:Array = DisplayObjectContainer(dp).getObjectsUnderPoint(new Point(appStage.mouseX,appStage.mouseY));
+						if(list.length>0)
+						{
+							target = list[list.length-1];
+						}
+					}
+				}
+				
+				if(currentTarget != target)
+				{
+					currentTarget = target;
+					invalidateDisplayList();
+				}
+				
+			}
 		}
 		
 		override protected function updateDisplayList(w:Number, h:Number):void
@@ -398,6 +485,21 @@ package org.flexlite.domUtils
 		 * 当前鼠标下的对象
 		 */		
 		private var currentTarget:DisplayObject;
+		/**
+		 * 鼠标移动过的标志
+		 */		
+		private var mouseMoved:Boolean = false;
+		/**
+		 * 鼠标移动
+		 */		
+		private function onMouseMove(event:MouseEvent):void
+		{
+			if(mouseMoved||!selectBtn.selected)
+				return;
+			mouseMoved = true;
+			invalidateProperties();
+		}	
+		
 		/**
 		 * 鼠标经过
 		 */		

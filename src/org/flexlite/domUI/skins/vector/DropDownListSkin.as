@@ -42,6 +42,10 @@ package org.flexlite.domUI.skins.vector
 		public var popUp:PopUpAnchor;
 		
 		public var scroller:Scroller;
+		/**
+		 * 滚动条皮肤
+		 */		
+		public var scrollerSkinName:Object;
 		
 		public var labelDisplay:Label;
 		
@@ -159,6 +163,8 @@ package org.flexlite.domUI.skins.vector
 			scroller.right = 2;
 			scroller.bottom = 2;
 			scroller.minViewportInset = 1;
+			if(scrollerSkinName)
+				scroller.skinName = scrollerSkinName;
 			scroller.viewport = dataGroup;
 			//dropShadow
 			var dropShadow:RectangularDropShadow = new RectangularDropShadow();
