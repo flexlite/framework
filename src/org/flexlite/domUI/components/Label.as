@@ -297,18 +297,18 @@ package org.flexlite.domUI.components
 		 */	
 		private function measureUsingWidth(w:Number):void
 		{
-			if(_isTruncated)
+			var originalText:String = textField.text;
+			if(_isTruncated||textChanged||htmlTextChanged)
 			{
 				if (isHTML)
 					textField.$htmlText = explicitHTMLText;
 				else
-					textField.$text = text;
+					textField.$text = _text;
 				applyRangeFormat();
 			}
-			
+
 			textField.autoSize = "left";
 			
-			var originalText:String = textField.text;
 			if (!isNaN(w))
 			{
 				textField.$width = w - _paddingLeft - _paddingRight;
@@ -364,9 +364,9 @@ package org.flexlite.domUI.components
 		 */		
 		public function setFormatOfRange(format:TextFormat, beginIndex:int=-1, endIndex:int=-1):void
 		{
-			if(rangeFormatDic==null)
+			if(!rangeFormatDic)
 				rangeFormatDic = new Dictionary;
-			if(rangeFormatDic[beginIndex]==null)
+			if(!rangeFormatDic[beginIndex])
 				rangeFormatDic[beginIndex] = new Dictionary;
 			rangeFormatDic[beginIndex][endIndex] = cloneTextFormat(format);
 			
@@ -393,7 +393,7 @@ package org.flexlite.domUI.components
 		private function applyRangeFormat(expLeading:Object=null):void
 		{
 			rangeFormatChanged = false;
-			if(rangeFormatDic==null||textField==null||text==""||text==null)
+			if(!rangeFormatDic||!textField||!_text)
 				return;
 			var useLeading:Boolean = expLeading!=null;
 			for(var beginIndex:* in rangeFormatDic)
@@ -403,7 +403,7 @@ package org.flexlite.domUI.components
 				{
 					for(var index:* in endDic)
 					{
-						if(endDic[index]==null)
+						if(!endDic[index])
 							continue;
 						var oldLeading:Object;
 						if(useLeading)
@@ -583,7 +583,7 @@ package org.flexlite.domUI.components
 		 */
 		override protected function createTextField():void
 		{
-			if (textField==null)
+			if (!textField)
 			{
 				super.createTextField();
 				textField.wordWrap = true;
