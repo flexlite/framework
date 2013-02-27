@@ -39,7 +39,7 @@ package org.flexlite.domUtils
 	
 	/**
 	 * 运行时显示列表调试工具。
-	 * 快捷键：F11：开启或关闭调试;F12:选取鼠标下对象;F2:复制选中的属性名;F3:复制选中属性值;
+	 * 快捷键：F11开启或关闭调试;F12开启或结束选择;F2复制选中的属性名;F3复制选中属性值;
 	 * F5:最大化或还原属性窗口;
 	 * @author DOM
 	 */
@@ -337,9 +337,19 @@ package org.flexlite.domUtils
 			}
 			else if(event.keyCode==Keyboard.F12)
 			{
-				selectBtn.selected = false;
-				mouseEnabled = true;
-				infoDp.source = describe(currentTarget);
+				if(selectBtn.selected)
+				{
+					selectBtn.selected = false;
+					mouseEnabled = true;
+					infoDp.source = describe(currentTarget);
+				}
+				else
+				{
+					selectBtn.selected = true;
+					onSelectedChange();
+					mouseMoved = true;
+					invalidateProperties();
+				}
 			}
 		}
 		
