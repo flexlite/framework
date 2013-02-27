@@ -59,7 +59,7 @@ package org.flexlite.domUI.components
 		 */		
 		public function get group():RadioButtonGroup
 		{
-			if (!_group&&groupName)
+			if (!_group&&_groupName)
 			{
 				if(!automaticRadioButtonGroups)
 					automaticRadioButtonGroups = new SharedMap;
@@ -67,6 +67,7 @@ package org.flexlite.domUI.components
 				if (!g)
 				{
 					g = new RadioButtonGroup();
+					g.name = _groupName;
 					automaticRadioButtonGroups.set(_groupName,g);     
 				}
 				_group = g;
@@ -103,6 +104,8 @@ package org.flexlite.domUI.components
 			if (!value || value == "")
 				return;
 			_groupName = value;
+			if(radioButtonGroup)
+				radioButtonGroup.removeInstance(this);
 			_group = null;
 			groupChanged = true;
 			

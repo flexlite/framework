@@ -80,13 +80,13 @@ package org.flexlite.domUI.components
 		
 		private var _selectedValue:Object;
 		/**
-		 * 当前被选中的单选按钮的value属性值。
+		 * 当前被选中的单选按钮的value属性值。注意，此属性仅当目标RadioButton在显示列表时有效。
 		 */		
 		public function get selectedValue():Object
 		{
 			if (selection)
 			{
-				return selection.value != null ?
+				return selection.value ?
 					selection.value :
 					selection.label;
 			}
@@ -95,7 +95,7 @@ package org.flexlite.domUI.components
 		public function set selectedValue(value:Object):void
 		{
 			_selectedValue = value;
-			if (value == null)
+			if (!value)
 			{
 				setSelection(null, false);
 				return;
@@ -119,7 +119,7 @@ package org.flexlite.domUI.components
 		
 		private var _selection:RadioButton;
 		/**
-		 * 当前被选中的单选按钮引用
+		 * 当前被选中的单选按钮引用,注意，此属性仅当目标RadioButton在显示列表时有效。
 		 */		
 		public function get selection():RadioButton
 		{
@@ -153,7 +153,7 @@ package org.flexlite.domUI.components
 			radioButtons.sort(breadthOrderCompare);
 			for (var i:int = 0; i < radioButtons.length; i++)
 				radioButtons[i].indexNumber = i;
-			if (_selectedValue != null)
+			if (_selectedValue)
 				selectedValue = _selectedValue;
 			if (instance.selected == true)
 				selection = instance;
@@ -214,9 +214,9 @@ package org.flexlite.domUI.components
 			if (_selection == value)
 				return;
 			
-			if (value == null)
+			if (!value)
 			{
-				if (selection != null)
+				if (selection)
 				{
 					_selection.selected = false;
 					_selection = null;
