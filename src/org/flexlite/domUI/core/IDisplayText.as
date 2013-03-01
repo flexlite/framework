@@ -11,11 +11,5 @@ package org.flexlite.domUI.core
 		 */		
 		function get text():String;
 		function set text(value:String):void;
-		
-		/**
-		 * 文本颜色。
-		 */
-		function get textColor():uint;
-		function set textColor(value:uint):void;
 	}
 }

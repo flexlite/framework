@@ -7,6 +7,11 @@ package org.flexlite.domUI.core
 	public interface IEditableText extends IDisplayText
 	{ 
 		/**
+		 * 文本颜色。
+		 */
+		function get textColor():uint;
+		function set textColor(value:uint):void;
+		/**
 		 * 指定文本字段是否是密码文本字段。如果此属性的值为 true，则文本字段被视为密码文本字段，
 		 * 并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
 		 * 启用密码模式时，“剪切”和“复制”命令及其对应的键盘快捷键将不起作用。
