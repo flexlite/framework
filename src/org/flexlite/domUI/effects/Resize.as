@@ -7,8 +7,11 @@ package org.flexlite.domUI.effects
 	import org.flexlite.domUI.effects.supportClasses.Effect;
 
 	use namespace dx_internal;
+	
+	[DXML(show="false")]
+	
 	/**
-	 * 尺寸调整特效。此动画作用于对象的width，height属性。
+	 * 尺寸调整特效。此动画作用于对象的width，height以及x，y属性。
 	 * @author DOM
 	 */
 	public class Resize extends Effect
@@ -23,11 +26,11 @@ package org.flexlite.domUI.effects
 		}
 		
 		/**
-		 * 缩放中心点x坐标(相对于scaleX为1时的位置)。默认值为0 
+		 * 缩放中心点x坐标。默认值为0 
 		 */		
 		public var originX:Number = 0;
 		/**
-		 * 缩放中心点y坐标(相对于scaleY为1时的位置)。默认值为0 
+		 * 缩放中心点y坐标。默认值为0 
 		 */		
 		public var originY:Number = 0;
 		
@@ -56,10 +59,11 @@ package org.flexlite.domUI.effects
 		 */	
 		public var widthBy:Number;
 		/**
-		 * 重置所有尺寸调整属性为初始状态。
+		 * @inheritDoc
 		 */		
-		public function reset():void
+		override public function reset():void
 		{
+			super.reset();
 			originX = originY = 0;
 			heightFrom = heightTo = heightBy = widthFrom = widthTo = widthBy = NaN;
 		}

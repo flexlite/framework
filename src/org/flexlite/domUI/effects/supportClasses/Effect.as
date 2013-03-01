@@ -27,6 +27,8 @@ package org.flexlite.domUI.effects.supportClasses
 	 * 对于任何重复次数超过一次的动画，当动画开始新的一次重复时分派。
 	 */	
 	[Event(name="effectRepeat", type="org.flexlite.domUI.events.EffectEvent")]
+	
+	
 	/**
 	 * 动画特效基类
 	 * @author DOM
@@ -306,6 +308,14 @@ package org.flexlite.domUI.effects.supportClasses
 		public function resume():void
 		{
 			animator.resume();
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public function reset():void
+		{
+			animator.stop();
+			_targets = [];
 		}
 	}
 }

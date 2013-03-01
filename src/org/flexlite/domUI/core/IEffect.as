@@ -59,5 +59,9 @@ package org.flexlite.domUI.core
 		 * 继续播放
 		 */		
 		function resume():void;
+		/**
+		 * 重置所有属性为初始状态。若正在播放中，同时立即停止动画。
+		 */
+		function reset():void;
 	}
 }

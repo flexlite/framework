@@ -6,8 +6,11 @@ package org.flexlite.domUI.effects
 	import org.flexlite.domUI.effects.supportClasses.Effect;
 
 	use namespace dx_internal;
+	
+	[DXML(show="false")]
+	
 	/**
-	 * 缩放特效,此动画作用于对象的scaleX,scaleY属性。
+	 * 缩放特效,此动画作用于对象的scaleX,scaleY以及x,y属性。
 	 * @author DOM
 	 */
 	public class Scale extends Effect
@@ -55,10 +58,11 @@ package org.flexlite.domUI.effects
 		 */	
 		public var scaleXBy:Number;
 		/**
-		 * 重置所有缩放属性为初始状态。
+		 * @inheritDoc
 		 */		
-		public function reset():void
+		override public function reset():void
 		{
+			super.reset();
 			originX = originY = scaleYFrom = scaleYTo = scaleYBy = scaleXFrom = scaleXTo = scaleXBy = NaN;
 		}
 		/**
