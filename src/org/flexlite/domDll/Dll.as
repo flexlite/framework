@@ -18,6 +18,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.DxrResolver;
 	import org.flexlite.domDll.resolvers.GrpResolver;
 	import org.flexlite.domDll.resolvers.ImgResolver;
+	import org.flexlite.domDll.resolvers.RslResolver;
 	import org.flexlite.domDll.resolvers.SoundResolver;
 	import org.flexlite.domDll.resolvers.SwfResolver;
 	import org.flexlite.domDll.resolvers.TxtResolver;
@@ -214,6 +215,8 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,ImgResolver,DllItem.TYPE_IMG);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SWF))
 				Injector.mapClass(IResolver,SwfResolver,DllItem.TYPE_SWF);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_RSL))
+				Injector.mapClass(IResolver,RslResolver,DllItem.TYPE_RSL);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_DXR))
 				Injector.mapClass(IResolver,DxrResolver,DllItem.TYPE_DXR);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_TXT))
