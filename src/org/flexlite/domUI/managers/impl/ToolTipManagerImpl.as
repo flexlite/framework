@@ -4,14 +4,12 @@ package org.flexlite.domUI.managers.impl
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
-	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.sensors.Accelerometer;
 	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	
