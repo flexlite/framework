@@ -279,9 +279,8 @@ package org.flexlite.domUI.components.supportClasses
 		private var pendingColor:uint = 0x000000;
 		
 		private var _textColor:uint = 0x000000;
-		
 		/**
-		 * 文字颜色,默认值为0x000000。
+		 * @inheritDoc
 		 */
 		public function get textColor():uint
 		{

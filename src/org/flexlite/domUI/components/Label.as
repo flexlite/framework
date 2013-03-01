@@ -55,7 +55,16 @@ package org.flexlite.domUI.components
 		{
 			return _verticalAlign;
 		}
-		
+		public function set verticalAlign(value:String):void
+		{
+			if(_verticalAlign==value)
+				return;
+			_verticalAlign = value;
+			defaultStyleChanged = true;
+			invalidateProperties();
+			invalidateSize();
+			invalidateDisplayList();
+		}
 		
 		/**
 		 * @inheritDoc
@@ -77,11 +86,8 @@ package org.flexlite.domUI.components
 		 * 从另外一个文本组件复制默认文字格式信息到自身，不包括对setFormatOfRange()的调用。<br/>
 		 * 复制的值包含：<br/>
 		 * fontFamily，size，textColor，bold，italic，underline，textAlign，<br/>
-		 * leading，letterSpacing，disabledColor,若目标textBase为Label还复制verticalAlign属性。
+		 * leading，letterSpacing，disabledColor,verticalAlign属性。
 		 */	
-		/**
-		 * @inheritDoc
-		 */
 		override public function copyDefaultFormatFrom(textBase:TextBase):void
 		{
 			super.copyDefaultFormatFrom(textBase);
@@ -91,16 +97,6 @@ package org.flexlite.domUI.components
 			}
 		}
 		
-		public function set verticalAlign(value:String):void
-		{
-			if(_verticalAlign==value)
-				return;
-			_verticalAlign = value;
-			defaultStyleChanged = true;
-			invalidateProperties();
-			invalidateSize();
-			invalidateDisplayList();
-		}
 		
 		private var _maxDisplayedLines:int = 0;
 		/**

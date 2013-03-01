@@ -132,6 +132,31 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
+		 * 文本颜色。
+		 */		
+		public function get textColor():uint
+		{
+			if(textDisplay)
+				return textDisplay.textColor;
+			var v:* = textDisplayProperties.textColor;
+			return (v === undefined) ? 0 : v;
+		}
+		public function set textColor(value:uint):void
+		{
+			if(textDisplay)
+			{
+				textDisplay.textColor = value;
+				textDisplayProperties.textColor = true;
+			}
+			else
+			{
+				textDisplayProperties.textColor = value;
+			}
+			//触发一次UPDATE_COMPLETE事件.
+			invalidateProperties();                    
+		}
+		
+		/**
 		 * 指定文本字段是否是密码文本字段。如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。
 		 * 如果为 false，则不会将文本字段视为密码文本字段。启用密码模式时，“剪切”和“复制”命令及其对应的键盘快捷键将不起作用。
 		 * 此安全机制可防止不良用户使用快捷键在无人看管的计算机上破译密码。
@@ -525,6 +550,12 @@ package org.flexlite.domUI.components.supportClasses
 				newTextDisplayProperties.displayAsPassword = true;
 			}
 			
+			if(textDisplayProperties.textColor !== undefined)
+			{
+				textDisplay.textColor = textDisplayProperties.textColor;
+				newTextDisplayProperties.textColor = true;
+			}
+			
 			if(textDisplayProperties.editable !== undefined)
 			{
 				textDisplay.editable = textDisplayProperties.editable;
@@ -596,6 +627,11 @@ package org.flexlite.domUI.components.supportClasses
 			if(textDisplayProperties.displayAsPassword)
 			{
 				newTextDisplayProperties.displayAsPassword = textDisplay.displayAsPassword;
+			}
+			
+			if(textDisplayProperties.textColor)
+			{
+				newTextDisplayProperties.textColor = textDisplay.textColor;
 			}
 			
 			if(textDisplayProperties.editable)
