@@ -63,6 +63,10 @@ package org.flexlite.domDisplay
 		 * 要绘制到的目标Graphics对象。
 		 */		
 		private var target:Graphics;
+		/**
+		 * bitmapData发生改变
+		 */		
+		private var bitmapDataChanged:Boolean = false;
 		
 		private var _bitmapData:BitmapData;
 		/**
@@ -82,7 +86,12 @@ package org.flexlite.domDisplay
 			cachedDestGrid = null;
 			if(value)
 			{
-				applyBitmapData();
+				if(!widthExplicitSet)
+					_width = _bitmapData.width-filterWidth;
+				if(!heightExplicitSet)
+					_height = _bitmapData.height-filterHeight;
+				bitmapDataChanged = true;
+				invalidateProperties();
 			}
 			else
 			{
@@ -254,9 +263,10 @@ package org.flexlite.domDisplay
 		 */
 		protected function commitProperties():void
 		{
-			if(widthChanged||heightChanged||scale9GridChanged||offsetPointChanged||smoothingChanged)
+			if(bitmapDataChanged||widthChanged||heightChanged||
+				scale9GridChanged||offsetPointChanged||smoothingChanged)
 			{
-				if(bitmapData)
+				if(_bitmapData)
 					applyBitmapData();
 				scale9GridChanged = false;
 				offsetPointChanged = false;
@@ -264,14 +274,6 @@ package org.flexlite.domDisplay
 			}
 		}
 
-		/**
-		 * 缓存的源九宫格网格坐标数据
-		 */		
-		private var cachedSourceGrid:Array;
-		/**
-		 * 缓存的目标九宫格网格坐标数据
-		 */		
-		private var cachedDestGrid:Array;
 		/**
 		 * 滤镜宽度,在子类中赋值
 		 */		
@@ -281,16 +283,19 @@ package org.flexlite.domDisplay
 		 */		
 		dx_internal var filterHeight:Number = 0;
 		/**
+		 * 缓存的源九宫格网格坐标数据
+		 */		
+		private var cachedSourceGrid:Array;
+		/**
+		 * 缓存的目标九宫格网格坐标数据
+		 */		
+		private var cachedDestGrid:Array;
+		/**
 		 * 应用bitmapData属性
 		 */		
 		private function applyBitmapData():void
 		{
 			target.clear();
-			if(!widthExplicitSet)
-				_width = _bitmapData.width-filterWidth;
-			if(!heightExplicitSet)
-				_height = _bitmapData.height-filterHeight;
-			
 			if(_scale9Grid)
 			{
 				if(widthChanged||heightChanged)
