@@ -134,9 +134,11 @@ package org.flexlite.domDll
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
 		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
+		 * "rsl" key是name返回:Loader key是subkey返回:Class<br/>
 		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
 		 * "amf" key是name返回:Object<br/>
 		 * "xml" key是name返回:XML<br/>
+		 * "txt" key是name返回:String<br/>
 		 * "img" key是name返回:BitmapData<br/>
 		 * "sound" key是name返回:Sound<br/>
 		 * "bin" key是name返回:ByteArray
@@ -149,7 +151,8 @@ package org.flexlite.domDll
 		 * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+		 * 回调函数的参数类型参考getRes()方法注释。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
 		public static function getResAsync(key:String,compFunc:Function,other:Object=null):void
@@ -160,7 +163,8 @@ package org.flexlite.domDll
 		 * 通过URL方式获取外部资源。<br/>
 		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
 		 * @param url 要加载文件的外部路径。
-		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+		 * 回调函数的参数类型参考getRes()方法注释。
 		 * @param type 文件类型(可选)。请使用DllItem类中定义的静态常量。若不设置将根据文件扩展名生成。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
@@ -351,21 +355,6 @@ package org.flexlite.domDll
 			return dllConfig.getType(key)!="";
 		}
 		
-		/**
-		 * 同步方式获取配置里的资源。<br/>
-		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
-		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @return 
-		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
-		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
-		 * "amf" key是name返回:Object<br/>
-		 * "xml" key是name返回:XML<br/>
-		 * "img" key是name返回:BitmapData<br/>
-		 * "sound" key是name返回:Sound<br/>
-		 * "bin" key是name返回:ByteArray
-		 * "txt" key是name返回:String
-		 */		
 		private function getRes(key:String):*
 		{
 			var type:String = dllConfig.getType(key);

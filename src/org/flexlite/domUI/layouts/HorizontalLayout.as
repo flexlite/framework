@@ -5,6 +5,7 @@ package org.flexlite.domUI.layouts
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domUI.core.ILayoutElement;
+	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 	
 	[DXML(show="false")]
@@ -268,11 +269,12 @@ package org.flexlite.domUI.layouts
 		{
 			if(!useVirtualLayout)
 			{
-				if(target!=null)
+				var element:IVisualElement;
+				if(target)
 				{
-					return target.getElementAt(index).x;
+					element = target.getElementAt(index);
 				}
-				return _paddingLeft;
+				return element?element.x:_paddingLeft;
 			}
 			var typicalWidth:Number = typicalLayoutRect?typicalLayoutRect.width:71;
 			var startPos:Number = paddingLeft;
