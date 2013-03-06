@@ -5,6 +5,7 @@ package org.flexlite.domUI.components
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
@@ -118,13 +119,9 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * 鼠标按下时的偏移量x
+		 * 鼠标按下时的偏移量
 		 */		
-		private var offsetX:Number;
-		/**
-		 * 鼠标按下时的偏移量y
-		 */	
-		private var offsetY:Number;
+		private var offsetPoint:Point;
 		/**
 		 * 鼠标在可移动区域按下
 		 */		
@@ -132,15 +129,14 @@ package org.flexlite.domUI.components
 		{
 			if (enabled && isPopUp)
 			{
-				offsetX = event.stageX - x;
-				offsetY = event.stageY - y;
+				offsetPoint = globalToLocal(new Point(event.stageX, event.stageY));
 				_includeInLayout = false;
 				DomGlobals.stage.addEventListener(
 					MouseEvent.MOUSE_MOVE, moveArea_mouseMoveHandler);
 				DomGlobals.stage.addEventListener(
 					MouseEvent.MOUSE_UP, moveArea_mouseUpHandler);
 				DomGlobals.stage.addEventListener(
-					Event.MOUSE_LEAVE, moveArea_mouseUpHandler)
+					Event.MOUSE_LEAVE, moveArea_mouseUpHandler);
 			}
 		}
 		/**
@@ -148,8 +144,9 @@ package org.flexlite.domUI.components
 		 */		
 		protected function moveArea_mouseMoveHandler(event:MouseEvent):void
 		{
-			this.x = event.stageX - offsetX;
-			this.y = event.stageY - offsetY;
+			var pos:Point = globalToLocal(new Point(event.stageX,event.stageY));
+			this.x += pos.x - offsetPoint.x;
+			this.y += pos.y - offsetPoint.y;
 			event.updateAfterEvent();
 		}
 		/**
@@ -163,8 +160,7 @@ package org.flexlite.domUI.components
 				MouseEvent.MOUSE_UP, moveArea_mouseUpHandler);
 			DomGlobals.stage.removeEventListener(
 				Event.MOUSE_LEAVE, moveArea_mouseUpHandler);
-			offsetX = NaN;
-			offsetY = NaN;
+			offsetPoint = null;
 			LayoutUtil.adjustRelativeByXY(this);
 			includeInLayout = true;
 		}
