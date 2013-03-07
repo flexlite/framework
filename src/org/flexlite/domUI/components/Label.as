@@ -100,7 +100,7 @@ package org.flexlite.domUI.components
 		
 		private var _maxDisplayedLines:int = 0;
 		/**
-		 * 最大显示行数,0或负值代表不限制
+		 * 最大显示行数,0或负值代表不限制。
 		 */
 		public function get maxDisplayedLines():int
 		{
@@ -527,7 +527,7 @@ package org.flexlite.domUI.components
 		private var _truncateToFit:Boolean = true;
 		/**
 		 * 如果此属性为true，并且Label控件大小小于其文本大小，则使用"..."截断 Label控件的文本。
-		 * 如果此属性为 false，则将直接截断文本。
+		 * 反之将直接截断文本。注意：当使用htmlText显示文本时，始终直接截断文本。
 		 */
 		public function get truncateToFit():Boolean
 		{
@@ -548,6 +548,8 @@ package org.flexlite.domUI.components
 		 */		
 		private function truncateTextToFit():Boolean
 		{
+			if(isHTML)
+				return false;
 			var truncationIndicator:String = "...";
 			var originalText:String = text;
 			
