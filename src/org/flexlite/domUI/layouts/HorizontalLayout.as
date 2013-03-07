@@ -77,9 +77,27 @@ package org.flexlite.domUI.layouts
 				dispatchEvent(new Event("gapChanged"));
 		}
 		
-		private var _paddingLeft:Number = 0;
+		private var _padding:Number = 0;
 		/**
-		 * 容器的左边缘与布局元素的左边缘之间的最少像素数
+		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
+		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 */
+		public function get padding():Number
+		{
+			return _padding;
+		}
+		public function set padding(value:Number):void
+		{
+			if(_padding==value)
+				return;
+			_padding = value;
+			invalidateTargetSizeAndDisplayList();
+		}
+
+		
+		private var _paddingLeft:Number = NaN;
+		/**
+		 * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingLeft():Number
 		{
@@ -95,9 +113,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingRight:Number = 0;
+		private var _paddingRight:Number = NaN;
 		/**
-		 * 容器的右边缘与布局元素的右边缘之间的最少像素数
+		 * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingRight():Number
 		{
@@ -113,9 +131,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingTop:Number = 0;
+		private var _paddingTop:Number = NaN;
 		/**
-		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数。
+		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingTop():Number
 		{
@@ -131,9 +149,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingBottom:Number = 0;
+		private var _paddingBottom:Number = NaN;
 		/**
-		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数。
+		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingBottom():Number
 		{
@@ -203,8 +221,14 @@ package org.flexlite.domUI.layouts
 				measuredWidth -= isNaN(elementSizeTable[i])?typicalWidth:elementSizeTable[i];;
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
-			var hPadding:Number = _paddingLeft + _paddingRight;
-			var vPadding:Number = _paddingTop + _paddingBottom;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
+			var hPadding:Number = paddingL + paddingR;
+			var vPadding:Number = paddingT + paddingB;
 			target.measuredWidth = Math.ceil(measuredWidth+hPadding);
 			target.measuredHeight = Math.ceil(measuredHeight+vPadding);
 		}
@@ -231,9 +255,14 @@ package org.flexlite.domUI.layouts
 				measuredWidth += preferredWidth;
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
-			measuredWidth += (numElements-1)*_gap
-			var hPadding:Number = _paddingLeft + _paddingRight;
-			var vPadding:Number = _paddingTop + _paddingBottom;
+			measuredWidth += (numElements-1)*_gap;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			var hPadding:Number = paddingL + paddingR;
+			var vPadding:Number = paddingT + paddingB;
 			target.measuredWidth = Math.ceil(measuredWidth+hPadding);
 			target.measuredHeight = Math.ceil(measuredHeight+vPadding);
 		}
@@ -267,6 +296,8 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function getStartPosition(index:int):Number
 		{
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
 			if(!useVirtualLayout)
 			{
 				var element:IVisualElement;
@@ -274,10 +305,10 @@ package org.flexlite.domUI.layouts
 				{
 					element = target.getElementAt(index);
 				}
-				return element?element.x:_paddingLeft;
+				return element?element.x:paddingL;
 			}
 			var typicalWidth:Number = typicalLayoutRect?typicalLayoutRect.width:71;
-			var startPos:Number = paddingLeft;
+			var startPos:Number = paddingL;
 			for(var i:int = 0;i<index;i++)
 			{
 				var eltWidth:Number = elementSizeTable[i];
@@ -430,18 +461,24 @@ package org.flexlite.domUI.layouts
 				return false;
 			}
 			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
 			var numElements:int = target.numElements;
 			var contentWidth:Number = getStartPosition(numElements-1)+
-				elementSizeTable[numElements-1]+paddingRight;			
+				elementSizeTable[numElements-1]+paddingR;			
 			var minVisibleX:Number = target.horizontalScrollPosition;
-			if(minVisibleX>contentWidth-paddingRight)
+			if(minVisibleX>contentWidth-paddingR)
 			{
 				startIndex = -1;
 				endIndex = -1;
 				return false;
 			}
 			var maxVisibleX:Number = target.horizontalScrollPosition + target.width;
-			if(maxVisibleX<paddingLeft)
+			if(maxVisibleX<paddingL)
 			{
 				startIndex = -1;
 				endIndex = -1;
@@ -472,12 +509,15 @@ package org.flexlite.domUI.layouts
 				indexInViewCalculated = false;
 			else
 				getIndexInView();
-			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 			var contentWidth:Number;
 			var numElements:int = target.numElements;
 			if(startIndex == -1||endIndex==-1)
 			{
-				contentWidth = getStartPosition(numElements)-_gap+_paddingRight;
+				contentWidth = getStartPosition(numElements)-_gap+paddingR;
 				target.setContentSize(Math.ceil(contentWidth),target.contentHeight);
 				return;
 			}
@@ -497,7 +537,7 @@ package org.flexlite.domUI.layouts
 				}
 			}
 			
-			var targetHeight:Number = Math.max(0, height - paddingTop - paddingBottom);
+			var targetHeight:Number = Math.max(0, height - paddingT - paddingB);
 			var justifyHeight:Number = Math.ceil(targetHeight);
 			var layoutElement:ILayoutElement;
 			if(contentJustify)
@@ -531,14 +571,14 @@ package org.flexlite.domUI.layouts
 				}
 				if(justify)
 				{
-					y = _paddingTop;
+					y = paddingT;
 					layoutElement.setLayoutBoundsSize(NaN,justifyHeight);
 				}
 				else
 				{
 					exceesHeight = (targetHeight - layoutElement.layoutBoundsHeight)*vAlign;
 					exceesHeight = exceesHeight>0?exceesHeight:0;
-					y = _paddingTop+Math.round(exceesHeight);
+					y = paddingT+Math.round(exceesHeight);
 				}
 				if(!contentJustify)
 					maxElementHeight = Math.max(maxElementHeight,layoutElement.preferredHeight);
@@ -552,8 +592,8 @@ package org.flexlite.domUI.layouts
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 			}
 			
-			contentHeight += paddingTop+paddingBottom;
-			contentWidth = getStartPosition(numElements)-_gap+_paddingRight;	
+			contentHeight += paddingT+paddingB;
+			contentWidth = getStartPosition(numElements)-_gap+paddingR;	
 			target.setContentSize(Math.ceil(contentWidth),
 				Math.ceil(contentHeight));
 			if(needInvalidateSize)
@@ -570,8 +610,14 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function updateDisplayListReal(width:Number,height:Number):void
 		{
-			var targetWidth:Number = Math.max(0, width - paddingLeft - paddingRight);
-			var targetHeight:Number = Math.max(0, height - paddingTop - paddingBottom);
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
+			var targetWidth:Number = Math.max(0, width - paddingL - paddingR);
+			var targetHeight:Number = Math.max(0, height - paddingT - paddingB);
 			
 			var justify:Boolean = _verticalAlign==VerticalAlign.JUSTIFY||_verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
 			var vAlign:Number = 0;
@@ -589,8 +635,8 @@ package org.flexlite.domUI.layouts
 			
 			var count:int = target.numElements;
 			var numElements:int = count;
-			var x:Number = _paddingLeft;
-			var y:Number = _paddingTop;
+			var x:Number = paddingL;
+			var y:Number = paddingT;
 			var i:int;
 			var layoutElement:ILayoutElement;
 			
@@ -649,15 +695,15 @@ package org.flexlite.domUI.layouts
 			
 			if(_horizontalAlign==HorizontalAlign.CENTER)
 			{
-				x = _paddingLeft+Math.round(excessWidth*0.5);
+				x = paddingL+Math.round(excessWidth*0.5);
 			}
 			else if(_horizontalAlign==HorizontalAlign.RIGHT)
 			{
-				x = _paddingLeft+Math.round(excessWidth);
+				x = paddingL+Math.round(excessWidth);
 			}
 			
-			var maxX:Number = _paddingLeft;
-			var maxY:Number = _paddingTop;
+			var maxX:Number = paddingL;
+			var maxY:Number = paddingT;
 			var dx:Number = 0;
 			var dy:Number = 0;
 			var justifyHeight:Number = Math.ceil(targetHeight);
@@ -671,7 +717,7 @@ package org.flexlite.domUI.layouts
 					continue;
 				if(justify)
 				{
-					y = _paddingTop;
+					y = paddingT;
 					layoutElement.setLayoutBoundsSize(widthDic[layoutElement],justifyHeight);
 				}
 				else
@@ -685,7 +731,7 @@ package org.flexlite.domUI.layouts
 					layoutElement.setLayoutBoundsSize(widthDic[layoutElement],layoutElementHeight);
 					exceesHeight = (targetHeight - layoutElement.layoutBoundsHeight)*vAlign;
 					exceesHeight = exceesHeight>0?exceesHeight:0;
-					y = _paddingTop+Math.round(exceesHeight);
+					y = paddingT+Math.round(exceesHeight);
 				}
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 				dx = Math.ceil(layoutElement.layoutBoundsWidth);
@@ -694,7 +740,7 @@ package org.flexlite.domUI.layouts
 				maxY = Math.max(maxY,y+dy);
 				x += dx+_gap;
 			}
-			target.setContentSize(Math.ceil(maxX+_paddingRight),Math.ceil(maxY+_paddingBottom));
+			target.setContentSize(Math.ceil(maxX+paddingR),Math.ceil(maxY+paddingB));
 		}
 		
 		/**
@@ -785,18 +831,22 @@ package org.flexlite.domUI.layouts
 			var rect:Rectangle = new Rectangle;
 			if(target==null)
 				return rect;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
 			var firstIndex:int = findIndexAt(scrollRect.left,0,target.numElements-1);
 			if(firstIndex==-1)
 			{
-				if(scrollRect.left>target.contentWidth - _paddingRight)
+				
+				if(scrollRect.left>target.contentWidth - paddingR)
 				{
-					rect.left = target.contentWidth - _paddingRight;
+					rect.left = target.contentWidth - paddingR;
 					rect.right = target.contentWidth;
 				}
 				else
 				{
 					rect.left = 0;
-					rect.right = _paddingLeft;
+					rect.right = paddingL;
 				}
 				return rect;
 			}
@@ -813,7 +863,7 @@ package org.flexlite.domUI.layouts
 				else
 				{
 					rect.left = 0;
-					rect.right = _paddingLeft;
+					rect.right = paddingL;
 				}
 			}
 			return rect;
@@ -828,17 +878,20 @@ package org.flexlite.domUI.layouts
 			if(target==null)
 				return rect;
 			var numElements:int = target.numElements;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
 			var lastIndex:int = findIndexAt(scrollRect.right,0,numElements-1);
 			if(lastIndex==-1)
 			{
-				if(scrollRect.right<_paddingLeft)
+				if(scrollRect.right<paddingL)
 				{
 					rect.left = 0;
-					rect.right = _paddingLeft;
+					rect.right = paddingL;
 				}
 				else
 				{
-					rect.left = target.contentWidth - _paddingRight;
+					rect.left = target.contentWidth - paddingR;
 					rect.right = target.contentWidth;
 				}
 				return rect;
@@ -855,7 +908,7 @@ package org.flexlite.domUI.layouts
 				}
 				else
 				{
-					rect.left = target.contentWidth - _paddingRight;
+					rect.left = target.contentWidth - paddingR;
 					rect.right = target.contentWidth;
 				}
 			}

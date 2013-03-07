@@ -182,9 +182,27 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}
 		
-		private var _paddingLeft:Number = 0;
+		private var _padding:Number = 0;
 		/**
-		 * 容器的右边缘与布局元素的右边缘之间的最少像素数
+		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
+		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 */
+		public function get padding():Number
+		{
+			return _padding;
+		}
+		public function set padding(value:Number):void
+		{
+			if(_padding==value)
+				return;
+			_padding = value;
+			invalidateTargetSizeAndDisplayList();
+		}
+		
+		
+		private var _paddingLeft:Number = NaN;
+		/**
+		 * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingLeft():Number
 		{
@@ -200,9 +218,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingRight:Number = 0;
+		private var _paddingRight:Number = NaN;
 		/**
-		 * 容器的右边缘与布局元素的右边缘之间的最少像素数
+		 * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingRight():Number
 		{
@@ -218,9 +236,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingTop:Number = 0;
+		private var _paddingTop:Number = NaN;
 		/**
-		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数。
+		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingTop():Number
 		{
@@ -236,9 +254,9 @@ package org.flexlite.domUI.layouts
 			invalidateTargetSizeAndDisplayList();
 		}    
 		
-		private var _paddingBottom:Number = 0;
+		private var _paddingBottom:Number = NaN;
 		/**
-		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数。
+		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingBottom():Number
 		{
@@ -415,8 +433,14 @@ package org.flexlite.domUI.layouts
 				measuredHeight = rowCount * (_rowHeight + _verticalGap) - _verticalGap;
 			}
 			
-			var hPadding:Number = paddingLeft + paddingRight;
-			var vPadding:Number = paddingTop + paddingBottom;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
+			var hPadding:Number = paddingL + paddingR;
+			var vPadding:Number = paddingT + paddingB;
 			
 			target.measuredWidth = Math.ceil(measuredWidth + hPadding);
 			target.measuredHeight = Math.ceil(measuredHeight + vPadding);
@@ -471,6 +495,12 @@ package org.flexlite.domUI.layouts
 			var widthHasSet:Boolean = !isNaN(explicitWidth);
 			var heightHasSet:Boolean = !isNaN(explicitHeight);
 			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
 			if(!widthHasSet&&!heightHasSet)
 			{
 				if(orientedByColumns)
@@ -503,7 +533,7 @@ package org.flexlite.domUI.layouts
 			else if(widthHasSet&&(!heightHasSet||!orientedByColumns))
 			{
 				var targetWidth:Number = Math.max(0, 
-					explicitWidth - paddingLeft - paddingRight);
+					explicitWidth - paddingL - paddingR);
 				_columnCount = Math.floor((targetWidth + _horizontalGap)/itemWidth);
 				if(_columnCount == 0)
 				{
@@ -518,7 +548,7 @@ package org.flexlite.domUI.layouts
 			else
 			{
 				var targetHeight:Number = Math.max(0, 
-					explicitHeight - paddingTop - paddingBottom);
+					explicitHeight - paddingT - paddingB);
 				_rowCount = Math.floor((targetHeight + _verticalGap)/itemHeight);
 				if(_rowCount == 0)
 				{
@@ -657,7 +687,9 @@ package org.flexlite.domUI.layouts
 			}
 			var oldStartIndex:int = startIndex;
 			var oldEndIndex:int = endIndex;
-			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
 			if(orientation == TileOrientation.COLUMNS)
 			{
 				var itemWidth:Number = _columnWidth + _horizontalGap;
@@ -669,10 +701,10 @@ package org.flexlite.domUI.layouts
 				}
 				var minVisibleX:Number = target.horizontalScrollPosition;
 				var maxVisibleX:Number = target.horizontalScrollPosition+target.width;
-				var startColumn:int = Math.floor((minVisibleX-paddingLeft+horizontalGap)/itemWidth);
+				var startColumn:int = Math.floor((minVisibleX-paddingL+horizontalGap)/itemWidth);
 				if(startColumn<0)
 					startColumn = 0;
-				var endColumn:int = Math.ceil((maxVisibleX-paddingLeft)/itemWidth);
+				var endColumn:int = Math.ceil((maxVisibleX-paddingL)/itemWidth);
 				if(endColumn<0)
 					endColumn = 0;
 				startIndex = Math.min(numElements-1,Math.max(0,startColumn*_rowCount));
@@ -689,10 +721,10 @@ package org.flexlite.domUI.layouts
 				}
 				var minVisibleY:Number = target.verticalScrollPosition;
 				var maxVisibleY:Number = target.verticalScrollPosition+target.height;
-				var startRow:int = Math.floor((minVisibleY-paddingTop+verticalGap)/itemHeight);
+				var startRow:int = Math.floor((minVisibleY-paddingT+verticalGap)/itemHeight);
 				if(startRow<0)
 					startRow = 0;
-				var endRow:int = Math.ceil((maxVisibleY-paddingTop)/itemHeight);
+				var endRow:int = Math.ceil((maxVisibleY-paddingT)/itemHeight);
 				if(endRow<0)
 					endRow = 0;
 				startIndex = Math.min(numElements-1,Math.max(0,startRow*_columnCount));
@@ -710,6 +742,11 @@ package org.flexlite.domUI.layouts
 			super.updateDisplayList(width, height);
 			if (target==null)
 				return;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 			
 			if(indexInViewCalculated)
 			{
@@ -720,7 +757,7 @@ package org.flexlite.domUI.layouts
 				calculateRowAndColumn(width,height);
 				if(_rowCount==0||_columnCount==0)
 				{
-					target.setContentSize(paddingLeft+paddingRight,paddingTop+paddingBottom);
+					target.setContentSize(paddingL+paddingR,paddingT+paddingB);
 					return;
 				}
 				adjustForJustify(width,height);
@@ -766,13 +803,13 @@ package org.flexlite.domUI.layouts
 						columnIndex = _columnCount - 1;
 					rowIndex = Math.ceil((index+1)/_columnCount) - 1;
 				}
-				x = columnIndex*(_columnWidth+_horizontalGap)+paddingLeft;
-				y = rowIndex*(_rowHeight+_verticalGap)+paddingTop;
+				x = columnIndex*(_columnWidth+_horizontalGap)+paddingL;
+				y = rowIndex*(_rowHeight+_verticalGap)+paddingT;
 				sizeAndPositionElement(elt,x,y,_columnWidth,rowHeight);
 			}
 			
-			var hPadding:Number = paddingLeft + paddingRight;
-			var vPadding:Number = paddingTop + paddingBottom;
+			var hPadding:Number = paddingL + paddingR;
+			var vPadding:Number = paddingT + paddingB;
 			var contentWidth:Number = (_columnWidth+horizontalGap)*_columnCount-_horizontalGap;
 			var contentHeight:Number = (_rowHeight+verticalGap)*_rowCount-verticalGap;
 			target.setContentSize(Math.ceil(contentWidth+hPadding),Math.ceil(contentHeight+vPadding));
@@ -830,10 +867,16 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function adjustForJustify(width:Number,height:Number):void
 		{
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
 			var targetWidth:Number = Math.max(0, 
-				width - paddingLeft - paddingRight);
+				width - paddingL - paddingR);
 			var targetHeight:Number = Math.max(0, 
-				height - paddingTop - paddingBottom);
+				height - paddingT - paddingB);
 			if(!isNaN(explicitVerticalGap))
 				_verticalGap = explicitVerticalGap;
 			if(!isNaN(explicitHorizontalGap))
@@ -884,21 +927,25 @@ package org.flexlite.domUI.layouts
 		override protected function getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			if(scrollRect.left>target.contentWidth - _paddingRight)
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			
+			if(scrollRect.left>target.contentWidth - paddingR)
 			{
-				bounds.left = target.contentWidth - _paddingRight;
+				bounds.left = target.contentWidth - paddingR;
 				bounds.right = target.contentWidth;
 			}
-			else if(scrollRect.left>_paddingLeft)
+			else if(scrollRect.left>paddingL)
 			{
-				var column:int = Math.floor((scrollRect.left - 1 - paddingLeft) / (_columnWidth + _horizontalGap));
+				var column:int = Math.floor((scrollRect.left - 1 - paddingL) / (_columnWidth + _horizontalGap));
 				bounds.left = leftEdge(column);
 				bounds.right = rightEdge(column);
 			}
 			else
 			{
 				bounds.left = 0;
-				bounds.right = _paddingLeft;
+				bounds.right = paddingL;
 			}
 			return bounds;
 		}
@@ -908,21 +955,25 @@ package org.flexlite.domUI.layouts
 		 */
 		override protected function getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle
 		{
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			
 			var bounds:Rectangle = new Rectangle();
-			if(scrollRect.right<_paddingLeft)
+			if(scrollRect.right<paddingL)
 			{
 				bounds.left = 0;
-				bounds.right = _paddingLeft;
+				bounds.right = paddingL;
 			}
-			else if(scrollRect.right<target.contentWidth - _paddingRight)
+			else if(scrollRect.right<target.contentWidth - paddingR)
 			{
-				var column:int = Math.floor(((scrollRect.right + 1 + _horizontalGap) - paddingLeft) / (_columnWidth + _horizontalGap));
+				var column:int = Math.floor(((scrollRect.right + 1 + _horizontalGap) - paddingL) / (_columnWidth + _horizontalGap));
 				bounds.left = leftEdge(column);
 				bounds.right = rightEdge(column);
 			}
 			else
 			{
-				bounds.left = target.contentWidth - _paddingRight;
+				bounds.left = target.contentWidth - paddingR;
 				bounds.right = target.contentWidth;
 			}
 			return bounds;
@@ -933,22 +984,25 @@ package org.flexlite.domUI.layouts
 		 */
 		override protected function getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle
 		{
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 			var bounds:Rectangle = new Rectangle();
-			if(scrollRect.top>target.contentHeight - _paddingBottom)
+			if(scrollRect.top>target.contentHeight - paddingB)
 			{
-				bounds.top = target.contentHeight - _paddingBottom;
+				bounds.top = target.contentHeight - paddingB;
 				bounds.bottom = target.contentHeight;
 			}
-			else if(scrollRect.top>_paddingTop)
+			else if(scrollRect.top>paddingT)
 			{
-				var row:int = Math.floor((scrollRect.top - 1 - paddingTop) / (_rowHeight + _verticalGap));
+				var row:int = Math.floor((scrollRect.top - 1 - paddingT) / (_rowHeight + _verticalGap));
 				bounds.top = topEdge(row);
 				bounds.bottom = bottomEdge(row);
 			}
 			else
 			{
 				bounds.top = 0;
-				bounds.bottom = _paddingTop;
+				bounds.bottom = paddingT;
 			}
 			return bounds;
 		}
@@ -958,57 +1012,64 @@ package org.flexlite.domUI.layouts
 		 */
 		override protected function getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle
 		{
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 			var bounds:Rectangle = new Rectangle();
-			if(scrollRect.bottom<_paddingTop)
+			if(scrollRect.bottom<paddingT)
 			{
 				bounds.top = 0;
-				bounds.bottom = _paddingTop;
+				bounds.bottom = paddingT;
 			}
-			else if(scrollRect.bottom<target.contentHeight - _paddingBottom)
+			else if(scrollRect.bottom<target.contentHeight - paddingB)
 			{
-				var row:int = Math.floor(((scrollRect.bottom + 1 + _verticalGap) - paddingTop) / (_rowHeight + _verticalGap));
+				var row:int = Math.floor(((scrollRect.bottom + 1 + _verticalGap) - paddingT) / (_rowHeight + _verticalGap));
 				bounds.top = topEdge(row);
 				bounds.bottom = bottomEdge(row);
 			}
 			else
 			{
-				bounds.top = target.contentHeight - _paddingBottom;
+				bounds.top = target.contentHeight - paddingB;
 				bounds.bottom = target.contentHeight;
 			}
 			
 			return bounds;
 		}
 		
-		final private function leftEdge(columnIndex:int):Number
+		private function leftEdge(columnIndex:int):Number
 		{
 			if (columnIndex < 0)
 				return 0;
-			
-			return Math.max(0, columnIndex * (_columnWidth + _horizontalGap)) + paddingLeft;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			return Math.max(0, columnIndex * (_columnWidth + _horizontalGap)) + paddingL;
 		}
 		
-		final private function rightEdge(columnIndex:int):Number
+		private function rightEdge(columnIndex:int):Number
 		{
 			if (columnIndex < 0)
 				return 0;
-			
-			return Math.min(target.contentWidth, columnIndex * (_columnWidth + _horizontalGap) + _columnWidth) + paddingLeft;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			return Math.min(target.contentWidth, columnIndex * (_columnWidth + _horizontalGap) + _columnWidth) + paddingL;
 		}
 		
 		final private function topEdge(rowIndex:int):Number
 		{
 			if (rowIndex < 0)
 				return 0;
-			
-			return Math.max(0, rowIndex * (_rowHeight + _verticalGap)) + paddingTop;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			return Math.max(0, rowIndex * (_rowHeight + _verticalGap)) + paddingT;
 		}
 		
 		final private function bottomEdge(rowIndex:int):Number
 		{
 			if (rowIndex < 0)
 				return 0;
-			
-			return Math.min(target.contentHeight, rowIndex * (_rowHeight + _verticalGap) + _rowHeight) + paddingTop;
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			return Math.min(target.contentHeight, rowIndex * (_rowHeight + _verticalGap) + _rowHeight) + paddingT;
 		}
 	
 	}

@@ -705,7 +705,7 @@ package org.flexlite.domUtils
 			new <String>["x","y","width","height","measuredWidth","measuredHeight",
 			"layoutBoundsWidth","layoutBoundsHeight","preferredWidth","preferredHeight",
 			"left","right","top","bottom","percentWidth","percentHeight","verticalCenter",
-			"horizontalCenter","explicitWidth","explicitHeight","paddingTop","paddingLeft",
+			"horizontalCenter","explicitWidth","explicitHeight","margin","padding","paddingTop","paddingLeft",
 			"paddingRight","paddingBottom","includeInLayout","preferredX","preferredY",
 			"layoutBoundsX","layoutBoundsY","scaleX","scaleY","maxWidth","minWidth",
 			"maxHeight","minHeight","visible","alpha","parent","skinName","skin","enabled",

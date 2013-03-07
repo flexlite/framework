@@ -52,10 +52,7 @@ package org.flexlite.domUI.skins.vector
 			contentDisplay.bottom = 36;
 			contentDisplay.verticalAlign = VerticalAlign.MIDDLE;
 			contentDisplay.textAlign = TextFormatAlign.CENTER;
-			contentDisplay.paddingBottom = 10;
-			contentDisplay.paddingTop = 10;
-			contentDisplay.paddingLeft = 10;
-			contentDisplay.paddingRight = 10;
+			contentDisplay.padding = 10;
 			contentDisplay.selectable = true;
 			addElementAt(contentDisplay,0);
 			

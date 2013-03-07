@@ -144,15 +144,32 @@ package org.flexlite.domUI.components
 			
 			rangeFormatDic = null;
 		}
-		
 		/**
 		 * 上一次测量的宽度 
 		 */		
 		private var lastUnscaledWidth:Number = NaN;
 		
-		private var _paddingLeft:Number = 0;
+		private var _padding:Number = 0;
 		/**
-		 * 文字距离左边缘的空白像素
+		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
+		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 */
+		public function get padding():Number
+		{
+			return _padding;
+		}
+		public function set padding(value:Number):void
+		{
+			if(_padding==value)
+				return;
+			_padding = value;
+			invalidateSize();
+			invalidateDisplayList();
+		}
+		
+		private var _paddingLeft:Number = NaN;
+		/**
+		 * 文字距离左边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingLeft():Number
 		{
@@ -169,9 +186,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingRight:Number = 0;
+		private var _paddingRight:Number = NaN;
 		/**
-		 * 文字距离右边缘的空白像素
+		 * 文字距离右边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingRight():Number
 		{
@@ -188,9 +205,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingTop:Number = 0;
+		private var _paddingTop:Number = NaN;
 		/**
-		 * 文字距离顶部边缘的空白像素
+		 * 文字距离顶部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingTop():Number
 		{
@@ -207,9 +224,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingBottom:Number = 0;
+		private var _paddingBottom:Number = NaN;
 		/**
-		 * 文字距离底部边缘的空白像素
+		 * 文字距离底部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingBottom():Number
 		{
@@ -225,8 +242,6 @@ package org.flexlite.domUI.components
 			invalidateSize();
 			invalidateDisplayList();
 		}    
-
-		
 		
 		/**
 		 * @inheritDoc
@@ -302,12 +317,18 @@ package org.flexlite.domUI.components
 					textField.$text = _text;
 				applyRangeFormat();
 			}
+			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 
 			textField.autoSize = "left";
 			
 			if (!isNaN(w))
 			{
-				textField.$width = w - _paddingLeft - _paddingRight;
+				textField.$width = w - paddingL - paddingR;
 				measuredWidth = Math.ceil(textField.textWidth);
 				measuredHeight = Math.ceil(textField.textHeight);
 			}
@@ -330,8 +351,8 @@ package org.flexlite.domUI.components
 				measuredHeight = lineM.height*_maxDisplayedLines-lineM.leading+4;
 			}
 			
-			measuredWidth += _paddingLeft + _paddingRight;
-			measuredHeight += _paddingTop + _paddingBottom;
+			measuredWidth += paddingL + paddingR;
+			measuredHeight += paddingT + paddingB;
 			
 			if(_isTruncated)
 			{
@@ -432,8 +453,15 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
 		{
 			$updateDisplayList(unscaledWidth,unscaledHeight);
-			textField.x = _paddingLeft;
-			textField.y = _paddingTop;
+			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
+			textField.x = paddingL;
+			textField.y = paddingT;
 			if (isSpecialCase())
 			{
 				var firstTime:Boolean = isNaN(lastUnscaledWidth) ||
@@ -458,8 +486,8 @@ package org.flexlite.domUI.components
 			textField.scrollH = 0;
 			textField.scrollV = 1;
 			
-			textField.$width = unscaledWidth - _paddingLeft - _paddingRight;
-			var unscaledTextHeight:Number = unscaledHeight - _paddingTop - _paddingBottom;
+			textField.$width = unscaledWidth - paddingL - paddingR;
+			var unscaledTextHeight:Number = unscaledHeight - paddingT - paddingB;
 			textField.$height = unscaledTextHeight;
 			
 			
