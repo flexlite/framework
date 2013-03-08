@@ -2,7 +2,6 @@ package org.flexlite.domUI.managers
 {
 	
 	import flash.display.DisplayObject;
-	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IToolTip;
@@ -15,7 +14,7 @@ package org.flexlite.domUI.managers
 	 * 工具提示管理器
 	 * @author DOM
 	 */	
-	public class ToolTipManager extends EventDispatcher
+	public class ToolTipManager
 	{
 		/**
 		 * 构造函数

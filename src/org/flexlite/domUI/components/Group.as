@@ -8,6 +8,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.events.DragEvent;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	
 	use namespace dx_internal;
@@ -100,6 +101,10 @@ package org.flexlite.domUI.components
 				case MouseEvent.ROLL_OVER:
 				case MouseEvent.MOUSE_UP:
 				case MouseEvent.MOUSE_WHEEL:
+				case DragEvent.DRAG_ENTER:
+				case DragEvent.DRAG_OVER:
+				case DragEvent.DRAG_DROP:
+				case DragEvent.DRAG_EXIT:
 					if (++mouseEventReferenceCount > 0)
 						hasMouseListeners = true;
 			}

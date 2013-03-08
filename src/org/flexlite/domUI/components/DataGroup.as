@@ -523,6 +523,8 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		
+		private var itemRendererSkinNameChange:Boolean = false;
+		
 		private var _itemRendererSkinName:Object;
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
@@ -534,7 +536,14 @@ package org.flexlite.domUI.components
 		}
 		public function set itemRendererSkinName(value:Object):void
 		{
+			if(_itemRendererSkinName==value)
+				return;
 			_itemRendererSkinName = value;
+			if(_itemRendererSkinName&&initialized)
+			{
+				itemRendererSkinNameChange = true;
+				invalidateProperties();
+			}
 		}
 
 
@@ -630,6 +639,32 @@ package org.flexlite.domUI.components
 			{
 				typicalItemChanged = false;
 				measureRendererSize();
+			}
+			if(itemRendererSkinNameChange)
+			{
+				itemRendererSkinNameChange = false;
+				var length:int = indexToRenderer.length;
+				var client:ISkinnableClient;
+				for(var i:int=0;i<length;i++)
+				{
+					client = indexToRenderer[i] as ISkinnableClient;
+					if(client&&!client.skinName)
+						client.skinName = _itemRendererSkinName;
+				}
+				for(var clazz:* in freeRenderers)
+				{
+					var list:Vector.<IItemRenderer> = freeRenderers[clazz];
+					if(list)
+					{
+						length = list.length;
+						for(i=0;i<length;i++)
+						{
+							client = list[i] as ISkinnableClient;
+							if(client&&!client.skinName)
+								client.skinName = _itemRendererSkinName;
+						}
+					}
+				}
 			}
 
 		}

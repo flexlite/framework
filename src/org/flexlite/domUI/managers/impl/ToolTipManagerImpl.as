@@ -320,17 +320,9 @@ package org.flexlite.domUI.managers.impl
 			
 			if (previousTarget && currentToolTip)
 			{
-				if (currentToolTip is IToolTip)
-				{
-					event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);
-					event.toolTip = currentToolTip;
-					previousTarget.dispatchEvent(event);
-				}
-				else
-				{
-					if (hasEventListener(ToolTipEvent.TOOL_TIP_HIDE))
-						dispatchEvent(new Event(ToolTipEvent.TOOL_TIP_HIDE));
-				}
+				event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);
+				event.toolTip = currentToolTip;
+				previousTarget.dispatchEvent(event);
 			}   
 			
 			reset();
@@ -338,10 +330,8 @@ package org.flexlite.domUI.managers.impl
 			if (currentTarget)
 			{
 				
-				if (currentTipData==null||currentTipData == "")
+				if (!currentTipData)
 					return;
-				event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_START);
-				currentTarget.dispatchEvent(event);
 				
 				if (_showDelay==0||showImmediatelyFlag||scrubTimer.running)
 				{
@@ -494,7 +484,7 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function hideTip():void
 		{
-			if (previousTarget)
+			if (previousTarget&&currentToolTip)
 			{
 				var event:ToolTipEvent =
 					new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);

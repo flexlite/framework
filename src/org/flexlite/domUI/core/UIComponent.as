@@ -40,6 +40,39 @@ package org.flexlite.domUI.core
 	 * 组件的一次三个延迟验证渲染阶段全部完成 
 	 */	
 	[Event(name="updateComplete", type="org.flexlite.domUI.events.UIEvent")]
+	/**
+	 * 即将显示ToolTip显示对象
+	 */	
+	[Event(name="toolTipShow", type="org.flexlite.domUI.events.ToolTipEvent")]
+	/**
+	 * 即将隐藏ToolTip显示对象
+	 */	
+	[Event(name="toolTipHide", type="org.flexlite.domUI.events.ToolTipEvent")]
+	
+	/**
+	 * 拖拽开始,此事件由启动拖拽的组件自身抛出。
+	 */
+	[Event(name="dragStart", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽完成，此事件由拖拽管理器在启动拖拽的组件上抛出。
+	 */
+	[Event(name="dragComplete", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 在目标区域放下拖拽的数据,此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragDrop", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽进入目标区域，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragEnter", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽移出目标区域，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragExit", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽经过目标区域，相当于MouseOver事件，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */
+	[Event(name="dragOver", type="org.flexlite.domUI.events.DragEvent")]
 	
 	[DXML(show="false")]
 	
