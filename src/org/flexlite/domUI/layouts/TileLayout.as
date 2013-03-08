@@ -85,6 +85,7 @@ package org.flexlite.domUI.layouts
 		/**
 		 * 要显示的列数。设置为0表示自动确定列计数,默认值0。<br/>
 		 * 注意:当orientation为TileOrientation.COLUMNS，即逐列排列元素时，设置此属性无效。
+		 * 另外，此属性仅供测量默认宽度时使用。若目标容器被显示设置了宽度，此属性也无效。
 		 */
 		public function get requestedColumnCount():int
 		{
@@ -114,6 +115,7 @@ package org.flexlite.domUI.layouts
 		/**
 		 * 要显示的行数。设置为0表示自动确定行计数,默认值0。<br/>
 		 * 注意:当orientation为TileOrientation.ROWS，即逐行排列元素时，设置此属性无效。
+		 * 另外，此属性仅供测量默认高度时使用。若目标容器被显示设置了高度，此属性也无效。
 		 */
 		public function get requestedRowCount():int
 		{
