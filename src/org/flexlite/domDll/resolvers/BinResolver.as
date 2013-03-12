@@ -40,7 +40,7 @@ package org.flexlite.domDll.resolvers
 		/**
 		 * 加载项字典
 		 */		
-		private var dllItemDic:Dictionary = new Dictionary();
+		protected var dllItemDic:Dictionary = new Dictionary();
 		/**
 		 * @inheritDoc
 		 */
@@ -58,7 +58,7 @@ package org.flexlite.domDll.resolvers
 		/**
 		 * URLLoader对象池
 		 */		
-		private var recycler:Recycler = new Recycler();
+		protected var recycler:Recycler = new Recycler();
 		/**
 		 * 获取一个URLLoader对象
 		 */		
@@ -90,7 +90,7 @@ package org.flexlite.domDll.resolvers
 		/**
 		 * 一项加载结束
 		 */		
-		private function onLoadFinish(event:Event):void
+		protected function onLoadFinish(event:Event):void
 		{
 			var loader:URLLoader = event.target as URLLoader;
 			var data:Object = dllItemDic[loader];

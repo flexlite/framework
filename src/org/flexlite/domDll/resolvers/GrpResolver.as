@@ -1,9 +1,13 @@
 package org.flexlite.domDll.resolvers
 {
+	import flash.display.Shape;
+	import flash.events.Event;
+	import flash.net.URLLoader;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.Injector;
+	import org.flexlite.domDll.core.DllItem;
 	import org.flexlite.domDll.core.IResolver;
 	
 	/**
@@ -25,7 +29,62 @@ package org.flexlite.domDll.resolvers
 		 * name和subkey到解析器的映射表
 		 */		
 		private var keyMap:Dictionary = new Dictionary;
-
+		/**
+		 * EnterFrame事件抛出者
+		 */		
+		private var eventDispatcher:Shape = new Shape();
+		/**
+		 * 已经添加过事件监听的标志
+		 */		
+		private var listenForEnterFrame:Boolean = false;
+		/**
+		 * 带回调列表
+		 */		
+		private var completeList:Array = [];
+		/**
+		 * @inheritDoc
+		 */
+		override protected function onLoadFinish(event:Event):void
+		{
+			var loader:URLLoader = event.target as URLLoader;
+			var data:Object = dllItemDic[loader];
+			delete dllItemDic[loader];
+			recycler.push(loader);
+			var dllItem:DllItem = data.item;
+			var compFunc:Function = data.func;
+			dllItem.loaded = (event.type==Event.COMPLETE);
+			if(dllItem.loaded)
+			{
+				loadBytes(loader.data,dllItem.name);
+			}
+			
+			completeList.push({compFunc:compFunc,dllItem:dllItem,count:1});
+			if(!listenForEnterFrame)
+			{
+				eventDispatcher.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+				listenForEnterFrame = true;
+			}
+		}
+		
+		private function onEnterFrame(event:Event):void
+		{
+			for(var i:int=completeList.length-1;i>=0;i--)
+			{
+				var data:Object = completeList[i];
+				data.count--;
+				if(data.count<0)
+				{
+					completeList.splice(i,1);
+					data.compFunc(data.dllItem);
+				}
+			}
+			if(completeList.length==0)
+			{
+				eventDispatcher.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
+				listenForEnterFrame = false;
+			}
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
