@@ -62,8 +62,6 @@ package org.flexlite.domUtils
 			appStage = stage;
 			visible = false;
 			appStage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-			
-			init();
 		}
 		
 		private var window:TitleWindow = new TitleWindow();
@@ -75,6 +73,7 @@ package org.flexlite.domUtils
 		private var selectBtn:ToggleButton = new ToggleButton();
 		private var selectMode:RadioButtonGroup = new RadioButtonGroup();
 		private var infoTree:Tree = new Tree();
+		private var hasInitialized:Boolean = false;
 		/**
 		 * 初始化
 		 */		
@@ -354,6 +353,11 @@ package org.flexlite.domUtils
 		 */		
 		private function show():void
 		{
+			if(!hasInitialized)
+			{
+				hasInitialized = true;
+				init();
+			}
 			var list:Array = appStage.getObjectsUnderPoint(new Point(appStage.mouseX,appStage.mouseY));
 			if(list.length>0)
 			{
