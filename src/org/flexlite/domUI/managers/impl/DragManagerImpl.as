@@ -1,9 +1,6 @@
 package org.flexlite.domUI.managers.impl
 {
 	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import org.flexlite.domCore.dx_internal;
@@ -23,23 +20,15 @@ package org.flexlite.domUI.managers.impl
 	 * 拖拽管理器实现类
 	 * @author DOM
 	 */	
-	public class DragManagerImpl extends EventDispatcher
+	public class DragManagerImpl
 	{
 		/**
 		 * 构造函数
 		 */		
 		public function DragManagerImpl()
 		{
-			super();
-			if(DomGlobals.stage)
-			{
-				eventAttached = true;
-				DomGlobals.stage.addEventListener(MouseEvent.MOUSE_DOWN, sm_mouseDownHandler, false, 0, true);
-				DomGlobals.stage.addEventListener(MouseEvent.MOUSE_UP, sm_mouseUpHandler, false, 0, true);
-			}
 		}
 		
-		private var eventAttached:Boolean = false;
 		/**
 		 * 启动拖拽的组件
 		 */		
@@ -48,10 +37,6 @@ package org.flexlite.domUI.managers.impl
 		 * 拖拽显示的图标
 		 */		
 		private var dragProxy:DragProxy;
-		/**
-		 * 鼠标按下的标志
-		 */		
-		private var mouseIsDown:Boolean = false;
 		
 		private var _isDragging:Boolean = false;
 		/**
@@ -62,7 +47,7 @@ package org.flexlite.domUI.managers.impl
 			return _isDragging;
 		}
 		/**
-		 * 启动拖拽操作。
+		 * 启动拖拽操作。请在MouseDown事件里执行此方法。
 		 * @param dragInitiator 启动拖拽的组件
 		 * @param dragSource 拖拽的数据源
 		 * @param dragImage 拖拽过程中显示的图像
@@ -78,13 +63,6 @@ package org.flexlite.domUI.managers.impl
 			yOffset:Number = 0,
 			imageAlpha:Number = 0.5):void
 		{
-			if(!eventAttached&&DomGlobals.stage)
-			{
-				eventAttached = true;
-				DomGlobals.stage.addEventListener(MouseEvent.MOUSE_DOWN, sm_mouseDownHandler, false, 0, true);
-				DomGlobals.stage.addEventListener(MouseEvent.MOUSE_UP, sm_mouseUpHandler, false, 0, true);
-			}
-			
 			if (_isDragging)
 				return;
 			
@@ -134,38 +112,18 @@ package org.flexlite.domUI.managers.impl
 		 */
 		public function endDrag():void
 		{
-			var e:Event;
-			
-			if (!e || dispatchEvent(e))
+			if (dragProxy)
 			{
-				if (dragProxy)
-				{
-					var parent:IVisualElementContainer = dragProxy.parent as IVisualElementContainer;
-					parent.removeElement(dragProxy);	
-					
-					if (dragProxy.numChildren > 0)
-						dragProxy.removeChildAt(0);
-					dragProxy = null;
-				}
+				var parent:IVisualElementContainer = dragProxy.parent as IVisualElementContainer;
+				parent.removeElement(dragProxy);	
+				
+				if (dragProxy.numChildren > 0)
+					dragProxy.removeChildAt(0);
+				dragProxy = null;
 			}
-			
 			dragInitiator = null;
 			_isDragging = false;
 			
-		}
-		/**
-		 * 舞台上鼠标按下
-		 */		
-		private function sm_mouseDownHandler(event:MouseEvent):void
-		{
-			mouseIsDown = true;
-		}
-		/**
-		 * 舞台上鼠标弹起
-		 */		
-		private function sm_mouseUpHandler(event:MouseEvent):void
-		{
-			mouseIsDown = false;
 		}
 	}
 }

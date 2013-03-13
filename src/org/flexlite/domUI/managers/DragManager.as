@@ -36,7 +36,7 @@ package org.flexlite.domUI.managers
 			return impl.isDragging;
 		}
 		/**
-		 * 启动拖拽操作。
+		 * 启动拖拽操作。请在MouseDown事件里执行此方法。
 		 * @param dragInitiator 启动拖拽的组件
 		 * @param dragSource 拖拽的数据源
 		 * @param dragImage 拖拽过程中显示的图像
