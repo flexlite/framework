@@ -81,11 +81,10 @@ package org.flexlite.domUI.layouts
 			return _columnCount;
 		}
 		
-		private var _requestedColumnCount:int = -1;
+		private var _requestedColumnCount:int = 0;
 		/**
 		 * 要显示的列数。设置为0表示自动确定列计数,默认值0。<br/>
-		 * 注意:当orientation为TileOrientation.COLUMNS，即逐列排列元素时，设置此属性无效。
-		 * 另外，此属性仅供测量默认宽度时使用。若目标容器被显示设置了宽度，此属性也无效。
+		 * 注意:当orientation为TileOrientation.COLUMNS(逐列排列元素)且taget被显式设置宽度时，此属性无效。
 		 */
 		public function get requestedColumnCount():int
 		{
@@ -114,8 +113,7 @@ package org.flexlite.domUI.layouts
 		private var _requestedRowCount:int = 0;
 		/**
 		 * 要显示的行数。设置为0表示自动确定行计数,默认值0。<br/>
-		 * 注意:当orientation为TileOrientation.ROWS，即逐行排列元素时，设置此属性无效。
-		 * 另外，此属性仅供测量默认高度时使用。若目标容器被显示设置了高度，此属性也无效。
+		 * 注意:当orientation为TileOrientation.ROWS(即逐行排列元素,此为默认值)且target被显式设置高度时，此属性无效。
 		 */
 		public function get requestedRowCount():int
 		{
@@ -400,7 +398,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function invalidateTargetSizeAndDisplayList():void
 		{
-			if(target!=null)
+			if(target)
 			{
 				target.invalidateSize();
 				target.invalidateDisplayList();
@@ -412,7 +410,7 @@ package org.flexlite.domUI.layouts
 		 */
 		override public function measure():void
 		{
-			if (target==null)
+			if (!target)
 				return;
 			
 			var savedColumnCount:int = _columnCount;
@@ -424,6 +422,8 @@ package org.flexlite.domUI.layouts
 			var measuredHeight:Number = 0;
 			
 			calculateRowAndColumn(target.explicitWidth,target.explicitHeight);
+			var columnCount:int = _requestedColumnCount>0 ? _requestedColumnCount: _columnCount;
+			var rowCount:int = _requestedRowCount>0 ? _requestedRowCount : _rowCount;
 			
 			if (columnCount > 0)
 			{
@@ -458,6 +458,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function calculateRowAndColumn(explicitWidth:Number, explicitHeight:Number):void
 		{
+			_rowCount = _columnCount = -1;
 			var numElements:int = target.numElements;
 			if(numElements==0)
 			{
@@ -503,33 +504,25 @@ package org.flexlite.domUI.layouts
 			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
 			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
 			
-			if(!widthHasSet&&!heightHasSet)
+			if (_requestedColumnCount>0 || _requestedRowCount>0)
+			{
+				if (_requestedRowCount>0)
+					_rowCount = Math.min(_requestedRowCount,numElements);
+				
+				if (_requestedColumnCount>0)
+					_columnCount = Math.min(_requestedColumnCount,numElements);
+			}
+			else if(!widthHasSet&&!heightHasSet)
 			{
 				if(orientedByColumns)
 				{
-					if(_requestedRowCount>0)
-					{
-						_rowCount = Math.min(_requestedRowCount,numElements);
-					}
-					else
-					{
-						_rowCount = Math.sqrt(numElements*itemWidth/itemHeight);
-						_rowCount = Math.floor(_rowCount);
-					}
-					_columnCount = Math.ceil(numElements/_rowCount);
+					_rowCount = Math.sqrt(numElements*itemWidth/itemHeight);
+					_rowCount = Math.max(1,Math.floor(_rowCount));
 				}
 				else
 				{
-					if(_requestedColumnCount>0)
-					{
-						_columnCount = Math.min(_requestedColumnCount,numElements);
-					}
-					else
-					{
-						_columnCount = Math.sqrt(numElements*itemHeight/itemWidth);
-						_columnCount = Math.floor(_columnCount);
-					}
-					_rowCount = Math.ceil(numElements/_columnCount);
+					_columnCount = Math.sqrt(numElements*itemHeight/itemWidth);
+					_columnCount = Math.max(1,Math.floor(_columnCount));
 				}
 			}
 			else if(widthHasSet&&(!heightHasSet||!orientedByColumns))
@@ -537,30 +530,25 @@ package org.flexlite.domUI.layouts
 				var targetWidth:Number = Math.max(0, 
 					explicitWidth - paddingL - paddingR);
 				_columnCount = Math.floor((targetWidth + _horizontalGap)/itemWidth);
-				if(_columnCount == 0)
-				{
-					_columnCount = 1;
-				}
-				else if(_columnCount>numElements)
-				{
-					_columnCount = numElements;
-				}
-				_rowCount = Math.ceil(numElements/_columnCount);
+				_columnCount = Math.max(1,Math.min(_columnCount,numElements));
 			}
 			else
 			{
 				var targetHeight:Number = Math.max(0, 
 					explicitHeight - paddingT - paddingB);
 				_rowCount = Math.floor((targetHeight + _verticalGap)/itemHeight);
-				if(_rowCount == 0)
-				{
-					_rowCount = 1;
-				}
-				else if(_rowCount>numElements)
-				{
-					_rowCount = numElements;
-				}
-				_columnCount = Math.ceil(numElements/_rowCount);
+				_rowCount = Math.max(1,Math.min(_rowCount,numElements));
+			}
+			if (_rowCount==-1)
+				_rowCount = Math.max(1, Math.ceil(numElements / _columnCount));
+			if (_columnCount==-1)
+				_columnCount = Math.max(1, Math.ceil(numElements / _rowCount));
+			if (_requestedColumnCount>0&&_requestedRowCount>0)
+			{
+				if (orientation == TileOrientation.ROWS)
+					_rowCount = Math.max(1, Math.ceil(numElements / _requestedColumnCount));
+				else
+					_columnCount = Math.max(1, Math.ceil(numElements / _requestedRowCount));
 			}
 		}
 		/**
@@ -576,7 +564,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function updateMaxElementSize():void
 		{
-			if(target==null)
+			if(!target)
 				return;
 			if(useVirtualLayout)
 				updateMaxElementSizeVirtual();
@@ -598,7 +586,7 @@ package org.flexlite.domUI.layouts
 				for (var index:int = startIndex; index <= endIndex; index++)
 				{
 					var elt:ILayoutElement = target.getVirtualElementAt(index) as ILayoutElement;
-					if(elt==null||!elt.includeInLayout)
+					if(!elt||!elt.includeInLayout)
 						continue;
 					maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
 					maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
@@ -615,7 +603,7 @@ package org.flexlite.domUI.layouts
 			for(var index:int = 0;index<numElements;index++)
 			{
 				var elt:ILayoutElement = target.getElementAt(index) as ILayoutElement;
-				if(elt==null||!elt.includeInLayout)
+				if(!elt||!elt.includeInLayout)
 					continue;
 				maxElementWidth = Math.max(maxElementWidth,elt.preferredWidth);
 				maxElementHeight = Math.max(maxElementHeight,elt.preferredHeight);
@@ -668,7 +656,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function getIndexInView():Boolean
 		{
-			if(target==null||target.numElements==0)
+			if(!target||target.numElements==0)
 			{
 				startIndex = endIndex = -1;
 				return false;
@@ -742,7 +730,7 @@ package org.flexlite.domUI.layouts
 		override public function updateDisplayList(width:Number, height:Number):void
 		{
 			super.updateDisplayList(width, height);
-			if (target==null)
+			if (!target)
 				return;
 			var padding:Number = isNaN(_padding)?0:_padding;
 			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;

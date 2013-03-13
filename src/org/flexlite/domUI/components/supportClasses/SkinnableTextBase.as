@@ -386,6 +386,7 @@ package org.flexlite.domUI.components.supportClasses
 				textDisplayProperties.selectionEndIndex = 0;
 			}
 			invalidateProperties();                    
+			invalidateSkinState();
 		}
 		
 		dx_internal function getWidthInChars():Number

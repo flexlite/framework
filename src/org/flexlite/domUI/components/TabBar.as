@@ -165,14 +165,14 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */
-		override protected function partAdded(partName:String, instance:Object):void
+		override dx_internal function createSkinParts():void
 		{
-			super.partAdded(partName,instance);
-			if(instance==dataGroup)
-			{
-				if(!dataGroup.layout||!(dataGroup.layout is TabBarHorizontalLayout))
-					dataGroup.layout = new TabBarHorizontalLayout();
-			}
+			dataGroup = new DataGroup();
+			dataGroup.percentHeight = dataGroup.percentWidth = 100;
+			dataGroup.clipAndEnableScrolling = true;
+			dataGroup.layout = new TabBarHorizontalLayout();
+			addToDisplayList(dataGroup);
+			partAdded("dataGroup",dataGroup);
 		}
 	}
 }
