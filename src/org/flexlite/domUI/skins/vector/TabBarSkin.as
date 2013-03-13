@@ -1,8 +1,9 @@
 package org.flexlite.domUI.skins.vector
 {
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.DataGroup;
 	import org.flexlite.domUI.components.TabBarButton;
-	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;
@@ -29,6 +30,7 @@ package org.flexlite.domUI.skins.vector
 			dataGroup.percentWidth = 100;
 			dataGroup.percentHeight = 100;
 			dataGroup.itemRenderer = TabBarButton;
+			dataGroup.layout = new TabBarHorizontalLayout()
 			addElement(dataGroup);
 		}
 		
