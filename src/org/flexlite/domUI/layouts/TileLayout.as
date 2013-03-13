@@ -763,7 +763,7 @@ package org.flexlite.domUI.layouts
 				target.setContentSize(0,0);
 				return;
 			}
-			
+			target.setVirtualElementIndicesInView(startIndex,endIndex);
 			var elt:ILayoutElement;
 			var x:Number;
 			var y:Number;
@@ -773,7 +773,7 @@ package org.flexlite.domUI.layouts
 			for(var index:int = startIndex;index <= endIndex;index++)
 			{
 				if(useVirtualLayout)
-					elt = target.getVirtualElementAt(index,true) as ILayoutElement;
+					elt = target.getVirtualElementAt(index) as ILayoutElement;
 				else
 					elt = target.getElementAt(index) as ILayoutElement;
 				if(elt == null||!elt.includeInLayout)

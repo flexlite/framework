@@ -526,6 +526,7 @@ package org.flexlite.domUI.layouts
 				target.setContentSize(Math.ceil(contentWidth),target.contentHeight);
 				return;
 			}
+			target.setVirtualElementIndicesInView(startIndex,endIndex);
 			//获取垂直布局参数
 			var justify:Boolean = _verticalAlign==VerticalAlign.JUSTIFY||_verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
 			var contentJustify:Boolean = _verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
@@ -564,7 +565,7 @@ package org.flexlite.domUI.layouts
 			for(var i:int=startIndex;i<=endIndex;i++)
 			{
 				var exceesHeight:Number = 0;
-				layoutElement = target.getVirtualElementAt(i,true) as ILayoutElement;
+				layoutElement = target.getVirtualElementAt(i) as ILayoutElement;
 				if (!layoutElement)
 				{
 					continue;

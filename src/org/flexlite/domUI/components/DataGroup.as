@@ -103,33 +103,47 @@ package org.flexlite.domUI.components
 		 */		
 		private var virtualRendererIndices:Vector.<int>;
 		
+		override public function setVirtualElementIndicesInView(startIndex:int, endIndex:int):void
+		{
+			virtualRendererIndices = new Vector.<int>();
+			for(var i:int=startIndex;i<=endIndex;i++)
+			{
+				virtualRendererIndices.push(i);
+			}
+			for(var index:* in indexToRenderer)
+			{
+				if(virtualRendererIndices.indexOf(index)==-1)
+				{
+					freeRendererByIndex(index);
+				}
+			}
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
-		override public function getVirtualElementAt(index:int,changeElementInViews:Boolean=false):IVisualElement
+		override public function getVirtualElementAt(index:int):IVisualElement
 		{
 			if(index<0||index>=dataProvider.length)
 				return null;
-			if(changeElementInViews)
-				virtualRendererIndices.push(index);
-			if(indexToRenderer[index])
+			var element:IVisualElement = indexToRenderer[index];
+			if(virtualLayoutUnderway&&!element)
 			{
-				return indexToRenderer[index];
+				var item:Object = dataProvider.getItemAt(index);
+				var renderer:IItemRenderer = createVirtualRenderer(index);
+				indexToRenderer[index] = renderer;
+				updateRenderer(renderer,index,item);
+				if(createNewRendererFlag)
+				{
+					createNewRendererFlag = false;
+					if(renderer is IInvalidating)
+						(renderer as IInvalidating).validateNow();
+					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
+						false, false, renderer, index, item));
+				}
+				element = renderer as IVisualElement;
 			}
-			
-			var item:Object = dataProvider.getItemAt(index);
-			var renderer:IItemRenderer = createVirtualRenderer(index);
-			indexToRenderer[index] = renderer;
-			updateRenderer(renderer,index,item);
-			if(createNewRendererFlag)
-			{
-				createNewRendererFlag = false;
-				if(renderer is IInvalidating)
-					(renderer as IInvalidating).validateNow();
-				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-					false, false, renderer, index, item));
-			}
-			return renderer as IVisualElement;
+			return element;
 		}
 		
 		
@@ -230,16 +244,9 @@ package org.flexlite.domUI.components
 		 */		
 		private function finishVirtualLayout():void
 		{
-			if(!virtualLayoutUnderWay)
+			if(!virtualLayoutUnderway)
 				return;
-			for(var index:* in indexToRenderer)
-			{
-				if(virtualRendererIndices.indexOf(index)==-1)
-				{
-					freeRendererByIndex(index);
-				}
-			}
-			virtualLayoutUnderWay = false;
+			virtualLayoutUnderway = false;
 		}
 		
 		/**
@@ -247,7 +254,7 @@ package org.flexlite.domUI.components
 		 */
 		override public function getElementIndicesInView():Vector.<int>
 		{
-			if(layout != null&&layout.useVirtualLayout)
+			if(layout&&layout.useVirtualLayout)
 				return virtualRendererIndices?
 					virtualRendererIndices:new Vector.<int>(0);
 			return super.getElementIndicesInView();
@@ -579,7 +586,7 @@ package org.flexlite.domUI.components
 			if(_itemRendererFunction!=null)
 			{
 				rendererClass = _itemRendererFunction(item);
-				if(rendererClass == null)
+				if(!rendererClass)
 					rendererClass = _itemRenderer;
 			}
 			else
@@ -684,7 +691,15 @@ package org.flexlite.domUI.components
 		/**
 		 * 正在进行虚拟布局阶段 
 		 */		
-		private var virtualLayoutUnderWay:Boolean = false;
+		private var virtualLayoutUnderway:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		override public function invalidateSize():void
+		{
+			if (!virtualLayoutUnderway)
+				super.invalidateSize();
+		}
 		
 		/**
 		 * @inheritDoc
@@ -693,12 +708,11 @@ package org.flexlite.domUI.components
 		{
 			if(layoutInvalidateDisplayListFlag&&layout&&layout.useVirtualLayout)
 			{
-				virtualLayoutUnderWay = true;
-				virtualRendererIndices = new Vector.<int>();
+				virtualLayoutUnderway = true;
 				ensureTypicalLayoutElement();
 			}
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(virtualLayoutUnderWay)
+			if(virtualLayoutUnderway)
 				finishVirtualLayout();
 		}
 		
@@ -820,7 +834,7 @@ package org.flexlite.domUI.components
 			{
 				var rendererClass:Class = itemToRendererClass(item);
 				var renderer:IItemRenderer = createOneRenderer(rendererClass);
-				if(renderer == null)
+				if(!renderer)
 					continue;
 				indexToRenderer[index] = renderer;
 				updateRenderer(renderer,index,item);
@@ -868,7 +882,7 @@ package org.flexlite.domUI.components
 		 */		
 		protected function itemToLabel(item:Object):String
 		{
-			if (item !== null)
+			if (item)
 				return item.toString();
 			else return " ";
 		}
