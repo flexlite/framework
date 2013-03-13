@@ -35,7 +35,7 @@ package org.flexlite.domUI.layouts
 			if(_horizontalAlign==value)
 				return;
 			_horizontalAlign = value;
-			if(target!=null)
+			if(target)
 				target.invalidateDisplayList();
 		}
 		
@@ -54,7 +54,7 @@ package org.flexlite.domUI.layouts
 			if(_verticalAlign==value)
 				return;
 			_verticalAlign = value;
-			if(target!=null)
+			if(target)
 				target.invalidateDisplayList();
 		}
 		
@@ -172,7 +172,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function invalidateTargetSizeAndDisplayList():void
 		{
-			if(target!=null)
+			if(target)
 			{
 				target.invalidateSize();
 				target.invalidateDisplayList();
@@ -187,7 +187,7 @@ package org.flexlite.domUI.layouts
 		override public function measure():void
 		{
 			super.measure();
-			if(target==null)
+			if(!target)
 				return;
 			if(useVirtualLayout)
 			{
@@ -274,7 +274,7 @@ package org.flexlite.domUI.layouts
 		override public function updateDisplayList(width:Number, height:Number):void
 		{
 			super.updateDisplayList(width, height);
-			if (target==null)
+			if(!target)
 				return;
 			if(useVirtualLayout)
 			{
@@ -329,9 +329,14 @@ package org.flexlite.domUI.layouts
 		{
 			if(useVirtualLayout)
 			{
-				return elementSizeTable[index];
+				var size:Number = elementSizeTable[index];
+				if(isNaN(size))
+				{
+					size = typicalLayoutRect?typicalLayoutRect.height:22;
+				}
+				return size;
 			}
-			if(target!=null)
+			if(target)
 			{
 				return target.getElementAt(index).height;
 			}
@@ -444,7 +449,7 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function getIndexInView():Boolean
 		{
-			if(target==null||target.numElements==0)
+			if(!target||target.numElements==0)
 			{
 				startIndex = endIndex = -1;
 				return false;
@@ -535,8 +540,8 @@ package org.flexlite.domUI.layouts
 			{
 				for(var index:int=startIndex;index<=endIndex;index++)
 				{
-					layoutElement = target.getVirtualElementAt(i) as ILayoutElement;
-					if (layoutElement==null||!layoutElement.includeInLayout)
+					layoutElement = target.getVirtualElementAt(index) as ILayoutElement;
+					if (!layoutElement||!layoutElement.includeInLayout)
 						continue;
 					maxElementWidth = Math.max(maxElementWidth,layoutElement.preferredWidth);
 				}
@@ -551,7 +556,7 @@ package org.flexlite.domUI.layouts
 			{
 				var exceesWidth:Number = 0;
 				layoutElement = target.getVirtualElementAt(i,true) as ILayoutElement;
-				if (layoutElement==null)
+				if (!layoutElement)
 				{
 					continue;
 				}
@@ -637,7 +642,7 @@ package org.flexlite.domUI.layouts
 			for (i = 0; i < count; i++)
 			{
 				layoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement==null||!layoutElement.includeInLayout)
+				if (!layoutElement||!layoutElement.includeInLayout)
 				{
 					numElements--;
 					continue;
@@ -702,7 +707,7 @@ package org.flexlite.domUI.layouts
 			{
 				var exceesWidth:Number = 0;
 				layoutElement = target.getElementAt(i) as ILayoutElement;
-				if (layoutElement==null||!layoutElement.includeInLayout)
+				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
 				if(justify)
 				{
@@ -819,7 +824,7 @@ package org.flexlite.domUI.layouts
 		override protected function getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var rect:Rectangle = new Rectangle;
-			if(target==null)
+			if(!target)
 				return rect;
 			var firstIndex:int = findIndexAt(scrollRect.top,0,target.numElements-1);
 			var padding:Number = isNaN(_padding)?0:_padding;
@@ -864,7 +869,7 @@ package org.flexlite.domUI.layouts
 		override protected function getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle
 		{
 			var rect:Rectangle = new Rectangle;
-			if(target==null)
+			if(!target)
 				return rect;
 			var numElements:int = target.numElements;
 			var lastIndex:int = findIndexAt(scrollRect.bottom,0,numElements-1);
