@@ -8,6 +8,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.DragSource;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.managers.IDragManager;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.dragClasses.DragProxy;
@@ -20,7 +21,7 @@ package org.flexlite.domUI.managers.impl
 	 * 拖拽管理器实现类
 	 * @author DOM
 	 */	
-	public class DragManagerImpl
+	public class DragManagerImpl implements IDragManager
 	{
 		/**
 		 * 构造函数

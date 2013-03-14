@@ -2,8 +2,8 @@ package org.flexlite.domUI.managers
 {
 
 	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
-
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.PopUpEvent;
 	import org.flexlite.domUI.managers.impl.PopUpManagerImpl;
@@ -11,7 +11,10 @@ package org.flexlite.domUI.managers
 	use namespace dx_internal;
 	
 	/**
-	 * 窗口弹出管理器
+	 * 窗口弹出管理器<p/>
+	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
+	 * 并在项目初始化前调用Injector.mapClass(IPopUpManager,YourPopUpManager)，
+	 * 注入自定义的弹出框管理器类。
 	 * @author DOM
 	 */	
 	public class PopUpManager
@@ -23,15 +26,22 @@ package org.flexlite.domUI.managers
 		{
 		}
 		
-		private static var _impl:PopUpManagerImpl;
+		private static var _impl:IPopUpManager;
 		/**
 		 * 获取单例
 		 */		
-		private static function get impl():PopUpManagerImpl
+		private static function get impl():IPopUpManager
 		{
 			if (!_impl)
 			{
-				_impl = new PopUpManagerImpl();
+				try
+				{
+					_impl = Injector.getInstance(IPopUpManager);
+				}
+				catch(e:Error)
+				{
+					_impl = new PopUpManagerImpl();
+				}
 			}
 			return _impl;
 		}

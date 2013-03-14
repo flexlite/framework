@@ -11,6 +11,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.managers.IPopUpManager;
 	import org.flexlite.domUI.managers.ISystemManager;
 
 	[ExcludeClass]
@@ -19,7 +20,7 @@ package org.flexlite.domUI.managers.impl
 	 * 窗口弹出管理器实现类
 	 * @author DOM
 	 */
-	public class PopUpManagerImpl extends EventDispatcher
+	public class PopUpManagerImpl extends EventDispatcher implements IPopUpManager
 	{
 		/**
 		 * 构造函数

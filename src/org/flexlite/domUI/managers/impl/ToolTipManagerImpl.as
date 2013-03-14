@@ -25,6 +25,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.ISystemManager;
+	import org.flexlite.domUI.managers.IToolTipManager;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUtils.SharedMap;
 	
@@ -36,7 +37,7 @@ package org.flexlite.domUI.managers.impl
 	 * 工具提示管理器实现类
 	 * @author DOM
 	 */	
-	public class ToolTipManagerImpl extends EventDispatcher
+	public class ToolTipManagerImpl implements IToolTipManager
 	{
 		/**
 		 * 构造函数
@@ -206,7 +207,7 @@ package org.flexlite.domUI.managers.impl
 		 * @param oldToolTip 之前的ToolTip数据
 		 * @param newToolTip 现在的ToolTip数据
 		 */		
-		dx_internal function registerToolTip(target:DisplayObject,
+		public function registerToolTip(target:DisplayObject,
 										oldToolTip:Object,
 										newToolTip:Object):void
 		{
