@@ -803,6 +803,7 @@ package org.flexlite.domUI.components
 				if(renderer)
 				{
 					super.removeChild(renderer as DisplayObject);
+					recycle(renderer);
 					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 						false, false, renderer, renderer.itemIndex, renderer.data));
 				}
@@ -816,6 +817,8 @@ package org.flexlite.domUI.components
 				for each(renderer in list)
 				{
 					super.removeChild(renderer as DisplayObject);
+					DisplayObject(renderer).visible = true;
+					recycle(renderer);
 				}
 			}
 			freeRenderers = new Dictionary;
