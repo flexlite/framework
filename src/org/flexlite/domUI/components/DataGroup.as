@@ -44,6 +44,9 @@ package org.flexlite.domUI.components
 	 */
 	public class DataGroup extends GroupBase
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function DataGroup()
 		{
 			super();
@@ -146,7 +149,7 @@ package org.flexlite.domUI.components
 			return element;
 		}
 		
-		
+		private var rendererToClassMap:Dictionary = new Dictionary(true);
 		private var freeRenderers:Dictionary = new Dictionary;
 		
 		/**
@@ -168,7 +171,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function doFreeRenderer(renderer:IItemRenderer):void
 		{
-			var rendererClass:Class = getDefinitionByName(getQualifiedClassName(renderer)) as Class;
+			var rendererClass:Class = rendererToClassMap[renderer];
 			if(!freeRenderers[rendererClass])
 			{
 				freeRenderers[rendererClass] = new Vector.<IItemRenderer>();
@@ -226,7 +229,10 @@ package org.flexlite.domUI.components
 					delete recyclerDic[rendererClass];
 			}
 			if(!renderer)
+			{
 				renderer = new rendererClass() as IItemRenderer;
+				rendererToClassMap[renderer] = rendererClass;
+			}
 			if(!renderer||!(renderer is DisplayObject))
 				return null;
 			if(_itemRendererSkinName)
@@ -453,7 +459,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function recycle(renderer:IItemRenderer):void
 		{
-			var rendererClass:Class = getDefinitionByName(getQualifiedClassName(renderer)) as Class;
+			var rendererClass:Class = rendererToClassMap[renderer];
 			if(!recyclerDic[rendererClass])
 			{
 				recyclerDic[rendererClass] = new Dictionary(true);
