@@ -80,6 +80,21 @@ package org.flexlite.domUI.components
 				closeButton.visible = _showCloseButton;
 		}
 
+		private var _autoBackToStage:Boolean = true;
+		/**
+		 * 在拖拽窗口时，有可能把窗口完全拖出屏幕外，导致无法点中moveArea而不能拖回屏幕。
+		 * 此属性为true时，将会在拖拽结束时，自动调整窗口位置，使moveArea可以被再次点中。
+		 * 反之不调整。默认值为true。
+		 */
+		public function get autoBackToStage():Boolean
+		{
+			return _autoBackToStage;
+		}
+		public function set autoBackToStage(value:Boolean):void
+		{
+			_autoBackToStage = value;
+		}
+
 
 		/**
 		 * @inheritDoc
@@ -160,9 +175,42 @@ package org.flexlite.domUI.components
 				MouseEvent.MOUSE_UP, moveArea_mouseUpHandler);
 			DomGlobals.stage.removeEventListener(
 				Event.MOUSE_LEAVE, moveArea_mouseUpHandler);
+			if(_autoBackToStage)
+			{
+				adjustPosForStage();
+			}
 			offsetPoint = null;
 			LayoutUtil.adjustRelativeByXY(this);
 			includeInLayout = true;
+		}
+		/**
+		 * 调整窗口位置，使其可以在舞台中被点中
+		 */		
+		private function adjustPosForStage():void
+		{
+			if(!moveArea||!stage)
+				return;
+			var pos:Point = moveArea.localToGlobal(new Point());
+			var stageX:Number = pos.x;
+			var stageY:Number = pos.y;
+			if(pos.x+moveArea.width<35)
+			{
+				stageX = 35 - moveArea.width;
+			}
+			if(pos.x>stage.stageWidth-20)
+			{
+				stageX = stage.stageWidth-20;
+			}
+			if(pos.y+moveArea.height<20)
+			{
+				stageY = 20 - moveArea.height;
+			}
+			if(pos.y>stage.stageHeight-20)
+			{
+				stageY = stage.stageHeight-20;
+			}
+			this.x += stageX-pos.x;
+			this.y += stageY-pos.y;
 		}
 	}
 }
