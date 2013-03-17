@@ -42,7 +42,7 @@ package org.flexlite.domUI.layouts
 		private var _verticalAlign:String = VerticalAlign.TOP;
 		/**
 		 * 布局元素的竖直对齐策略。参考VerticalAlign定义的常量。
-		 * 注意：对VerticalLayout.verticalAlign设置JUSTIFY无效。
+		 * 注意：对VerticalLayout.verticalAlign设置JUSTIFY和CONTENT_JUSTIFY无效。
 		 */
 		public function get verticalAlign():String
 		{

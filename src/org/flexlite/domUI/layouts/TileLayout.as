@@ -14,6 +14,9 @@ package org.flexlite.domUI.layouts
 	 */
 	public class TileLayout extends LayoutBase
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function TileLayout()
 		{
 			super();

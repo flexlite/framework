@@ -24,7 +24,7 @@ package org.flexlite.domUI.layouts
 		private var _horizontalAlign:String = HorizontalAlign.LEFT;
 		/**
 		 * 布局元素的水平对齐策略。参考HorizontalAlign定义的常量。
-		 * 注意：对HorizontalLayout.horizontalAlign设置JUSTIFY无效。
+		 * 注意：对HorizontalLayout.horizontalAlign设置JUSTIFY和CONTENT_JUSTIFY无效。
 		 */
 		public function get horizontalAlign():String
 		{
