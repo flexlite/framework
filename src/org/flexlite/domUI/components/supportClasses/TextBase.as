@@ -566,6 +566,10 @@ package org.flexlite.domUI.components.supportClasses
 			if (textField == null)
 			{
 				createTextField();
+				if (isHTML)
+					textField.$htmlText = explicitHTMLText;
+				else
+					textField.$text = _text;
 			}
 		}
 		
