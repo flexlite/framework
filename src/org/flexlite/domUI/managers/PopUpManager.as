@@ -80,7 +80,7 @@ package org.flexlite.domUI.managers
 		public static function addPopUp(popUp:IVisualElement,modal:Boolean=false,
 										center:Boolean=true,systemManager:ISystemManager=null):void
 		{
-			impl.addPopUp(popUp,modal,center);
+			impl.addPopUp(popUp,modal,center,systemManager);
 			impl.dispatchEvent(new PopUpEvent(PopUpEvent.ADD_POPUP,false,false,popUp,modal));
 		}
 		
