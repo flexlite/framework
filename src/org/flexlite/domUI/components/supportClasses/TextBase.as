@@ -443,6 +443,8 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_htmlText = value;
+			if(textField)
+				textField.$htmlText = _htmlText;
 			htmlTextChanged = true;
 			_text = null;
 			
@@ -510,6 +512,8 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_text = value;
+			if(textField)
+				textField.$text = _text;
 			textChanged = true;
 			_htmlText = null;
 			
@@ -575,6 +579,10 @@ package org.flexlite.domUI.components.supportClasses
 			if(textField==null)
 			{
 				createTextField();
+				if (isHTML)
+					textField.$htmlText = explicitHTMLText;
+				else
+					textField.$text = _text;
 				condenseWhiteChanged = true;
 				selectableChanged = true;
 				textChanged = true;
@@ -605,11 +613,6 @@ package org.flexlite.domUI.components.supportClasses
 			
 			if (textChanged || htmlTextChanged)
 			{
-				if (isHTML)
-					textField.$htmlText = explicitHTMLText;
-				else
-					textField.$text = _text;
-				
 				textFieldChanged(false);
 				textChanged = false;
 				htmlTextChanged = false;

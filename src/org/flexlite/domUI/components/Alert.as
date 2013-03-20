@@ -184,6 +184,7 @@ package org.flexlite.domUI.components
 			}
 			else if(instance==secondButton)
 			{
+				secondButton.label = _secondButtonLabel;
 				secondButton.includeInLayout = secondButton.visible
 					= (_secondButtonLabel!=""&&_secondButtonLabel!=null);
 				secondButton.addEventListener(MouseEvent.CLICK,onClose);
