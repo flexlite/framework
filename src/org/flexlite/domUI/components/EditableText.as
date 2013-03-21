@@ -302,7 +302,7 @@ package org.flexlite.domUI.components
 			_horizontalScrollPosition = value;
 			if (_clipAndEnableScrolling)
 			{
-				if(textField)
+				if(textField!=null)
 					textField.scrollH = value;
 				dispatchPropertyChangeEvent("horizontalScrollPosition",oldValue,value);
 			}
@@ -326,7 +326,7 @@ package org.flexlite.domUI.components
 			_verticalScrollPosition = value;
 			if (_clipAndEnableScrolling)
 			{
-				if (textField)
+				if (textField!=null)
 					textField.scrollV = getScrollVByVertitcalPos(value);
 				dispatchPropertyChangeEvent("verticalScrollPosition",oldValue,value);
 			}
@@ -433,7 +433,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function getVScrollDelta(offsetLine:int):Number
 		{
-			if(!textField)
+			if(textField==null)
 				return 0;
 			var currentScrollV:int = getScrollVByVertitcalPos(_verticalScrollPosition);
 			var scrollV:int = currentScrollV + offsetLine;
@@ -458,7 +458,7 @@ package org.flexlite.domUI.components
 				return;
 			_clipAndEnableScrolling = value;
 			
-			if(textField)
+			if(textField!=null)
 			{
 				if(value)
 				{
@@ -480,7 +480,7 @@ package org.flexlite.domUI.components
 		 */
 		override protected function commitProperties():void
 		{
-			if(!textField)
+			if(textField==null)
 			{
 				editableChanged = true;
 				displayAsPasswordChanged = true;
@@ -610,7 +610,7 @@ package org.flexlite.domUI.components
 		public function get selectionBeginIndex():int
 		{
 			validateProperties();
-			if(textField)
+			if(textField!=null)
 				return textField.selectionBeginIndex;
 			return 0;
 		}
@@ -620,7 +620,7 @@ package org.flexlite.domUI.components
 		public function get selectionEndIndex():int
 		{
 			validateProperties();
-			if(textField)
+			if(textField!=null)
 				return textField.selectionEndIndex;
 			return 0;
 		}
@@ -630,7 +630,7 @@ package org.flexlite.domUI.components
 		public function get caretIndex():int
 		{
 			validateProperties();
-			if(textField)
+			if(textField!=null)
 				return textField.caretIndex;
 			return 0;
 		}
@@ -640,7 +640,7 @@ package org.flexlite.domUI.components
 		public function setSelection(beginIndex:int,endIndex:int):void
 		{
 			validateProperties();
-			if(textField)
+			if(textField!=null)
 			{
 				textField.setSelection(beginIndex,endIndex);
 			}
@@ -651,7 +651,7 @@ package org.flexlite.domUI.components
 		public function selectAll():void
 		{
 			validateProperties();
-			if(textField)
+			if(textField != null)
 			{
 				textField.setSelection(0,textField.length-1);
 			}
@@ -692,18 +692,21 @@ package org.flexlite.domUI.components
 		override protected function createTextField():void
 		{   
 			super.createTextField();
-			textField.type = _editable?TextFieldType.INPUT:TextFieldType.DYNAMIC;
-			textField.multiline = _multiline;
-			textField.wordWrap = _multiline;
-			
-			textField.addEventListener(Event.CHANGE, textField_changeHandler);
-			textField.addEventListener(Event.SCROLL, textField_scrollHandler);
-			textField.addEventListener(TextEvent.TEXT_INPUT,
-				textField_textInputHandler);
-			if(_clipAndEnableScrolling)
+			if (textField!=null)
 			{
-				textField.scrollH = _horizontalScrollPosition;
-				textField.scrollV = getScrollVByVertitcalPos(_verticalScrollPosition);
+				textField.type = _editable?TextFieldType.INPUT:TextFieldType.DYNAMIC;
+				textField.multiline = _multiline;
+				textField.wordWrap = _multiline;
+				
+				textField.addEventListener(Event.CHANGE, textField_changeHandler);
+				textField.addEventListener(Event.SCROLL, textField_scrollHandler);
+				textField.addEventListener(TextEvent.TEXT_INPUT,
+					textField_textInputHandler);
+				if(_clipAndEnableScrolling)
+				{
+					textField.scrollH = _horizontalScrollPosition;
+					textField.scrollV = getScrollVByVertitcalPos(_verticalScrollPosition);
+				}
 			}
 		}
 		

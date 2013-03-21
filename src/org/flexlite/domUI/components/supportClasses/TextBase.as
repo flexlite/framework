@@ -443,8 +443,6 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_htmlText = value;
-			if(textField)
-				textField.$htmlText = _htmlText;
 			htmlTextChanged = true;
 			_text = null;
 			
@@ -459,7 +457,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		dx_internal function get isHTML():Boolean
 		{
-			return Boolean(explicitHTMLText);
+			return explicitHTMLText != null;
 		}
 		
 		private var pendingSelectable:Boolean = false;
@@ -512,8 +510,6 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_text = value;
-			if(textField)
-				textField.$text = _text;
 			textChanged = true;
 			_htmlText = null;
 			
@@ -563,9 +559,9 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super.createChildren();
 			
-			if (!textField)
+			if (textField == null)
 			{
-				checkTextField();
+				createTextField();
 			}
 		}
 		
@@ -576,9 +572,13 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super.commitProperties();
 			
-			if(!textField)
+			if(textField==null)
 			{
-				checkTextField();
+				createTextField();
+				condenseWhiteChanged = true;
+				selectableChanged = true;
+				textChanged = true;
+				defaultStyleChanged = true;
 			}
 			
 			if (condenseWhiteChanged)
@@ -605,7 +605,12 @@ package org.flexlite.domUI.components.supportClasses
 			
 			if (textChanged || htmlTextChanged)
 			{
-				textFieldChanged(true);
+				if (isHTML)
+					textField.$htmlText = explicitHTMLText;
+				else
+					textField.$text = _text;
+				
+				textFieldChanged(false);
 				textChanged = false;
 				htmlTextChanged = false;
 			}
@@ -622,45 +627,31 @@ package org.flexlite.domUI.components.supportClasses
 				DomGlobals.stage.focus = textField;
 			}
 		}
-		/**
-		 * 检查是否创建了textField对象，没有就创建一个。
-		 */		
-		private function checkTextField():void
-		{
-			if(!textField)
-			{
-				createTextField();
-				if (isHTML)
-					textField.$htmlText = explicitHTMLText;
-				else
-					textField.$text = _text;
-				condenseWhiteChanged = true;
-				selectableChanged = true;
-				textChanged = true;
-				defaultStyleChanged = true;
-				invalidateProperties();
-			}
-		}
+		
 		
 		/**
 		 * 创建文本显示对象
 		 */		
 		protected function createTextField():void
 		{   
-			textField = new UITextField;
-			textField.selectable = selectable;
-			textField.antiAliasType = AntiAliasType.ADVANCED; 
-			textField.mouseWheelEnabled = false;
-			
-			textField.addEventListener("textChanged",
-				textField_textModifiedHandler);
-			textField.addEventListener("widthChanged",
-				textField_textFieldSizeChangeHandler);
-			textField.addEventListener("heightChanged",
-				textField_textFieldSizeChangeHandler);
-			textField.addEventListener("textFormatChanged",
-				textField_textFormatChangeHandler);
-			addChild(textField);
+			if (textField==null)
+			{
+				textField = new UITextField;
+				textField.selectable = selectable;
+				textField.antiAliasType = AntiAliasType.ADVANCED; 
+				textField.mouseWheelEnabled = false;
+				
+				textField.addEventListener("textChanged",
+					textField_textModifiedHandler);
+				textField.addEventListener("widthChanged",
+					textField_textFieldSizeChangeHandler);
+				textField.addEventListener("heightChanged",
+					textField_textFieldSizeChangeHandler);
+				textField.addEventListener("textFormatChanged",
+					textField_textFormatChangeHandler);
+				addChild(textField);
+				
+			}
 		}
 		
 		
