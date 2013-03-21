@@ -165,8 +165,7 @@ package org.flexlite.domUI.managers
 		{
 			DomGlobals.stage.addEventListener(Event.ENTER_FRAME,doPhasedInstantiation);
 			DomGlobals.stage.addEventListener(Event.RENDER, doPhasedInstantiation);
-			if(DomGlobals.stage)
-				DomGlobals.stage.invalidate();
+			DomGlobals.stage.invalidate();
 			listenersAttached = true;
 		}
 		/**
