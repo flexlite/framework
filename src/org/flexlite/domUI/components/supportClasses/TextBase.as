@@ -605,7 +605,7 @@ package org.flexlite.domUI.components.supportClasses
 			
 			if (textChanged || htmlTextChanged)
 			{
-				textFieldChanged(false);
+				textFieldChanged(true);
 				textChanged = false;
 				htmlTextChanged = false;
 			}
