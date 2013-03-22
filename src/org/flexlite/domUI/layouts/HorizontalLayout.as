@@ -546,6 +546,7 @@ package org.flexlite.domUI.layouts
 			var targetHeight:Number = Math.max(0, height - paddingT - paddingB);
 			var justifyHeight:Number = Math.ceil(targetHeight);
 			var layoutElement:ILayoutElement;
+			var oldMaxH:Number = maxElementHeight;
 			if(contentJustify)
 			{
 				for(var index:int=startIndex;index<=endIndex;index++)
@@ -602,7 +603,7 @@ package org.flexlite.domUI.layouts
 			contentWidth = getStartPosition(numElements)-_gap+paddingR;	
 			target.setContentSize(Math.ceil(contentWidth),
 				Math.ceil(contentHeight));
-			if(needInvalidateSize)
+			if(needInvalidateSize||oldMaxH!=maxElementHeight)
 			{
 				target.invalidateSize();
 			}

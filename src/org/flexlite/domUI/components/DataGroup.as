@@ -698,14 +698,6 @@ package org.flexlite.domUI.components
 		 * 正在进行虚拟布局阶段 
 		 */		
 		private var virtualLayoutUnderway:Boolean = false;
-		/**
-		 * @inheritDoc
-		 */
-		override public function invalidateSize():void
-		{
-			if (!virtualLayoutUnderway)
-				super.invalidateSize();
-		}
 		
 		/**
 		 * @inheritDoc
