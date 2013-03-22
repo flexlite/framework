@@ -412,11 +412,11 @@ package org.flexlite.domUI.components
 			rangeFormatChanged = false;
 			if(!rangeFormatDic||!textField||!_text)
 				return;
-			var useLeading:Boolean = expLeading!=null;
+			var useLeading:Boolean = Boolean(expLeading);
 			for(var beginIndex:* in rangeFormatDic)
 			{
 				var endDic:Dictionary = rangeFormatDic[beginIndex] as Dictionary;
-				if(endDic!=null)
+				if(endDic)
 				{
 					for(var index:* in endDic)
 					{
@@ -609,12 +609,9 @@ package org.flexlite.domUI.components
 		 */
 		override protected function createTextField():void
 		{
-			if (!textField)
-			{
-				super.createTextField();
-				textField.wordWrap = true;
-				textField.visible = false;
-			}
+			super.createTextField();
+			textField.wordWrap = true;
+			textField.visible = false;
 		}
 		
 		/**
