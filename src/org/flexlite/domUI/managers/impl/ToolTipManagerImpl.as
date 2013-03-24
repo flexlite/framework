@@ -393,19 +393,10 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function initializeTip():void
 		{
-			if (currentToolTip is IToolTip)
-				IToolTip(currentToolTip).toolTipData = currentTipData;
+			currentToolTip.toolTipData = currentTipData;
 			
-			sizeTip(currentToolTip);
-		}
-		/**
-		 * 设置ToolTip大小
-		 */		
-		private function sizeTip(toolTip:IToolTip):void
-		{
-			if (toolTip is IInvalidating)
-				IInvalidating(toolTip).validateNow();
-			toolTip.setActualSize(toolTip.preferredWidth,toolTip.preferredHeight);
+			if (currentToolTip is IInvalidating)
+				IInvalidating(currentToolTip).validateNow();
 		}
 		/**
 		 * 设置ToolTip位置
@@ -544,7 +535,8 @@ package org.flexlite.domUI.managers.impl
 			
 			toolTip.toolTipData = toolTipData;
 			
-			sizeTip(toolTip);
+			if (currentToolTip is IInvalidating)
+				IInvalidating(currentToolTip).validateNow();
 			var pos:Point = toolTip.parent.globalToLocal(new Point(x,y));
 			toolTip.x = pos.x;
 			toolTip.y = pos.y;
