@@ -546,7 +546,9 @@ package org.flexlite.domUI.layouts
 			var targetHeight:Number = Math.max(0, height - paddingT - paddingB);
 			var justifyHeight:Number = Math.ceil(targetHeight);
 			var layoutElement:ILayoutElement;
-			var oldMaxH:Number = maxElementHeight;
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
+			var typicalWidth:Number = typicalLayoutRect?typicalLayoutRect.width:71;
+			var oldMaxH:Number = Math.max(typicalHeight,maxElementHeight);
 			if(contentJustify)
 			{
 				for(var index:int=startIndex;index<=endIndex;index++)
@@ -561,6 +563,7 @@ package org.flexlite.domUI.layouts
 			var x:Number = 0;
 			var y:Number = 0;
 			var contentHeight:Number = 0;
+			var oldElementSize:Number;
 			var needInvalidateSize:Boolean = false;
 			//对可见区域进行布局
 			for(var i:int=startIndex;i<=endIndex;i++)
@@ -590,8 +593,12 @@ package org.flexlite.domUI.layouts
 				if(!contentJustify)
 					maxElementHeight = Math.max(maxElementHeight,layoutElement.preferredHeight);
 				contentHeight = Math.max(contentHeight,layoutElement.layoutBoundsHeight);
-				if(!needInvalidateSize&&elementSizeTable[i]!=layoutElement.layoutBoundsHeight)
-					needInvalidateSize = true;
+				if(!needInvalidateSize)
+				{
+					oldElementSize = isNaN(elementSizeTable[i])?typicalWidth:elementSizeTable[i];
+					if(oldElementSize!=layoutElement.layoutBoundsWidth)
+						needInvalidateSize = true;
+				}
 				if(i==0&&elementSizeTable.length>0&&elementSizeTable[i]!=layoutElement.layoutBoundsWidth)
 					typicalLayoutRect = null;
 				elementSizeTable[i] = layoutElement.layoutBoundsWidth;
@@ -603,7 +610,7 @@ package org.flexlite.domUI.layouts
 			contentWidth = getStartPosition(numElements)-_gap+paddingR;	
 			target.setContentSize(Math.ceil(contentWidth),
 				Math.ceil(contentHeight));
-			if(needInvalidateSize||oldMaxH!=maxElementHeight)
+			if(needInvalidateSize||oldMaxH<maxElementHeight)
 			{
 				target.invalidateSize();
 			}

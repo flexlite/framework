@@ -130,7 +130,7 @@ package org.flexlite.domUI.components
 			if(index<0||index>=dataProvider.length)
 				return null;
 			var element:IVisualElement = indexToRenderer[index];
-			if(virtualLayoutUnderway&&!element)
+			if(!element)
 			{
 				var item:Object = dataProvider.getItemAt(index);
 				var renderer:IItemRenderer = createVirtualRenderer(index);
@@ -138,9 +138,9 @@ package org.flexlite.domUI.components
 				updateRenderer(renderer,index,item);
 				if(createNewRendererFlag)
 				{
-					createNewRendererFlag = false;
 					if(renderer is IInvalidating)
 						(renderer as IInvalidating).validateNow();
+					createNewRendererFlag = false;
 					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 						false, false, renderer, index, item));
 				}
@@ -184,6 +184,15 @@ package org.flexlite.domUI.components
 		 * 是否创建了新的项呈示器标志 
 		 */		
 		private var createNewRendererFlag:Boolean = false;
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function invalidateSize():void
+		{
+			if(!createNewRendererFlag)//虚拟布局时创建子项不需要重新验证
+				super.invalidateSize();
+		}
 		
 		/**
 		 * 为指定索引创建虚拟的项呈示器
@@ -752,6 +761,7 @@ package org.flexlite.domUI.components
 				setTypicalLayoutRect(null);
 				return;
 			}
+			createNewRendererFlag = true;
 			var displayObj:DisplayObject = typicalRenderer as DisplayObject;
 			updateRenderer(typicalRenderer,0,typicalItem);
 			if(typicalRenderer is IInvalidating)
@@ -763,6 +773,7 @@ package org.flexlite.domUI.components
 			super.removeChild(displayObj);
 			recycle(typicalRenderer);
 			setTypicalLayoutRect(rect);
+			createNewRendererFlag = false;
 		} 
 		
 		/**
