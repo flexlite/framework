@@ -95,6 +95,7 @@ package org.flexlite.domUI.components.supportClasses
 			_currentState = value;
 			if (initialized||hasParent)
 			{
+				currentStateChanged = false;
 				commitCurrentState();
 				if(hostComponent)
 				{
