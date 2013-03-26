@@ -66,6 +66,7 @@ package org.flexlite.domUI.components
 			else
 			{
 				skinNameChanged = true;
+				invalidateProperties();
 			}
 		}
 		
@@ -103,9 +104,9 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */
-		override protected function createChildren():void
+		override protected function commitProperties():void
 		{
-			super.createChildren();
+			super.commitProperties();
 			if(skinNameChanged)
 			{
 				skinNameChanged = false;
