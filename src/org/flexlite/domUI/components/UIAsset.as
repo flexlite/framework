@@ -61,12 +61,12 @@ package org.flexlite.domUI.components
 			_skinName = value;
 			if(initialized||hasParent)
 			{
+				skinNameChanged = false;
 				parseSkinName();
 			}
 			else
 			{
 				skinNameChanged = true;
-				invalidateProperties();
 			}
 		}
 		
@@ -104,9 +104,9 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */
-		override protected function commitProperties():void
+		override protected function createChildren():void
 		{
-			super.commitProperties();
+			super.createChildren();
 			if(skinNameChanged)
 			{
 				skinNameChanged = false;
@@ -141,7 +141,7 @@ package org.flexlite.domUI.components
 					adapter = defaultSkinAdapter;
 				}
 			}
-			if(_skinName==null||_skinName=="")
+			if(!_skinName)
 			{
 				skinChnaged(null,_skinName);
 			}
