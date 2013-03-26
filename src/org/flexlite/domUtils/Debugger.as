@@ -27,6 +27,7 @@ package org.flexlite.domUtils
 	import org.flexlite.domUI.skins.vector.HScrollBarSkin;
 	import org.flexlite.domUI.skins.vector.ListSkin;
 	import org.flexlite.domUI.skins.vector.RadioButtonSkin;
+	import org.flexlite.domUI.skins.vector.ScrollerSkin;
 	import org.flexlite.domUI.skins.vector.TitleWindowSkin;
 	import org.flexlite.domUI.skins.vector.ToggleButtonSkin;
 	import org.flexlite.domUI.skins.vector.TreeItemRendererSkin;
@@ -170,6 +171,7 @@ package org.flexlite.domUtils
 		{
 			infoTree.removeEventListener(UIEvent.CREATION_COMPLETE,onTreeComp);
 			infoTree.dataGroup.itemRendererSkinName = TreeItemRendererSkin;
+			(infoTree.skin as ListSkin).scroller.skinName = ScrollerSkin;
 			(infoTree.skin as ListSkin).scroller.verticalScrollBar.skinName = VScrollBarSkin;
 			(infoTree.skin as ListSkin).scroller.horizontalScrollBar.skinName = HScrollBarSkin;
 		}
