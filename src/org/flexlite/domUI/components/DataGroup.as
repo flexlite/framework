@@ -244,13 +244,13 @@ package org.flexlite.domUI.components
 			}
 			if(!renderer||!(renderer is DisplayObject))
 				return null;
-			super.addChild(renderer as DisplayObject);
 			if(_itemRendererSkinName)
 			{
 				var client:ISkinnableClient = renderer as ISkinnableClient;
 				if(client&&!client.skinName)
 					client.skinName = _itemRendererSkinName;
 			}
+			super.addChild(renderer as DisplayObject);
 			return renderer;
 		}
 		
