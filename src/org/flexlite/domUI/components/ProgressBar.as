@@ -129,8 +129,9 @@ package org.flexlite.domUI.components
 				if (animator.isPlaying)
 					animator.stop();
 				slideToValue = nearestValidValue(newValue, snapInterval);
-				animator.duration = _slideDuration * 
+				var duration:Number = _slideDuration * 
 					(Math.abs(super.value - slideToValue) / (maximum - minimum));
+				animator.duration = duration===Infinity?0:duration;
 				animator.motionPaths = new <MotionPath>[
 					new MotionPath("value", super.value, slideToValue)];
 				animator.play();
@@ -214,8 +215,8 @@ package org.flexlite.domUI.components
 			{
 				var w:Number = isNaN(track.width)?0:track.width;
 				
-				var thumbWidth:Number = (value/maximum)*w;
-				if(thumbWidth<0)
+				var thumbWidth:Number = (currentValue/maxValue)*w;
+				if(thumbWidth<0||thumbWidth===Infinity)
 					thumbWidth = 0;
 				thumb.width = Math.round(isNaN(thumbWidth)?0:thumbWidth);
 				thumb.x = globalToLocal(track.localToGlobal(new Point)).x;
