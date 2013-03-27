@@ -548,7 +548,7 @@ package org.flexlite.domUI.components
 		private var _isTruncated:Boolean = false;
 		
 		/**
-		 * 文本是否已截断的标志。
+		 * 文本是否已经截断并以...结尾的标志。注意：当使用htmlText显示文本时，始终直接截断文本,不显示...。
 		 */		
 		public function get isTruncated():Boolean
 		{
@@ -558,7 +558,7 @@ package org.flexlite.domUI.components
 		private var _truncateToFit:Boolean = true;
 		/**
 		 * 如果此属性为true，并且Label控件大小小于其文本大小，则使用"..."截断 Label控件的文本。
-		 * 反之将直接截断文本。注意：当使用htmlText显示文本时，始终直接截断文本。
+		 * 反之将直接截断文本。注意：当使用htmlText显示文本时，始终直接截断文本,不显示...。
 		 */
 		public function get truncateToFit():Boolean
 		{

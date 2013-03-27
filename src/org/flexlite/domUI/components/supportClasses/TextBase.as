@@ -598,7 +598,8 @@ package org.flexlite.domUI.components.supportClasses
 			
 			if(defaultStyleChanged)
 			{
-				textField.$setTextFormat(defaultTextFormat);
+				if(!isHTML)
+					textField.$setTextFormat(defaultTextFormat);
 				textField.defaultTextFormat = defaultTextFormat;
 				textField.embedFonts = embedFonts;
 			}
