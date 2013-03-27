@@ -268,6 +268,9 @@ package org.flexlite.domUI.components
 		 */
 		override protected function measure():void
 		{
+			//先提交属性，防止样式发生改变导致的测量不准确问题。
+			if(invalidatePropertiesFlag)
+				validateProperties();
 			if (isSpecialCase())
 			{
 				if (isNaN(lastUnscaledWidth))
