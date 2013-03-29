@@ -24,20 +24,18 @@ package org.flexlite.domUI.skins.vector
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);
-			var offsetY:Number = Math.round(h*0.5-2);
 			
 			graphics.clear();
 			graphics.beginFill(0xFFFFFF,0);
 			graphics.drawRect(0,0,w,h);
 			graphics.endFill();
-			h=10;
 			graphics.lineStyle();
 			drawRoundRect(
-				0, offsetY, w, h, 0,
+				0, 0, w, h, 0,
 				0xdddbdb, 1,
-				verticalGradientMatrix(0, offsetY, w, h)); 
+				verticalGradientMatrix(0, 0, w, h)); 
 			if(w>4)
-				drawLine(1,offsetY,w-1,offsetY,0xbcbcbc);
+				drawLine(1,0,w-1,0,0xbcbcbc);
 			this.alpha = currentState=="disabled"?0.5:1;
 		}
 	}

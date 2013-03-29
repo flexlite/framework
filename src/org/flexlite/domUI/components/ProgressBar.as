@@ -90,6 +90,24 @@ package org.flexlite.domUI.components
 			_slideDuration = value;
 		}
 		
+		private var _direction:String = ProgressBarDirection.LEFT_TO_RIGHT;
+		/**
+		 * 进度条增长方向。请使用ProgressBarDirection定义的常量。默认值：ProgressBarDirection.LEFT_TO_RIGHT。
+		 */
+		public function get direction():String
+		{
+			return _direction;
+		}
+
+		public function set direction(value:String):void
+		{
+			if(_direction==value)
+				return;
+			_direction = value;
+			invalidateDisplayList();
+		}
+
+		
 		private static var sineEaser:IEaser = new Sine(0);
 		/**
 		 * 动画实例
@@ -213,13 +231,37 @@ package org.flexlite.domUI.components
 			var maxValue:Number = isNaN(maximum)?0:maximum;
 			if(thumb&&track)
 			{
-				var w:Number = isNaN(track.width)?0:track.width;
-				
-				var thumbWidth:Number = (currentValue/maxValue)*w;
-				if(thumbWidth<0||thumbWidth===Infinity)
+				var trackWidth:Number = isNaN(track.width)?0:track.width;
+				trackWidth *= track.scaleX;
+				var trackHeight:Number = isNaN(track.height)?0:track.height;
+				trackHeight *= track.scaleY;
+				var thumbWidth:Number = Math.round((currentValue/maxValue)*trackWidth);
+				if(isNaN(thumbWidth)||thumbWidth<0||thumbWidth===Infinity)
 					thumbWidth = 0;
-				thumb.width = Math.round(isNaN(thumbWidth)?0:thumbWidth);
-				thumb.x = globalToLocal(track.localToGlobal(new Point)).x;
+				var thumbHeight:Number = Math.round((currentValue/maxValue)*trackHeight);
+				if(isNaN(thumbHeight)||thumbHeight<0||thumbHeight===Infinity)
+					thumbHeight = 0;
+				var thumbPos:Point = globalToLocal(track.localToGlobal(new Point));
+				switch(_direction)
+				{
+					case ProgressBarDirection.LEFT_TO_RIGHT:
+						thumb.width = thumbWidth;
+						thumb.x = thumbPos.x;
+						break;
+					case ProgressBarDirection.RIGHT_TO_LEFT:
+						thumb.width = thumbWidth;
+						thumb.x = thumbPos.x+trackWidth-thumbWidth;
+						break;
+					case ProgressBarDirection.TOP_TO_BOTTOM:
+						thumb.height = thumbHeight;
+						thumb.y = thumbPos.y;
+						break;
+					case ProgressBarDirection.BOTTOM_TO_TOP:
+						thumb.height = thumbHeight;
+						thumb.y = thumbPos.y+trackHeight-thumbHeight;
+						break;
+				}
+				
 			}
 			if(labelDisplay)
 			{
