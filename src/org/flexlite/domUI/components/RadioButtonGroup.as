@@ -86,7 +86,7 @@ package org.flexlite.domUI.components
 		{
 			if (selection)
 			{
-				return selection.value ?
+				return selection.value!=null?
 					selection.value :
 					selection.label;
 			}
