@@ -42,8 +42,6 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function set data(value:Object):void
 		{
-			if(_data==value)
-				return;
 			_data = value;
 			if(initialized||hasParent)
 			{
