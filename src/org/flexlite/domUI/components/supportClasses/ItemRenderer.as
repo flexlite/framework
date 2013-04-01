@@ -42,6 +42,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public function set data(value:Object):void
 		{
+			//这里不能加if(_data==value)return;的判断，会导致数据源无法刷新的问题
 			_data = value;
 			if(initialized||hasParent)
 			{
