@@ -176,19 +176,28 @@ package org.flexlite.domUI.components
 			return (pageIndex+1)+"/"+totalPages;
 		}
 		
+		/**
+		 * 未设置缓存选中项的值
+		 */
+		private static const NO_PROPOSED_PAGE:int = -2;
+		/**
+		 * 在属性提交前缓存外部显式设置的页码值
+		 */
+		dx_internal var proposedCurrentPage:int = NO_PROPOSED_PAGE;
+		
 		private var _currentPage:int = -1;
 		/**
 		 * 当前页码索引，从0开始。
 		 */
 		public function get currentPage():int
 		{
-			return _currentPage;
+			return proposedCurrentPage == NO_PROPOSED_PAGE ?
+				_currentPage : proposedCurrentPage;
 		}
 		
 		public function set currentPage(value:int):void
 		{
-			_currentPage = value;
-			callLater(gotoPage,[value]);
+			gotoPage(value);
 		}
 		
 		private var _totalPages:int = 0;
@@ -212,7 +221,7 @@ package org.flexlite.domUI.components
 		
 		public function set viewport(value:IViewport):void
 		{
-			if (value == _viewport)
+			if(value == _viewport)
 				return;
 			
 			uninstallViewport();
@@ -447,13 +456,28 @@ package org.flexlite.domUI.components
 			adjustingScrollPostion = false;
 		}
 		
+		private var pageIndexChanged:Boolean = false;
 		/**
 		 * 跳转到指定索引的页面
 		 */			
 		private function gotoPage(index:int):void
 		{
+			proposedCurrentPage = index;
+			if(pageIndexChanged)
+				return;
+			pageIndexChanged = true;
+			callLater(doChangePage);
+		}
+		
+		/**
+		 * 执行翻页操作
+		 */		
+		private function doChangePage():void
+		{
+			pageIndexChanged = false;
 			if(!_viewport)
 				return;
+			var index:int = proposedCurrentPage;
 			if(index<0)
 				index = 0;
 			if(index>_totalPages-1)
@@ -509,8 +533,8 @@ package org.flexlite.domUI.components
 					}
 				}
 			}
-			_currentPage = index;
 			checkButtonEnabled();
+			_currentPage = index;
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
 			if(_pageDuration>0&&stage)
@@ -528,6 +552,7 @@ package org.flexlite.domUI.components
 				startAnimation(oldScrollPostion,destScrollPostion);
 			}
 			adjustingScrollPostion = false;
+			proposedCurrentPage = NO_PROPOSED_PAGE;
 		}
 		/**
 		 * 检查页码并设置按钮禁用状态
@@ -540,11 +565,11 @@ package org.flexlite.domUI.components
 			var last:Boolean = false;
 			if(_totalPages>1)
 			{
-				if(_currentPage<_totalPages-1)
+				if(currentPage<_totalPages-1)
 				{
 					last = next = true;
 				}
-				if(_currentPage>0)
+				if(currentPage>0)
 				{
 					first = prev = true;
 				}
@@ -617,7 +642,7 @@ package org.flexlite.domUI.components
 			}
 			else if(instance==labelDisplay)
 			{
-				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+				labelDisplay.text = pageToLabel(currentPage,_totalPages);
 			}
 		}
 		
@@ -669,7 +694,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			gotoPage(_currentPage+1);
+			gotoPage(Math.min(_totalPages-1,currentPage+1));
 		}
 		/**
 		 * "上一页"按钮被点击
@@ -678,7 +703,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			gotoPage(_currentPage-1);
+			gotoPage(Math.max(currentPage-1,0));
 		}
 		
 		
@@ -691,9 +716,9 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented() || !vp || !vp.visible)
 				return;
 			if(event.delta>0)
-				gotoPage(_currentPage-1);
+				gotoPage(Math.max(currentPage-1,0));
 			else
-				gotoPage(_currentPage+1);
+				gotoPage(Math.min(_totalPages-1,currentPage+1));
 			event.preventDefault();
 			
 		}
