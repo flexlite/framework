@@ -2,6 +2,7 @@ package org.flexlite.domUI.components
 {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
@@ -185,7 +186,7 @@ package org.flexlite.domUI.components
 		 */
 		dx_internal var proposedCurrentPage:int = NO_PROPOSED_PAGE;
 		
-		private var _currentPage:int = -1;
+		private var _currentPage:int = 0;
 		/**
 		 * 当前页码索引，从0开始。
 		 */
@@ -294,11 +295,14 @@ package org.flexlite.domUI.components
 		 */		
 		private function onLayoutChanged(event:Event=null):void
 		{
+			var oldDirection:Boolean = pageDirectionIsVertical;
 			pageDirectionIsVertical = updateDirection();
+			if(pageDirectionIsVertical!=oldDirection)
+				updateaTotalPages();
 			if(event.type=="layoutChanged"&&_viewport is GroupBase)
 			{
 				var layout:LayoutBase = (_viewport as GroupBase).layout;
-				if(layout&&!layout.hasEventListener("gapChanged"))
+				if(layout&&!layout.hasEventListener("orientationChanged"))
 				{
 					layout.addEventListener("orientationChanged",onLayoutChanged,false,0,true);
 				}
@@ -392,6 +396,7 @@ package org.flexlite.domUI.components
 			checkButtonEnabled();
 		}
 
+		private var scrollPostionMap:Array = [0];
 		/**
 		 * 更新总页码
 		 */		
@@ -401,6 +406,7 @@ package org.flexlite.domUI.components
 			if(!_viewport||(_animator&&_animator.isPlaying))
 				return;
 			adjustingScrollPostion = true;
+			scrollPostionMap = [0];
 			_totalPages = 1;
 			var oldScrollPostion:Number;
 			var maxScrollPostion:Number;
@@ -419,6 +425,7 @@ package org.flexlite.domUI.components
 						currentPageFoud = true;
 						_currentPage = _totalPages-1;
 					}
+					scrollPostionMap[_totalPages] = _viewport.verticalScrollPosition;
 					_totalPages++;
 				}
 				var h:Number = isNaN(_viewport.height)?0:_viewport.height;
@@ -439,6 +446,7 @@ package org.flexlite.domUI.components
 						currentPageFoud = true;
 						_currentPage = _totalPages-1;
 					}
+					scrollPostionMap[_totalPages] = _viewport.horizontalScrollPosition;
 					_totalPages++;
 				}
 				var w:Number = isNaN(_viewport.width)?0:_viewport.width;
@@ -462,6 +470,8 @@ package org.flexlite.domUI.components
 		 */			
 		private function gotoPage(index:int):void
 		{
+			if(index<0)
+				index = 0;
 			proposedCurrentPage = index;
 			if(pageIndexChanged)
 				return;
@@ -477,79 +487,38 @@ package org.flexlite.domUI.components
 			pageIndexChanged = false;
 			if(!_viewport)
 				return;
-			var index:int = proposedCurrentPage;
-			if(index<0)
-				index = 0;
-			if(index>_totalPages-1)
-				index = _totalPages-1;
+			_currentPage = proposedCurrentPage;
+			if(_currentPage>_totalPages-1)
+				_currentPage = _totalPages-1;
+			checkButtonEnabled();
+			if(labelDisplay)
+				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
 			adjustingScrollPostion = true;
-			var length:int = Math.abs(_currentPage-index);
-			var i:int;
-			var navigatorUint:uint;
-			var oldScrollPostion:Number;
-			if(pageDirectionIsVertical)
+			
+			destScrollPostion = scrollPostionMap[_currentPage];
+			if(_pageDuration>0&&stage)
 			{
-				oldScrollPostion = _viewport.verticalScrollPosition;
-				if(index==0)
+				var oldScrollPostion:Number;
+				if(pageDirectionIsVertical)
 				{
-					_viewport.verticalScrollPosition += 
-						_viewport.getVerticalScrollPositionDelta(NavigationUnit.HOME);
-				}
-				else if(index==_totalPages-1)
-				{
-					_viewport.verticalScrollPosition += 
-						_viewport.getVerticalScrollPositionDelta(NavigationUnit.END);
+					oldScrollPostion = _viewport.verticalScrollPosition;
 				}
 				else
 				{
-					navigatorUint = index<_currentPage?NavigationUnit.PAGE_UP:NavigationUnit.PAGE_DOWN;
-					for(i=0;i<length;i++)
-					{
-						_viewport.verticalScrollPosition += 
-							_viewport.getVerticalScrollPositionDelta(navigatorUint);
-					}
+					oldScrollPostion = _viewport.horizontalScrollPosition;
 				}
+				startAnimation(oldScrollPostion,destScrollPostion);
 			}
 			else
 			{
-				oldScrollPostion = _viewport.horizontalScrollPosition;
-				if(index==0)
-				{
-					_viewport.horizontalScrollPosition += 
-						_viewport.getHorizontalScrollPositionDelta(NavigationUnit.HOME);
-				}
-				else if(index==_totalPages-1)
-				{
-					_viewport.horizontalScrollPosition += 
-						_viewport.getHorizontalScrollPositionDelta(NavigationUnit.END);
-				}
-				else
-				{
-					navigatorUint = index<_currentPage?NavigationUnit.PAGE_LEFT:NavigationUnit.PAGE_RIGHT;
-					for(i=0;i<length;i++)
-					{
-						_viewport.horizontalScrollPosition += 
-							_viewport.getHorizontalScrollPositionDelta(navigatorUint);
-					}
-				}
-			}
-			checkButtonEnabled();
-			_currentPage = index;
-			if(labelDisplay)
-				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
-			if(_pageDuration>0&&stage)
-			{
 				if(pageDirectionIsVertical)
 				{
-					destScrollPostion = _viewport.verticalScrollPosition;
-					_viewport.verticalScrollPosition = oldScrollPostion;
+					_viewport.verticalScrollPosition = destScrollPostion;
 				}
 				else
 				{
-					destScrollPostion = _viewport.horizontalScrollPosition;
-					_viewport.horizontalScrollPosition = oldScrollPostion;
+					_viewport.horizontalScrollPosition = destScrollPostion;
 				}
-				startAnimation(oldScrollPostion,destScrollPostion);
 			}
 			adjustingScrollPostion = false;
 			proposedCurrentPage = NO_PROPOSED_PAGE;
@@ -703,7 +672,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			gotoPage(Math.max(currentPage-1,0));
+			gotoPage(currentPage-1);
 		}
 		
 		
@@ -716,7 +685,7 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented() || !vp || !vp.visible)
 				return;
 			if(event.delta>0)
-				gotoPage(Math.max(currentPage-1,0));
+				gotoPage(currentPage-1);
 			else
 				gotoPage(Math.min(_totalPages-1,currentPage+1));
 			event.preventDefault();
