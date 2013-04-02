@@ -475,26 +475,6 @@ package org.flexlite.domUI.core
 			}
 		}
 		
-		/**
-		 * enabled禁用时记录的mouseChildre值 
-		 */		
-		private var oldMouseChilren:Boolean = true;
-		
-		/**
-		 * @inheritDoc
-		 */		
-		override public function set mouseChildren(enable:Boolean):void
-		{
-			if(_enabled)
-			{
-				super.mouseChildren = enable;
-			}
-			else
-			{
-				oldMouseChilren = enable;
-			}
-		}
-		
 		private var _enabled:Boolean = true;
 		/**
 		 * @inheritDoc
@@ -506,22 +486,9 @@ package org.flexlite.domUI.core
 		
 		public function set enabled(value:Boolean):void
 		{
-			if(_enabled == value)
+			if(_enabled==value)
 				return;
-			
 			_enabled = value;
-			mouseEnabled = value;
-			if(value)
-			{
-				super.mouseChildren = oldMouseChilren;
-			}
-			else
-			{
-				oldMouseChilren = super.mouseChildren;
-				super.mouseChildren = false;
-			}
-			invalidateDisplayList();
-			
 			dispatchEvent(new Event("enabledChanged"));
 		}
 		

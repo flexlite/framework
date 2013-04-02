@@ -312,14 +312,72 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		private var _autoMouseEnabled:Boolean = true;
+		/**
+		 * 在enabled属性发生改变时是否自动开启或禁用鼠标事件的响应。默认值为true。
+		 */
+		public function get autoMouseEnabled():Boolean
+		{
+			return _autoMouseEnabled;
+		}
+		
+		public function set autoMouseEnabled(value:Boolean):void
+		{
+			if(_autoMouseEnabled==value)
+				return;
+			_autoMouseEnabled = value;
+			if(_autoMouseEnabled)
+			{
+				super.mouseChildren = enabled ? explicitMouseChildren : false;
+				super.mouseEnabled  = enabled ? explicitMouseEnabled  : false;
+			}
+			else
+			{
+				super.mouseChildren = explicitMouseChildren;
+				super.mouseEnabled  = explicitMouseEnabled;
+			}
+		}
+		
+		/**
+		 * 外部显式设置的mouseChildren属性值 
+		 */		
+		private var explicitMouseChildren:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */		
+		override public function set mouseChildren(enable:Boolean):void
+		{
+			if(enabled)
+				super.mouseChildren = enable;
+			explicitMouseChildren = enable;
+		}
+		/**
+		 * 外部显式设置的mouseEnabled属性值
+		 */		
+		private var explicitMouseEnabled:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */	
+		override public function set mouseEnabled(enabled:Boolean):void
+		{
+			if(enabled)
+				super.mouseEnabled = enabled;
+			explicitMouseEnabled = enabled;
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
 		override public function set enabled(value:Boolean):void
 		{
-			if(enabled==value)
+			if(super.enabled==value)
 				return;
 			super.enabled = value;
+			if(_autoMouseEnabled)
+			{
+				super.mouseChildren = value ? explicitMouseChildren : false;
+				super.mouseEnabled  = value ? explicitMouseEnabled  : false;
+			}
 			invalidateSkinState();
 		}
 		
