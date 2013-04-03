@@ -95,7 +95,7 @@ package org.flexlite.domUI.components
 		public function set selectedValue(value:Object):void
 		{
 			_selectedValue = value;
-			if (!value)
+			if (value==null)
 			{
 				setSelection(null, false);
 				return;
