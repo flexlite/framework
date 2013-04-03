@@ -820,15 +820,15 @@ package org.flexlite.domUI.layouts
 			if (horizontalAlign == HorizontalAlign.JUSTIFY)
 				elementWidth = cellWidth;
 			else if (!isNaN(element.percentWidth))
-				elementWidth = Math.round(cellWidth * element.percentWidth * 0.01);
+				elementWidth = cellWidth * element.percentWidth * 0.01;
 			
 			if (verticalAlign == VerticalAlign.JUSTIFY)
 				elementHeight = cellHeight;
 			else if (!isNaN(element.percentHeight))
-				elementHeight = Math.round(cellHeight * element.percentHeight * 0.01);
+				elementHeight = cellHeight * element.percentHeight * 0.01;
 			
 			
-			element.setLayoutBoundsSize(elementWidth, elementHeight);
+			element.setLayoutBoundsSize(Math.round(elementWidth), Math.round(elementHeight));
 			
 			var x:Number = cellX;
 			switch (horizontalAlign)
@@ -837,7 +837,7 @@ package org.flexlite.domUI.layouts
 					x += cellWidth - element.layoutBoundsWidth;
 					break;
 				case HorizontalAlign.CENTER:
-					x = cellX + Math.floor((cellWidth - element.layoutBoundsWidth) / 2);
+					x = cellX + (cellWidth - element.layoutBoundsWidth) / 2;
 					break;
 			}
 			
@@ -848,10 +848,10 @@ package org.flexlite.domUI.layouts
 					y += cellHeight - element.layoutBoundsHeight;
 					break;
 				case VerticalAlign.MIDDLE:
-					y += Math.floor((cellHeight - element.layoutBoundsHeight) / 2);
+					y += (cellHeight - element.layoutBoundsHeight) / 2;
 					break;
 			}
-			element.setLayoutBoundsPosition(x, y);
+			element.setLayoutBoundsPosition(Math.round(x), Math.round(y));
 		}			
 		
 		
