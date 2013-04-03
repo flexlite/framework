@@ -368,12 +368,11 @@ package org.flexlite.domUI.managers.impl
 			{
 				currentToolTip = new tipClass();
 				toolTipCacheMap.set(key,currentToolTip);
+				if(currentToolTip is InteractiveObject)
+					InteractiveObject(currentToolTip).mouseEnabled = false;
+				if(currentToolTip is DisplayObjectContainer)
+					DisplayObjectContainer(currentToolTip).mouseChildren = false;
 			}
-			if(currentToolTip is InteractiveObject)
-				InteractiveObject(currentToolTip).mouseEnabled = false;
-			if(currentToolTip is DisplayObjectContainer)
-				DisplayObjectContainer(currentToolTip).mouseChildren = false;
-			currentToolTip.visible = false;
 			toolTipContainer.addElement(currentToolTip);
 		}
 		/**
@@ -469,7 +468,15 @@ package org.flexlite.domUI.managers.impl
 			
 			DomGlobals.stage.addEventListener(MouseEvent.MOUSE_DOWN,
 				stage_mouseDownHandler);
-			currentToolTip.visible = true;
+			if (_hideDelay == 0)
+			{
+				hideTip();
+			}
+			else if (_hideDelay < Infinity)
+			{
+				hideTimer.delay = _hideDelay;
+				hideTimer.start();
+			}
 		}
 		/**
 		 * 隐藏ToolTip
@@ -484,13 +491,12 @@ package org.flexlite.domUI.managers.impl
 				previousTarget.dispatchEvent(event);
 			}
 			
-			if (currentToolTip)
-				currentToolTip.visible = false;
 			if (previousTarget)
 			{
 				DomGlobals.stage.removeEventListener(MouseEvent.MOUSE_DOWN,
 					stage_mouseDownHandler);
 			}
+			reset();
 		}
 		
 		/**
