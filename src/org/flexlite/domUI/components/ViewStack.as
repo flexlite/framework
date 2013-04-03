@@ -145,7 +145,12 @@ package org.flexlite.domUI.components
 			element.visible = true;
 			element.includeInLayout = true;
 			if(index==_selectedIndex)
-				setSelectedIndex(0);
+			{
+				if(numElements>1)
+					setSelectedIndex(0);
+				else
+					setSelectedIndex(-1);
+			}
 		}
 	}
 }
