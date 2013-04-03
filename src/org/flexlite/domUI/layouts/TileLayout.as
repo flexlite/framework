@@ -884,19 +884,22 @@ package org.flexlite.domUI.layouts
 			if(itemHeight <= 0)
 				itemHeight = 1;
 			
-			var offsetY:Number = (targetHeight+_verticalGap)%itemHeight;
-			var offsetX:Number = (targetWidth+_horizontalGap)%itemWidth;
+			var offsetY:Number = targetHeight-_rowHeight*_rowCount;
+			var offsetX:Number = targetWidth-_columnWidth*_columnCount;
 			var gapCount:int;
 			if(offsetY>0)
 			{
 				if(rowAlign == RowAlign.JUSTIFY_USING_GAP)
 				{
 					gapCount = Math.max(1,_rowCount-1);
-					_verticalGap += offsetY/gapCount;
+					_verticalGap = offsetY/gapCount;
 				}
 				else if(rowAlign == RowAlign.JUSTIFY_USING_HEIGHT)
 				{
-					_rowHeight += offsetY/_rowCount;
+					if(_rowCount>0)
+					{
+						_rowHeight += (offsetY-(_rowCount-1)*_verticalGap)/_rowCount;
+					}
 				}
 			}
 			if(offsetX>0)
@@ -904,11 +907,14 @@ package org.flexlite.domUI.layouts
 				if(columnAlign == ColumnAlign.JUSTIFY_USING_GAP)
 				{
 					gapCount = Math.max(1,_columnCount-1);
-					_horizontalGap += offsetX/gapCount;
+					_horizontalGap = offsetX/gapCount;
 				}
 				else if(columnAlign == ColumnAlign.JUSTIFY_USING_WIDTH)
 				{
-					_columnWidth += offsetX/_columnCount;
+					if(_columnCount>0)
+					{
+						_columnWidth += (offsetX-(_columnCount-1)*_horizontalGap)/_columnCount;
+					}
 				}
 			}			
 		}
