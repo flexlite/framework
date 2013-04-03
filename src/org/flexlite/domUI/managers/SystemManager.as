@@ -1,22 +1,18 @@
 package org.flexlite.domUI.managers
 {
-	import flash.display.InteractiveObject;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.EventPhase;
-	import flash.events.FocusEvent;
 	import flash.events.FullScreenEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Group;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
-	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.layouts.BasicLayout;
@@ -25,7 +21,9 @@ package org.flexlite.domUI.managers
 	use namespace dx_internal;
 	
 	/**
-	 * 系统管理器,应用程序顶级容器。管理弹窗，鼠标样式，工具提示的显示层级。
+	 * 系统管理器，应用程序顶级容器。
+	 * 通常情况下，一个程序应该只含有唯一的系统管理器,并且所有的组件都包含在它内部。
+	 * 它负责管理弹窗，鼠标样式，工具提示的显示层级，以及过滤鼠标和键盘事件为可以取消的。
 	 * @author DOM
 	 */	
 	public class SystemManager extends Group implements ISystemManager
@@ -41,26 +39,11 @@ package org.flexlite.domUI.managers
 			{
 				onAddToStage();
 			}
-			this.addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE,onRemoved);
-		}
-		/**
-		 * 从舞台移除
-		 */		
-		private function onRemoved(event:Event):void
-		{
-			var index:int = DomGlobals._systemManagers.indexOf(this);
-			if(index!=-1)
-				DomGlobals._systemManagers.splice(index,1);
-			stage.removeEventListener(Event.RESIZE,onResize);
-			stage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true);
-			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true);
-			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
-			stage.removeEventListener(Event.ACTIVATE, activateHandler);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			stage.removeEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
+			addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE,onRemoved);
+			addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
+			addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
+			addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
 		}
 		/**
 		 * 添加到舞台
@@ -76,16 +59,35 @@ package org.flexlite.domUI.managers
 			var index:int = DomGlobals._systemManagers.indexOf(this);
 			if(index==-1)
 				DomGlobals._systemManagers.push(this);
-			stage.addEventListener(Event.RESIZE,onResize);
-			stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
-			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
-			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE,mouseFocusChangeHandler);
-			stage.addEventListener(Event.ACTIVATE, activateHandler);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler, true);
-			onResize();
+			if(_autoResize)
+			{
+				stage.addEventListener(Event.RESIZE,onResize);
+				stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+				onResize();
+			}
+		}
+		/**
+		 * 从舞台移除
+		 */		
+		private function onRemoved(event:Event):void
+		{
+			var index:int = DomGlobals._systemManagers.indexOf(this);
+			if(index!=-1)
+				DomGlobals._systemManagers.splice(index,1);
+			if(_autoResize)
+			{
+				stage.removeEventListener(Event.RESIZE,onResize);
+				stage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+			}
+		}
+		
+		/**
+		 * 舞台尺寸改变
+		 */		
+		private function onResize(event:Event=null):void
+		{
+			super.width = stage.stageWidth;
+			super.height = stage.stageHeight;
 		}
 		/**
 		 * @inheritDoc
@@ -96,76 +98,6 @@ package org.flexlite.domUI.managers
 												useWeakReference:Boolean = true/*将弱引用的默认值改成true*/):void
 		{
 			super.addEventListener(type,listener,useCapture,priority,useWeakReference);
-		}
-		/**
-		 * 屏蔽FP原始的焦点处理过程
-		 */		
-		private function mouseFocusChangeHandler(event:FocusEvent):void
-		{
-			if (event.isDefaultPrevented())
-				return;
-			
-			if (event.relatedObject is TextField)
-			{
-				var tf:TextField = event.relatedObject as TextField;
-				if (tf.type == "input" || tf.selectable)
-				{
-					return;
-				}
-			}
-			event.preventDefault();
-		}
-		
-		/**
-		 * 当前的焦点对象。
-		 */		
-		private var currentFocus:IUIComponent;
-		/**
-		 * 鼠标按下事件
-		 */		
-		private function onMouseDown(event:MouseEvent):void
-		{
-			var focus:IUIComponent = getTopLevelFocusTarget(InteractiveObject(event.target));
-			if (!focus)
-				return;
-			
-			if (focus != currentFocus && !(focus is TextField))
-			{
-				focus.setFocus();
-			}
-		}
-		/**
-		 * 焦点改变时更新currentFocus
-		 */		
-		private function focusInHandler(event:FocusEvent):void
-		{
-			currentFocus = getTopLevelFocusTarget(InteractiveObject(event.target));
-		}
-		/**
-		 * 获取鼠标按下点的焦点对象
-		 */		
-		private function getTopLevelFocusTarget(target:InteractiveObject):IUIComponent
-		{
-			while(target)
-			{
-				if (target is IUIComponent&&
-					IUIComponent(target).focusEnabled&&
-					IUIComponent(target).enabled)
-				{
-					return target as IUIComponent;
-				}
-				target = target.parent;
-			}
-			return null;
-		}
-		
-		/**
-		 * 窗口激活时重新设置焦点
-		 */		
-		private function activateHandler(event:Event):void
-		{
-			if(currentFocus)
-				currentFocus.setFocus();
 		}
 		
 		/**
@@ -226,13 +158,33 @@ package org.flexlite.domUI.managers
 			}
 		}
 		
+		private var _autoResize:Boolean = true;
 		/**
-		 * 舞台尺寸改变
-		 */		
-		protected function onResize(event:Event=null):void
+		 * 是否自动跟随舞台缩放。当此属性为true时，将强制让SystemManager始终与舞台保持相同大小。
+		 * 反之需要外部手动同步大小。默认值为true。
+		 */
+		public function get autoResize():Boolean
 		{
-			super.width = stage.stageWidth;
-			super.height = stage.stageHeight;
+			return _autoResize;
+		}
+		
+		public function set autoResize(value:Boolean):void
+		{
+			if(_autoResize==value)
+				return;
+			_autoResize = value;
+			if(!stage)
+				return;
+			if(_autoResize)
+			{
+				stage.addEventListener(Event.RESIZE,onResize);
+				stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+			}
+			else
+			{
+				stage.removeEventListener(Event.RESIZE,onResize);
+				stage.removeEventListener(FullScreenEvent.FULL_SCREEN,onResize);
+			}
 		}
 		
 		//==========================================================================
@@ -241,43 +193,84 @@ package org.flexlite.domUI.managers
 		/**
 		 * @inheritDoc
 		 */
-		override public function set x(value:Number):void{}
+		override public function set x(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.x = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function set y(value:Number):void{}
+		override public function set y(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.y = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function set width(value:Number):void{}
+		override public function set width(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.width = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function set height(value:Number):void{}
+		override public function set height(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.height = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function set scaleX(value:Number):void{}
+		override public function set scaleX(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.scaleX = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function set scaleY(value:Number):void{}
+		override public function set scaleY(value:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.scaleY = value;
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function setActualSize(w:Number, h:Number):void{}
+		override public function setActualSize(w:Number, h:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.setActualSize(w,h);
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function setLayoutBoundsPosition(x:Number, y:Number):void{}
+		override public function setLayoutBoundsPosition(x:Number, y:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.setLayoutBoundsPosition(x,y);
+		}
 		/**
 		 * @inheritDoc
 		 */
-		override public function setLayoutBoundsSize(layoutWidth:Number, layoutHeight:Number):void{}
-		/**
-		 * @inheritDoc
-		 */
-		override public function set name(value:String):void{}
+		override public function setLayoutBoundsSize(layoutWidth:Number, layoutHeight:Number):void
+		{
+			if(_autoResize)
+				return;
+			super.setLayoutBoundsSize(layoutWidth,layoutHeight);
+		}
 		/**
 		 * 布局对象,SystemManager只接受BasicLayout
 		 */		
@@ -517,6 +510,7 @@ package org.flexlite.domUI.managers
 		{
 			if(notifyListeners)
 			{
+				//PopUpManager需要监听这个事件
 				element.dispatchEvent(new Event("removeFromSystemManager"));
 			}
 			super.elementRemoved(element,index,notifyListeners);

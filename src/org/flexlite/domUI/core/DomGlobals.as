@@ -2,7 +2,10 @@ package org.flexlite.domUI.core
 {
 	import flash.display.Stage;
 	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.managers.FocusManager;
+	import org.flexlite.domUI.managers.IFocusManager;
 	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.LayoutManager;
 
@@ -34,14 +37,29 @@ package org.flexlite.domUI.core
 			if(initlized)
 				return;
 			_stage = stage;
-			layoutManager = new LayoutManager;
+			layoutManager = new LayoutManager();
+			try
+			{
+				focusManager = Injector.getInstance(IFocusManager);
+			}
+			catch(e:Error)
+			{
+				focusManager = new FocusManager();
+			}
+			focusManager.stage = stage;
 			initlized = true;
 		}
 		/**
 		 * 延迟渲染布局管理器 
 		 */		
 		dx_internal static var layoutManager:LayoutManager;
-		
+		/**
+		 * 焦点管理器
+		 */		
+		dx_internal static var focusManager:IFocusManager;
+		/**
+		 * 系统管理器列表
+		 */		
 		dx_internal static var _systemManagers:Vector.<ISystemManager> = new Vector.<ISystemManager>();
 		/**
 		 * 顶级应用容器
