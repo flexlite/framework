@@ -91,7 +91,7 @@ package org.flexlite.domUI.core
 		{
 			super();
 			focusRect = false;
-			if(DomGlobals.stage==null)
+			if(!DomGlobals.stage)
 			{
 				if(stage)
 				{
