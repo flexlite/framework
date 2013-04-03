@@ -44,7 +44,6 @@ package org.flexlite.domUI.components
 		{
 			super();
 			mouseChildren = true;
-			mouseEnabled = true;
 		}
 		
 		/**
@@ -345,11 +344,11 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */		
-		override public function set mouseChildren(enable:Boolean):void
+		override public function set mouseChildren(value:Boolean):void
 		{
 			if(enabled)
-				super.mouseChildren = enable;
-			explicitMouseChildren = enable;
+				super.mouseChildren = value;
+			explicitMouseChildren = value;
 		}
 		/**
 		 * 外部显式设置的mouseEnabled属性值
@@ -358,11 +357,11 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */	
-		override public function set mouseEnabled(enabled:Boolean):void
+		override public function set mouseEnabled(value:Boolean):void
 		{
 			if(enabled)
-				super.mouseEnabled = enabled;
-			explicitMouseEnabled = enabled;
+				super.mouseEnabled = value;
+			explicitMouseEnabled = value;
 		}
 		
 		/**
