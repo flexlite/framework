@@ -176,7 +176,7 @@ package org.flexlite.domUI.components
 		/**
 		 * createChildren()方法已经执行过的标志
 		 */		
-		dx_internal var createChildrenCalled:Boolean = false;
+		private var createChildrenCalled:Boolean = false;
 		
 		/**
 		 * @inheritDoc

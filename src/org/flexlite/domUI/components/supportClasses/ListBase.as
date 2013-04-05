@@ -45,7 +45,7 @@ package org.flexlite.domUI.components.supportClasses
 	 */	
 	[Event(name="change", type="org.flexlite.domUI.events.IndexChangeEvent")]
 	/**
-	 * 属性提交事件
+	 * 属性改变事件
 	 */	
 	[Event(name="valueCommit", type="org.flexlite.domUI.events.UIEvent")]
 

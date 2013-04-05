@@ -1,7 +1,6 @@
 package org.flexlite.domUI.components
 {
 	import org.flexlite.domCore.dx_internal;
-
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
@@ -51,12 +50,12 @@ package org.flexlite.domUI.components
 		/**
 		 * 实体容器实例化之前缓存子对象的容器 
 		 */		
-		private var _placeHolderGroup:Group;
+		dx_internal var _placeHolderGroup:Group;
 		
 		/**
 		 * 获取当前的实体容器
 		 */		
-		private function get currentContentGroup():Group
+		dx_internal function get currentContentGroup():Group
 		{          
 			if (contentGroup==null)
 			{
@@ -211,19 +210,19 @@ package org.flexlite.domUI.components
 					contentGroup.layout = contentGroupProperties.layout;
 					contentGroupProperties = {};
 				}
-				if(_placeHolderGroup!=null)
+				if(_placeHolderGroup)
 				{
 					_placeHolderGroup.removeEventListener(
 						ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
 					_placeHolderGroup.removeEventListener(
 						ElementExistenceEvent.ELEMENT_REMOVE, contentGroup_elementRemovedHandler);
-					var sourceContent:Array = _placeHolderGroup.getElementsContent();
-					contentGroup.elementsContent = sourceContent ? sourceContent.slice() : null;
+					var sourceContent:Array = _placeHolderGroup.getElementsContent().concat();
 					for (var i:int = _placeHolderGroup.numElements; i > 0; i--)
 					{
 						_placeHolderGroup.removeElementAt(0);  
 					}
 					removeFromDisplayList(_placeHolderGroup);
+					contentGroup.elementsContent = sourceContent;
 					_placeHolderGroup = null;
 				}
 				contentGroup.addEventListener(
