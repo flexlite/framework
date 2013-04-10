@@ -214,7 +214,8 @@ package org.flexlite.domDll.core
 			{
 				if(lazyLoadList.length==0)
 					return null;
-				return lazyLoadList.shift();
+				//后请求的先加载，以便更快获取当前需要的资源
+				return lazyLoadList.pop();
 			}
 			var length:int = queue.length;
 			var list:Vector.<DllItem>;
