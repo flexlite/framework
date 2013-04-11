@@ -205,9 +205,9 @@ package org.flexlite.domUI.components
 			return _animator;
 		}
 		
-		private var _openDuration:Number = 150;
+		private var _openDuration:Number = 250;
 		/**
-		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值150。
+		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值250。
 		 */
 		public function get openDuration():Number
 		{
@@ -219,7 +219,7 @@ package org.flexlite.domUI.components
 			_openDuration = value;
 		}
 		
-		private var _closeDuration:Number = 250;
+		private var _closeDuration:Number = 150;
 		/**
 		 * 窗口关闭的动画时间(以毫秒为单位)，设置为0则直接关闭窗口而不播放动画效果。默认值150。
 		 */
@@ -358,17 +358,19 @@ package org.flexlite.domUI.components
 		 */		
 		private function startAnimation():void
 		{
+			animator.motionPaths = createMotionPath();
 			if(popUpIsDisplayed)
 			{
-				animator.duration = _closeDuration;
+				animator.duration = valueRange<200?int(valueRange/200*_openDuration):_openDuration;
 			}
 			else
 			{
-				animator.duration = _openDuration;
+				animator.duration = valueRange<200?int(valueRange/200*_closeDuration):_closeDuration;
 			}
-			animator.motionPaths = createMotionPath();
 			animator.play();
 		}
+		
+		private var valueRange:Number = 1;
 		/**
 		 * 创建动画轨迹
 		 */		
@@ -385,23 +387,31 @@ package org.flexlite.domUI.components
 					xPath.valueFrom = xPath.valueTo = 0;
 					yPath.valueFrom = popUp.height;
 					yPath.valueTo = 0;
+					valueRange = popUp.height;
 					break;
 				case PopUpPosition.ABOVE:
 					xPath.valueFrom = xPath.valueTo = 0;
 					yPath.valueFrom = -popUp.height;
 					yPath.valueTo = 0;
+					valueRange = popUp.height;
 					break;
 				case PopUpPosition.LEFT:
 					yPath.valueFrom = yPath.valueTo = 0;
 					xPath.valueFrom = -popUp.width;
 					xPath.valueTo = 0;
+					valueRange = popUp.width;
 					break;
 				case PopUpPosition.RIGHT:
 					yPath.valueFrom = yPath.valueTo = 0;
 					xPath.valueFrom = popUp.width;
 					xPath.valueTo = 0;
-					break;            
+					valueRange = popUp.width;
+					break;    
+				default:
+					valueRange = 1;
+					break;
 			}
+			valueRange = Math.abs(valueRange);
 			if(!popUpIsDisplayed)
 			{
 				var tempValue:Number = xPath.valueFrom;

@@ -155,7 +155,7 @@ package org.flexlite.domUI.components
 				animationEndHandler(animator);
 				animator.stop();
 			}
-			animator.duration = _pageDuration;
+			animator.duration = int(Math.abs(valueTo-valueFrom)/100*_pageDuration);
 			animator.motionPaths = new <MotionPath>[
 				new MotionPath("scrollPosition", valueFrom, valueTo)];
 			animator.play();
@@ -403,7 +403,7 @@ package org.flexlite.domUI.components
 		private function updateaTotalPages():void
 		{
 			totalPagesChanged = false;
-			if(!_viewport||(_animator&&_animator.isPlaying))
+			if(!_viewport)
 				return;
 			adjustingScrollPostion = true;
 			scrollPostionMap = [0];
@@ -423,7 +423,6 @@ package org.flexlite.domUI.components
 					if(!currentPageFoud&&_viewport.verticalScrollPosition>oldScrollPostion)
 					{
 						currentPageFoud = true;
-						_currentPage = _totalPages-1;
 					}
 					scrollPostionMap[_totalPages] = _viewport.verticalScrollPosition;
 					_totalPages++;
@@ -444,7 +443,6 @@ package org.flexlite.domUI.components
 					if(!currentPageFoud&&_viewport.horizontalScrollPosition>oldScrollPostion)
 					{
 						currentPageFoud = true;
-						_currentPage = _totalPages-1;
 					}
 					scrollPostionMap[_totalPages] = _viewport.horizontalScrollPosition;
 					_totalPages++;
@@ -454,13 +452,27 @@ package org.flexlite.domUI.components
 					= Math.max(0,Math.min(oldScrollPostion,_viewport.contentWidth-w));
 				
 			}
-			if(!currentPageFoud)
+			if(_animator&&_animator.isPlaying)
 			{
-				_currentPage = totalPages-1;
+				proposedCurrentPage = _currentPage;
+				doChangePage();
 			}
-			checkButtonEnabled();
-			if(labelDisplay)
-				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+			else
+			{
+				if(_currentPage>_totalPages-1)
+					_currentPage = _totalPages-1;
+				checkButtonEnabled();
+				if(labelDisplay)
+					labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+				if(pageDirectionIsVertical)
+				{
+					_viewport.verticalScrollPosition = scrollPostionMap[_currentPage];
+				}
+				else
+				{
+					_viewport.horizontalScrollPosition = scrollPostionMap[_currentPage];
+				}
+			}
 			adjustingScrollPostion = false;
 		}
 		
@@ -493,7 +505,6 @@ package org.flexlite.domUI.components
 			checkButtonEnabled();
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
-			adjustingScrollPostion = true;
 			
 			destScrollPostion = scrollPostionMap[_currentPage];
 			if(_pageDuration>0&&stage)
@@ -520,7 +531,6 @@ package org.flexlite.domUI.components
 					_viewport.horizontalScrollPosition = destScrollPostion;
 				}
 			}
-			adjustingScrollPostion = false;
 			proposedCurrentPage = NO_PROPOSED_PAGE;
 		}
 		/**
