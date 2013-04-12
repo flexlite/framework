@@ -126,8 +126,26 @@ package org.flexlite.domUtils
 			infoTree.labelFunction = labelFunc;
 			infoTree.addEventListener(TreeEvent.ITEM_OPENING,onTreeOpening);
 			infoTree.addEventListener(UIEvent.CREATION_COMPLETE,onTreeComp);
+			infoTree.doubleClickEnabled = true;
+			infoTree.addEventListener(MouseEvent.DOUBLE_CLICK,onTreeDoubleClick);
 			window.addElement(infoTree);
 			addElement(window);
+		}
+		/**
+		 * 双击一个节点
+		 */		
+		private function onTreeDoubleClick(event:MouseEvent):void
+		{
+			var item:XML = infoTree.selectedItem;
+			if(!item||item.children().length()==0)
+				return;
+			var target:DisplayObject = getTargetByItem(item) as DisplayObject;
+			if(target)
+			{
+				currentTarget = target;
+				infoDp.source = describe(currentTarget);
+				invalidateDisplayList();
+			}
 		}
 		/**
 		 * 选择模式发生改变
