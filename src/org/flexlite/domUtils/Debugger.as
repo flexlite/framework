@@ -3,6 +3,7 @@ package org.flexlite.domUtils
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;
+	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventPhase;
@@ -24,6 +25,7 @@ package org.flexlite.domUtils
 	import org.flexlite.domUI.components.ToggleButton;
 	import org.flexlite.domUI.components.Tree;
 	import org.flexlite.domUI.core.UIComponent;
+	import org.flexlite.domUI.events.CloseEvent;
 	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.skins.vector.HScrollBarSkin;
@@ -63,7 +65,6 @@ package org.flexlite.domUtils
 			mouseEnabled = false;
 			mouseEnabledWhereTransparent = false;
 			appStage = stage;
-			visible = false;
 			appStage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
 		}
@@ -97,8 +98,8 @@ package org.flexlite.domUtils
 		{
 			window.skinName = TitleWindowSkin;
 			window.isPopUp = true;
-			window.showCloseButton = false;
 			window.width = 250;
+			window.addEventListener(CloseEvent.CLOSE,close);
 			window.title = "显示列表";
 			targetLabel.text = "";
 			targetLabel.y = 48;
@@ -328,14 +329,13 @@ package org.flexlite.domUtils
 		{
 			if(event.keyCode==Keyboard.F11)
 			{
-				visible = !visible;
-				if(visible)
+				if(parent)
 				{
-					show();
+					close();
 				}
 				else
 				{
-					close();
+					show();
 				}
 			}
 			if(!parent)
@@ -449,8 +449,9 @@ package org.flexlite.domUtils
 		/**
 		 * 关闭
 		 */		
-		private function close():void
+		private function close(event:Event=null):void
 		{
+			stage.focus = root as InteractiveObject;
 			if(parent)
 				parent.removeChild(this);
 			currentTarget = null;
