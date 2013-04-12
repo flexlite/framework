@@ -37,7 +37,7 @@ package org.flexlite.domUtils
 	/**
 	 * 运行时显示列表调试工具。
 	 * 快捷键：F11开启或关闭调试;F12开启或结束选择;F2复制选中的属性名;F3复制选中属性值;
-	 * F5:最大化或还原属性窗口;
+	 * F5:最大化或还原属性窗口;F6:设置选中节点为浏览树的根
 	 * @author DOM
 	 */
 	public class Debugger extends Group
@@ -66,11 +66,8 @@ package org.flexlite.domUtils
 		}
 		
 		private var window:TitleWindow = new TitleWindow();
-		private var xLabel:Label = new Label();
-		private var yLabel:Label = new Label();
-		private var widthLabel:Label = new Label();
-		private var heightLabel:Label = new Label();
-		private var nameLabel:Label = new Label();
+		private var targetLabel:Label = new Label();
+		private var rectLabel:Label = new Label();
 		private var selectBtn:ToggleButton = new ToggleButton();
 		private var selectMode:RadioButtonGroup = new RadioButtonGroup();
 		private var infoTree:Tree = new Tree();
@@ -85,23 +82,11 @@ package org.flexlite.domUtils
 			window.showCloseButton = false;
 			window.width = 250;
 			window.title = "控制面板";
-			var infoGroup:Group = new Group();
-			nameLabel.text = "";
-			xLabel.y = 18;
-			xLabel.text = "x:";
-			yLabel.y = 36;
-			yLabel.text = "y:";
-			widthLabel.y = 54;
-			widthLabel.text = "width:";
-			heightLabel.y = 72;
-			heightLabel.text = "height:";
-			infoGroup.y = 30;
-			infoGroup.addElement(nameLabel);
-			infoGroup.addElement(xLabel);
-			infoGroup.addElement(yLabel);
-			infoGroup.addElement(widthLabel);
-			infoGroup.addElement(heightLabel);
-			window.addElement(infoGroup);
+			targetLabel.text = "";
+			targetLabel.y = 48;
+			rectLabel.y = 30;
+			window.addElement(targetLabel);
+			window.addElement(rectLabel);
 			window.addEventListener(UIEvent.CREATION_COMPLETE,onWindowComp);
 			selectBtn.label = "开启选择";
 			selectBtn.y = 5;
@@ -134,7 +119,7 @@ package org.flexlite.domUtils
 			infoTree.skinName = ListSkin;
 			infoTree.left = 0;
 			infoTree.right = 0;
-			infoTree.top = 120;
+			infoTree.top = 66;
 			infoTree.bottom = 0;
 			infoTree.minHeight = 200;
 			infoTree.dataProvider = infoDp;
@@ -186,45 +171,56 @@ package org.flexlite.domUtils
 			if(item.children().length()==1&&
 				item.children()[0].localName()=="child")
 			{
-				var keys:Array = [String(item.@key)];
-				var parent:XML = item.parent();
-				while(parent&&parent.parent())
+				var target:Object = getTargetByItem(item);
+				if(target)
 				{
-					if(parent.localName()!="others")
-						keys.push(String(parent.@key));
-					parent = parent.parent();
+					item.setChildren(describe(target).children());
 				}
-				var target:Object = currentTarget;
-				try
+			}
+		}
+		/**
+		 * 根据xml节点获取对应的对象引用
+		 */		
+		private function getTargetByItem(item:XML):*
+		{
+			var keys:Array = [String(item.@key)];
+			var parent:XML = item.parent();
+			while(parent&&parent.parent())
+			{
+				if(parent.localName()!="others")
+					keys.push(String(parent.@key));
+				parent = parent.parent();
+			}
+			var target:Object = currentTarget;
+			try
+			{
+				while(keys.length>0)
 				{
-					while(keys.length>0)
+					var key:String = keys.pop();
+					if(key.substr(0,8)=="children")
 					{
-						var key:String = keys.pop();
-						if(key.substr(0,8)=="children")
+						var index:int = int(key.substring(9,key.length-1));
+						target = DisplayObjectContainer(target).getChildAt(index);
+					}
+					else
+					{
+						if(key.charAt(0)=="["&&key.charAt(key.length-1)=="]")
 						{
-							var index:int = int(key.substring(9,key.length-1));
-							target = DisplayObjectContainer(target).getChildAt(index);
+							index = int(key.substring(9,key.length-1));
+							target = target[index];
 						}
 						else
 						{
-							if(key.charAt(0)=="["&&key.charAt(key.length-1)=="]")
-							{
-								index = int(key.substring(9,key.length-1));
-								target = target[index];
-							}
-							else
-							{
-								target = target[key];
-							}
+							target = target[key];
 						}
 					}
 				}
-				catch(e:Error)
-				{
-					return;
-				}
-				item.setChildren(describe(target).children());
 			}
+			catch(e:Error)
+			{
+				return null;
+			}
+			return target;
 		}
 		/**
 		 * 树列表项显示文本格式化函数
@@ -347,6 +343,36 @@ package org.flexlite.domUtils
 					mouseMoved = true;
 					invalidateProperties();
 				}
+			}
+			else if(event.keyCode==Keyboard.F6)
+			{
+				if(!selectBtn.selected)
+				{
+					changeCurrentTarget();
+				}
+			}
+		}
+		/**
+		 * 设置当前选中节点为根节点
+		 */		
+		private function changeCurrentTarget():void
+		{
+			var item:XML = infoTree.selectedItem;
+			var target:DisplayObject;
+			while(item)
+			{
+				if(item.children().length()>0)
+				{
+					target = getTargetByItem(item) as DisplayObject;
+					if(target)
+					{
+						currentTarget = target;
+						infoDp.source = describe(currentTarget);
+						invalidateDisplayList();
+						break;
+					}
+				}
+				item = item.parent();
 			}
 		}
 		
@@ -478,17 +504,14 @@ package org.flexlite.domUtils
 			if(currentTarget)
 			{
 				var pos:Point = currentTarget.localToGlobal(new Point());
-				xLabel.text = "x: "+pos.x;
-				yLabel.text = "y: "+pos.y;
-				widthLabel.text = "width: "+currentTarget.width;
-				heightLabel.text = "height: "+currentTarget.height;
 				var className:String = getQualifiedClassName(currentTarget);
-				nameLabel.text = "target: ";
+				targetLabel.text = "对象:";
 				if(className.indexOf("::")!=-1)
-					nameLabel.text += className.split("::")[1];
+					targetLabel.text += className.split("::")[1];
 				else
-					nameLabel.text += className;
-				nameLabel.text += "#"+currentTarget.name;
+					targetLabel.text += className;
+				targetLabel.text += "#"+currentTarget.name+" : ["+className+"]";;
+				rectLabel.text = "区域:["+pos.x+","+pos.y+","+currentTarget.width+","+currentTarget.height+"]";
 				g.drawRect(pos.x,pos.y,currentTarget.width,currentTarget.height);
 				g.endFill();
 				g.beginFill(0x009aff,0);
@@ -497,12 +520,8 @@ package org.flexlite.domUtils
 			}
 			else
 			{
-				nameLabel.text = "target: ";
-				xLabel.text = "x: ";
-				yLabel.text = "y: ";
-				widthLabel.text = "width: ";
-				heightLabel.text = "height: ";
-				
+				targetLabel.text = "对象:";
+				rectLabel.text = "区域:";
 			}
 			g.endFill();
 		}
@@ -622,6 +641,7 @@ package org.flexlite.domUtils
 			var info:XML = describeType(target);
 			var others:Array = [];
 			var children:Array = [];
+			var parent:XML;
 			var childXMLList:XMLList = info.variable+info.accessor;
 			for each(var node:XML in childXMLList)
 			{
@@ -634,6 +654,8 @@ package org.flexlite.domUtils
 				item.@key = key;
 				if(layoutProps.indexOf(key)==-1)
 					others.push(item);
+				else if(key=="parent")
+					parent = item;
 				else
 					items.push(item);
 				try
@@ -677,6 +699,10 @@ package org.flexlite.domUtils
 				{
 					xml.appendChild(children.shift());
 				}
+			}
+			if(parent)
+			{
+				xml.appendChild(parent);
 			}
 			items.sortOn("@key");
 			others.sortOn("@key");
