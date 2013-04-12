@@ -18,6 +18,7 @@ package org.flexlite.domUI.skins.vector
 		public function TitleWindowSkin()
 		{
 			super();
+			clipAndEnableScrolling = true;
 		}
 		
 		public var closeButton:Button;

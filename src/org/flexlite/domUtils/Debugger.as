@@ -5,6 +5,7 @@ package org.flexlite.domUtils
 	import flash.display.Graphics;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.EventPhase;
 	import flash.events.FullScreenEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -22,6 +23,7 @@ package org.flexlite.domUtils
 	import org.flexlite.domUI.components.TitleWindow;
 	import org.flexlite.domUI.components.ToggleButton;
 	import org.flexlite.domUI.components.Tree;
+	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.events.TreeEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.skins.vector.HScrollBarSkin;
@@ -63,6 +65,22 @@ package org.flexlite.domUtils
 			appStage = stage;
 			visible = false;
 			appStage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+			addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
+		}
+		
+		/**
+		 * 过滤鼠标事件为可以取消的
+		 */		
+		private function mouseEventHandler(e:MouseEvent):void
+		{
+			if (!e.cancelable&&e.eventPhase!=EventPhase.BUBBLING_PHASE)
+			{
+				e.stopImmediatePropagation();
+				var cancelableEvent:MouseEvent = new MouseEvent(e.type, e.bubbles, true, e.localX, 
+					e.localY, e.relatedObject, e.ctrlKey, e.altKey,
+					e.shiftKey, e.buttonDown, e.delta);
+				e.target.dispatchEvent(cancelableEvent);               
+			}
 		}
 		
 		private var window:TitleWindow = new TitleWindow();
@@ -81,7 +99,7 @@ package org.flexlite.domUtils
 			window.isPopUp = true;
 			window.showCloseButton = false;
 			window.width = 250;
-			window.title = "控制面板";
+			window.title = "显示列表";
 			targetLabel.text = "";
 			targetLabel.y = 48;
 			rectLabel.y = 30;
