@@ -4,10 +4,9 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
-	import org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
-	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
+	import org.flexlite.domUI.layouts.HorizontalLayout;
 	
 	use namespace dx_internal;  
 	
@@ -38,19 +37,6 @@ package org.flexlite.domUI.components
 		{
 			return TabBar;
 		}
-		/**
-		 * 布局对象，TabBar只支持TabBarHorizontalLayout，
-		 * 设置其他类型无效，不设置将会默认添加一个。
-		 */		
-		override public function get layout():LayoutBase
-		{
-			return super.layout;
-		}
-		override public function set layout(value:LayoutBase):void
-		{
-			super.layout = value;
-		}
-		
 		/**
 		 * requireSelection改变标志
 		 */
@@ -170,7 +156,7 @@ package org.flexlite.domUI.components
 			dataGroup = new DataGroup();
 			dataGroup.percentHeight = dataGroup.percentWidth = 100;
 			dataGroup.clipAndEnableScrolling = true;
-			dataGroup.layout = new TabBarHorizontalLayout();
+			dataGroup.layout = new HorizontalLayout();
 			addToDisplayList(dataGroup);
 			partAdded("dataGroup",dataGroup);
 		}
