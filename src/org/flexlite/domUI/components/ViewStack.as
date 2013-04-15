@@ -31,10 +31,11 @@ package org.flexlite.domUI.components
 		public function ViewStack()
 		{
 			super();
+			super.layout = new BasicLayout();
 		}
 
 		/**
-		 * 此容器的布局对象,仅支持BasicLayout,设置其他布局将会被忽略。
+		 * 此容器的布局对象为只读,默认限制为BasicLayout。
 		 */		
 		override public function get layout():LayoutBase
 		{
@@ -42,8 +43,6 @@ package org.flexlite.domUI.components
 		}
 		override public function set layout(value:LayoutBase):void
 		{
-			if(value is BasicLayout)
-				super.layout = value;
 		}
 		
 		private var _createAllChildren:Boolean = false;
