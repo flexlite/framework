@@ -19,6 +19,8 @@
 14.飘文字组件
 53.用非可视化组件基类，虚拟化Skin和UIAsset
 55.多主题切换的需求，利用 的name参数来注入不同主题
-56.优化Layout类的大小，提供PageLayout
-
+56.优化Layout类的大小
+57.提供PageLayout
+58.Scroller的拖拽功能分离出来
+59.Button兼容三帧影片剪辑功能
 
