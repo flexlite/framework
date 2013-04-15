@@ -20,6 +20,5 @@
 53.用非可视化组件基类，虚拟化Skin和UIAsset
 55.多主题切换的需求，利用 的name参数来注入不同主题
 56.优化Layout类的大小，提供PageLayout
-57.要不要这几个类?HGroup VGroup TileGroup
 
 
