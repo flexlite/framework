@@ -1,13 +1,10 @@
 package org.flexlite.domUI.components
 {
-	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ScrollerLayout;
-	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.IVisualElement;
@@ -56,26 +53,6 @@ package org.flexlite.domUI.components
 				contentGroup.layout = _layout;
 			}
 		}
-		
-		private var dragEnabledChange:Boolean = false;
-		
-		private var _dragEnabled:Boolean = false;
-		/**
-		 * 是否开启拖拽滚动功能。默认false。
-		 */
-		public function get dragEnabled():Boolean
-		{
-			return _dragEnabled;
-		}
-		public function set dragEnabled(value:Boolean):void
-		{
-			if(_dragEnabled == value)
-				return;
-			_dragEnabled = value;
-			dragEnabledChange = true;
-			invalidateProperties();
-		}
-
 		/**
 		 * 实体容器
 		 */		
@@ -92,98 +69,6 @@ package org.flexlite.domUI.components
 			addToDisplayList(contentGroup);
 			contentGroup.addEventListener(MouseEvent.MOUSE_WHEEL, contentGroup_mouseWheelHandler);
 			super.createChildren();
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override protected function commitProperties():void
-		{
-			super.commitProperties();
-			if(dragEnabledChange)
-			{
-				if(_dragEnabled)
-					contentGroup.addEventListener(MouseEvent.MOUSE_DOWN,onDragMouseDown);
-				else
-					contentGroup.removeEventListener(MouseEvent.MOUSE_DOWN,onDragMouseDown);
-				dragEnabledChange = false;
-			}
-		}
-		
-		/**
-		 * 鼠标按下时的偏移量
-		 */		
-		private var offsetPoint:Point;
-		/**
-		 * 鼠标按下，开始拖拽。
-		 */		
-		private function onDragMouseDown(event:MouseEvent):void
-		{
-			var target:InteractiveObject = event.target as InteractiveObject;
-			var found:Boolean = false;
-			while(target)
-			{
-				if(target==_viewport)
-				{
-					found = true;
-					break;
-				}
-				if(target == contentGroup)
-				{
-					break;
-				}
-				target = target.parent;
-			}
-			if(!found)
-				return;
-			offsetPoint = globalToLocal(new Point(event.stageX, event.stageY));
-			DomGlobals.stage.addEventListener(
-				MouseEvent.MOUSE_MOVE,onDragMouseMove);
-			DomGlobals.stage.addEventListener(
-				MouseEvent.MOUSE_UP, onDragMouseUp);
-			DomGlobals.stage.addEventListener(
-				Event.MOUSE_LEAVE, onDragMouseUp);
-		}
-		/**
-		 * 鼠标弹起，结束拖拽
-		 */		
-		private function onDragMouseUp(event:Event=null):void
-		{
-			DomGlobals.stage.removeEventListener(
-				MouseEvent.MOUSE_MOVE,onDragMouseMove);
-			DomGlobals.stage.removeEventListener(
-				MouseEvent.MOUSE_UP, onDragMouseUp);
-			DomGlobals.stage.removeEventListener(
-				Event.MOUSE_LEAVE, onDragMouseUp);
-			offsetPoint = null;
-		}
-		
-		/**
-		 * 鼠标移动，执行拖拽。
-		 */
-		private function onDragMouseMove(event:MouseEvent):void
-		{
-			if(!_viewport||!_dragEnabled)
-			{
-				onDragMouseUp();
-				return;
-			}
-			var pos:Point = globalToLocal(new Point(event.stageX,event.stageY));
-			var offsetX:Number = pos.x - offsetPoint.x;
-			var offsetY:Number = pos.y - offsetPoint.y;
-			offsetPoint = pos;
-			var hsp:Number = _viewport.horizontalScrollPosition - offsetX;
-			var vsp:Number = _viewport.verticalScrollPosition - offsetY;
-			if(hsp>_viewport.contentWidth - _viewport.width)
-				hsp = _viewport.contentWidth - _viewport.width;
-			if(hsp<0)
-				hsp = 0;
-			if(vsp>_viewport.contentHeight - _viewport.height)
-				vsp = _viewport.contentHeight - _viewport.height;
-			if(vsp<0)
-				vsp=0;
-			_viewport.horizontalScrollPosition = hsp;
-			_viewport.verticalScrollPosition = vsp;
-			event.updateAfterEvent();
 		}
 		/**
 		 * @inheritDoc
@@ -568,7 +453,7 @@ package org.flexlite.domUI.components
 			}
 			else if (horizontalScrollBar && horizontalScrollBar.visible)
 			{
-				 
+				navigationUnit = (event.delta < 0) ? NavigationUnit.RIGHT : NavigationUnit.LEFT;
 				for (var hStep:int = 0; hStep < nSteps; hStep++)
 				{
 					var hspDelta:Number = vp.getHorizontalScrollPositionDelta(navigationUnit);
