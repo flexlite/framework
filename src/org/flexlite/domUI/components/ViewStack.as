@@ -206,13 +206,11 @@ package org.flexlite.domUI.components
 		
 		private function commitSelection(newIndex:int):void
 		{
-			if(_selectedIndex==newIndex)
-				return;
 			var oldIndex:int = _selectedIndex;
 			if(newIndex>=0&&newIndex<numElements)
 			{
 				_selectedIndex = newIndex;
-				if(_selectedChild)
+				if(_selectedChild&&_selectedChild.parent==this)
 				{
 					_selectedChild.visible = false;
 					_selectedChild.includeInLayout = false;

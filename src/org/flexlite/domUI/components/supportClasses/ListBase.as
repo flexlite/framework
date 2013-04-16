@@ -6,10 +6,8 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
-
 	import org.flexlite.domUI.components.IItemRenderer;
 	import org.flexlite.domUI.components.SkinnableDataContainer;
-
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
@@ -17,7 +15,6 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.events.UIEvent;
-
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
@@ -732,13 +729,22 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
 		{
+			var items:Array = event.items;
 			if (event.kind == CollectionEventKind.ADD)
 			{
-				itemAdded(event.location);
+				var length:int = items.length;
+				for (var i:int = 0; i < length; i++)
+				{
+					itemAdded(event.location + i);
+				}
 			}
 			else if (event.kind == CollectionEventKind.REMOVE)
 			{
-				itemRemoved(event.location);
+				length = items.length;
+				for (i = length-1; i >= 0; i--)
+				{
+					itemRemoved(event.location + i);
+				}
 			}
 			else if (event.kind == CollectionEventKind.RESET)
 			{
