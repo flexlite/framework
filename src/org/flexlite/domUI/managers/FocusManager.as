@@ -63,7 +63,7 @@ package org.flexlite.domUI.managers
 			if (event.relatedObject is TextField)
 			{
 				var tf:TextField = event.relatedObject as TextField;
-				if (tf.type == "input" || tf.selectable)
+				if (tf.type == "input" || tf.selectable||tf.htmlText)
 				{
 					return;
 				}
