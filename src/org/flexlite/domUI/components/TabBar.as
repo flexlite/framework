@@ -156,7 +156,9 @@ package org.flexlite.domUI.components
 			dataGroup = new DataGroup();
 			dataGroup.percentHeight = dataGroup.percentWidth = 100;
 			dataGroup.clipAndEnableScrolling = true;
-			dataGroup.layout = new HorizontalLayout();
+			var layout:HorizontalLayout = new HorizontalLayout();
+			layout.gap = -1;
+			dataGroup.layout = layout;
 			addToDisplayList(dataGroup);
 			partAdded("dataGroup",dataGroup);
 		}

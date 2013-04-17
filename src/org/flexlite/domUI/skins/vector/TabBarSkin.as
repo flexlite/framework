@@ -30,7 +30,9 @@ package org.flexlite.domUI.skins.vector
 			dataGroup.percentWidth = 100;
 			dataGroup.percentHeight = 100;
 			dataGroup.itemRenderer = TabBarButton;
-			dataGroup.layout = new HorizontalLayout()
+			var layout:HorizontalLayout = new HorizontalLayout();
+			layout.gap = -1;
+			dataGroup.layout = layout;
 			addElement(dataGroup);
 		}
 		
