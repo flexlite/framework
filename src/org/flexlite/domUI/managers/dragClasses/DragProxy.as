@@ -206,7 +206,8 @@ package org.flexlite.domUI.managers.dragClasses
 					dropTarget = dropTarget.parent;
 				}
 			}
-			event.updateAfterEvent();
+			if(DomGlobals.useUpdateAfterEvent)
+				event.updateAfterEvent();
 		}
 		/**
 		 * 鼠标移出舞台事件

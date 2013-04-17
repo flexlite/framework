@@ -4,6 +4,7 @@ package org.flexlite.domUI.effects.animation
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
+	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.effects.easing.Sine;
 
@@ -485,7 +486,8 @@ package org.flexlite.domUI.effects.animation
 			{
 				timer.stop();
 			}
-			event.updateAfterEvent();
+			if(DomGlobals.useUpdateAfterEvent)
+				event.updateAfterEvent();
 		}
 		
 	}

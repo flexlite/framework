@@ -162,7 +162,8 @@ package org.flexlite.domUI.components
 			var pos:Point = globalToLocal(new Point(event.stageX,event.stageY));
 			this.x += pos.x - offsetPoint.x;
 			this.y += pos.y - offsetPoint.y;
-			event.updateAfterEvent();
+			if(DomGlobals.useUpdateAfterEvent)
+				event.updateAfterEvent();
 		}
 		/**
 		 * 鼠标在舞台上弹起事件
