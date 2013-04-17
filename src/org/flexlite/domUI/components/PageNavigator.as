@@ -155,7 +155,9 @@ package org.flexlite.domUI.components
 				animationEndHandler(animator);
 				animator.stop();
 			}
-			animator.duration = int(Math.abs(valueTo-valueFrom)/100*_pageDuration);
+			var pageSize:Number = Math.max(1,_viewport.width);
+			var duration:Number = Math.abs(valueTo-valueFrom)/pageSize*_pageDuration;
+			animator.duration = int(Math.min(_pageDuration,duration));
 			animator.motionPaths = new <MotionPath>[
 				new MotionPath("scrollPosition", valueFrom, valueTo)];
 			animator.play();

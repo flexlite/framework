@@ -361,11 +361,11 @@ package org.flexlite.domUI.components
 			animator.motionPaths = createMotionPath();
 			if(popUpIsDisplayed)
 			{
-				animator.duration = valueRange<200?int(valueRange/200*_openDuration):_openDuration;
+				animator.duration = _openDuration;
 			}
 			else
 			{
-				animator.duration = valueRange<200?int(valueRange/200*_closeDuration):_closeDuration;
+				animator.duration = _closeDuration;
 			}
 			animator.play();
 		}
