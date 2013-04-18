@@ -92,8 +92,6 @@ package org.flexlite.domUI.components
 			var index:int = getElementIndex(value);
 			if(index>=0&&index<numElements)
 				setSelectedIndex(index);
-			var event:Event;
-			event.stopImmediatePropagation()
 		}
 		/**
 		 * 未设置缓存选中项的值
