@@ -1,5 +1,6 @@
 package org.flexlite.domDisplay
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Shape;
@@ -35,6 +36,16 @@ package org.flexlite.domDisplay
 			this._smoothing = smoothing;
 			if(bitmapData)
 				this.bitmapData = bitmapData;
+			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);
+		}
+		
+		private function onAdded(event:Event):void
+		{
+			var bitmap:Bitmap = new Bitmap();
+			bitmap.bitmapData = bitmapData;
+			bitmap.x = 300;
+			bitmap.y = 200;
+			stage.addChild(bitmap);
 		}
 		/**
 		 * smoothing改变标志
@@ -401,9 +412,11 @@ package org.flexlite.domDisplay
 					
 					destSection.topLeft = cachedDestGrid[rowIndex][colIndex];
 					destSection.bottomRight = cachedDestGrid[rowIndex+1][colIndex+1];
-					
+					if(destSection.width==0||destSection.height==0||
+						sourceSection.width==0||sourceSection.height==0)
+						continue;
 					matrix.identity();
-					matrix.scale(destSection.width / sourceSection.width, destSection.height / sourceSection.height);
+					matrix.scale(destSection.width / sourceSection.width,destSection.height / sourceSection.height);
 					matrix.translate(destSection.x - sourceSection.x * matrix.a, destSection.y - sourceSection.y * matrix.d);
 					matrix.translate(roundedDrawX, roundedDrawY);
 					
