@@ -36,16 +36,6 @@ package org.flexlite.domDisplay
 			this._smoothing = smoothing;
 			if(bitmapData)
 				this.bitmapData = bitmapData;
-			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);
-		}
-		
-		private function onAdded(event:Event):void
-		{
-			var bitmap:Bitmap = new Bitmap();
-			bitmap.bitmapData = bitmapData;
-			bitmap.x = 300;
-			bitmap.y = 200;
-			stage.addChild(bitmap);
 		}
 		/**
 		 * smoothing改变标志
