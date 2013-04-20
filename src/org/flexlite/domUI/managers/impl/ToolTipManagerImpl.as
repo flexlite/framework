@@ -453,6 +453,10 @@ package org.flexlite.domUI.managers.impl
 				x = screenWidth - toolTipWidth;
 			if (y + toolTipHeight > screenHeight)
 				y = screenHeight - toolTipHeight;
+			if(x<0)
+				x = 0;
+			if(y<0)
+				y = 0;
 			currentToolTip.x = x;
 			currentToolTip.y = y;
 		}
