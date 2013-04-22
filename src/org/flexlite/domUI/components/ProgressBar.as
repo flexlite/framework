@@ -87,7 +87,14 @@ package org.flexlite.domUI.components
 		
 		public function set slideDuration(value:Number):void
 		{
+			if(_slideDuration==value)
+				return;
 			_slideDuration = value;
+			if(animator&&animator.isPlaying)
+			{
+				animator.stop();
+				super.value = slideToValue;
+			}
 		}
 		
 		private var _direction:String = ProgressBarDirection.LEFT_TO_RIGHT;
