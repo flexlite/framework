@@ -107,8 +107,6 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}
 
-		
-		private static var sineEaser:IEaser = new Sine(0);
 		/**
 		 * 动画实例
 		 */	
@@ -140,9 +138,7 @@ package org.flexlite.domUI.components
 				if (!animator)
 				{
 					animator = new Animation(animationUpdateHandler);
-					animator.endFunction = animationEndHandler;
-					
-					animator.easer = sineEaser;
+					animator.easer = null;
 				}
 				if (animator.isPlaying)
 					animator.stop();
@@ -162,14 +158,6 @@ package org.flexlite.domUI.components
 		private function animationUpdateHandler(animation:Animation):void
 		{
 			setValue(nearestValidValue(animation.currentValue["value"], snapInterval));
-		}
-		
-		/**
-		 * 动画播放完毕
-		 */	
-		private function animationEndHandler(animation:Animation):void
-		{
-			setValue(slideToValue);
 		}
 		
 		/**
