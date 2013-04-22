@@ -255,6 +255,8 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			if (_value == value)
 				return;
+			if(isNaN(value))
+				value = 0;
 			if (!isNaN(maximum) && !isNaN(minimum) && (maximum > minimum))
 				_value = Math.min(maximum, Math.max(minimum, value));
 			else

@@ -135,6 +135,9 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
+				slideToValue = nearestValidValue(newValue, snapInterval);
+				if(slideToValue==super.value)
+					return;
 				if (!animator)
 				{
 					animator = new Animation(animationUpdateHandler);
@@ -142,7 +145,6 @@ package org.flexlite.domUI.components
 				}
 				if (animator.isPlaying)
 					animator.stop();
-				slideToValue = nearestValidValue(newValue, snapInterval);
 				var duration:Number = _slideDuration * 
 					(Math.abs(super.value - slideToValue) / (maximum - minimum));
 				animator.duration = duration===Infinity?0:duration;

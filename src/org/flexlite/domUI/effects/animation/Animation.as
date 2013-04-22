@@ -363,11 +363,11 @@ package org.flexlite.domUI.effects.animation
 						repeatFunction(this);
 				}
 			}
-			var fraction:Number = Math.min(runningTime,duration)/duration;
+			var fraction:Number = _duration==0?1:Math.min(runningTime,_duration)/_duration;
 			caculateCurrentValue(fraction);
 			if(updateFunction!=null)
 				updateFunction(this);
-			var isEnded:Boolean = runningTime>=duration;
+			var isEnded:Boolean = runningTime>=_duration;
 			if(isEnded)
 			{
 				playedTimes++;
@@ -404,7 +404,7 @@ package org.flexlite.domUI.effects.animation
 				fraction = 1-fraction;
 			}
 			var finalFraction:Number = fraction;
-			if(easer!=null)
+			if(easer)
 				finalFraction = easer.ease(fraction);
 			for each(var motionPath:MotionPath in motionPaths)
 			{
