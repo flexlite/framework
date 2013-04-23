@@ -118,24 +118,24 @@ package org.flexlite.domUI.core
 		 */		
 		function get scaleY():Number;
 		/**
-		 * 组件的最大宽度,若设置了percentWidth,或同时设置left和right,则此属性无效。
+		 * 组件的最大测量宽度,若设置了percentWidth,或同时设置left和right,则此属性无效。
 		 */	
 		function get maxWidth():Number;
 		function set maxWidth(value:Number):void;
 		/**
-		 * 组件的最小宽度 
+		 * 组件的最小测量宽度 
 		 * 若设置了percentWidth,或同时设置left和right,则此属性无效。
 		 * 若此属性设置为大于maxWidth的值时，则也无效。
 		 */
 		function get minWidth():Number;
 		function set minWidth(value:Number):void;
 		/**
-		 * 组件的最大高度,若设置了percentHeight,或同时设置top和bottom,则此属性无效。
+		 * 组件的最大测量高度,若设置了percentHeight,或同时设置top和bottom,则此属性无效。
 		 */
 		function get maxHeight():Number;
 		function set maxHeight(value:Number):void;
 		/**
-		 * 组件的最小高度
+		 * 组件的最小测量高度
 		 * 若设置了percentHeight,或同时设置top和bottom,则此属性无效。
 		 * 若此属性设置为大于maxHeight的值时，则也无效
 		 */
