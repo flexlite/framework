@@ -209,7 +209,6 @@ package org.flexlite.domUI.components
 			}
 			if(skin is ISkin)
 			{
-				(skin as ISkin).hostComponent = null;
 				var skinParts:Vector.<String> = SkinPartUtil.getSkinParts(this);
 				for each(var partName:String in skinParts)
 				{
@@ -221,6 +220,7 @@ package org.flexlite.domUI.components
 					}
 					this[partName] = null;
 				}
+				(skin as ISkin).hostComponent = null;
 			}
 		}
 		
@@ -421,6 +421,20 @@ package org.flexlite.domUI.components
 			{
 				layout.target = null;
  				layout = null;
+			}
+			invalidateSize();
+			invalidateDisplayList();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override dx_internal function childXYChanged():void
+		{
+			if(layout)
+			{
+				invalidateSize();
+				invalidateDisplayList();
 			}
 		}
 		

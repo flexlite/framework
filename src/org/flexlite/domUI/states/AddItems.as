@@ -2,7 +2,7 @@ package org.flexlite.domUI.states
 {
 	import org.flexlite.domUI.core.IDeferredInstance;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.core.IContainer;
 	
 	
 	/**
@@ -65,7 +65,7 @@ package org.flexlite.domUI.states
 			target = targetFactory.getInstance() as IVisualElement;
 		}
 		
-		override public function apply(parent:IVisualElementContainer):void
+		override public function apply(parent:IContainer):void
 		{
 			var index:int;
 			var relative:IVisualElement;
@@ -77,8 +77,8 @@ package org.flexlite.domUI.states
 			{
 				
 			}
-			var dest:IVisualElementContainer = propertyName==null||propertyName==""?
-					parent:parent[propertyName] as IVisualElementContainer;
+			var dest:IContainer = propertyName==null||propertyName==""?
+					parent:parent[propertyName] as IContainer;
 			if(dest==null)
 				return;
 			switch (position)
@@ -101,10 +101,10 @@ package org.flexlite.domUI.states
 			dest.addElementAt(target,index);
 		}
 		
-		override public function remove(parent:IVisualElementContainer):void
+		override public function remove(parent:IContainer):void
 		{
-			var dest:IVisualElementContainer = propertyName==null||propertyName==""?
-				parent:parent[propertyName] as IVisualElementContainer;
+			var dest:IContainer = propertyName==null||propertyName==""?
+				parent:parent[propertyName] as IContainer;
 			if(dest==null)
 				return;
 			if(dest.getElementIndex(target)!=-1)

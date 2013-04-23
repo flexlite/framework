@@ -73,6 +73,7 @@ package org.flexlite.domUI.managers
 				index--;
 			owner[upperBoundReference]++;
 			owner[raw_addElementAt](element,index);
+			element.ownerChanged(this);
 			return element;
 		}
 		/**
@@ -83,6 +84,7 @@ package org.flexlite.domUI.managers
 			owner[upperBoundReference]++;
 			owner[raw_addElementAt](
 				element, owner[lowerBoundReference] + index);
+			element.ownerChanged(this);
 			return element;
 		}
 		/**
@@ -97,6 +99,7 @@ package org.flexlite.domUI.managers
 				owner[raw_removeElement](element);
 				owner[upperBoundReference]--;
 			}
+			element.ownerChanged(null);
 			return element;
 		}
 		/**
@@ -112,6 +115,7 @@ package org.flexlite.domUI.managers
 				element = owner[raw_removeElementAt](index);
 				owner[upperBoundReference]--;
 			}
+			element.ownerChanged(null);
 			return element;
 		}
 		/**

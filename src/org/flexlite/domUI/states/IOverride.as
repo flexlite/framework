@@ -1,6 +1,6 @@
 package org.flexlite.domUI.states
 {
-	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.core.IContainer;
 	
 	/**
 	 * IOverride 接口用于视图状态覆盖。State 类 overrides 属性数组中的所有条目均必须实现此接口。
@@ -15,10 +15,10 @@ package org.flexlite.domUI.states
 		/**
 		 * 应用覆盖。将保留原始值，以便以后可以在 remove() 方法中恢复该值。 
 		 */			
-		function apply(parent:IVisualElementContainer):void;
+		function apply(parent:IContainer):void;
 		/**
 		 * 删除覆盖。在 apply() 方法中记住的值将被恢复。 
 		 */		
-		function remove(parent:IVisualElementContainer):void;
+		function remove(parent:IContainer):void;
 	}
 }

@@ -452,7 +452,6 @@ package org.flexlite.domUI.components
 			
 			if(oldRenderer&&oldRenderer is DisplayObject)
 			{
-				super.removeChild(oldRenderer as DisplayObject);
 				recycle(oldRenderer);
 				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
@@ -468,6 +467,11 @@ package org.flexlite.domUI.components
 		 */		
 		private function recycle(renderer:IItemRenderer):void
 		{
+			super.removeChild(renderer as DisplayObject);
+			if(renderer is IVisualElement)
+			{
+				(renderer as IVisualElement).ownerChanged(null);
+			}
 			var rendererClass:Class = rendererToClassMap[renderer];
 			if(!recyclerDic[rendererClass])
 			{
@@ -770,7 +774,6 @@ package org.flexlite.domUI.components
 			var h:Number = isNaN(displayObj.height)?0:displayObj.height;
 			var rect:Rectangle = new Rectangle(0,0,
 				Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
-			super.removeChild(displayObj);
 			recycle(typicalRenderer);
 			setTypicalLayoutRect(rect);
 			createNewRendererFlag = false;
@@ -811,7 +814,6 @@ package org.flexlite.domUI.components
 				renderer = indexToRenderer[i];
 				if(renderer)
 				{
-					super.removeChild(renderer as DisplayObject);
 					recycle(renderer);
 					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 						false, false, renderer, renderer.itemIndex, renderer.data));
@@ -825,7 +827,6 @@ package org.flexlite.domUI.components
 			{
 				for each(renderer in list)
 				{
-					super.removeChild(renderer as DisplayObject);
 					DisplayObject(renderer).visible = true;
 					recycle(renderer);
 				}
@@ -877,7 +878,7 @@ package org.flexlite.domUI.components
 			{
 				if(renderer is IVisualElement)
 				{
-					(renderer as IVisualElement).owner = this;
+					(renderer as IVisualElement).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
 				renderer.label = itemToLabel(data);

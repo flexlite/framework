@@ -50,7 +50,7 @@ package org.flexlite.domUI.components
 		{
 			if(renderer is IVisualElement)
 			{
-				(renderer as IVisualElement).owner = this;
+				(renderer as IVisualElement).ownerChanged(this);
 			}
 			renderer.itemIndex = itemIndex;
 			renderer.label = itemToLabel(data);

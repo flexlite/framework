@@ -6,6 +6,7 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.events.DragEvent;
@@ -238,12 +239,9 @@ package org.flexlite.domUI.components
 		{
 			var i:int;
 			
-			if (_elementsContent != value)
+			for (i = _elementsContent.length - 1; i >= 0; i--)
 			{
-				for (i = _elementsContent.length - 1; i >= 0; i--)
-				{
-					elementRemoved(_elementsContent[i], i);
-				}
+				elementRemoved(_elementsContent[i], i);
 			}
 			
 			_elementsContent = value.concat();
@@ -253,7 +251,7 @@ package org.flexlite.domUI.components
 			{   
 				var elt:IVisualElement = _elementsContent[i];
 				
-				if (elt.parent!=null && (elt.parent is IVisualElementContainer))
+				if(elt.parent is IVisualElementContainer)
 					IVisualElementContainer(elt.parent).removeElement(elt);
 				
 				elementAdded(elt, i);
@@ -320,6 +318,10 @@ package org.flexlite.domUI.components
 			else if (host is IVisualElementContainer)
 			{
 				IVisualElementContainer(host).removeElement(element);
+			}
+			else if(element.owner is IContainer)
+			{
+				IContainer(element.owner).removeElement(element);
 			}
 			
 			_elementsContent.splice(index, 0, element);

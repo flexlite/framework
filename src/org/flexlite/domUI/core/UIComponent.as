@@ -196,16 +196,18 @@ package org.flexlite.domUI.core
 			_isPopUp = value;
 		}
 		
-		private var _owner:DisplayObjectContainer;
+		private var _owner:Object;
 		/**
 		 * @inheritDoc
 		 */
-		public function get owner():DisplayObjectContainer
+		public function get owner():Object
 		{
-			return _owner ? _owner : parent;
+			return _owner? _owner : parent;
 		}
-		
-		public function set owner(value:DisplayObjectContainer):void
+		/**
+		 * @inheritDoc
+		 */
+		public function ownerChanged(value:Object):void
 		{
 			_owner = value;
 		}

@@ -279,7 +279,10 @@ package org.flexlite.domUI.components
 				IUIComponent(popUp).enabled = true;
 			DisplayObject(popUp).scrollRect = null;
 			if(!popUpIsDisplayed)
+			{
 				PopUpManager.removePopUp(popUp);
+				popUp.ownerChanged(null);
+			}
 		}
 		
 		/**
@@ -293,7 +296,7 @@ package org.flexlite.domUI.components
 			if (popUp.parent == null && displayPopUp)
 			{
 				PopUpManager.addPopUp(popUp,false,false,systemManager);
-				popUp.owner = this;
+				popUp.ownerChanged(this);
 				popUpIsDisplayed = true;
 				if(inAnimation)
 					animator.end();
@@ -331,6 +334,7 @@ package org.flexlite.domUI.components
 			else
 			{
 				PopUpManager.removePopUp(popUp);
+				popUp.ownerChanged(null);
 			}
 		}
 		/**

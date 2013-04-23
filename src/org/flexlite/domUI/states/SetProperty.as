@@ -1,6 +1,6 @@
 package org.flexlite.domUI.states
 {
-	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.core.IContainer;
 	
 	/**
 	 * 设置属性
@@ -36,7 +36,7 @@ package org.flexlite.domUI.states
 		 */		
 		private var oldValue:Object;
 		
-		override public function apply(parent:IVisualElementContainer):void
+		override public function apply(parent:IContainer):void
 		{   
 			var obj:Object = target==null||target==""?parent:parent[target];
 			if(obj==null)
@@ -45,7 +45,7 @@ package org.flexlite.domUI.states
 			setPropertyValue(obj, name, value, oldValue);
 		}
 		
-		override public function remove(parent:IVisualElementContainer):void
+		override public function remove(parent:IContainer):void
 		{   
 			var obj:Object = target==null||target==""?parent:parent[target];
 			if(obj==null)

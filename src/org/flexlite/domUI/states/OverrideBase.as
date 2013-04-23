@@ -1,6 +1,6 @@
 package org.flexlite.domUI.states
 {
-	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.utils.OnDemandEventDispatcher;
 	
 	/**
@@ -13,12 +13,12 @@ package org.flexlite.domUI.states
 		
 		public function initialize():void {}
 		
-		public function apply(parent:IVisualElementContainer):void 
+		public function apply(parent:IContainer):void 
 		{
 			
 		}
 		
-		public function remove(parent:IVisualElementContainer):void 
+		public function remove(parent:IContainer):void 
 		{
 			
 		}
