@@ -140,18 +140,20 @@ package org.flexlite.domUI.components
 			{
 				var newSkin:ISkin = skin as ISkin;
 				newSkin.hostComponent = this;
-				skinLayoutEnabled = false;
 				findSkinParts();
 			}
 			else
 			{
-				skinLayoutEnabled = true;
 				if(!hasCreatedSkinParts)
 				{
 					createSkinParts();
 					hasCreatedSkinParts = true;
 				}
 			}
+			if(skin is ISkin&&skin is DisplayObject)
+				skinLayoutEnabled = false;
+			else
+				skinLayoutEnabled = true;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
