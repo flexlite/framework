@@ -12,14 +12,14 @@ package org.flexlite.domDisplay
 	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.IMovieClip;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domDisplay.events.MoveClipPlayEvent;
+	import org.flexlite.domDisplay.events.MovieClipPlayEvent;
 	
 	use namespace dx_internal;
 	
 	/**
 	 * 一次播放完成事件
 	 */	
-	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MoveClipPlayEvent")]
+	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MovieClipPlayEvent")]
 	
 	/**
 	 * DXR影片剪辑。
@@ -457,9 +457,9 @@ package org.flexlite.domDisplay
 			if(_currentFrame>=totalFrames-1)
 			{
 				_currentFrame = totalFrames-1;
-				if(hasEventListener(MoveClipPlayEvent.PLAY_COMPLETE))
+				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
 				{
-					var event:MoveClipPlayEvent = new MoveClipPlayEvent(MoveClipPlayEvent.PLAY_COMPLETE);
+					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
 					dispatchEvent(event);
 				}
 				if(!_repeatPlay)
