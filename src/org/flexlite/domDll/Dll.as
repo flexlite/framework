@@ -507,7 +507,7 @@ package org.flexlite.domDll
 				var resolver:IResolver = getResolverByType(args.type);
 				resolver.destroyRes(name);
 			}
-			if(other)
+			if(other!=null)
 				compFunc(data,other);
 			else 
 				compFunc(data);
@@ -517,7 +517,7 @@ package org.flexlite.domDll
 		 */		
 		private function doCompFunc(compFunc:Function,res:*,other:Object):void
 		{
-			if(other)
+			if(other!=null)
 				compFunc(res,other);
 			else 
 				compFunc(res);
@@ -528,7 +528,7 @@ package org.flexlite.domDll
 		private function doGetResAsync(resolver:IResolver,key:String,compFunc:Function,other:Object):void
 		{
 			resolver.getResAsync(key,function(data:*):void{
-				if(other)
+				if(other!=null)
 					compFunc(data,other);
 				else 
 					compFunc(data);
