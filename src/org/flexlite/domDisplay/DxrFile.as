@@ -67,45 +67,49 @@ package org.flexlite.domDisplay
 		/**
 		 * DxrData缓存表
 		 */		
-		private var dxrDataMap:SharedMap;
+		private var dxrDataMap:SharedMap = new SharedMap();
 		/**
 		 * 回调函数字典
 		 */		
-		private var compFuncDic:Dictionary;
+		private var compFuncDic:Dictionary = new Dictionary();
+		/**
+		 * 回调函数参数字典
+		 */		
+		private var otherArgDic:Dictionary = new Dictionary();
 		
 		/**
 		 * 通过动画导出键名获取指定的DxrData动画数据
 		 * @param key 动画导出键名
-		 * @param onComp 结果回调函数，示例：onComp(data:DxrData);
+		 * @param onComp 结果回调函数，示例：onComp(data:DxrData):void,若设置了other参数则为:onComp(data,other):void
+		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
-		public function getDxrData(key:String,onComp:Function):void
+		public function getDxrData(key:String,onComp:Function,other:Object=null):void
 		{
 			if(onComp==null)
 				return;
-			if(!dxrDataMap)
-			{
-				dxrDataMap = new SharedMap;
-			}
 			var dxr:DxrData = dxrDataMap.get(key);
 			if(dxr)
 			{
-				onComp(dxr);
+				if(other==null)
+					onComp(dxr);
+				else
+					onComp(dxr,other);
 				return;
 			}
 			
 			var data:Object = keyObject.keyList[key];
 			if(!data)
 			{
-				onComp(null);
+				if(other==null)
+					onComp(null);
+				else
+					onComp(null,other);
 				return;
 			}
-			if(compFuncDic==null)
-			{
-				compFuncDic = new Dictionary;
-			}
+			otherArgDic[onComp] = other;
 			if(compFuncDic[key])
 			{
-				(compFuncDic[key] as Vector.<Function>).push(onComp);
+				compFuncDic[key].push(onComp);
 			}
 			else
 			{
@@ -123,8 +127,16 @@ package org.flexlite.domDisplay
 			dxrDataMap.set(dxrData.key,dxrData);
 			var funcVec:Vector.<Function> = compFuncDic[dxrData.key];
 			delete compFuncDic[dxrData.key];
+			var other:Object;
 			for each(var compFunc:Function in funcVec)
-				compFunc(dxrData);
+			{
+				other = otherArgDic[compFunc];
+				delete otherArgDic[compFunc];
+				if(other==null)
+					compFunc(dxrData);
+				else
+					compFunc(dxrData,other);
+			}
 		}
 		
 	}
