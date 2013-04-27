@@ -126,9 +126,9 @@ package org.flexlite.domDisplay
 			for each(var data:Object in compArr)
 			{
 				if(data.other==null)
-					data.compFunc(dxrData);
+					data.onComp(dxrData);
 				else
-					data.compFunc(dxrData,data.other);
+					data.onComp(dxrData,data.other);
 			}
 		}
 		
