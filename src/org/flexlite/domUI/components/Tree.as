@@ -232,7 +232,11 @@ package org.flexlite.domUI.components
 				var renderer:TreeItemRenderer = dataGroup?
 					dataGroup.getElementAt(event.location) as TreeItemRenderer:null;
 				if(renderer)
+				{
 					updateRenderer(renderer,event.location,event.items[0]);
+					if(event.kind == CollectionEventKind.CLOSE&&layout&&layout.useVirtualLayout)
+						layout.clearVirtualLayoutCache();
+				}
 			}
 		}
 		
