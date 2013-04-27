@@ -71,11 +71,7 @@ package org.flexlite.domDisplay
 		/**
 		 * 回调函数字典
 		 */		
-		private var compFuncDic:Dictionary = new Dictionary();
-		/**
-		 * 回调函数参数字典
-		 */		
-		private var otherArgDic:Dictionary = new Dictionary();
+		private var compDic:Dictionary = new Dictionary();
 		
 		/**
 		 * 通过动画导出键名获取指定的DxrData动画数据
@@ -106,14 +102,13 @@ package org.flexlite.domDisplay
 					onComp(null,other);
 				return;
 			}
-			otherArgDic[onComp] = other;
-			if(compFuncDic[key])
+			if(compDic[key])
 			{
-				compFuncDic[key].push(onComp);
+				compDic[key].push({onComp:onComp,other:other});
 			}
 			else
 			{
-				compFuncDic[key] = new <Function>[onComp];
+				compDic[key] = [{onComp:onComp,other:other}];
 				var decoder:DxrDecoder = new DxrDecoder();
 				decoder.decode(data,key,onGetDxrData);
 			}
@@ -125,17 +120,15 @@ package org.flexlite.domDisplay
 		private function onGetDxrData(dxrData:DxrData):void
 		{
 			dxrDataMap.set(dxrData.key,dxrData);
-			var funcVec:Vector.<Function> = compFuncDic[dxrData.key];
-			delete compFuncDic[dxrData.key];
+			var compArr:Array = compDic[dxrData.key];
+			delete compDic[dxrData.key];
 			var other:Object;
-			for each(var compFunc:Function in funcVec)
+			for each(var data:Object in compArr)
 			{
-				other = otherArgDic[compFunc];
-				delete otherArgDic[compFunc];
-				if(other==null)
-					compFunc(dxrData);
+				if(data.other==null)
+					data.compFunc(dxrData);
 				else
-					compFunc(dxrData,other);
+					data.compFunc(dxrData,data.other);
 			}
 		}
 		
