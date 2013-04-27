@@ -37,7 +37,7 @@ package org.flexlite.domUI.managers.dragClasses
 		 * @param dragInitiator 启动拖拽的组件
 		 * @param dragSource 拖拽的数据源
 		 */		
-		public function DragProxy(dragInitiator:IUIComponent,
+		public function DragProxy(dragInitiator:InteractiveObject,
 								  dragSource:DragSource)
 		{
 			super();
@@ -74,7 +74,7 @@ package org.flexlite.domUI.managers.dragClasses
 		/**
 		 * 启动拖拽的组件
 		 */		
-		public var dragInitiator:IUIComponent;
+		public var dragInitiator:InteractiveObject;
 		/**
 		 * 拖拽的数据源
 		 */		

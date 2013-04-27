@@ -1,13 +1,11 @@
 package org.flexlite.domUI.managers
 {
 	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
+	import flash.display.InteractiveObject;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DragSource;
-	import org.flexlite.domUI.core.IUIComponent;
-	import org.flexlite.domUI.managers.dragClasses.DragProxy;
 	import org.flexlite.domUI.managers.impl.DragManagerImpl;
 	
 	/**
@@ -56,7 +54,7 @@ package org.flexlite.domUI.managers
 		 * @param imageAlpha dragImage的透明度，默认0.5。
 		 */		
 		public static function doDrag(
-			dragInitiator:IUIComponent, 
+			dragInitiator:InteractiveObject, 
 			dragSource:DragSource, 
 			dragImage:DisplayObject = null,
 			xOffset:Number = 0,
@@ -70,7 +68,7 @@ package org.flexlite.domUI.managers
 		 * 接受拖拽的数据源。通常在dragEnter事件处理函数调用此方法。
 		 * 传入target后，若放下数据源。target将能监听到dragDrop事件。
 		 */		
-		public static function acceptDragDrop(target:IUIComponent):void
+		public static function acceptDragDrop(target:InteractiveObject):void
 		{
 			impl.acceptDragDrop(target);
 		}

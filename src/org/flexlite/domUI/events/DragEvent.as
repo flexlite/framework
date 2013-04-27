@@ -1,10 +1,10 @@
 package org.flexlite.domUI.events
 {
+	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import org.flexlite.domUI.core.DragSource;
-	import org.flexlite.domUI.core.IUIComponent;
 
 	/**
 	 * 拖拽事件
@@ -52,7 +52,7 @@ package org.flexlite.domUI.events
 		 */		
 		public function DragEvent(type:String, bubbles:Boolean = false,
 								  cancelable:Boolean = true,
-								  dragInitiator:IUIComponent = null,
+								  dragInitiator:InteractiveObject = null,
 								  dragSource:DragSource = null,
 								  ctrlKey:Boolean = false,
 								  altKey:Boolean = false,
@@ -69,7 +69,7 @@ package org.flexlite.domUI.events
 		/**
 		 * 启动拖拽的组件
 		 */		
-		public var dragInitiator:IUIComponent;
+		public var dragInitiator:InteractiveObject;
 		/**
 		 * 包含正在拖拽数据的DragSource对象。
 		 */		

@@ -1,6 +1,7 @@
 package org.flexlite.domUI.managers.impl
 {
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	
 	import org.flexlite.domCore.dx_internal;
@@ -33,7 +34,7 @@ package org.flexlite.domUI.managers.impl
 		/**
 		 * 启动拖拽的组件
 		 */		
-		private var dragInitiator:IUIComponent;
+		private var dragInitiator:InteractiveObject;
 		/**
 		 * 拖拽显示的图标
 		 */		
@@ -57,7 +58,7 @@ package org.flexlite.domUI.managers.impl
 		 * @param imageAlpha dragImage的透明度，默认0.5。
 		 */		
 		public function doDrag(
-			dragInitiator:IUIComponent, 
+			dragInitiator:InteractiveObject, 
 			dragSource:DragSource, 
 			dragImage:DisplayObject = null, 
 			xOffset:Number = 0,
@@ -72,14 +73,14 @@ package org.flexlite.domUI.managers.impl
 			this.dragInitiator = dragInitiator;
 			
 			dragProxy = new DragProxy(dragInitiator, dragSource);
-			var sm:ISystemManager = dragInitiator.systemManager;
+			var sm:ISystemManager = dragInitiator is IUIComponent?IUIComponent(dragInitiator).systemManager:null;
 			if(!sm)
 				sm = DomGlobals.systemManager;
 			sm.popUpContainer.addElement(dragProxy);	
 			
 			if (dragImage)
 			{
-				dragProxy.addChild(DisplayObject(dragImage));
+				dragProxy.addChild(dragImage);
 				if (dragImage is ILayoutManagerClient)
 					DomGlobals.layoutManager.validateClient(ILayoutManagerClient(dragImage), true);
 			}
@@ -88,7 +89,7 @@ package org.flexlite.domUI.managers.impl
 			
 			var mouseX:Number = DisplayObject(sm).mouseX;
 			var mouseY:Number = DisplayObject(sm).mouseY;
-			var proxyOrigin:Point = DisplayObject(dragInitiator).localToGlobal(new Point(-xOffset, -yOffset));
+			var proxyOrigin:Point = dragInitiator.localToGlobal(new Point(-xOffset, -yOffset));
 			proxyOrigin = DisplayObject(sm).globalToLocal(proxyOrigin);
 			dragProxy.xOffset = mouseX - proxyOrigin.x;
 			dragProxy.yOffset = mouseY - proxyOrigin.y;
@@ -96,17 +97,17 @@ package org.flexlite.domUI.managers.impl
 			dragProxy.y = proxyOrigin.y;
 			dragProxy.startX = dragProxy.x;
 			dragProxy.startY = dragProxy.y;
-			if (dragImage is DisplayObject) 
-				DisplayObject(dragImage).cacheAsBitmap = true;
+			if (dragImage) 
+				dragImage.cacheAsBitmap = true;
 		}
 		/**
 		 * 接受拖拽的数据源。通常在dragEnter事件处理函数调用此方法。
 		 * 传入target后，若放下数据源。target将能监听到dragDrop事件。
 		 */	
-		public function acceptDragDrop(target:IUIComponent):void
+		public function acceptDragDrop(target:InteractiveObject):void
 		{
 			if (dragProxy)
-				dragProxy.target = target as DisplayObject;
+				dragProxy.target = target;
 		}
 		/**
 		 * 结束拖拽
