@@ -23,5 +23,6 @@
 58.Accordion组件
 59.Tree支持Object类型的数据源，TreeItemRenderer应该定义为一个接口
 60.ToolTip异步修改数据源导致的尺寸改变位置更新。
+61.位图的Repeat控件
 
 
