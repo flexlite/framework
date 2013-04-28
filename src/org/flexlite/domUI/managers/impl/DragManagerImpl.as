@@ -2,16 +2,14 @@ package org.flexlite.domUI.managers.impl
 {
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
+	import flash.display.Stage;
 	import flash.geom.Point;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.DragSource;
-	import org.flexlite.domUI.core.IUIComponent;
-	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.managers.IDragManager;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
-	import org.flexlite.domUI.managers.ISystemManager;
 	import org.flexlite.domUI.managers.dragClasses.DragProxy;
 	
 	use namespace dx_internal;
@@ -73,10 +71,10 @@ package org.flexlite.domUI.managers.impl
 			this.dragInitiator = dragInitiator;
 			
 			dragProxy = new DragProxy(dragInitiator, dragSource);
-			var sm:ISystemManager = dragInitiator is IUIComponent?IUIComponent(dragInitiator).systemManager:null;
-			if(!sm)
-				sm = DomGlobals.systemManager;
-			sm.popUpContainer.addElement(dragProxy);	
+			var stage:Stage = DomGlobals.stage;
+			if(!stage)
+				return;
+			stage.addChild(dragProxy);	
 			
 			if (dragImage)
 			{
@@ -87,10 +85,9 @@ package org.flexlite.domUI.managers.impl
 			
 			dragProxy.alpha = imageAlpha;
 			
-			var mouseX:Number = DisplayObject(sm).mouseX;
-			var mouseY:Number = DisplayObject(sm).mouseY;
+			var mouseX:Number = stage.mouseX;
+			var mouseY:Number = stage.mouseY;
 			var proxyOrigin:Point = dragInitiator.localToGlobal(new Point(-xOffset, -yOffset));
-			proxyOrigin = DisplayObject(sm).globalToLocal(proxyOrigin);
 			dragProxy.xOffset = mouseX - proxyOrigin.x;
 			dragProxy.yOffset = mouseY - proxyOrigin.y;
 			dragProxy.x = proxyOrigin.x;
@@ -116,8 +113,7 @@ package org.flexlite.domUI.managers.impl
 		{
 			if (dragProxy)
 			{
-				var parent:IVisualElementContainer = dragProxy.parent as IVisualElementContainer;
-				parent.removeElement(dragProxy);	
+				dragProxy.parent.removeChild(dragProxy);	
 				
 				if (dragProxy.numChildren > 0)
 					dragProxy.removeChildAt(0);
