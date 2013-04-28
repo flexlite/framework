@@ -182,7 +182,10 @@ package org.flexlite.domUI.managers.impl
 					i--;
 				popUpContainer.setElementIndex(modalMask,i);
 			}
-			modalMask.visible = found;
+			else
+			{
+				popUpContainer.removeElement(modalMask);
+			}
 		}
 		
 		/**
