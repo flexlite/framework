@@ -694,7 +694,7 @@ package org.flexlite.domUI.layouts
 				}
 				var minVisibleX:Number = target.horizontalScrollPosition;
 				var maxVisibleX:Number = target.horizontalScrollPosition+target.width;
-				var startColumn:int = Math.floor((minVisibleX-paddingL+horizontalGap)/itemWidth);
+				var startColumn:int = Math.floor((minVisibleX-paddingL)/itemWidth);
 				if(startColumn<0)
 					startColumn = 0;
 				var endColumn:int = Math.ceil((maxVisibleX-paddingL)/itemWidth);
@@ -714,7 +714,7 @@ package org.flexlite.domUI.layouts
 				}
 				var minVisibleY:Number = target.verticalScrollPosition;
 				var maxVisibleY:Number = target.verticalScrollPosition+target.height;
-				var startRow:int = Math.floor((minVisibleY-paddingT+verticalGap)/itemHeight);
+				var startRow:int = Math.floor((minVisibleY-paddingT)/itemHeight);
 				if(startRow<0)
 					startRow = 0;
 				var endRow:int = Math.ceil((maxVisibleY-paddingT)/itemHeight);
