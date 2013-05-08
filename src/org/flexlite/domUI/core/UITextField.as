@@ -118,7 +118,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * Flash Player在计算TextFiled.textHeight时，
+		 * Flash Player在计算TextField.textHeight时，
 		 * 没有包含空白的4像素,为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给heihgt，不会造成截断
 		 */	
@@ -127,7 +127,7 @@ package org.flexlite.domUI.core
 			return super.textHeight+4;
 		}
 		/**
-		 * Flash Player在计算TextFiled.textWidth时，
+		 * Flash Player在计算TextField.textWidth时，
 		 * 没有包含空白的5像素,为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给width，不会造成截断
 		 */
