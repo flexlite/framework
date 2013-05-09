@@ -39,7 +39,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function onWindowMouseDown(event:MouseEvent):void
 		{
-			if(enabled&&isPopUp)
+			if(enabled&&isPopUp&&event.target!=closeButton)
 			{
 				PopUpManager.bringToFront(this);
 			}

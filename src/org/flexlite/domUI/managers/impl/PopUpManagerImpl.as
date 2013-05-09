@@ -88,7 +88,7 @@ package org.flexlite.domUI.managers.impl
 				IUIComponent(popUp).isPopUp = true;
 			if(modal)
 			{
-				updateModal(systemManager);
+				invalidateModal(systemManager);
 			}
 			popUp.addEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 		}
@@ -108,7 +108,7 @@ package org.flexlite.domUI.managers.impl
 					data.popUp.removeEventListener(REMOVE_FROM_SYSTEMMANAGER,onRemoved);
 					popUpDataList.splice(index,1);
 					_popUpList.splice(index,1);
-					updateModal(data.popUp.parent as ISystemManager);
+					invalidateModal(data.popUp.parent as ISystemManager);
 					break;
 				}
 				index++;
@@ -129,6 +129,7 @@ package org.flexlite.domUI.managers.impl
 			if(_modalColor==value)
 				return;
 			_modalColor = value;
+			invalidateModal(DomGlobals.systemManager);
 		}
 		
 		private var _modalAlpha:Number = 0.5;
@@ -144,6 +145,43 @@ package org.flexlite.domUI.managers.impl
 			if(_modalAlpha==value)
 				return;
 			_modalAlpha = value;
+			invalidateModal(DomGlobals.systemManager);
+		}
+		
+		/**
+		 * 模态层失效的SystemManager列表
+		 */		
+		private var invalidateModalList:Vector.<ISystemManager> = new Vector.<ISystemManager>();
+		
+		private var invalidateModalFlag:Boolean = false;
+		/**
+		 * 标记一个SystemManager的模态层失效
+		 */		
+		private function invalidateModal(systemManager:ISystemManager):void
+		{
+			if(!systemManager)
+				return;
+			if(invalidateModalList.indexOf(systemManager)==-1)
+				invalidateModalList.push(systemManager);
+			if(!invalidateModalFlag)
+			{
+				invalidateModalFlag = true;
+				DomGlobals.stage.addEventListener(Event.ENTER_FRAME,validateModal);
+				DomGlobals.stage.addEventListener(Event.RENDER,validateModal);
+				DomGlobals.stage.invalidate();
+			}
+		}
+		
+		private function validateModal(event:Event):void
+		{
+			invalidateModalFlag = false;
+			DomGlobals.stage.removeEventListener(Event.ENTER_FRAME,validateModal);
+			DomGlobals.stage.removeEventListener(Event.RENDER,validateModal);
+			for each(var sm:ISystemManager in invalidateModalList)
+			{
+				updateModal(sm);
+			}
+			invalidateModalList.length = 0;
 		}
 		
 		private var modalMaskDic:Dictionary = new Dictionary(true);
@@ -152,19 +190,7 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function updateModal(systemManager:ISystemManager):void
 		{
-			if(!systemManager)
-				return;
 			var popUpContainer:IContainer = systemManager.popUpContainer;
-			var modalMask:Rect = modalMaskDic[systemManager];
-			if(!modalMask)
-			{
-				modalMaskDic[systemManager] = modalMask = new Rect();
-				(modalMask as Rect).fillColor = _modalColor;
-				modalMask.alpha = _modalAlpha;
-				modalMask.top = modalMask.left = modalMask.right = modalMask.bottom = 0;
-			}
-			if(modalMask.parent!=systemManager)
-				popUpContainer.addElement(modalMask);
 			var found:Boolean = false;
 			for(var i:int = popUpContainer.numElements-1;i>=0;i--)
 			{
@@ -176,13 +202,28 @@ package org.flexlite.domUI.managers.impl
 					break;
 				}
 			}
+			var modalMask:Rect = modalMaskDic[systemManager];
 			if(found)
 			{
-				if(popUpContainer.getElementIndex(modalMask)<i)
-					i--;
-				popUpContainer.setElementIndex(modalMask,i);
+				if(!modalMask)
+				{
+					modalMaskDic[systemManager] = modalMask = new Rect();
+					modalMask.top = modalMask.left = modalMask.right = modalMask.bottom = 0;
+				}
+				(modalMask as Rect).fillColor = _modalColor;
+				modalMask.alpha = _modalAlpha;
+				if(modalMask.parent==systemManager)
+				{
+					if(popUpContainer.getElementIndex(modalMask)<i)
+						i--;
+					popUpContainer.setElementIndex(modalMask,i);
+				}
+				else
+				{
+					popUpContainer.addElementAt(modalMask,i);
+				}
 			}
-			else
+			else if(modalMask&&modalMask.parent==systemManager)
 			{
 				popUpContainer.removeElement(modalMask);
 			}
@@ -224,7 +265,7 @@ package org.flexlite.domUI.managers.impl
 			{
 				var sm:ISystemManager = popUp.parent as ISystemManager;
 				sm.popUpContainer.setElementIndex(popUp,sm.popUpContainer.numElements-1);
-				updateModal(sm);
+				invalidateModal(sm);
 			}
 		}
 	}
