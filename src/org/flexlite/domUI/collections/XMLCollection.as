@@ -155,8 +155,7 @@ package org.flexlite.domUI.collections
 			}
 		}
 		/**
-		 * 检查指定的节点是否含有子节点
-		 * @param item
+		 * @inheritDoc
 		 */		
 		public function hasChildren(item:Object):Boolean
 		{
@@ -165,17 +164,15 @@ package org.flexlite.domUI.collections
 			return XML(item).children().length()>0;
 		}
 		/**
-		 * 指定的节点是否打开
-		 */		
+		 * @inheritDoc
+		 */	
 		public function isItemOpen(item:Object):Boolean
 		{
 			return _openNodes.indexOf(item)!=-1;
 		}	
 		/**
-		 * 打开或关闭一个节点
-		 * @param item 要打开或关闭的节点
-		 * @param open true表示打开节点，反之关闭。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function expandItem(item:Object,open:Boolean=true):void
 		{
 			if(!(item is XML))
@@ -234,8 +231,8 @@ package org.flexlite.domUI.collections
 			}
 		}
 		/**
-		 * 获取节点的深度
-		 */		
+		 * @inheritDoc
+		 */	
 		public function getDepth(item:Object):int
 		{
 			var depth:int = 0;

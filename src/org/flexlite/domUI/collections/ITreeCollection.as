@@ -2,14 +2,14 @@ package org.flexlite.domUI.collections
 {
 	
 	/**
-	 * 
+	 * Tree组件的集合类数据源对象接口 
 	 * @author DOM
 	 */
 	public interface ITreeCollection extends ICollection
 	{
 		/**
 		 * 检查指定的节点是否含有子节点
-		 * @param item
+		 * @param item 要检查的节点
 		 */		
 		function hasChildren(item:Object):Boolean;
 
