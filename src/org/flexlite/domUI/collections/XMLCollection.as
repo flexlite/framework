@@ -17,7 +17,8 @@ package org.flexlite.domUI.collections
 	 * XML的集合类数据结构包装器,通常作为Tree组件的数据源。
 	 * @author DOM
 	 */
-	public class XMLCollection extends EventDispatcher implements ICollection
+	public class XMLCollection extends EventDispatcher 
+		implements ICollection,ITreeCollection
 	{
 		/**
 		 * 构造函数
@@ -153,7 +154,16 @@ package org.flexlite.domUI.collections
 					addChildren(children[i], list);
 			}
 		}
-		
+		/**
+		 * 检查指定的节点是否含有子节点
+		 * @param item
+		 */		
+		public function hasChildren(item:Object):Boolean
+		{
+			if(!(item is XML))
+				return false;
+			return XML(item).children().length()>0;
+		}
 		/**
 		 * 指定的节点是否打开
 		 */		
@@ -226,9 +236,11 @@ package org.flexlite.domUI.collections
 		/**
 		 * 获取节点的深度
 		 */		
-		public function getDepth(item:XML):int
+		public function getDepth(item:Object):int
 		{
 			var depth:int = 0;
+			if(!(item is XML))
+				return depth;
 			var parent:XML = item.parent();
 			while (parent)
 			{

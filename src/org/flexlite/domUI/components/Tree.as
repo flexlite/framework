@@ -1,6 +1,6 @@
 package org.flexlite.domUI.components
 {
-	import org.flexlite.domUI.collections.XMLCollection;
+	import org.flexlite.domUI.collections.ITreeCollection;
 	import org.flexlite.domUI.components.supportClasses.TreeItemRenderer;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
@@ -54,33 +54,21 @@ package org.flexlite.domUI.components
 			return Tree;
 		}
 		
-		private var _indentation:Number = 17;
-		/**
-		 * 子节点相对父节点的缩进值，以像素为单位。默认17。
-		 */
-		public function get indentation():Number
-		{
-			return _indentation;
-		}
-		public function set indentation(value:Number):void
-		{
-			_indentation = value;
-		}
-
 		/**
 		 * @inheritDoc
 		 */
 		override public function updateRenderer(renderer:IItemRenderer, itemIndex:int, data:Object):IItemRenderer
 		{
-			if(renderer is TreeItemRenderer&&dataProvider is XMLCollection)
+			if(renderer is ITreeItemRenderer&&dataProvider is ITreeCollection)
 			{
-				var treeRenderer:TreeItemRenderer = renderer as TreeItemRenderer;
-				treeRenderer.hasChildren = XML(data).children().length()>0;
-				treeRenderer.opened = XMLCollection(dataProvider).isItemOpen(data as XML);
-				treeRenderer.indentation = XMLCollection(dataProvider).getDepth(data as XML)*_indentation;
+				var treeCollection:ITreeCollection = dataProvider as ITreeCollection;
+				var treeRenderer:ITreeItemRenderer = renderer as ITreeItemRenderer;
+				treeRenderer.hasChildren = treeCollection.hasChildren(data);
+				treeRenderer.opened = treeCollection.isItemOpen(data);
+				treeRenderer.depth = treeCollection.getDepth(data);
 				treeRenderer.iconSkinName = itemToIcon(data);
 			}
-			return super.updateRenderer(renderer, itemIndex, data); 
+			return super.updateRenderer(renderer, itemIndex, data);
 		}
 		/**
 		 * 根据数据项返回项呈示器中图标的skinName属性值
@@ -139,12 +127,12 @@ package org.flexlite.domUI.components
 		{
 			var renderer:TreeItemRenderer = event.itemRenderer;
 			var item:XML = event.item as XML;
-			if(!renderer||!(dataProvider is XMLCollection))
+			if(!renderer||!(dataProvider is ITreeCollection))
 				return;
 			if(dispatchEvent(event))
 			{
 				var opend:Boolean = !renderer.opened;
-				XMLCollection(dataProvider).expandItem(item,opend);
+				ITreeCollection(dataProvider).expandItem(item,opend);
 				var type:String = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
 				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
 				dispatchEvent(evt);
@@ -207,18 +195,18 @@ package org.flexlite.domUI.components
 		 */		
 		public function expandItem(item:Object,open:Boolean = true):void
 		{
-			if(!(dataProvider is XMLCollection))
+			if(!(dataProvider is ITreeCollection))
 				return;
-			XMLCollection(dataProvider).expandItem(item,open);
+			ITreeCollection(dataProvider).expandItem(item,open);
 		}
 		/**
 		 * 指定的节点是否打开
 		 */		
 		public function isItemOpen(item:Object):Boolean
 		{
-			if(!(dataProvider is XMLCollection))
+			if(!(dataProvider is ITreeCollection))
 				return false;
-			return XMLCollection(dataProvider).isItemOpen(item);
+			return ITreeCollection(dataProvider).isItemOpen(item);
 		}
 		
 		/**

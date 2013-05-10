@@ -3,22 +3,17 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
-	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.components.UIAsset;
-	import org.flexlite.domUI.core.IInvalidating;
+	import org.flexlite.domUI.components.ITreeItemRenderer;
 	import org.flexlite.domUI.core.ISkinnableClient;
-	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domUI.events.ResizeEvent;
 	import org.flexlite.domUI.events.TreeEvent;
-	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
 	/**
 	 * Tree组件的项呈示器基类
 	 * @author DOM
 	 */
-	public class TreeItemRenderer extends ItemRenderer
+	public class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer
 	{
 		/**
 		 * 构造函数
@@ -48,15 +43,27 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		public var contentGroup:DisplayObject;
 		
+		private var _indentation:Number = 17;
+		/**
+		 * 子节点相对父节点的缩进值，以像素为单位。默认17。
+		 */
+		public function get indentation():Number
+		{
+			return _indentation;
+		}
+		public function set indentation(value:Number):void
+		{
+			_indentation = value;
+		}
+		
 		private var _iconSkinName:Object;
 		/**
-		 * 图标的皮肤名
+		 * @inheritDoc
 		 */
 		public function get iconSkinName():Object
 		{
 			return _iconSkinName;
 		}
-
 		public function set iconSkinName(value:Object):void
 		{
 			if(_iconSkinName==value)
@@ -68,34 +75,33 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 
-		
-		private var _indent:Number = 0;
+		private var _depth:int = 0;
 		/**
-		 * 缩进值,以像素为单位。默认值为0。
+		 * @inheritDoc
 		 */
-		public function get indentation():Number
+		public function get depth():int
 		{
-			return _indent;
+			return _depth;
 		}
-
-		public function set indentation(value:Number):void
+		public function set depth(value:int):void
 		{
-			if(value==_indent)
+			if(value==_depth)
 				return;
-			_indent = value;
+			_depth = value;
 			if(contentGroup)
-				contentGroup.x = _indent;
+			{
+				contentGroup.x = _depth*_indentation;
+			}
 		}
 		
 		private var _hasChildren:Boolean = false;
 		/**
-		 * 是否含有子节点,默认false。
+		 * @inheritDoc
 		 */
 		public function get hasChildren():Boolean
 		{
 			return _hasChildren;
 		}
-
 		public function set hasChildren(value:Boolean):void
 		{
 			if(_hasChildren==value)
@@ -109,13 +115,12 @@ package org.flexlite.domUI.components.supportClasses
 		
 		private var _isOpen:Boolean = false;
 		/**
-		 * 节点是否处于开启状态。
+		 * @inheritDoc
 		 */
 		public function get opened():Boolean
 		{
 			return _isOpen;
 		}
-
 		public function set opened(value:Boolean):void
 		{
 			if(_isOpen==value)
@@ -144,7 +149,7 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			else if(instance==contentGroup)
 			{
-				contentGroup.x = _indent;
+				contentGroup.x = _depth*_indentation;
 			}
 		}
 		
