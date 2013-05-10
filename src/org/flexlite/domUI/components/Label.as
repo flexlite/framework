@@ -611,14 +611,14 @@ package org.flexlite.domUI.components
 			var lastLineIndex:int = textField.getLineIndexAtPoint(2,textField.height-2);
 			if(lastLineIndex<0)
 				lastLineIndex = 0;
-			
-			if(textField.numLines>lastLineIndex+1)
+			lastLineIndex += 1;
+			if(textField.numLines>lastLineIndex&&textField.textHeight>textField.height)
 			{
-				var offset:int = textField.getLineOffset(lastLineIndex+1);
+				var offset:int = textField.getLineOffset(lastLineIndex);
 				originalText = originalText.substr(0,offset);
 				textField.$text = originalText+truncationIndicator;
 				applyRangeFormat(expLeading);
-				while (originalText.length > 1 && textField.numLines>lastLineIndex+1)
+				while (originalText.length > 1 && textField.numLines>lastLineIndex)
 				{
 					originalText = originalText.slice(0, -1);
 					textField.$text = originalText+truncationIndicator;
