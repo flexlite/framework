@@ -1,6 +1,7 @@
 package org.flexlite.domUI.managers.impl
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
@@ -81,9 +82,9 @@ package org.flexlite.domUI.managers.impl
 				popUpDataList.push(data);
 				_popUpList.push(popUp);
 			}
+			systemManager.popUpContainer.addElement(popUp);
 			if(center)
 				centerPopUp(popUp);
-			systemManager.popUpContainer.addElement(popUp);
 			if(popUp is IUIComponent)
 				IUIComponent(popUp).isPopUp = true;
 			if(modal)
@@ -252,6 +253,12 @@ package org.flexlite.domUI.managers.impl
 		{
 			popUp.top = popUp.bottom = popUp.left = popUp.right = NaN;
 			popUp.verticalCenter = popUp.horizontalCenter = 0;
+			var parent:DisplayObjectContainer = popUp.parent;
+			if(parent)
+			{
+				popUp.x = (parent.width-popUp.layoutBoundsWidth)*0.5;
+				popUp.y = (parent.height-popUp.layoutBoundsHeight)*0.5;
+			}
 		}
 		
 		/**
