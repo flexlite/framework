@@ -104,6 +104,13 @@ package org.flexlite.domDll
 			instance.loadGroup(name,priority);
 		}
 		/**
+		 * 语言版本,如"cn","en","tw"等。
+		 */		
+		public static function get language():String
+		{
+			return instance.language;
+		}
+		/**
 		 * 检查某个资源组是否已经加载完成
 		 * @param groupName 组名
 		 */		
@@ -251,6 +258,10 @@ package org.flexlite.domDll
 		 */		
 		private var configComplete:Boolean = false;
 		/**
+		 * 语言版本
+		 */		
+		private var language:String = "cn";
+		/**
 		 * 加载配置文件并解析
 		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
@@ -258,6 +269,7 @@ package org.flexlite.domDll
 		 */	
 		private function loadConfig(configList:Vector.<ConfigItem>,version:String="",language:String="cn"):void
 		{
+			this.language = language;
 			dllLoader.setVersion(version);
 			dllConfig.setLanguage(language);
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
