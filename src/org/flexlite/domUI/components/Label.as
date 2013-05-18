@@ -515,8 +515,9 @@ package org.flexlite.domUI.components
 			var unscaledTextHeight:Number = unscaledHeight - paddingT - paddingB;
 			textField.$height = unscaledTextHeight;
 			
-			
-			if (Math.floor(width) < Math.floor(measuredWidth))
+			if(_maxDisplayedLines==1)
+				textField.wordWrap = false;
+			else if (Math.floor(width) < Math.floor(measuredWidth))
 				textField.wordWrap = true;
 			
 			_textWidth = textField.textWidth;
