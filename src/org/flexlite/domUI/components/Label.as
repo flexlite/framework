@@ -5,10 +5,8 @@ package org.flexlite.domUI.components
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
 	
-	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.TextBase;
-	import org.flexlite.domUI.core.ITranslator;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	
@@ -27,24 +25,7 @@ package org.flexlite.domUI.components
 		{
 			super();
 			addEventListener(UIEvent.UPDATE_COMPLETE, updateCompleteHandler);
-			if(isFirstLabel)
-			{
-				isFirstLabel = false;
-				try
-				{
-					translator = Injector.getInstance(ITranslator);
-				}
-				catch(e:Error){}
-			}
 		}
-		/**
-		 * 是否是第一个创建的Label实例
-		 */		
-		private static var isFirstLabel:Boolean = true;
-		/**
-		 * 注入的文本翻译对象
-		 */		
-		private static var translator:ITranslator;
 		
 		private var toolTipSet:Boolean = false;
 		
@@ -144,10 +125,7 @@ package org.flexlite.domUI.components
 				value = "";
 			if (!isHTML && value == _text)
 				return;
-			if(translator)
-				super.text = translator.translate(value);
-			else
-				super.text = value;
+			super.text = value;
 			rangeFormatDic = null;
 		}
 		

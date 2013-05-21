@@ -3,6 +3,8 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
@@ -17,7 +19,24 @@ package org.flexlite.domUI.core
 		public function UITextField()
 		{
 			super();
+			if(isFirstTextFiled)
+			{
+				isFirstTextFiled = false;
+				try
+				{
+					translator = Injector.getInstance(ITranslator);
+				}
+				catch(e:Error){}
+			}
 		}
+		/**
+		 * 是否是第一个创建的Label实例
+		 */		
+		private static var isFirstTextFiled:Boolean = true;
+		/**
+		 * 注入的文本翻译对象
+		 */		
+		private static var translator:ITranslator;
 		
 		/**
 		 * @inheritDoc
@@ -59,7 +78,7 @@ package org.flexlite.domUI.core
 				value = "";
 			var changed:Boolean = super.text != value;
 			
-			super.text = value;
+			$text = value;
 			
 			if(changed)
 				dispatchEvent(new Event("textChanged"));
@@ -171,9 +190,12 @@ package org.flexlite.domUI.core
 		 */			
 		dx_internal final function set $text(value:String):void
 		{
-			if (!value)
+			if (value==null)
 				value = "";
-			super.text = value;
+			if(translator)
+				super.text = translator.translate(value);
+			else
+				super.text = value;
 		}
 		
 		
