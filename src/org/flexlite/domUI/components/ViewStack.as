@@ -154,9 +154,17 @@ package org.flexlite.domUI.components
 			
 			element.visible = false;
 			element.includeInLayout = false;
-			if(selectedIndex==-1)
-				setSelectedIndex(0);
+			if (selectedIndex == -1)
+			{
+				adjustSelection(index);
+			}
+			else if (index <= selectedIndex)
+			{
+				adjustSelection(selectedIndex + 1);
+			}
 		}
+		
+		
 		/**
 		 * 从容器移除一个显示元素
 		 */		
@@ -165,13 +173,34 @@ package org.flexlite.domUI.components
 			super.elementRemoved(element,index,notifyListeners);
 			element.visible = true;
 			element.includeInLayout = true;
-			if(index==selectedIndex)
+			if (index == selectedIndex)
 			{
-				if(numElements>1)
-					setSelectedIndex(0);
+				if (numElements > 0)
+				{       
+					setSelectedIndex(0, false);
+				}
 				else
-					setSelectedIndex(-1);
+					adjustSelection(-1);
 			}
+			else if (index < selectedIndex)
+			{
+				adjustSelection(selectedIndex - 1);
+			}
+		}
+		
+		/**
+		 * 调整选中项
+		 */		
+		protected function adjustSelection(newIndex:int):void
+		{
+			if(selectedIndex==newIndex)
+				return;
+			if (proposedSelectedIndex != NO_PROPOSED_SELECTION)
+				proposedSelectedIndex = newIndex;
+			else
+				_selectedIndex = newIndex;
+			
+			dispatchEvent(new Event("IndexChanged"));//通知TabNavigator自己的选中项发生改变
 		}
 		
 		/**

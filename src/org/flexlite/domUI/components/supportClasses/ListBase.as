@@ -612,11 +612,11 @@ package org.flexlite.domUI.components.supportClasses
 			if (selectedIndex == NO_SELECTION)
 			{
 				if (requireSelection)
-					adjustSelection(index);
+					adjustSelection(index,true);
 			}
 			else if (index <= selectedIndex)
 			{
-				adjustSelection(selectedIndex + 1);
+				adjustSelection(selectedIndex + 1,true);
 			}
 		}
 		
@@ -641,11 +641,11 @@ package org.flexlite.domUI.components.supportClasses
 						setSelectedIndex(0, false);
 				}
 				else
-					adjustSelection(-1);
+					adjustSelection(-1,false);
 			}
 			else if (index < selectedIndex)
 			{
-				adjustSelection(selectedIndex - 1);
+				adjustSelection(selectedIndex - 1,false);
 			}
 		}
 		
