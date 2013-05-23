@@ -191,7 +191,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 调整选中项
 		 */		
-		protected function adjustSelection(newIndex:int):void
+		private function adjustSelection(newIndex:int):void
 		{
 			if(selectedIndex==newIndex)
 				return;
