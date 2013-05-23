@@ -115,6 +115,8 @@ package org.flexlite.domUI.components
 		{
 			setSelectedIndex(value);
 		}
+		
+		private var notifyTabNavigator:Boolean = false;
 		/**
 		 * 设置选中项索引
 		 */		
@@ -129,10 +131,7 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 			
 			dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
-			if(notifyListeners)
-			{
-				dispatchEvent(new Event("IndexChanged"));//通知TabNavigator自己的选中项发生改变
-			}
+			notifyTabNavigator = notifyTabNavigator||notifyListeners;
 		}
 		
 		/**
@@ -156,11 +155,11 @@ package org.flexlite.domUI.components
 			element.includeInLayout = false;
 			if (selectedIndex == -1)
 			{
-				adjustSelection(index);
+				setSelectedIndex(index,false);
 			}
 			else if (index <= selectedIndex)
 			{
-				adjustSelection(selectedIndex + 1);
+				setSelectedIndex(selectedIndex + 1);
 			}
 		}
 		
@@ -177,30 +176,21 @@ package org.flexlite.domUI.components
 			{
 				if (numElements > 0)
 				{       
-					setSelectedIndex(0, false);
+					if (index == 0)
+					{
+						proposedSelectedIndex = 0;
+						invalidateProperties();
+					}
+					else
+						setSelectedIndex(0, false);
 				}
 				else
-					adjustSelection(-1);
+					setSelectedIndex(-1);
 			}
 			else if (index < selectedIndex)
 			{
-				adjustSelection(selectedIndex - 1);
+				setSelectedIndex(selectedIndex - 1);
 			}
-		}
-		
-		/**
-		 * 调整选中项
-		 */		
-		private function adjustSelection(newIndex:int):void
-		{
-			if(selectedIndex==newIndex)
-				return;
-			if (proposedSelectedIndex != NO_PROPOSED_SELECTION)
-				proposedSelectedIndex = newIndex;
-			else
-				_selectedIndex = newIndex;
-			
-			dispatchEvent(new Event("IndexChanged"));//通知TabNavigator自己的选中项发生改变
 		}
 		
 		/**
@@ -228,6 +218,12 @@ package org.flexlite.domUI.components
 						addToDisplayList(DisplayObject(element));
 					}
 				}
+			}
+			
+			if(notifyTabNavigator)
+			{
+				notifyTabNavigator = true;
+				dispatchEvent(new Event("IndexChanged"));//通知TabNavigator自己的选中项发生改变
 			}
 		}
 		
