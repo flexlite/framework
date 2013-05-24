@@ -111,7 +111,8 @@ package org.flexlite.domDll.core
 				return;
 			if(!list||list.length==0)
 			{
-				var event:Event = new Event(Event.COMPLETE);
+				var event:DllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
+				event.groupName = groupName;
 				dispatchEvent(event);
 				return;
 			}
