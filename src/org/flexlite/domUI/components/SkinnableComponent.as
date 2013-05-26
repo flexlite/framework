@@ -62,6 +62,7 @@ package org.flexlite.domUI.components
 			if(defaultTheme&&skinName==null)
 			{
 				skinName = defaultTheme.getSkinName(hostComponentKey);
+				skinNameExplicitlySet = false;
 			}
 			if(skinName==null)
 			{//让部分组件在没有皮肤的情况下创建默认的子部件。

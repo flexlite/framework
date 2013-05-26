@@ -42,6 +42,10 @@ package org.flexlite.domUI.components
 		}
 		
 		private var skinNameChanged:Boolean = false;
+		/**
+		 * 外部显式设置了皮肤名
+		 */		
+		dx_internal var skinNameExplicitlySet:Object = false;
 		
 		dx_internal var _skinName:Object;
 
@@ -59,6 +63,7 @@ package org.flexlite.domUI.components
 			if(_skinName==value)
 				return;
 			_skinName = value;
+			skinNameExplicitlySet = true;
 			if(initialized||hasParent)
 			{
 				skinNameChanged = false;

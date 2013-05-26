@@ -4,8 +4,6 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
@@ -246,12 +244,30 @@ package org.flexlite.domUI.components
 				return null;
 			if(_itemRendererSkinName)
 			{
+				setItemRenderSkinName(renderer);
+			}
+			super.addChild(renderer as DisplayObject);
+			return renderer;
+		}
+		/**
+		 * 设置项呈示器的默认皮肤
+		 */		
+		private function setItemRenderSkinName(renderer:IItemRenderer):void
+		{
+			if(!renderer)
+				return;
+			var comp:SkinnableComponent = renderer as SkinnableComponent;
+			if(comp)
+			{
+				if(!comp.skinNameExplicitlySet)
+					comp.skinName = _itemRendererSkinName;
+			}
+			else
+			{
 				var client:ISkinnableClient = renderer as ISkinnableClient;
 				if(client&&!client.skinName)
 					client.skinName = _itemRendererSkinName;
 			}
-			super.addChild(renderer as DisplayObject);
-			return renderer;
 		}
 		
 		/**
@@ -671,11 +687,10 @@ package org.flexlite.domUI.components
 				itemRendererSkinNameChange = false;
 				var length:int = indexToRenderer.length;
 				var client:ISkinnableClient;
+				var comp:SkinnableComponent;
 				for(var i:int=0;i<length;i++)
 				{
-					client = indexToRenderer[i] as ISkinnableClient;
-					if(client&&!client.skinName)
-						client.skinName = _itemRendererSkinName;
+					setItemRenderSkinName(indexToRenderer[i]);
 				}
 				for(var clazz:* in freeRenderers)
 				{
@@ -685,14 +700,11 @@ package org.flexlite.domUI.components
 						length = list.length;
 						for(i=0;i<length;i++)
 						{
-							client = list[i] as ISkinnableClient;
-							if(client&&!client.skinName)
-								client.skinName = _itemRendererSkinName;
+							setItemRenderSkinName(list[i]);
 						}
 					}
 				}
 			}
-
 		}
 		
 		/**
