@@ -126,7 +126,7 @@ package org.flexlite.domUI.components
 		private function onItemOpening(event:TreeEvent):void
 		{
 			var renderer:TreeItemRenderer = event.itemRenderer;
-			var item:XML = event.item as XML;
+			var item:Object = event.item;
 			if(!renderer||!(dataProvider is ITreeCollection))
 				return;
 			if(dispatchEvent(event))
