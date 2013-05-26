@@ -177,7 +177,6 @@ package org.flexlite.domUI.components.supportClasses
 				false,true,itemIndex,data,this);
 			evt.opening = !_isOpen;
 			dispatchEvent(evt);
-			event.preventDefault();//防止当前项被选中。
 		}
 	}
 }
