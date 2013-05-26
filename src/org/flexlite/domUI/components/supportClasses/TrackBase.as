@@ -315,7 +315,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 鼠标移动事件
 		 */		
-		private function stage_mouseMoveHandler(event:MouseEvent):void
+		protected function stage_mouseMoveHandler(event:MouseEvent):void
 		{
 			if (needUpdateValue)
 				return;

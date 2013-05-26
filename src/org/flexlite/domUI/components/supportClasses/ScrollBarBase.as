@@ -6,10 +6,10 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.geom.Point;
 	import flash.utils.Timer;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IViewport;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -286,7 +286,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 开始播放动画
 		 */		
-		private function startAnimation(duration:Number, valueTo:Number, 
+		dx_internal function startAnimation(duration:Number, valueTo:Number, 
 										easer:IEaser, startDelay:Number = 0):void
 		{
 			animator.stop();
@@ -695,7 +695,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 立即停止动画的播放
 		 */		
-		private function stopAnimation():void
+		dx_internal function stopAnimation():void
 		{
 			if (animator.isPlaying)
 				animationEndHandler(animator);
