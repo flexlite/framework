@@ -139,18 +139,19 @@ package org.flexlite.domDll.resolvers
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,checkAsyncList); 
 			nameDic[loader] = name;
 			loadingCount++;
+			var loaderContext:LoaderContext;
 			if(loadInCurrentDomain)
 			{
-				var loaderContext:LoaderContext = 
-					new LoaderContext(false,ApplicationDomain.currentDomain);
-				if(loaderContext.hasOwnProperty("allowCodeImport"))
-					loaderContext["allowCodeImport"] = true;
-				loader.loadBytes(bytes,loaderContext);
+				loaderContext = new LoaderContext(false,ApplicationDomain.currentDomain);
+				
 			}
 			else
 			{
-				loader.loadBytes(bytes);
+				loaderContext = new LoaderContext();
 			}
+			if(loaderContext.hasOwnProperty("allowCodeImport"))
+				loaderContext["allowCodeImport"] = true;
+			loader.loadBytes(bytes,loaderContext);
 		}
 		
 		/**
