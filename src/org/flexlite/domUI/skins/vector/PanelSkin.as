@@ -53,6 +53,7 @@ package org.flexlite.domUI.skins.vector
 			contentGroup.left = 1;
 			contentGroup.right = 1;
 			contentGroup.bottom = 1;
+			contentGroup.clipAndEnableScrolling = true;
 			addElement(contentGroup);
 			
 			titleDisplay = new Label();
