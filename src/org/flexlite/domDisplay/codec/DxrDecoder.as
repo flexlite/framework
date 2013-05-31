@@ -127,7 +127,7 @@ package org.flexlite.domDisplay.codec
 				bd.copyPixels(bitmapDataList[info[0]],rect,new Point(0,0),null,null,true);
 				dxrData.frameList.push(bd);
 				dxrData.frameOffsetList.push(new Point(info[5],info[6]));
-				if(info[7])
+				if(info.length==9)
 				{
 					dxrData.filterOffsetList[dxrData.frameList.length-1] = new Point(info[7],info[8]);
 				}
@@ -145,7 +145,6 @@ package org.flexlite.domDisplay.codec
 			if(dxrSourceData.hasOwnProperty("frameLabels"))
 			{
 				var fls:Array = dxrSourceData.frameLabels as Array;
-				dxrData._frameLabels = [];
 				for each(var label:Array in fls)
 				{
 					dxrData._frameLabels.push(new FrameLabel(label[1],label[0]));

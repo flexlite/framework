@@ -121,7 +121,7 @@ package org.flexlite.domDisplay
 		 */
 		override public function set scale9Grid(value:Rectangle):void
 		{
-			if(value==_scale9Grid)
+			if(value&&_scale9Grid&&value.equals(_scale9Grid))
 				return;
 			cachedDestGrid = null;
 			cachedSourceGrid = null;

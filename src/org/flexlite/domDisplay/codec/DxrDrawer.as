@@ -36,19 +36,17 @@ package org.flexlite.domDisplay.codec
 		 */	
 		public function drawDxrData(dp:DisplayObject,key:String=""):DxrData
 		{
-			var t:Number = getTimer();
 			var dxrData:DxrData = new DxrData(key);
 			if(dp is MovieClip)
 			{
 				var mc:MovieClip = dp as MovieClip;
 				var oldFrame:int = mc.currentFrame;
 				var isPlaying:Boolean = mc.isPlaying;
-				mc.gotoAndStop(1);
-				drawDisplayObject(mc,dxrData);
-				while(mc.currentFrame<mc.totalFrames)
+				var totalFrames:int = mc.totalFrames;
+				for(var frame:int=0;frame<totalFrames;frame++)
 				{
-					mc.gotoAndStop(mc.currentFrame+1);
-					drawDisplayObject(mc,dxrData);
+					mc.gotoAndStop(frame+1);
+					drawDisplayObject(mc,dxrData,frame);
 				}
 				if(isPlaying)
 					mc.gotoAndPlay(oldFrame);
@@ -58,19 +56,19 @@ package org.flexlite.domDisplay.codec
 			}
 			else
 			{
-				drawDisplayObject(dp,dxrData);
+				drawDisplayObject(dp,dxrData,0);
 			}
 			if(dp.scale9Grid)
 				dxrData._scale9Grid = dp.scale9Grid.clone();
-			trace("绘制时间："+(getTimer()-t)+"ms");
 			return dxrData;
 		}
 		
 		/**
 		 * 绘制一个显示对象的当前外观，存储其一帧位图信息到dxrData内
 		 */		
-		private function drawDisplayObject(dp:DisplayObject,dxrData:DxrData):void
+		dx_internal function drawDisplayObject(dp:DisplayObject,dxrData:DxrData,frame:int):void
 		{
+			var t:Number = getTimer();
 			var dpRect:Rectangle = dp.getBounds(dp);
 			if(dpRect.width<1)
 				dpRect.width = 1;
@@ -86,16 +84,17 @@ package org.flexlite.domDisplay.codec
 			var colorRect:Rectangle = getColorRect(tempBmData);
 			var frameData:BitmapData = new BitmapData(colorRect.width,colorRect.height,true,0);
 			frameData.copyPixels(tempBmData,colorRect,new Point(),null,null,true);
-			dxrData.frameList.push(frameData);
+			dxrData.frameList[frame] = frameData;
 			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x-offsetX,
 				Math.round(dpRect.top)+colorRect.y-offsetY);
-			dxrData.frameOffsetList.push(offsetPoint);
+			dxrData.frameOffsetList[frame] = offsetPoint;
 			var filterOffset:Point = new Point(Math.round(colorRect.width-dpRect.width),
 				Math.round(colorRect.height-dpRect.height));
 			if(filterOffset.x!=0||filterOffset.y!=0)
 			{
-				dxrData.filterOffsetList[dxrData.frameOffsetList.length-1]=filterOffset;
+				dxrData.filterOffsetList[frame] = filterOffset;
 			}
+			trace("绘制时间："+(getTimer()-t)+"ms");
 		}
 		
 		/**

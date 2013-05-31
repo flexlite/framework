@@ -156,16 +156,16 @@ package org.flexlite.domDisplay
 		{
 			frameScaleX = 1;
 			frameScaleY = 1;
-			var sizeOffset:Point = dxrData.filterOffsetList[0];
+			var sizeOffset:Point = dxrData.getFilterOffset(0);
 			initFilterWidth = sizeOffset?sizeOffset.x:0;
 			initFilterHeight = sizeOffset?sizeOffset.y:0;
 			if(widthExplicitSet)
 			{
-				frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
+				frameScaleX = _width/(_dxrData.getBitmapData(0).width-initFilterWidth);
 			}
 			if(heightExplicitSet)
 			{
-				frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
+				frameScaleY = _height/(_dxrData.getBitmapData(0).height-initFilterHeight);
 			}
 			if(useScale9Grid)
 			{
@@ -232,9 +232,9 @@ package org.flexlite.domDisplay
 		 */		
 		private function applyCurrentFrameData():void
 		{
-			var bitmapData:BitmapData = dxrData.frameList[_currentFrame];
-			var pos:Point = dxrData.frameOffsetList[_currentFrame];
-			var sizeOffset:Point = dxrData.filterOffsetList[_currentFrame];
+			var bitmapData:BitmapData = dxrData.getBitmapData(_currentFrame);
+			var pos:Point = dxrData.getFrameOffset(_currentFrame);
+			var sizeOffset:Point = dxrData.getFilterOffset(_currentFrame);
 			if(!sizeOffset)
 				sizeOffset = zeroPoint;
 			filterWidth = sizeOffset.x;
@@ -306,7 +306,7 @@ package org.flexlite.domDisplay
 			if(widthExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
+					frameScaleX = _width/(_dxrData.getBitmapData(0).width-initFilterWidth);
 			}
 			else
 			{
@@ -345,7 +345,7 @@ package org.flexlite.domDisplay
 			if(heightExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
+					frameScaleY = _height/(_dxrData.getBitmapData(0).height-initFilterHeight);
 			}
 			else 
 			{
@@ -430,7 +430,7 @@ package org.flexlite.domDisplay
 		 */
 		public function get totalFrames():int
 		{
-			return dxrData?dxrData.frameList.length:0;
+			return dxrData?dxrData.totalFrames:0;
 		}
 		
 		/**
@@ -538,7 +538,7 @@ package org.flexlite.domDisplay
 		 */
 		public function get bitmapData():BitmapData
 		{
-			return dxrData?dxrData.frameList[_currentFrame]:null;
+			return dxrData?dxrData.getBitmapData(_currentFrame):null;
 		}
 		/**
 		 * 滤镜宽度
