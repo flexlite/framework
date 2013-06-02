@@ -122,12 +122,20 @@ package org.flexlite.domDisplay.codec
 			var rect:Rectangle;
 			for each(var info:Array in dxrSourceData.frameInfo)
 			{
-				bd = new BitmapData(info[3],info[4],true,0);
-				rect = new Rectangle(info[1],info[2],info[3],info[4]);
-				bd.copyPixels(bitmapDataList[info[0]],rect,new Point(0,0),null,null,true);
+				if(info.length==10)
+				{
+					var copyFromIndex:int = info[9];
+					bd = dxrData.frameList[copyFromIndex];
+				}
+				else
+				{
+					bd = new BitmapData(info[3],info[4],true,0);
+					rect = new Rectangle(info[1],info[2],info[3],info[4]);
+					bd.copyPixels(bitmapDataList[info[0]],rect,new Point(0,0),null,null,true);
+				}
 				dxrData.frameList.push(bd);
 				dxrData.frameOffsetList.push(new Point(info[5],info[6]));
-				if(info.length==9)
+				if(info.length>=9)
 				{
 					dxrData.filterOffsetList[dxrData.frameList.length-1] = new Point(info[7],info[8]);
 				}
