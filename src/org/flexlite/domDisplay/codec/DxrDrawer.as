@@ -68,7 +68,6 @@ package org.flexlite.domDisplay.codec
 		 */		
 		dx_internal function drawDisplayObject(dp:DisplayObject,dxrData:DxrData,frame:int):void
 		{
-			var t:Number = getTimer();
 			var dpRect:Rectangle = dp.getBounds(dp);
 			if(dpRect.width<1)
 				dpRect.width = 1;
@@ -94,7 +93,6 @@ package org.flexlite.domDisplay.codec
 			{
 				dxrData.filterOffsetList[frame] = filterOffset;
 			}
-			trace("绘制时间："+(getTimer()-t)+"ms");
 		}
 		
 		/**
