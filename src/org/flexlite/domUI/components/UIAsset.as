@@ -91,14 +91,17 @@ package org.flexlite.domUI.components
 		 */		
 		protected function onGetSkin(skin:Object,skinName:Object):void
 		{
-			if(_skin&&_skin.parent==this)
+			if(_skin!==skin)
 			{
-				super.removeChild(_skin);
-			}
-			_skin = skin as DisplayObject;
-			if(_skin)
-			{
-				super.addChildAt(_skin,0);
+				if(_skin&&_skin.parent==this)
+				{
+					super.removeChild(_skin);
+				}
+				_skin = skin as DisplayObject;
+				if(_skin)
+				{
+					super.addChildAt(_skin,0);
+				}
 			}
 			invalidateSize();
 			invalidateDisplayList();
@@ -127,6 +130,8 @@ package org.flexlite.domUI.components
 		 * 默认的皮肤解析适配器
 		 */	
 		private static var defaultSkinAdapter:DefaultSkinAdapter;
+		
+		private var skinReused:Boolean = false;
 		/**
 		 * 解析skinName
 		 */		
@@ -152,7 +157,9 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				adapter.getSkin(_skinName,skinChnaged,_skin);
+				var reuseSkin:DisplayObject = skinReused?null:_skin;
+				skinReused = true;
+				adapter.getSkin(_skinName,skinChnaged,reuseSkin);
 			}
 		}
 		/**
@@ -163,6 +170,7 @@ package org.flexlite.domUI.components
 			if(skinName!==_skinName)
 				return;
 			onGetSkin(skin,skinName);
+			skinReused = false;
 			if(hasEventListener(UIEvent.SKIN_CHANGED))
 			{
 				var event:UIEvent = new UIEvent(UIEvent.SKIN_CHANGED);
