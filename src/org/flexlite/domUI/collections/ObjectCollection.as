@@ -145,13 +145,13 @@ package org.flexlite.domUI.collections
 		 */		
 		private function addChildren(parent:Object,list:Array):void
 		{
-			var children:Object = parent[childrenKey];
-			var length:int = children.length;
-			for (var i:int = 0; i < length; i++)
+			if(!parent.hasOwnProperty(childrenKey))
+				return;
+			for each(var child:Object in parent[childrenKey])
 			{
-				list.push(children[i]);
-				if (isItemOpen(children[i]))
-					addChildren(children[i], list);
+				list.push(child);
+				if (_openNodes.indexOf(child)!=-1)
+					addChildren(child, list);
 			}
 		}
 		/**

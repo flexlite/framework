@@ -148,12 +148,11 @@ package org.flexlite.domUI.collections
 		private function addChildren(parent:XML,list:Array):void
 		{
 			var children:XMLList = parent.children();
-			var length:int = children.length();
-			for (var i:int = 0; i < length; i++)
+			for each(var child:XML in children)
 			{
-				list.push(children[i]);
-				if (isItemOpen(children[i]))
-					addChildren(children[i], list);
+				list.push(child);
+				if ( _openNodes.indexOf(child)!=-1)
+					addChildren(child, list);
 			}
 		}
 		/**
