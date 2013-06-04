@@ -28,6 +28,6 @@ package org.flexlite.domUI.collections
 		/**
 		 * 获取节点的深度
 		 */		
-		function getDepth(item:Object):int
+		function getDepth(item:Object):int;
 	}
 }

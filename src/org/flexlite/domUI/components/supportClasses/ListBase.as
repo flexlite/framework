@@ -649,15 +649,6 @@ package org.flexlite.domUI.components.supportClasses
 			}
 		}
 		
-		/**
-		 * 数据源刷新
-		 */
-		protected function dataProviderRefreshed():void
-		{
-			setSelectedIndex(NO_SELECTION, false);
-		}
-		
-		
 		
 		/**
 		 * 项呈示器被添加
@@ -746,6 +737,11 @@ package org.flexlite.domUI.components.supportClasses
 					itemRemoved(event.location + i);
 				}
 			}
+			else if (event.kind == CollectionEventKind.MOVE)
+			{
+				itemRemoved(event.oldLocation);
+				itemAdded(event.location);
+			}
 			else if (event.kind == CollectionEventKind.RESET)
 			{
 				if (dataProvider.length == 0)
@@ -760,12 +756,7 @@ package org.flexlite.domUI.components.supportClasses
 			}
 			else if (event.kind == CollectionEventKind.REFRESH)
 			{
-				dataProviderRefreshed();
-			}
-			else if (event.kind == CollectionEventKind.REPLACE ||
-				event.kind == CollectionEventKind.MOVE)
-			{
-				
+				setSelectedIndex(NO_SELECTION, false);
 			}
 		}
 	}
