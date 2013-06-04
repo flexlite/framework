@@ -15,6 +15,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
@@ -639,7 +640,10 @@ package org.flexlite.domUI.components
 		{
 			if(!layout)
 			{
-				layout = new VerticalLayout;
+				var _layout:VerticalLayout = new VerticalLayout();
+				_layout.gap = 0;
+				_layout.horizontalAlign = HorizontalAlign.CONTENT_JUSTIFY;
+				layout = _layout;
 			}
 			super.createChildren();
 		}
