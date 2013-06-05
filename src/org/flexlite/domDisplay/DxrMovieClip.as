@@ -52,15 +52,16 @@ package org.flexlite.domDisplay
 		 * 构造函数
 		 * @param data 被引用的DxrData对象
 		 * @param smoothing 在缩放时是否对位图进行平滑处理。
+		 * @param frameRate 播放帧率。若不设置，将采用defaultFrameRate的值。
 		 */
-		public function DxrMovieClip(data:DxrData=null,smoothing:Boolean=true)
+		public function DxrMovieClip(data:DxrData=null,smoothing:Boolean=true,frameRate:int=-1)
 		{
 			super();
 			addEventListener(Event.ADDED_TO_STAGE,onAddedOrRemoved);
 			addEventListener(Event.REMOVED_FROM_STAGE,onAddedOrRemoved);
 			mouseChildren = false;
-			_frameRate = defaultFrameRate;
-			this._smoothing = smoothing;
+			_smoothing = smoothing;
+			_frameRate = frameRate==-1?defaultFrameRate:frameRate;
 			if(data)
 				dxrData = data;
 		}
