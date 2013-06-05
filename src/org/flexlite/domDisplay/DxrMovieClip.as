@@ -5,8 +5,11 @@ package org.flexlite.domDisplay
 	import flash.display.FrameLabel;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.IInvalidateDisplay;
@@ -30,6 +33,22 @@ package org.flexlite.domDisplay
 		IMovieClip,IBitmapAsset,IDxrDisplay,IInvalidateDisplay
 	{
 		/**
+		 * 所有DxrMovieClip初始化时默认的帧率。默认24。
+		 */		
+		public static var defaultFrameRate:int = 24;
+		/**
+		 * Timer字典,每种帧率对应一个Timer实例。
+		 */		
+		private static var timerDic:Array = [];
+		/**
+		 * 每种帧率的Timer实例被添加监听的次数。
+		 */		
+		private static var timerEventCount:Array = [];
+		/**
+		 * 零坐标点
+		 */		
+		private static var zeroPoint:Point = new Point;
+		/**
 		 * 构造函数
 		 * @param data 被引用的DxrData对象
 		 * @param smoothing 在缩放时是否对位图进行平滑处理。
@@ -40,10 +59,32 @@ package org.flexlite.domDisplay
 			addEventListener(Event.ADDED_TO_STAGE,onAddedOrRemoved);
 			addEventListener(Event.REMOVED_FROM_STAGE,onAddedOrRemoved);
 			mouseChildren = false;
+			_frameRate = defaultFrameRate;
 			this._smoothing = smoothing;
 			if(data)
 				dxrData = data;
 		}
+		
+		private var _frameRate:int = 24;
+		/**
+		 * 播放帧率，即每秒钟播放的次数。有效值为1~60。
+		 * 注意：修改此属性只影响当前实例，若要同时修改所有实例的默认帧率，请设置静态属性defaultFrameRate
+		 */
+		public function get frameRate():int
+		{
+			return _frameRate;
+		}
+		public function set frameRate(value:int):void
+		{
+			if(value<1)
+				value==1;
+			if(value>60)
+				value = 60;
+			if(value==_frameRate)
+				return;
+			_frameRate = value;
+		}
+
 		
 		/**
 		 * smoothing改变标志
@@ -67,15 +108,18 @@ package org.flexlite.domDisplay
 			smoothingChanged = true;
 			invalidateProperties();
 		}
-		
+		/**
+		 * 是否在舞台上的标志。
+		 */		
+		private var inStage:Boolean = false;
 		/**
 		 * 被添加到显示列表时
 		 */		
 		private function onAddedOrRemoved(event:Event):void
 		{
+			inStage = Boolean(event.type==Event.ADDED_TO_STAGE);
 			checkEventListener();
 		}		
-		
 		/**
 		 * 位图显示对象
 		 */		
@@ -201,32 +245,66 @@ package org.flexlite.domDisplay
 		 */			
 		private function checkEventListener(remove:Boolean=false):void
 		{
-			var needAddEventListener:Boolean = (!remove&&stage&&!isStop&&totalFrames>1);
+			var needAddEventListener:Boolean = (!remove&&inStage&&!isStop&&totalFrames>1&&visible);
 			if(eventListenerAdded==needAddEventListener)
 				return;
+			var timer:Timer = timerDic[_frameRate];
 			if(eventListenerAdded)
 			{
-				this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
+				timer.removeEventListener(TimerEvent.TIMER,render);
+				timerEventCount[_frameRate] --;
+				if(timerEventCount[_frameRate]<=0)
+					timer.stop();
 				eventListenerAdded = false;
 			}
 			else
 			{
-				this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+				if(!timer)
+				{
+					timer = new Timer(1000 / _frameRate);
+					timerDic[_frameRate] = timer;
+					timerEventCount[_frameRate] = 0;
+				}
+				if(!timer.running)
+					timer.start();
+				timer.addEventListener(TimerEvent.TIMER,render);
+				timerEventCount[_frameRate] ++;
 				eventListenerAdded = true;
 			}
 		}
 		
 		/**
-		 * 帧标签字典索引
+		 * 执行一次渲染
 		 */		
-		private var frameLabelDic:Dictionary;
-		
-		private function onEnterFrame(event:Event):void
+		private function render(evt:TimerEvent):void
 		{
-			render();
+			var total:int = totalFrames;
+			if(total<=1||!visible)
+				return;
+			if(_currentFrame>=totalFrames-1)
+			{
+				_currentFrame = totalFrames-1;
+				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
+				{
+					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
+					dispatchEvent(event);
+				}
+				if(!_repeatPlay)
+				{
+					checkEventListener(true);
+					return;
+				}
+			}
+			if(_currentFrame<total-1)
+			{
+				gotoFrame(_currentFrame+1);
+			}
+			else
+			{
+				gotoFrame(0);
+			}
 		}
 		
-		private static var zeroPoint:Point = new Point;
 		/**
 		 * 应用当前帧的位图数据
 		 */		
@@ -446,38 +524,6 @@ package org.flexlite.domDisplay
 		 */		
 		private var isStop:Boolean = false;
 		
-		/**
-		 * 执行一次渲染
-		 */		
-		public function render():void
-		{
-			var total:int = totalFrames;
-			if(total<=1||!visible)
-				return;
-			if(_currentFrame>=totalFrames-1)
-			{
-				_currentFrame = totalFrames-1;
-				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
-				{
-					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
-					dispatchEvent(event);
-				}
-				if(!_repeatPlay)
-				{
-					checkEventListener(true);
-					return;
-				}
-			}
-			if(_currentFrame<total-1)
-			{
-				gotoFrame(_currentFrame+1);
-			}
-			else
-			{
-				gotoFrame(0);
-			}
-		}
-		
 		private var _repeatPlay:Boolean = true;
 		/**
 		 * @inheritDoc
@@ -501,6 +547,11 @@ package org.flexlite.domDisplay
 			isStop = false;
 			checkEventListener();
 		}
+		
+		/**
+		 * 帧标签字典索引
+		 */		
+		private var frameLabelDic:Dictionary;
 		/**
 		 * 跳到指定帧
 		 */		

@@ -21,9 +21,5 @@
 56.优化Layout类的大小
 57.提供PageLayout,支持水平翻页时垂直排列元素。
 58.Accordion组件
-59.Tree支持Object类型的数据源，TreeItemRenderer应该定义为一个接口
-60.ToolTip异步修改数据源导致的尺寸改变位置更新。
 61.增加Image控件，继承UIComponent，集成Scale9GridBitmap，RepeatBitmap以及其他位图效果的直接操作。
-62.DxrMovieClip增加设置fps功能，DxrEncoder判断前后帧是否相同。
-
 
