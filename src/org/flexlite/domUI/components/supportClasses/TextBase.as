@@ -1,9 +1,7 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	import flash.events.Event;
-	import flash.system.IME;
 	import flash.text.AntiAliasType;
-	import flash.text.Font;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
@@ -114,7 +112,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 是否使用嵌入字体
 		 */		
-		private var embedFonts:Boolean = false;
+		dx_internal var embedFonts:Boolean = false;
 		
 		private var _fontFamily:String = "SimSun";
 		
@@ -131,16 +129,6 @@ package org.flexlite.domUI.components.supportClasses
 			if(_fontFamily==value)
 				return;
 			_fontFamily = value;
-			var fontList:Array = Font.enumerateFonts(false);
-			embedFonts = false;
-			for each(var font:Font in fontList)
-			{
-				if(font.fontName==value)
-				{
-					embedFonts = true;
-					break;
-				}
-			}
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();

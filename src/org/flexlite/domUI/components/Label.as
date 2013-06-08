@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import flash.events.Event;
+	import flash.text.Font;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
@@ -38,6 +39,11 @@ package org.flexlite.domUI.components
 			}
 		}
 		/**
+		 * 是否只显示嵌入的字体。此属性对只所有Label实例有效。true表示如果指定的fontFamily没有被嵌入，
+		 * 即使用户机上存在该设备字体也不显示。而将使用默认的字体。默认值为false。
+		 */		
+		public static var showEmbedFontsOnly:Boolean = false;
+		/**
 		 * 是否是第一个创建的Label实例
 		 */		
 		private static var isFirstLabel:Boolean = true;
@@ -45,6 +51,27 @@ package org.flexlite.domUI.components
 		 * 注入的文本翻译对象
 		 */		
 		private static var translator:ITranslator;
+		/**
+		 * @inheritDoc
+		 */
+		override public function set fontFamily(value:String):void
+		{
+			if(fontFamily==value)
+				return;
+			var fontList:Array = Font.enumerateFonts(false);
+			embedFonts = false;
+			for each(var font:Font in fontList)
+			{
+				if(font.fontName==value)
+				{
+					embedFonts = true;
+					break;
+				}
+			}
+			if(!embedFonts&&showEmbedFontsOnly)
+				return;
+			super.fontFamily = value;
+		}
 		
 		private var toolTipSet:Boolean = false;
 		
