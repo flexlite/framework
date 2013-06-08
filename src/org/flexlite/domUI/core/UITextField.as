@@ -78,7 +78,10 @@ package org.flexlite.domUI.core
 				value = "";
 			var changed:Boolean = super.text != value;
 			
-			$text = value;
+			if(translator)
+				super.text = translator.translate(value);
+			else
+				super.text = value;
 			
 			if(changed)
 				dispatchEvent(new Event("textChanged"));
@@ -192,10 +195,7 @@ package org.flexlite.domUI.core
 		{
 			if (value==null)
 				value = "";
-			if(translator)
-				super.text = translator.translate(value);
-			else
-				super.text = value;
+			super.text = value;
 		}
 		
 		
