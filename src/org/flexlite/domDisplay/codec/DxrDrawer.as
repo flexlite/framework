@@ -95,6 +95,28 @@ package org.flexlite.domDisplay.codec
 				dxrData.filterOffsetList[frame] = filterOffset;
 			}
 		}
+		/**
+		 * 绘制一个显示对象的当前外观，存储其一帧位图信息到dxrData内
+		 */		
+		dx_internal function drawWithoutFilter(dp:DisplayObject,dxrData:DxrData,frame:int):void
+		{
+			var dpRect:Rectangle = dp.getBounds(dp);
+			
+			if(Math.abs(dpRect.left%1)>0)
+				dpRect.width += 1;
+			if(Math.abs(dpRect.top%1)>0)
+				dpRect.height += 1;
+			if(dpRect.width<1)
+				dpRect.width = 1;
+			if(dpRect.height<1)
+				dpRect.height = 1;
+			var matrix:Matrix = new Matrix(1,0,0,1,-dpRect.left,-dpRect.top);
+			var frameData:BitmapData = new BitmapData(dpRect.width,dpRect.height,true,0); 
+			var ct:ColorTransform = drawColorTransfrom(dp);
+			frameData.draw(dp,matrix,ct,null,null,true);
+			dxrData.frameList[frame] = frameData;
+			dxrData.frameOffsetList[frame] = new Point(Math.round(dpRect.left),Math.round(dpRect.top));
+		}
 		
 		/**
 		 * 获取指定显示对象的除去alpha值的colorTransform对象。若对象各个属性都是初始状态，则返回null。

@@ -123,24 +123,32 @@ package org.flexlite.domDisplay
 		 * 要绘制的目标显示对象
 		 */		
 		private var drawTarget:DisplayObject;
+		/**
+		 * 是否绘制滤镜
+		 */		
+		private var containsFilter:Boolean = false;
 		
 		/**
 		 * 位图化一个显示对象或多帧的影片剪辑。<br/>
 		 * 出于性能优化考虑，此方法并不会立即执行绘制操作，而是等待外部第一次访问其某一帧位图数据时才绘制该帧。
+		 * @param drawTarget 要绘制的目标显示对象。
+		 * @param containsFilter 当目标对象或其子孙项含有滤镜时，绘制出的滤镜效果可能会被截边。
+		 * 设置此属性true将绘制出包完整含滤镜效果的位图。但是绘制耗时会更长。请根据绘制目标酌情考虑是否开启。默认为false。
 		 */		
-		public function draw(dp:DisplayObject):void
+		public function draw(drawTarget:DisplayObject,containsFilter:Boolean = false):void
 		{
-			if(drawTarget==dp)
+			if(this.drawTarget==drawTarget)
 				return;
+			this.drawTarget = drawTarget;
+			this.containsFilter = containsFilter;
 			drawCount = 0;
 			frameList = [];
 			frameOffsetList = [];
 			filterOffsetList = [];
-			drawTarget = dp;
-			if(dp)
+			if(drawTarget)
 			{
-				_scale9Grid = dp.scale9Grid;
-				var mc:MovieClip = dp as MovieClip;
+				_scale9Grid = drawTarget.scale9Grid;
+				var mc:MovieClip = drawTarget as MovieClip;
 				if(mc)
 				{
 					_frameLabels = mc.currentLabels;
@@ -177,14 +185,13 @@ package org.flexlite.domDisplay
 				dxrDrawer = new DxrDrawer();
 			var mc:MovieClip = drawTarget as MovieClip;
 			if(mc)
-			{
 				mc.gotoAndStop(frame+1);
-				dxrDrawer.drawDisplayObject(mc,this,frame);
-			}
+
+			if(containsFilter)
+				dxrDrawer.drawDisplayObject(drawTarget,this,frame);
 			else
-			{
-				dxrDrawer.drawDisplayObject(drawTarget,this,0);
-			}
+				dxrDrawer.drawWithoutFilter(drawTarget,this,frame);
+			
 			drawCount++;
 			if(drawCount==frameList.length)
 			{
