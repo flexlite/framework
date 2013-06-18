@@ -151,7 +151,10 @@ package org.flexlite.domUI.components
 					animator.easer = null;
 				}
 				if (animator.isPlaying)
+				{
+					setValue(nearestValidValue(animator.motionPaths[0].valueTo, snapInterval));
 					animator.stop();
+				}
 				var duration:Number = _slideDuration * 
 					(Math.abs(super.value - slideToValue) / (maximum - minimum));
 				animator.duration = duration===Infinity?0:duration;
