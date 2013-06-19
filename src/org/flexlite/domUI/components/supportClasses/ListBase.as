@@ -662,7 +662,8 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.addEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.addEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.addEventListener(MouseEvent.CLICK, item_mouseEventHandler,false,-50);
+			//这里不监听Click事件，因为有可能在mouseDown时子项改变，无法触发Click事件，但是可以触发MouseUp事件
+			renderer.addEventListener(MouseEvent.MOUSE_UP, item_mouseEventHandler,false,-50);
 		}
 		/**
 		 * 项呈示器被移除
@@ -676,11 +677,11 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.removeEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.removeEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.removeEventListener(MouseEvent.CLICK, item_mouseEventHandler);
+			renderer.removeEventListener(MouseEvent.MOUSE_UP, item_mouseEventHandler);
 		}
 		
 		private static const TYPE_MAP:Object = {rollOver:"itemRollOver",
-			rollOut:"itemRollOut",click:"itemClick"};
+			rollOut:"itemRollOut",mouseUp:"itemClick"};
 		
 		/**
 		 * 项呈示器鼠标事件
