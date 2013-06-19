@@ -517,15 +517,14 @@ package org.flexlite.domUI.layouts
 			}
 			else if(!widthHasSet&&!heightHasSet)
 			{
+				var side:Number = Math.sqrt(numElements*itemWidth*itemHeight);
 				if(orientedByColumns)
 				{
-					_rowCount = Math.sqrt(numElements*itemWidth/itemHeight);
-					_rowCount = Math.max(1,Math.floor(_rowCount));
+					_rowCount = Math.max(1,Math.round(side/itemHeight));
 				}
 				else
 				{
-					_columnCount = Math.sqrt(numElements*itemHeight/itemWidth);
-					_columnCount = Math.max(1,Math.floor(_columnCount));
+					_columnCount = Math.max(1,Math.round(side/itemWidth));
 				}
 			}
 			else if(widthHasSet&&(!heightHasSet||!orientedByColumns))
