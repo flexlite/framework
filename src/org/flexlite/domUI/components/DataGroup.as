@@ -323,6 +323,8 @@ package org.flexlite.domUI.components
 			dataProviderChanged = true;
 			cleanFreeRenderer = true;
 			invalidateProperties();
+			invalidateSize();
+			invalidateDisplayList();
 		}
 		/**
 		 * 移除数据源监听
