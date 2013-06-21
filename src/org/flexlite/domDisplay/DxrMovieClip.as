@@ -83,9 +83,13 @@ package org.flexlite.domDisplay
 				value = 60;
 			if(value==_frameRate)
 				return;
+			var isPlaying:Boolean = eventListenerAdded;
+			removeTimerEventListener();
 			_frameRate = value;
+			if(isPlaying)
+				attachTimerEventListener();
 		}
-
+		
 		
 		/**
 		 * smoothing改变标志
@@ -140,7 +144,7 @@ package org.flexlite.domDisplay
 		{
 			return _dxrData;
 		}
-
+		
 		public function set dxrData(value:DxrData):void
 		{
 			if(_dxrData==value)
@@ -249,29 +253,48 @@ package org.flexlite.domDisplay
 			var needAddEventListener:Boolean = (!remove&&inStage&&!isStop&&totalFrames>1&&visible);
 			if(eventListenerAdded==needAddEventListener)
 				return;
-			var timer:Timer = timerDic[_frameRate];
 			if(eventListenerAdded)
 			{
-				timer.removeEventListener(TimerEvent.TIMER,render);
-				timerEventCount[_frameRate] --;
-				if(timerEventCount[_frameRate]<=0)
-					timer.stop();
-				eventListenerAdded = false;
+				removeTimerEventListener();
 			}
 			else
 			{
-				if(!timer)
-				{
-					timer = new Timer(1000 / _frameRate);
-					timerDic[_frameRate] = timer;
-					timerEventCount[_frameRate] = 0;
-				}
-				if(!timer.running)
-					timer.start();
-				timer.addEventListener(TimerEvent.TIMER,render);
-				timerEventCount[_frameRate] ++;
-				eventListenerAdded = true;
+				attachTimerEventListener();
 			}
+		}
+		/**
+		 * 移除当前的Timer事件监听
+		 */		
+		private function removeTimerEventListener():void
+		{
+			if(!eventListenerAdded)
+				return;
+			var timer:Timer = timerDic[_frameRate];
+			timer.removeEventListener(TimerEvent.TIMER,render);
+			timerEventCount[_frameRate] --;
+			if(timerEventCount[_frameRate]<=0)
+				timer.stop();
+			eventListenerAdded = false;
+		}
+		/**
+		 * 添加当前的Timer事件监听
+		 */
+		private function attachTimerEventListener():void
+		{
+			if(eventListenerAdded)
+				return;
+			var timer:Timer = timerDic[_frameRate];
+			if(!timer)
+			{
+				timer = new Timer(1000 / _frameRate);
+				timerDic[_frameRate] = timer;
+				timerEventCount[_frameRate] = 0;
+			}
+			if(!timer.running)
+				timer.start();
+			timer.addEventListener(TimerEvent.TIMER,render);
+			timerEventCount[_frameRate] ++;
+			eventListenerAdded = true;
 		}
 		
 		/**
@@ -372,7 +395,7 @@ package org.flexlite.domDisplay
 		{
 			return escapeNaN(_width);
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -411,7 +434,7 @@ package org.flexlite.domDisplay
 		{
 			return escapeNaN(_height);
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -494,7 +517,7 @@ package org.flexlite.domDisplay
 				}
 			}
 		}
-
+		
 		private var _currentFrame:int = 0;
 		/**
 		 * @inheritDoc
@@ -503,7 +526,7 @@ package org.flexlite.domDisplay
 		{
 			return _currentFrame;
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
