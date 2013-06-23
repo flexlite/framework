@@ -3,10 +3,11 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
 	import org.flexlite.domUI.core.IVisualElement;
-	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 
 	use namespace dx_internal;
@@ -95,12 +96,14 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented())
 				return;
 			
+			var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
 			var newIndex:int
-			if (event.currentTarget is IItemRenderer)
-				newIndex = IItemRenderer(event.currentTarget).itemIndex;
+			if (itemRenderer)
+				newIndex = itemRenderer.itemIndex;
 			else
 				newIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
 			setSelectedIndex(newIndex, true);
+			dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 	}
 }

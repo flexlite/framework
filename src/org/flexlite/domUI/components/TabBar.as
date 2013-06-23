@@ -5,6 +5,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
 	
@@ -132,13 +133,13 @@ package org.flexlite.domUI.components
 		 */		
 		private function item_clickHandler(event:MouseEvent):void
 		{
-			var newIndex:int;
-			if (event.currentTarget is IItemRenderer)
-				newIndex = IItemRenderer(event.currentTarget).itemIndex;
+			var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
+			var newIndex:int
+			if (itemRenderer)
+				newIndex = itemRenderer.itemIndex;
 			else
 				newIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
 			
-			var oldSelectedIndex:int = selectedIndex;
 			if (newIndex == selectedIndex)
 			{
 				if (!requireSelection)
@@ -146,6 +147,7 @@ package org.flexlite.domUI.components
 			}
 			else
 				setSelectedIndex(newIndex, true);
+			dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
 		/**

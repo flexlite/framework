@@ -662,8 +662,6 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.addEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.addEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			//这里不监听Click事件，因为有可能在mouseDown时子项改变，无法触发Click事件，但是可以触发MouseUp事件
-			renderer.addEventListener(MouseEvent.MOUSE_UP, item_mouseEventHandler,false,-50);
 		}
 		/**
 		 * 项呈示器被移除
@@ -677,11 +675,10 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.removeEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.removeEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.removeEventListener(MouseEvent.MOUSE_UP, item_mouseEventHandler);
 		}
 		
 		private static const TYPE_MAP:Object = {rollOver:"itemRollOver",
-			rollOut:"itemRollOut",mouseUp:"itemClick"};
+			rollOut:"itemRollOut"};
 		
 		/**
 		 * 项呈示器鼠标事件
@@ -693,27 +690,36 @@ package org.flexlite.domUI.components.supportClasses
 			if (hasEventListener(type))
 			{
 				var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
-				
-				var itemIndex:int = -1;
-				if (itemRenderer)
-					itemIndex = itemRenderer.itemIndex;
-				else
-					itemIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
-				
-				var listEvent:ListEvent = new ListEvent(type, false, false,
-					event.localX,
-					event.localY,
-					event.relatedObject,
-					event.ctrlKey,
-					event.altKey,
-					event.shiftKey,
-					event.buttonDown,
-					event.delta,
-					itemIndex,
-					dataProvider.getItemAt(itemIndex),
-					itemRenderer);
-				dispatchEvent(listEvent);
+				dispatchListEvent(event,type,itemRenderer);
 			}
+		}
+		/**
+		 * 抛出列表事件
+		 * @param mouseEvent 相关联的鼠标事件
+		 * @param type 事件名称
+		 * @param itemRenderer 关联的条目渲染器实例
+		 */		
+		dx_internal function dispatchListEvent(mouseEvent:MouseEvent,type:String,itemRenderer:IItemRenderer):void
+		{
+			var itemIndex:int = -1;
+			if (itemRenderer)
+				itemIndex = itemRenderer.itemIndex;
+			else
+				itemIndex = dataGroup.getElementIndex(mouseEvent.currentTarget as IVisualElement);
+
+			var listEvent:ListEvent = new ListEvent(type, false, false,
+				mouseEvent.localX,
+				mouseEvent.localY,
+				mouseEvent.relatedObject,
+				mouseEvent.ctrlKey,
+				mouseEvent.altKey,
+				mouseEvent.shiftKey,
+				mouseEvent.buttonDown,
+				mouseEvent.delta,
+				itemIndex,
+				dataProvider.getItemAt(itemIndex),
+				itemRenderer);
+			dispatchEvent(listEvent);
 		}
 		
 		/**
