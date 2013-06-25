@@ -2,13 +2,14 @@ package org.flexlite.domUI.components.supportClasses
 {
 	
 	import flash.display.DisplayObject;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import org.flexlite.domUI.collections.ICollection;
-	import org.flexlite.domUI.components.List;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.collections.ICollection;
+	import org.flexlite.domUI.components.IItemRenderer;
+	import org.flexlite.domUI.components.List;
 	import org.flexlite.domUI.events.CollectionEvent;
+	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
@@ -37,6 +38,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function DropDownListBase()
 		{
 			super();
+			captureItemRenderer = false;
 			dropDownController = new DropDownController();
 		}
 		
@@ -263,6 +265,10 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function item_mouseDownHandler(event:MouseEvent):void
 		{
 			super.item_mouseDownHandler(event);
+			
+			var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
+			dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+			
 			userProposedSelectedIndex = selectedIndex;
 			closeDropDown(true);
 		}
