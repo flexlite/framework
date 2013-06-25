@@ -708,6 +708,8 @@ package org.flexlite.domUI.components.supportClasses
 		private function trackScrollTimerHandler(event:Event):void
 		{
 			var newScrollValue:Number = pointToValue(trackPosition.x, trackPosition.y);
+			if(newScrollValue==value)
+				return;
 			var fixedThumbSize:Boolean = _fixedThumbSize !== false;
 			if (trackScrollDown)
 			{
