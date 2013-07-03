@@ -345,6 +345,21 @@ package org.flexlite.domDisplay
 			var s9g:Rectangle = new Rectangle(
 				target.scale9Grid.x-roundedDrawX,target.scale9Grid.y-roundedDrawY,
 				target.scale9Grid.width,target.scale9Grid.height);
+			//防止空心的情况出现。
+			if(s9g.top==s9g.bottom)
+			{
+				if(s9g.bottom<bitmapData.height)
+					s9g.bottom ++;
+				else
+					s9g.top --;
+			}
+			if(s9g.left==s9g.right)
+			{
+				if(s9g.right<bitmapData.width)
+					s9g.right ++;
+				else
+					s9g.left --;
+			}
 			var cachedSourceGrid:Array = target.cachedSourceGrid;
 			if (cachedSourceGrid == null)
 			{
