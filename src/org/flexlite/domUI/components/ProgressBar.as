@@ -142,6 +142,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
+				validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
 				slideToValue = nearestValidValue(newValue, snapInterval);
 				if(slideToValue==super.value)
 					return;
