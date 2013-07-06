@@ -60,7 +60,11 @@ package org.flexlite.domUI.collections
 				{
 					nodeList.push(_source);
 				}
-				addChildren(_source,nodeList);
+				else
+				{
+					_openNodes = [_source];
+					addChildren(_source,nodeList);
+				}
 			}
 			dispatchCoEvent(CollectionEventKind.RESET);
 		}
@@ -131,12 +135,15 @@ package org.flexlite.domUI.collections
 			{
 				if(_showRoot)
 				{
-					nodeList.push(_source);
+					nodeList.splice(0,0,_source);
 				}
 				else
 				{
 					nodeList.shift();
+					if(openNodes.indexOf(_source)==-1)
+						openNodes.push(_source);
 				}
+				refresh();
 			}
 		}
 		
@@ -145,13 +152,12 @@ package org.flexlite.domUI.collections
 		 */		
 		private function addChildren(parent:Object,list:Array):void
 		{
-			if(!parent.hasOwnProperty(childrenKey))
+			if(!parent.hasOwnProperty(childrenKey)||_openNodes.indexOf(parent)==-1)
 				return;
 			for each(var child:Object in parent[childrenKey])
 			{
 				list.push(child);
-				if (_openNodes.indexOf(child)!=-1)
-					addChildren(child, list);
+				addChildren(child, list);
 			}
 		}
 		/**
@@ -210,12 +216,12 @@ package org.flexlite.domUI.collections
 			var index:int = _openNodes.indexOf(item);
 			if(index==-1)
 				return;
+			var list:Array = [];
+			addChildren(item,list);
 			_openNodes.splice(index,1);
 			index = nodeList.indexOf(item);
 			if(index!=-1)
 			{
-				var list:Array = [];
-				addChildren(item,list);
 				index++;
 				while(list.length)
 				{
