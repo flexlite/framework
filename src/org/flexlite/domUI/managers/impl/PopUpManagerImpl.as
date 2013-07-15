@@ -9,6 +9,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.components.Rect;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IInvalidating;
 	import org.flexlite.domUI.core.IUIComponent;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
@@ -256,6 +257,8 @@ package org.flexlite.domUI.managers.impl
 			var parent:DisplayObjectContainer = popUp.parent;
 			if(parent)
 			{
+				if(popUp is IInvalidating)
+					IInvalidating(popUp).validateNow();
 				popUp.x = (parent.width-popUp.layoutBoundsWidth)*0.5;
 				popUp.y = (parent.height-popUp.layoutBoundsHeight)*0.5;
 			}
