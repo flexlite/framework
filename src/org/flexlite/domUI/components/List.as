@@ -134,7 +134,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 鼠标在舞台上弹起
 		 */		
-		private function stage_mouseUpHandler(event:MouseEvent):void
+		private function stage_mouseUpHandler(event:Event):void
 		{
 			DomGlobals.stage.removeEventListener(MouseEvent.MOUSE_UP,stage_mouseUpHandler);
 			DomGlobals.stage.removeEventListener(Event.MOUSE_LEAVE,stage_mouseUpHandler);
