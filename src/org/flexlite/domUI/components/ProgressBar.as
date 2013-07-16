@@ -14,7 +14,7 @@ package org.flexlite.domUI.components
 	[DXML(show="true")]
 	
 	/**
-	 * 进度条控件。注意：此控件默认禁用鼠标事件。
+	 * 进度条控件。
 	 * @author chenglong
 	 */
 	public class ProgressBar extends Range
@@ -22,8 +22,6 @@ package org.flexlite.domUI.components
 		public function ProgressBar()
 		{
 			super();
-			mouseChildren = false;
-			mouseEnabled = false;
 		}
 		
 		/**
