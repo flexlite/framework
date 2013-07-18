@@ -340,10 +340,10 @@ package org.flexlite.domDisplay
 			{
 				offset = new Point();
 			}
-			var roundedDrawX:Number = Math.round(offset.x);
-			var roundedDrawY:Number = Math.round(offset.y);
+			var roundedDrawX:Number = Math.round(offset.x*width/bitmapData.width);
+			var roundedDrawY:Number = Math.round(offset.y*height/bitmapData.height);
 			var s9g:Rectangle = new Rectangle(
-				target.scale9Grid.x-roundedDrawX,target.scale9Grid.y-roundedDrawY,
+				target.scale9Grid.x-Math.round(offset.x),target.scale9Grid.y-Math.round(offset.y),
 				target.scale9Grid.width,target.scale9Grid.height);
 			//防止空心的情况出现。
 			if(s9g.top==s9g.bottom)
