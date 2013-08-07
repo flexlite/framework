@@ -134,16 +134,8 @@ package org.flexlite.domUI.effects
 				target["x"] = Math.round(animation.currentValue["x"+index]);
 				target["y"] = Math.round(animation.currentValue["y"+index]);
 				var element:IUIComponent = target as IUIComponent;
-				if(element)
-				{
-					element.setActualSize(Math.ceil(animation.currentValue["width"+index]),
-						Math.ceil(animation.currentValue["height"+index]));
-				}
-				else
-				{
-					target["width"] = Math.ceil(animation.currentValue["width"+index]);
-					target["height"] = Math.ceil(animation.currentValue["height"+index]);
-				}
+				target["width"] = Math.ceil(animation.currentValue["width"+index]);
+				target["height"] = Math.ceil(animation.currentValue["height"+index]);
 				index++;
 			}
 		}
