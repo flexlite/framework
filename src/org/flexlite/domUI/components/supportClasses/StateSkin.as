@@ -1,4 +1,4 @@
-package org.flexlite.domUI.skins
+package org.flexlite.domUI.components.supportClasses
 {
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
