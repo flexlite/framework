@@ -241,7 +241,7 @@ package org.flexlite.domUI.components
 			if (contentGroup&&_viewport)
 			{
 				_viewport.clipAndEnableScrolling = true;
-				_viewport.percentHeight = _viewport.percentWidth = 100;
+				_viewport.left = _viewport.right = _viewport.top = _viewport.bottom = 0;
 				contentGroup.addElementAt(_viewport, 0);
 				_viewport.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
@@ -276,7 +276,7 @@ package org.flexlite.domUI.components
 			if (skin && _viewport)
 			{
 				_viewport.clipAndEnableScrolling = false;
-				_viewport.percentHeight = _viewport.percentWidth = NaN;
+				_viewport.left = _viewport.right = _viewport.top = _viewport.bottom = NaN;
 				contentGroup.removeElement(_viewport);
 				_viewport.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);	
