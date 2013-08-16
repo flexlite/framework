@@ -4,6 +4,7 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ArrayCollection;
+	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.IndexChangeEvent;
@@ -25,7 +26,7 @@ package org.flexlite.domUI.components
 	 * 使用子项的name属性作为选项卡上显示的字符串。
 	 * @author DOM
 	 */
-	public class TabNavigator extends SkinnableContainer
+	public class TabNavigator extends SkinnableContainer implements IViewStack
 	{
 		/**
 		 * 构造函数

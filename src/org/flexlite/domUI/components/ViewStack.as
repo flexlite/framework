@@ -4,6 +4,7 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.IndexChangeEvent;
@@ -23,7 +24,7 @@ package org.flexlite.domUI.components
 	 * 层级堆叠容器,一次只显示一个子对象。
 	 * @author DOM
 	 */
-	public class ViewStack extends Group
+	public class ViewStack extends Group implements IViewStack
 	{
 		/**
 		 * 构造函数
