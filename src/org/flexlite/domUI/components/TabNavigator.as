@@ -101,7 +101,7 @@ package org.flexlite.domUI.components
 		}
 
 		/**
-		 * 当前可见的子元素。
+		 * @inheritDoc
 		 */		
 		public function get selectedChild():IVisualElement
 		{
@@ -122,8 +122,8 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * 当前可见子元素的索引。索引从0开始。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get selectedIndex():int
 		{
 			if(viewStack)

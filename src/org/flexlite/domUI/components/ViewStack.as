@@ -79,8 +79,8 @@ package org.flexlite.domUI.components
 
 		private var _selectedChild:IVisualElement;
 		/**
-		 * 当前可见的子元素。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get selectedChild():IVisualElement
 		{
 			var index:int = selectedIndex;
@@ -106,8 +106,8 @@ package org.flexlite.domUI.components
 		
 		dx_internal var _selectedIndex:int = -1;
 		/**
-		 * 当前可见子元素的索引。索引从0开始。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get selectedIndex():int
 		{
 			return proposedSelectedIndex!=NO_PROPOSED_SELECTION?proposedSelectedIndex:_selectedIndex;
