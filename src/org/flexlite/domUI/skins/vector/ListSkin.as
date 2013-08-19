@@ -20,6 +20,8 @@ package org.flexlite.domUI.skins.vector
 		public function ListSkin()
 		{
 			super();
+			minWidth = 70;
+			minHeight = 70;
 		}
 		
 		public var dataGroup:DataGroup;
