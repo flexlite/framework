@@ -8,6 +8,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
+	import org.flexlite.domUI.layouts.VerticalAlign;
 	
 	use namespace dx_internal;  
 	
@@ -160,6 +161,7 @@ package org.flexlite.domUI.components
 			dataGroup.clipAndEnableScrolling = true;
 			var layout:HorizontalLayout = new HorizontalLayout();
 			layout.gap = -1;
+			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
 			dataGroup.layout = layout;
 			addToDisplayList(dataGroup);
 			partAdded("dataGroup",dataGroup);

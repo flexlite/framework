@@ -32,17 +32,17 @@ package org.flexlite.domUI.skins.vector
 		override protected function createChildren():void
 		{
 			super.createChildren();
+			contentGroup = new ViewStack();
+			contentGroup.top = 25;
+			contentGroup.left = 0;
+			contentGroup.right = 0;
+			contentGroup.bottom = 0;
+			contentGroup.clipAndEnableScrolling = true;
+			addElement(contentGroup);
 			
 			tabBar = new TabBar();
 			tabBar.height = 25;
 			addElement(tabBar);
-			
-			contentGroup = new ViewStack();
-			contentGroup.top = 28;
-			contentGroup.left = 0;
-			contentGroup.right = 0;
-			contentGroup.bottom = 0;
-			addElement(contentGroup);
 		}
 		
 		/**

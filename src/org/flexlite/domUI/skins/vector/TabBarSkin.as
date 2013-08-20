@@ -4,6 +4,7 @@ package org.flexlite.domUI.skins.vector
 	import org.flexlite.domUI.components.DataGroup;
 	import org.flexlite.domUI.components.TabBarButton;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
+	import org.flexlite.domUI.layouts.VerticalAlign;
 	import org.flexlite.domUI.skins.VectorSkin;
 	
 	use namespace dx_internal;
@@ -32,6 +33,7 @@ package org.flexlite.domUI.skins.vector
 			dataGroup.itemRenderer = TabBarButton;
 			var layout:HorizontalLayout = new HorizontalLayout();
 			layout.gap = -1;
+			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
 			dataGroup.layout = layout;
 			addElement(dataGroup);
 		}
