@@ -861,8 +861,10 @@ package org.flexlite.domUI.components
 			if(!_dataProvider)
 				return;
 			var index:int = 0;
-			for each(var item:Object in _dataProvider)
+			var length:int = _dataProvider.length;
+			for(var i:int=0;i<length;i++)
 			{
+				var item:Object = _dataProvider.getItemAt(i);
 				var rendererClass:Class = itemToRendererClass(item);
 				var renderer:IItemRenderer = createOneRenderer(rendererClass);
 				if(!renderer)

@@ -1,10 +1,14 @@
 package org.flexlite.domUI.components
 {
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
+	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
@@ -56,6 +60,44 @@ package org.flexlite.domUI.components
 			requireSelectionChanged = true;
 			invalidateProperties();
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set dataProvider(value:ICollection):void
+		{
+			if(dataProvider is IViewStack)
+			{
+				dataProvider.removeEventListener("IndexChanged",onViewStackIndexChange);
+				removeEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
+			}
+			
+			if(value is IViewStack)
+			{
+				value.addEventListener("IndexChanged",onViewStackIndexChange);
+				addEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
+			}
+			super.dataProvider = value;
+		}
+		/**
+		 * 鼠标点击的选中项改变
+		 */		
+		private function onIndexChanged(event:IndexChangeEvent):void
+		{
+			if(dataProvider is ViewStack)
+				ViewStack(dataProvider).setSelectedIndex(event.newIndex,false);
+			else
+				IViewStack(dataProvider).selectedIndex = event.newIndex;
+		}
+		
+		/**
+		 * ViewStack选中项发生改变
+		 */		
+		private function onViewStackIndexChange(event:Event):void
+		{
+			setSelectedIndex(IViewStack(dataProvider).selectedIndex, false);
+		}
+		
 		
 		/**
 		 * @inheritDoc

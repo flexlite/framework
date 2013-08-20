@@ -1,9 +1,6 @@
 package org.flexlite.domUI.components
 {
-	import flash.events.Event;
-	
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.collections.ArrayCollection;
 	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
@@ -146,10 +143,6 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * TabBar数据源
-		 */		
-		private var tabBarData:ArrayCollection = new ArrayCollection;
-		/**
 		 * @inheritDoc
 		 */
 		override protected function partAdded(partName:String, instance:Object):void
@@ -157,14 +150,16 @@ package org.flexlite.domUI.components
 			super.partAdded(partName,instance);
 			if(instance==tabBar)
 			{
-				tabBar.dataProvider = tabBarData;
+				if(viewStack&&tabBar.dataProvider != viewStack)
+					tabBar.dataProvider = viewStack;
 				tabBar.selectedIndex = viewStack?viewStack.selectedIndex:-1;
-				tabBar.addEventListener(IndexChangeEvent.CHANGE,onTabBarIndexChange);
+				tabBar.addEventListener(IndexChangeEvent.CHANGE,dispatchEvent);
 				tabBar.addEventListener(IndexChangeEvent.CHANGING,onTabBarIndexChanging);
 			}
 			else if(instance==viewStack)
 			{
-				viewStack.addEventListener("IndexChanged",onViewStackIndexChange);
+				if(tabBar&&tabBar.dataProvider != viewStack)
+					tabBar.dataProvider = viewStack;
 				if(viewStackProperties.selectedIndex!==undefined)
 				{
 					viewStack.selectedIndex = viewStackProperties.selectedIndex;
@@ -187,22 +182,13 @@ package org.flexlite.domUI.components
 			if(instance==tabBar)
 			{
 				tabBar.dataProvider = null;
-				tabBar.removeEventListener(IndexChangeEvent.CHANGE,onTabBarIndexChange);
+				tabBar.removeEventListener(IndexChangeEvent.CHANGE,dispatchEvent);
 				tabBar.removeEventListener(IndexChangeEvent.CHANGING,onTabBarIndexChanging);
 			}
 			else if(instance==viewStack)
 			{
-				viewStack.removeEventListener("IndexChanged",onViewStackIndexChange);
 				viewStackProperties.selectedIndex = viewStack.selectedIndex;
 			}
-		}
-		/**
-		 * ViewStack选中项改变事件
-		 */		
-		private function onViewStackIndexChange(event:Event):void
-		{
-			if(tabBar)
-				tabBar.selectedIndex = viewStack.selectedIndex;
 		}
 		
 		/**
@@ -213,33 +199,7 @@ package org.flexlite.domUI.components
 			if(!dispatchEvent(event))
 				event.preventDefault();
 		}
-		/**
-		 * TabBar选中项改变事件
-		 */		
-		private function onTabBarIndexChange(event:IndexChangeEvent):void
-		{
-			if(viewStack)
-				viewStack.setSelectedIndex(event.newIndex,false);
-			dispatchEvent(event);
-		}
 
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
-		{
-			super.contentGroup_elementAddedHandler(event);
-			tabBarData.addItemAt(event.element.name,event.index);
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
-		{
-			super.contentGroup_elementRemovedHandler(event);
-			tabBarData.removeItemAt(event.index);
-		}
-		
 		/**
 		 * @inheritDoc
 		 */

@@ -4,8 +4,11 @@ package org.flexlite.domUI.components
 	import flash.events.Event;
 	
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.CollectionEvent;
+	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.events.UIEvent;
@@ -15,7 +18,10 @@ package org.flexlite.domUI.components
 	use namespace dx_internal;
 	
 	[DXML(show="true")]
-	
+	/**
+	 * 集合数据发生改变 
+	 */	
+	[Event(name="collectionChange", type="org.flexlite.domUI.events.CollectionEvent")]
 	/**
 	 * 属性提交事件,当修改选中项时会抛出这个事件。
 	 */	
@@ -24,7 +30,7 @@ package org.flexlite.domUI.components
 	 * 层级堆叠容器,一次只显示一个子对象。
 	 * @author DOM
 	 */
-	public class ViewStack extends Group implements IViewStack
+	public class ViewStack extends Group implements IViewStack,ICollection
 	{
 		/**
 		 * 构造函数
@@ -117,7 +123,7 @@ package org.flexlite.domUI.components
 			setSelectedIndex(value);
 		}
 		
-		private var notifyTabNavigator:Boolean = false;
+		private var notifyTabBar:Boolean = false;
 		/**
 		 * 设置选中项索引
 		 */		
@@ -132,7 +138,7 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 			
 			dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
-			notifyTabNavigator = notifyTabNavigator||notifyListeners;
+			notifyTabBar = notifyTabBar||notifyListeners;
 		}
 		
 		/**
@@ -162,6 +168,7 @@ package org.flexlite.domUI.components
 			{
 				setSelectedIndex(selectedIndex + 1);
 			}
+			dispatchCoEvent(CollectionEventKind.ADD,index,-1,[element.name]);
 		}
 		
 		
@@ -192,6 +199,7 @@ package org.flexlite.domUI.components
 			{
 				setSelectedIndex(selectedIndex - 1);
 			}
+			dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[element.name]);
 		}
 		
 		/**
@@ -221,10 +229,10 @@ package org.flexlite.domUI.components
 				}
 			}
 			
-			if(notifyTabNavigator)
+			if(notifyTabBar)
 			{
-				notifyTabNavigator = true;
-				dispatchEvent(new Event("IndexChanged"));//通知TabNavigator自己的选中项发生改变
+				notifyTabBar = true;
+				dispatchEvent(new Event("IndexChanged"));//通知TabBar自己的选中项发生改变
 			}
 		}
 		
@@ -258,6 +266,50 @@ package org.flexlite.domUI.components
 			}
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		/**
+		 * @inheritDoc
+		 */	
+		public function get length():int
+		{
+			return numElements;
+		}
+		/**
+		 * @inheritDoc
+		 */			
+		public function getItemAt(index:int):Object
+		{
+			var element:IVisualElement = getElementAt(index);
+			if(element)
+				return element.name;
+			return "";
+		}
+		/**
+		 * @inheritDoc
+		 */		
+		public function getItemIndex(item:Object):int
+		{
+			var list:Array = getElementsContent();
+			var length:int = list.length;
+			for(var i:int=0;i<length;i++)
+			{
+				if(list[i].name===item)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+		
+		/**
+		 * 抛出事件
+		 */		
+		private function dispatchCoEvent(kind:String = null, location:int = -1,
+										 oldLocation:int = -1, items:Array = null,oldItems:Array=null):void
+		{
+			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE,false,false,
+				kind,location,oldLocation,items,oldItems);
+			dispatchEvent(event);
 		}
 
 	}
