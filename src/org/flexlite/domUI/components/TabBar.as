@@ -10,6 +10,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.HorizontalLayout;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	
@@ -199,6 +200,7 @@ package org.flexlite.domUI.components
 			dataGroup.clipAndEnableScrolling = true;
 			var layout:HorizontalLayout = new HorizontalLayout();
 			layout.gap = -1;
+			layout.horizontalAlign = HorizontalAlign.JUSTIFY;
 			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
 			dataGroup.layout = layout;
 			addToDisplayList(dataGroup);

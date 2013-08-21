@@ -42,7 +42,7 @@ package org.flexlite.domUI.layouts
 		private var _verticalAlign:String = VerticalAlign.TOP;
 		/**
 		 * 布局元素的竖直对齐策略。参考VerticalAlign定义的常量。
-		 * 注意：对VerticalLayout.verticalAlign设置JUSTIFY和CONTENT_JUSTIFY无效。
+		 * 注意：此属性设置为CONTENT_JUSTIFY始终无效。当useVirtualLayout为true时，设置JUSTIFY也无效。
 		 */
 		public function get verticalAlign():String
 		{
@@ -622,9 +622,10 @@ package org.flexlite.domUI.layouts
 			var targetWidth:Number = Math.max(0, width - paddingL - paddingR);
 			var targetHeight:Number = Math.max(0, height - paddingT - paddingB);
 			// 获取水平布局参数
-			var justify:Boolean = _horizontalAlign==HorizontalAlign.JUSTIFY||_horizontalAlign==HorizontalAlign.CONTENT_JUSTIFY;
+			var vJustify:Boolean = _verticalAlign==VerticalAlign.JUSTIFY;
+			var hJustify:Boolean = _horizontalAlign==HorizontalAlign.JUSTIFY||_horizontalAlign==HorizontalAlign.CONTENT_JUSTIFY;
 			var hAlign:Number = 0;
-			if(!justify)
+			if(!hJustify)
 			{
 				if(_horizontalAlign==HorizontalAlign.CENTER)
 				{
@@ -643,11 +644,11 @@ package org.flexlite.domUI.layouts
 			var i:int;
 			var layoutElement:ILayoutElement;
 			
-			
-			var excessHeight:Number = targetHeight;
+			var totalPreferredHeight:Number = 0;
 			var totalPercentHeight:Number = 0;
 			var childInfoArray:Array = [];
 			var childInfo:ChildInfo;
+			var heightToDistribute:Number = targetHeight;
 			for (i = 0; i < count; i++)
 			{
 				layoutElement = target.getElementAt(i) as ILayoutElement;
@@ -656,52 +657,87 @@ package org.flexlite.domUI.layouts
 					numElements--;
 					continue;
 				}
-				if(!isNaN(layoutElement.percentHeight))
+				maxElementWidth = Math.max(maxElementWidth,layoutElement.preferredWidth);
+				if(vJustify)
 				{
-					totalPercentHeight += layoutElement.percentHeight;
-					
-					childInfo = new ChildInfo();
-					childInfo.layoutElement = layoutElement;
-					childInfo.percent    = layoutElement.percentHeight;
-					childInfo.min        = layoutElement.minHeight
-					childInfo.max        = layoutElement.maxHeight;
-					childInfoArray.push(childInfo);
+					totalPreferredHeight += layoutElement.preferredHeight;
 				}
 				else
 				{
-					maxElementWidth = Math.max(maxElementWidth,layoutElement.preferredWidth);
-					excessHeight -= layoutElement.layoutBoundsHeight;
+					if(!isNaN(layoutElement.percentHeight))
+					{
+						totalPercentHeight += layoutElement.percentHeight;
+						
+						childInfo = new ChildInfo();
+						childInfo.layoutElement = layoutElement;
+						childInfo.percent    = layoutElement.percentHeight;
+						childInfo.min        = layoutElement.minHeight
+						childInfo.max        = layoutElement.maxHeight;
+						childInfoArray.push(childInfo);
+					}
+					else
+					{
+						heightToDistribute -= layoutElement.preferredHeight;
+					}
 				}
+				
 			}
 			
-			excessHeight -= (numElements-1)*_gap;
-			excessHeight = excessHeight>0?excessHeight:0;
+			heightToDistribute -= (numElements-1)*_gap;
+			heightToDistribute = heightToDistribute>0?heightToDistribute:0;
+			var excessSpace:Number = targetHeight - totalPreferredHeight - gap * (numElements - 1);
 			
+			var averageHeight:Number;
+			var largeChildrenCount:int = numElements;
 			var heightDic:Dictionary = new Dictionary;
-			if(totalPercentHeight>0)
+			if(vJustify)
 			{
-				flexChildrenProportionally(targetHeight,excessHeight,
-					totalPercentHeight,childInfoArray);
-				var roundOff:Number = 0;
-				for each (childInfo in childInfoArray)
+				if(excessSpace<0)
 				{
-					var childSize:int = Math.round(childInfo.size + roundOff);
-					roundOff += childInfo.size - childSize;
-					
-					heightDic[childInfo.layoutElement] = childSize;
-					excessHeight -= childSize;
+					averageHeight = heightToDistribute / numElements;
+					for (i = 0; i < count; i++)
+					{
+						layoutElement = target.getElementAt(i);
+						if (!layoutElement || !layoutElement.includeInLayout)
+							continue;
+						
+						var preferredHeight:Number = layoutElement.preferredHeight;
+						if (preferredHeight <= averageHeight)
+						{
+							heightToDistribute -= preferredHeight;
+							largeChildrenCount--;
+							continue;
+						}
+					}
+					heightToDistribute = heightToDistribute>0?heightToDistribute:0;
 				}
 			}
-			
-			excessHeight = excessHeight>0?excessHeight:0;
+			else
+			{
+				if(totalPercentHeight>0)
+				{
+					flexChildrenProportionally(targetHeight,heightToDistribute,
+						totalPercentHeight,childInfoArray);
+					var roundOff:Number = 0;
+					for each (childInfo in childInfoArray)
+					{
+						var childSize:int = Math.round(childInfo.size + roundOff);
+						roundOff += childInfo.size - childSize;
+						
+						heightDic[childInfo.layoutElement] = childSize;
+						heightToDistribute -= childSize;
+					}
+					heightToDistribute = heightToDistribute>0?heightToDistribute:0;
+				}
+			}
 		
 			if(_verticalAlign==VerticalAlign.MIDDLE)
 			{
-				y = paddingT+Math.round(excessHeight*0.5);
+				y = paddingT+Math.round(heightToDistribute*0.5);
 			}
 			else if(_verticalAlign==VerticalAlign.BOTTOM)
 			{
-				y = paddingT+Math.round(excessHeight);
+				y = paddingT+Math.round(heightToDistribute);
 			}
 			
 			//开始对所有元素布局
@@ -712,16 +748,41 @@ package org.flexlite.domUI.layouts
 			var justifyWidth:Number = Math.ceil(targetWidth);
 			if(_horizontalAlign==HorizontalAlign.CONTENT_JUSTIFY)
 				justifyWidth = Math.ceil(Math.max(targetWidth,maxElementWidth));
+			roundOff = 0;
+			var layoutElementHeight:Number = NaN;
+			var childHeight:Number;
 			for (i = 0; i < count; i++)
 			{
 				var exceesWidth:Number = 0;
 				layoutElement = target.getElementAt(i) as ILayoutElement;
 				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
-				if(justify)
+				layoutElementHeight = NaN;
+				if(vJustify)
+				{
+					childHeight = NaN;
+					if(excessSpace>0)
+					{
+						childHeight = heightToDistribute * layoutElement.preferredHeight / totalPreferredHeight;
+					}
+					else if(excessSpace<0&&layoutElement.preferredHeight>averageHeight)
+					{
+						childHeight = heightToDistribute / largeChildrenCount
+					}
+					if(!isNaN(childHeight))
+					{
+						layoutElementHeight = Math.round(childHeight + roundOff);
+						roundOff += childHeight - layoutElementHeight;
+					}
+				}
+				else
+				{
+					layoutElementHeight = heightDic[layoutElement];
+				}
+				if(hJustify)
 				{
 					x = paddingL;
-					layoutElement.setLayoutBoundsSize(justifyWidth,heightDic[layoutElement]);
+					layoutElement.setLayoutBoundsSize(justifyWidth,layoutElementHeight);
 				}
 				else
 				{
@@ -731,7 +792,7 @@ package org.flexlite.domUI.layouts
 						var percent:Number = Math.min(100,layoutElement.percentWidth);
 						layoutElementWidth = Math.round(targetWidth*percent*0.01);
 					}
-					layoutElement.setLayoutBoundsSize(layoutElementWidth,heightDic[layoutElement]);
+					layoutElement.setLayoutBoundsSize(layoutElementWidth,layoutElementHeight);
 					exceesWidth = (targetWidth - layoutElement.layoutBoundsWidth)*hAlign;
 					exceesWidth = exceesWidth>0?exceesWidth:0;
 					x = paddingL+Math.round(exceesWidth);
