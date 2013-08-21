@@ -23,7 +23,7 @@ package org.flexlite.domUI.components
 	 */	
 	[Event(name="skinChanged", type="org.flexlite.domUI.events.UIEvent")]
 	
-	[DXML(show="false")]
+	[DXML(show="true")]
 	
 	/**
 	 * 素材包装器。<p/>

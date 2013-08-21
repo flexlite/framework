@@ -6,7 +6,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
-	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.IndexChangeEvent;
 	import org.flexlite.domUI.events.ListEvent;
@@ -66,13 +65,13 @@ package org.flexlite.domUI.components
 		 */
 		override public function set dataProvider(value:ICollection):void
 		{
-			if(dataProvider is IViewStack)
+			if(dataProvider is ViewStack)
 			{
 				dataProvider.removeEventListener("IndexChanged",onViewStackIndexChange);
 				removeEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
 			}
 			
-			if(value is IViewStack)
+			if(value is ViewStack)
 			{
 				value.addEventListener("IndexChanged",onViewStackIndexChange);
 				addEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
@@ -84,10 +83,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function onIndexChanged(event:IndexChangeEvent):void
 		{
-			if(dataProvider is ViewStack)
-				ViewStack(dataProvider).setSelectedIndex(event.newIndex,false);
-			else
-				IViewStack(dataProvider).selectedIndex = event.newIndex;
+			ViewStack(dataProvider).setSelectedIndex(event.newIndex,false);
 		}
 		
 		/**
@@ -95,7 +91,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function onViewStackIndexChange(event:Event):void
 		{
-			setSelectedIndex(IViewStack(dataProvider).selectedIndex, false);
+			setSelectedIndex(ViewStack(dataProvider).selectedIndex, false);
 		}
 		
 		
