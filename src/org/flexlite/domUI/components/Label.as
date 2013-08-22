@@ -304,7 +304,7 @@ package org.flexlite.domUI.components
 			
 			if(rangeFormatChanged)
 			{
-				if(!needSetDefaultFormat)
+				if(needSetDefaultFormat)
 					textField.$setTextFormat(defaultTextFormat);
 				applyRangeFormat();
 				rangeFormatChanged = false;
@@ -527,6 +527,13 @@ package org.flexlite.domUI.components
 					return;
 				}
 			}
+			//防止在父级validateDisplayList()阶段改变的text属性值，
+			//接下来直接调用自身的updateDisplayList()而没有经过measu(),使用的测量尺寸是上一次的错误值。
+			if(invalidatePropertiesFlag)
+				validateProperties();
+			if(invalidateSizeFlag)
+				validateSize();
+			
 			if(!textField.visible)//解决初始化时文本闪烁问题
 				textField.visible = true;
 			if(_isTruncated)
