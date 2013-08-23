@@ -1,11 +1,10 @@
-package org.flexlite.domUI.components.supportClasses
+package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IStateClient;
