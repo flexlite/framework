@@ -94,7 +94,7 @@ package org.flexlite.domDll.resolvers
 			loader.removeEventListener(Event.COMPLETE,onLoadFinish);
 			loader.removeEventListener(ProgressEvent.PROGRESS,onProgress);
 			var data:Object = dllItemDic[loader];
-			delete dllItemDic[data];
+			delete dllItemDic[loader];
 			var dllItem:DllItem = data.item;
 			var compFunc:Function = data.func;
 			dllItem.loaded = (event.type==Event.COMPLETE);
