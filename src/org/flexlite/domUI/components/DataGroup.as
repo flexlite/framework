@@ -2,8 +2,10 @@ package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
@@ -271,6 +273,7 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		private var cleanTimer:Timer;
 		/**
 		 * 虚拟布局结束清理不可见的项呈示器
 		 */		
@@ -279,6 +282,42 @@ package org.flexlite.domUI.components
 			if(!virtualLayoutUnderway)
 				return;
 			virtualLayoutUnderway = false;
+			var found:Boolean = false;
+			for(var clazz:* in freeRenderers)
+			{
+				if(freeRenderers[clazz].length>0)
+				{
+					found = true;
+					break;
+				}
+			}
+			if(!found)
+				return;
+			if(!cleanTimer)
+			{
+				cleanTimer = new Timer(3000,1);
+				cleanTimer.addEventListener(TimerEvent.TIMER,cleanAllFreeRenderer);
+			}
+			//为了提高持续滚动过程中的性能，防止反复地添加移除子项，这里不直接清理而是延迟后在滚动停止时清理一次。
+			cleanTimer.reset();
+			cleanTimer.start();
+		}
+		/**
+		 * 延迟清理多余的在显示列表中的ItemRenderer。
+		 */		
+		private function cleanAllFreeRenderer(event:TimerEvent=null):void
+		{
+			var renderer:IItemRenderer;
+			for each(var list:Vector.<IItemRenderer> in freeRenderers)
+			{
+				for each(renderer in list)
+				{
+					DisplayObject(renderer).visible = true;
+					recycle(renderer);
+				}
+			}
+			freeRenderers = new Dictionary;
+			cleanFreeRenderer = false;
 		}
 		
 		/**
@@ -686,7 +725,11 @@ package org.flexlite.domUI.components
 			if(typicalItemChanged)
 			{
 				typicalItemChanged = false;
-				measureRendererSize();
+				if (_dataProvider&&_dataProvider.length > 0)
+				{
+					typicalItem = _dataProvider.getItemAt(0);
+					measureRendererSize();
+				}
 			}
 			if(itemRendererSkinNameChange)
 			{
@@ -841,16 +884,7 @@ package org.flexlite.domUI.components
 			virtualRendererIndices = null;
 			if(!cleanFreeRenderer)
 				return;
-			for each(var list:Vector.<IItemRenderer> in freeRenderers)
-			{
-				for each(renderer in list)
-				{
-					DisplayObject(renderer).visible = true;
-					recycle(renderer);
-				}
-			}
-			freeRenderers = new Dictionary;
-			cleanFreeRenderer = false;
+			cleanAllFreeRenderer();
 		}
 		
 		/**
