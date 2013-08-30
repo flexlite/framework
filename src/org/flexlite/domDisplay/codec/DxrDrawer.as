@@ -85,11 +85,11 @@ package org.flexlite.domDisplay.codec
 			var frameData:BitmapData = new BitmapData(colorRect.width,colorRect.height,true,0);
 			frameData.copyPixels(tempBmData,colorRect,new Point(),null,null,true);
 			dxrData.frameList[frame] = frameData;
-			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x-offsetX,
-				Math.round(dpRect.top)+colorRect.y-offsetY);
+			var offsetPoint:Point = new Point(dpRect.left+colorRect.x-offsetX,
+				dpRect.top+colorRect.y-offsetY);
 			dxrData.frameOffsetList[frame] = offsetPoint;
-			var filterOffset:Point = new Point(Math.round(colorRect.width-dpRect.width),
-				Math.round(colorRect.height-dpRect.height));
+			var filterOffset:Point = new Point(colorRect.width-dpRect.width,
+				colorRect.height-dpRect.height);
 			if(filterOffset.x>1&&filterOffset.y>1)
 			{
 				dxrData.filterOffsetList[frame] = filterOffset;
@@ -115,7 +115,7 @@ package org.flexlite.domDisplay.codec
 			var ct:ColorTransform = drawColorTransfrom(dp);
 			frameData.draw(dp,matrix,ct,null,null,true);
 			dxrData.frameList[frame] = frameData;
-			dxrData.frameOffsetList[frame] = new Point(Math.round(dpRect.left),Math.round(dpRect.top));
+			dxrData.frameOffsetList[frame] = new Point(dpRect.left,dpRect.top);
 		}
 		
 		/**
