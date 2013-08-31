@@ -76,7 +76,7 @@ package org.flexlite.domDisplay.codec
 				dpRect.height = 1;
 			var offsetX:Number = 100;
 			var offsetY:Number = 100;
-			var matrix:Matrix = new Matrix(1,0,0,1,offsetX-dpRect.left,offsetY-dpRect.top);
+			var matrix:Matrix = new Matrix(1,0,0,1,offsetX-Math.round(dpRect.left),offsetY-Math.round(dpRect.top));
 			var tempBmData:BitmapData = new BitmapData(dpRect.width+offsetX*2,dpRect.height+offsetY*2,true,0); 
 			var ct:ColorTransform = drawColorTransfrom(dp);
 			tempBmData.draw(dp,matrix,ct,null,null,true);
@@ -85,11 +85,11 @@ package org.flexlite.domDisplay.codec
 			var frameData:BitmapData = new BitmapData(colorRect.width,colorRect.height,true,0);
 			frameData.copyPixels(tempBmData,colorRect,new Point(),null,null,true);
 			dxrData.frameList[frame] = frameData;
-			var offsetPoint:Point = new Point(dpRect.left+colorRect.x-offsetX,
-				dpRect.top+colorRect.y-offsetY);
+			var offsetPoint:Point = new Point(Math.round(dpRect.left)+colorRect.x-offsetX,
+				Math.round(dpRect.top)+colorRect.y-offsetY);
 			dxrData.frameOffsetList[frame] = offsetPoint;
-			var filterOffset:Point = new Point(colorRect.width-dpRect.width,
-				colorRect.height-dpRect.height);
+			var filterOffset:Point = new Point(Math.round(colorRect.width-dpRect.width),
+				Math.round(colorRect.height-dpRect.height));
 			if(filterOffset.x>1&&filterOffset.y>1)
 			{
 				dxrData.filterOffsetList[frame] = filterOffset;
@@ -110,12 +110,12 @@ package org.flexlite.domDisplay.codec
 				dpRect.width = 1;
 			if(dpRect.height<1)
 				dpRect.height = 1;
-			var matrix:Matrix = new Matrix(1,0,0,1,-dpRect.left,-dpRect.top);
+			var matrix:Matrix = new Matrix(1,0,0,1,Math.round(-dpRect.left),Math.round(-dpRect.top));
 			var frameData:BitmapData = new BitmapData(dpRect.width,dpRect.height,true,0); 
 			var ct:ColorTransform = drawColorTransfrom(dp);
 			frameData.draw(dp,matrix,ct,null,null,true);
 			dxrData.frameList[frame] = frameData;
-			dxrData.frameOffsetList[frame] = new Point(dpRect.left,dpRect.top);
+			dxrData.frameOffsetList[frame] = new Point(Math.round(dpRect.left),Math.round(dpRect.top));
 		}
 		
 		/**
