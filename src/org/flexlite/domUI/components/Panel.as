@@ -18,6 +18,9 @@ package org.flexlite.domUI.components
 		{
 			super();
 			mouseEnabled = false;
+			//当面板覆盖在会运动的场景上时，将会导致不断被触发重绘，而如果含有较多矢量子项，
+			//就会消耗非常多的渲染时间。设置位图缓存将能极大提高这种情况下的性能。
+			cacheAsBitmap = true;
 		}
 		
 		/**
