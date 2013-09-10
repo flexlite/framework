@@ -227,7 +227,7 @@ package org.flexlite.domDisplay.codec
 		{
 			if(data==null)
 			{
-				throw new Error("DXR动画文件字节流为空！");
+				trace("DXR动画文件字节流为空！");
 			}
 			try
 			{
@@ -252,7 +252,7 @@ package org.flexlite.domDisplay.codec
 			}
 			catch(e:Error)
 			{
-				throw new Error("不是有效的DXR动画文件！");
+				trace("不是有效的DXR动画文件！");
 			}
 			return null;
 		}

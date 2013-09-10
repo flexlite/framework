@@ -22,6 +22,8 @@ package org.flexlite.domDisplay
 		public function DxrFile(data:ByteArray,path:String="")
 		{
 			keyObject = DxrDecoder.readObject(data);
+			if(!keyObject)
+				keyObject = {keyList:{}};
 			this._path = path;
 		}
 		
