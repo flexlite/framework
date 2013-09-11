@@ -344,13 +344,10 @@ package org.flexlite.domUI.components
 		{
 			if (!popUpIsDisplayed)
 				return;
-			var w:Number;
-			var h:Number;
 			if (popUpWidthMatchesAnchorWidth)
-				w = unscaledWidth;
+				popUp.width = unscaledWidth;
 			if (popUpHeightMatchesAnchorHeight)
-				h = unscaledHeight;
-			popUp.setLayoutBoundsSize(w,h);
+				popUp.height = unscaledHeight;
 			if(popUp is IInvalidating)
 				(popUp as IInvalidating).validateNow();
 			var popUpPoint:Point = calculatePopUpPosition();
