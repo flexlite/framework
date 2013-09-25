@@ -44,6 +44,7 @@ package org.flexlite.domUI.components.supportClasses
 			buttonMode = true;
 			useHandCursor = true;
 			focusEnabled = true;
+			autoMouseEnabled = false;
 			addHandlers();
 		}
 		
