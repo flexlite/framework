@@ -417,7 +417,8 @@ package org.flexlite.domUI.components
 			{
 				oldScrollPostion = _viewport.verticalScrollPosition;
 				_viewport.verticalScrollPosition = 0;
-				maxScrollPostion = _viewport.contentHeight-_viewport.height;
+				maxScrollPostion = _viewport.contentHeight-Math.max(0,_viewport.height);
+				maxScrollPostion = Math.min(_viewport.contentHeight,maxScrollPostion);
 				while(_viewport.verticalScrollPosition<maxScrollPostion)
 				{
 					_viewport.verticalScrollPosition += 
@@ -437,7 +438,8 @@ package org.flexlite.domUI.components
 			{
 				oldScrollPostion = _viewport.horizontalScrollPosition;
 				_viewport.horizontalScrollPosition = 0;
-				maxScrollPostion = _viewport.contentWidth-_viewport.width;
+				maxScrollPostion = _viewport.contentWidth-Math.max(0,_viewport.width);
+				maxScrollPostion = Math.min(_viewport.contentWidth,maxScrollPostion);
 				while(_viewport.horizontalScrollPosition<maxScrollPostion)
 				{
 					_viewport.horizontalScrollPosition += 
