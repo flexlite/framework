@@ -58,16 +58,16 @@ package org.flexlite.domUI.layouts
 				target.invalidateDisplayList();
 		}
 		
-		private var _gap:int = 6;
+		private var _gap:Number = 6;
 		/**
 		 * 布局元素之间的水平空间（以像素为单位）
 		 */
-		public function get gap():int
+		public function get gap():Number
 		{
 			return _gap;
 		}
 
-		public function set gap(value:int):void
+		public function set gap(value:Number):void
 		{
 			if (_gap == value) 
 				return;
@@ -316,7 +316,7 @@ package org.flexlite.domUI.layouts
 				{
 					eltWidth = typicalWidth;
 				}
-				startPos += eltWidth+gap;
+				startPos += eltWidth+_gap;
 			}
 			return startPos;
 		}
@@ -357,9 +357,9 @@ package org.flexlite.domUI.layouts
 				{
 					eltWidth = typicalWidth;
 				}
-				totalSize += eltWidth+gap;
+				totalSize += eltWidth+_gap;
 			}
-			totalSize -= gap;
+			totalSize -= _gap;
 			return totalSize;
 		}
 		
@@ -408,7 +408,7 @@ package org.flexlite.domUI.layouts
 			var index:int = (i0 + i1) / 2;
 			var elementX:Number = getStartPosition(index);
 			var elementWidth:Number = getElementSize(index);
-			if ((x >= elementX) && (x < elementX + elementWidth + gap))
+			if ((x >= elementX) && (x < elementX + elementWidth + _gap))
 				return index;
 			else if (i0 == i1)
 				return -1;
@@ -588,7 +588,7 @@ package org.flexlite.domUI.layouts
 				{
 					exceesHeight = (targetHeight - layoutElement.layoutBoundsHeight)*vAlign;
 					exceesHeight = exceesHeight>0?exceesHeight:0;
-					y = paddingT+Math.round(exceesHeight);
+					y = paddingT+exceesHeight;
 				}
 				if(!contentJustify)
 					maxElementHeight = Math.max(maxElementHeight,layoutElement.preferredHeight);
@@ -693,9 +693,9 @@ package org.flexlite.domUI.layouts
 					}
 				}
 			}
-			widthToDistribute -= gap * (numElements - 1);
+			widthToDistribute -= _gap * (numElements - 1);
 			widthToDistribute = widthToDistribute>0?widthToDistribute:0;
-			var excessSpace:Number = targetWidth - totalPreferredWidth - gap * (numElements - 1);
+			var excessSpace:Number = targetWidth - totalPreferredWidth - _gap * (numElements - 1);
 			
 			var averageWidth:Number;
 			var largeChildrenCount:int = numElements;
@@ -743,11 +743,11 @@ package org.flexlite.domUI.layouts
 			
 			if(_horizontalAlign==HorizontalAlign.CENTER)
 			{
-				x = paddingL+Math.round(widthToDistribute*0.5);
+				x = paddingL+widthToDistribute*0.5;
 			}
 			else if(_horizontalAlign==HorizontalAlign.RIGHT)
 			{
-				x = paddingL+Math.round(widthToDistribute);
+				x = paddingL+widthToDistribute;
 			}
 			
 			var maxX:Number = paddingL;
@@ -804,7 +804,7 @@ package org.flexlite.domUI.layouts
 					layoutElement.setLayoutBoundsSize(layoutElementWidth,layoutElementHeight);
 					exceesHeight = (targetHeight - layoutElement.layoutBoundsHeight)*vAlign;
 					exceesHeight = exceesHeight>0?exceesHeight:0;
-					y = paddingT+Math.round(exceesHeight);
+					y = paddingT+exceesHeight;
 				}
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 				dx = Math.ceil(layoutElement.layoutBoundsWidth);

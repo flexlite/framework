@@ -58,16 +58,16 @@ package org.flexlite.domUI.layouts
 				target.invalidateDisplayList();
 		}
 		
-		private var _gap:int = 6;
+		private var _gap:Number = 6;
 		/**
 		 * 布局元素之间的垂直空间（以像素为单位）
 		 */
-		public function get gap():int
+		public function get gap():Number
 		{
 			return _gap;
 		}
 		
-		public function set gap(value:int):void
+		public function set gap(value:Number):void
 		{
 			if (_gap == value) 
 				return;
@@ -317,7 +317,7 @@ package org.flexlite.domUI.layouts
 				{
 					eltHeight = typicalHeight;
 				}
-				startPos += eltHeight+gap;
+				startPos += eltHeight+_gap;
 			}
 			return startPos;
 		}
@@ -358,9 +358,9 @@ package org.flexlite.domUI.layouts
 				{
 					eltHeight = typicalHeight;
 				}
-				totalSize += eltHeight+gap;
+				totalSize += eltHeight+_gap;
 			}
-			totalSize -= gap;
+			totalSize -= _gap;
 			return totalSize;
 		}
 		
@@ -403,7 +403,7 @@ package org.flexlite.domUI.layouts
 			var index:int = (i0 + i1) / 2;
 			var elementY:Number = getStartPosition(index);
 			var elementHeight:Number = getElementSize(index);
-			if ((y >= elementY) && (y < elementY + elementHeight + gap))
+			if ((y >= elementY) && (y < elementY + elementHeight + _gap))
 				return index;
 			else if (i0 == i1)
 				return -1;
@@ -579,7 +579,7 @@ package org.flexlite.domUI.layouts
 				{
 					exceesWidth = (targetWidth - layoutElement.layoutBoundsWidth)*hAlign;
 					exceesWidth = exceesWidth>0?exceesWidth:0;
-					x = paddingL+Math.round(exceesWidth);
+					x = paddingL+exceesWidth;
 				}
 				if(!contentJustify)
 					maxElementWidth = Math.max(maxElementWidth,layoutElement.preferredWidth);
@@ -685,7 +685,7 @@ package org.flexlite.domUI.layouts
 			
 			heightToDistribute -= (numElements-1)*_gap;
 			heightToDistribute = heightToDistribute>0?heightToDistribute:0;
-			var excessSpace:Number = targetHeight - totalPreferredHeight - gap * (numElements - 1);
+			var excessSpace:Number = targetHeight - totalPreferredHeight - _gap * (numElements - 1);
 			
 			var averageHeight:Number;
 			var largeChildrenCount:int = numElements;
@@ -733,11 +733,11 @@ package org.flexlite.domUI.layouts
 		
 			if(_verticalAlign==VerticalAlign.MIDDLE)
 			{
-				y = paddingT+Math.round(heightToDistribute*0.5);
+				y = paddingT+heightToDistribute*0.5;
 			}
 			else if(_verticalAlign==VerticalAlign.BOTTOM)
 			{
-				y = paddingT+Math.round(heightToDistribute);
+				y = paddingT+heightToDistribute;
 			}
 			
 			//开始对所有元素布局
@@ -795,7 +795,7 @@ package org.flexlite.domUI.layouts
 					layoutElement.setLayoutBoundsSize(layoutElementWidth,layoutElementHeight);
 					exceesWidth = (targetWidth - layoutElement.layoutBoundsWidth)*hAlign;
 					exceesWidth = exceesWidth>0?exceesWidth:0;
-					x = paddingL+Math.round(exceesWidth);
+					x = paddingL+exceesWidth;
 				}
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 				dx = Math.ceil(layoutElement.layoutBoundsWidth);
