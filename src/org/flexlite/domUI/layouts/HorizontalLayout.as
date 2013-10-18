@@ -411,7 +411,8 @@ package org.flexlite.domUI.layouts
 			var index:int = (i0 + i1) / 2;
 			var elementX:Number = getStartPosition(index);
 			var elementWidth:Number = getElementSize(index);
-			if ((x >= elementX) && (x < elementX + elementWidth + isNaN(_gap)?0:_gap))
+			var gap:Number = isNaN(_gap)?0:_gap;
+			if ((x >= elementX) && (x < elementX + elementWidth + gap))
 				return index;
 			else if (i0 == i1)
 				return -1;
