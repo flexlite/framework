@@ -138,7 +138,8 @@ package org.flexlite.domUI.skins.vector
 					popUp.displayPopUp = true;
 					break;
 				case "normal":
-					popUp.displayPopUp = false;
+					if(popUp)
+						popUp.displayPopUp = false;
 					break;
 				case "disabled":
 					
