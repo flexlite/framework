@@ -28,6 +28,11 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DefaultProperty(name="label",array="false")]
 	
+	[SkinState("up")]
+	[SkinState("over")]
+	[SkinState("down")]
+	[SkinState("disabled")]
+	
 	/**
 	 * 按钮组件基类
 	 * @author DOM

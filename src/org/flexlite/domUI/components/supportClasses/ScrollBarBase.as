@@ -328,17 +328,6 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		override protected function getCurrentSkinState():String
-		{
-			if (maximum <= minimum)
-				return "inactive";
-			
-			return super.getCurrentSkinState();
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);

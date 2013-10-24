@@ -156,14 +156,6 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		override protected function getCurrentSkinState():String
-		{
-			return enabled ? "normal" : "disabled";
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName, instance);

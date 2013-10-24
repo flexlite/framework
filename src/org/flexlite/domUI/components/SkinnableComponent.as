@@ -15,7 +15,6 @@ package org.flexlite.domUI.components
 	
 	use namespace dx_internal;
 	
-	[DXML(show="false")]
 	/**
 	 * 皮肤部件附加事件 
 	 */	
@@ -26,6 +25,9 @@ package org.flexlite.domUI.components
 	[Event(name="partRemoved", type="org.flexlite.domUI.events.SkinPartEvent")]
 	
 	[DXML(show="false")]
+	
+	[SkinState("normal")]
+	[SkinState("disabled")]
 	
 	/**
 	 * 复杂可设置外观组件的基类，接受ISkin类或任何显示对象作为皮肤。

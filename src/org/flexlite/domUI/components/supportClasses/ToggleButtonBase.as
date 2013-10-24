@@ -10,6 +10,16 @@ package org.flexlite.domUI.components.supportClasses
 	
 	
 	[Event(name="change", type="flash.events.Event")]
+	
+	[SkinState("up")]
+	[SkinState("over")]
+	[SkinState("down")]
+	[SkinState("disabled")]
+	[SkinState("upAndSelected")]
+	[SkinState("overAndSelected")]
+	[SkinState("downAndSelected")]
+	[SkinState("disabledAndSelected")]
+	
 	/**
 	 * 切换按钮组件基类
 	 * @author DOM

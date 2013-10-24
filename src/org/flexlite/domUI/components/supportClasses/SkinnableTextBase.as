@@ -30,6 +30,11 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DXML(show="false")]
 	
+	[SkinState("normal")]
+	[SkinState("disabled")]
+	[SkinState("normalWithPrompt")]
+	[SkinState("disabledWithPrompt")]
+	
 	/**
 	 * 可设置外观的文本输入控件基类
 	 * @author DOM
