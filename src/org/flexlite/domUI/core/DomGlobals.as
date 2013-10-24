@@ -78,5 +78,9 @@ package org.flexlite.domUI.core
 			}
 			return null;
 		}
+		/**
+		 * 是否屏蔽失效验证阶段的所有报错,这个接口仅预留给编辑器使用。
+		 */		
+		dx_internal static var catchCallLaterExceptions:Boolean = false;
 	}
 }
