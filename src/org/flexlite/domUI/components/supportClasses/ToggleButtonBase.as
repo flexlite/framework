@@ -8,8 +8,9 @@ package org.flexlite.domUI.components.supportClasses
 	
 	use namespace dx_internal;
 	
-	
 	[Event(name="change", type="flash.events.Event")]
+	
+	[DXML(show="false")]
 	
 	[SkinState("up")]
 	[SkinState("over")]
