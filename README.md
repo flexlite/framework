@@ -1,7 +1,8 @@
 framework
 =========
 
-an Open Source UI Framework for Flash Games!
+This is an open source UI framework for flash games,
+and it is under the MIT License.
 
 
 使用之前请务必先查看Wiki，检出说明及编译条件：
