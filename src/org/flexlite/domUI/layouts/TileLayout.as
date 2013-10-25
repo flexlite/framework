@@ -466,6 +466,15 @@ package org.flexlite.domUI.layouts
 			var verticalGap:Number = isNaN(_verticalGap)?0:_verticalGap;
 			_rowCount = _columnCount = -1;
 			var numElements:int = target.numElements;
+			var count:int = numElements;
+			for(var index:int = 0;index<count;index++)
+			{
+				var elt:ILayoutElement = target.getElementAt(index) as ILayoutElement;
+				if(elt&&!elt.includeInLayout)
+				{
+					numElements--;
+				}
+			}
 			if(numElements==0)
 			{
 				_rowCount = _columnCount = 0;
@@ -778,12 +787,13 @@ package org.flexlite.domUI.layouts
 			var columnIndex:int;
 			var rowIndex:int;
 			var orientedByColumns:Boolean = (orientation == TileOrientation.COLUMNS);
-			for(var index:int = startIndex;index <= endIndex;index++)
+			var index:int = startIndex;
+			for(var i:int = startIndex;i <= endIndex;i++)
 			{
 				if(useVirtualLayout)
-					elt = target.getVirtualElementAt(index) as ILayoutElement;
+					elt = target.getVirtualElementAt(i) as ILayoutElement;
 				else
-					elt = target.getElementAt(index) as ILayoutElement;
+					elt = target.getElementAt(i) as ILayoutElement;
 				if(elt == null||!elt.includeInLayout)
 					continue;
 				
@@ -804,6 +814,7 @@ package org.flexlite.domUI.layouts
 				x = columnIndex*(_columnWidth+horizontalGap)+paddingL;
 				y = rowIndex*(_rowHeight+verticalGap)+paddingT;
 				sizeAndPositionElement(elt,x,y,_columnWidth,rowHeight);
+				index++;
 			}
 			
 			var hPadding:Number = paddingL + paddingR;
