@@ -118,6 +118,34 @@ package org.flexlite.domUI.collections
 			return 0;
 		}
 		
+		/**
+		 * 删除指定节点
+		 */
+		public function removeItem(item:Object):void
+		{
+			if(isItemOpen(item))
+				closeNode(item);
+			if(!item)
+				return;
+			var parent:Object = item[parentKey];
+			if(!parent)
+				return;
+			var list:Array = parent[childrenKey];
+			if(!list)
+				return;
+			var index:int = list.indexOf(item);
+			if(index!=-1)
+				list.splice(index,1);
+			item[parentKey] = null;
+			index = nodeList.indexOf(item);
+			if(index!=-1)
+			{
+				nodeList.splice(index,1);
+				dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[item]);
+			}
+			
+		}
+		
 		private var _showRoot:Boolean = false;
 		/**
 		 * 是否显示根节点,默认false。
