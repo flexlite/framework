@@ -54,25 +54,43 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
-		public var minWidth:Number = 0;
-		
+		/**
+		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
+		 */	
 		public var maxWidth:Number = 10000;
-		
-		public var minHeight:Number = 0;
-		
+		/**
+		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
+		 */
+		public var minWidth:Number = 0;
+		/**
+		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
+		 */
 		public var maxHeight:Number = 10000;
-		
+		/**
+		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
+		 */
+		public var minHeight:Number = 0;
+		/**
+		 * 组件宽度
+		 */
 		public var width:Number = NaN;
-		
+		/**
+		 * 组件高度
+		 */
 		public var height:Number = NaN;
 		
-		public var percentWidth:Number = NaN;
-		
-		public var percentHeight:Number = NaN;
-		
+		/**
+		 * x坐标
+		 */		
 		public var x:Number = 0;
-		
+		/**
+		 * y坐标 
+		 */		
 		public var y:Number = 0;
+		
+		//以下这两个属性无效，仅用于防止DXML编译器报错。
+		public var percentWidth:Number = NaN;
+		public var percentHeight:Number = NaN;
 		
 		private var _hostComponent:SkinnableComponent;
 		/**
