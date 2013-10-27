@@ -453,6 +453,41 @@ package org.flexlite.domUI.components
 			{
 				layout.measure();
 			}
+			if(_invisibleSkin)
+			{//为非显示对象的皮肤测量
+				var measuredW:Number = this.measuredWidth;
+				var measuredH:Number = this.measuredHeight;
+				try
+				{
+					if(!isNaN(_invisibleSkin.width))
+						measuredW = Math.ceil(_invisibleSkin.width);
+					if(!isNaN(_invisibleSkin.height))
+						measuredH = Math.ceil(_invisibleSkin.height);
+					if(_invisibleSkin.hasOwnProperty("minWidth")&&
+						measuredW<_invisibleSkin.minWidth)
+					{
+						measuredW = _invisibleSkin.minWidth;
+					}
+					if(_invisibleSkin.hasOwnProperty("maxWidth")&&
+						measuredW>_invisibleSkin.maxWidth)
+					{
+						measuredW = _invisibleSkin.maxWidth;
+					}
+					if(_invisibleSkin.hasOwnProperty("minHeight")&&
+						measuredH<_invisibleSkin.minHeight)
+					{
+						measuredH = _invisibleSkin.minHeight;
+					}
+					if(_invisibleSkin.hasOwnProperty("maxHeight")&&
+						measuredH>_invisibleSkin.maxHeight)
+					{
+						measuredH = _invisibleSkin.maxHeight
+					}
+					this.measuredWidth = measuredW;
+					this.measuredHeight = measuredH;
+				}
+				catch(e:Error){}
+			}
 		}
 		
 		/**

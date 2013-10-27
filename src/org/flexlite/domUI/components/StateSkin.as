@@ -54,26 +54,25 @@ package org.flexlite.domUI.components
 			super();
 		}
 		
-		/**
-		 * 主机组件的最小测量宽度。默认值为0。
-		 * 注意：此属性仅在皮肤被附加到主机组件前设置，并且主机组件还没有被显式设置过minWidth时才有效。
-		 */
 		public var minWidth:Number = 0;
-		/**
-		 * 主机组件的最大测量宽度。默认值为10000。
-		 * 注意：此属性仅在皮肤被附加到主机组件前设置，并且主机组件还没有被显式设置过maxWidth时才有效。
-		 */
+		
 		public var maxWidth:Number = 10000;
-		/**
-		 * 组件的最小测量高度。默认值为0。
-		 * 注意：此属性仅在皮肤被附加到主机组件前设置，并且主机组件还没有被显式设置过minHeight时才有效。
-		 */
+		
 		public var minHeight:Number = 0;
-		/**
-		 * 主机组件的最大测量高度。默认值为10000。
-		 * 注意：此属性仅在皮肤被附加到主机组件前设置，并且主机组件还没有被显式设置过maxHeight时才有效。
-		 */
+		
 		public var maxHeight:Number = 10000;
+		
+		public var width:Number = NaN;
+		
+		public var height:Number = NaN;
+		
+		public var percentWidth:Number = NaN;
+		
+		public var percentHeight:Number = NaN;
+		
+		public var x:Number = 0;
+		
+		public var y:Number = 0;
 		
 		private var _hostComponent:SkinnableComponent;
 		/**
@@ -102,16 +101,7 @@ package org.flexlite.domUI.components
 			_hostComponent = value;
 			
 			if(_hostComponent)
-			{
-				if(minWidth!=0&&_hostComponent.minWidth==0)
-					_hostComponent.minWidth = minWidth;
-				if(maxWidth!=10000&&_hostComponent.maxWidth==10000)
-					_hostComponent.maxWidth = maxWidth;
-				if(minHeight!=0&&_hostComponent.minHeight==0)
-					_hostComponent.minHeight = minHeight;
-				if(maxHeight!=10000&&_hostComponent.maxHeight==10000)
-					_hostComponent.maxHeight = maxHeight;
-				
+			{			
 				var n:int = _elementsContent.length;
 				for (i = 0; i < n; i++)
 				{   
