@@ -49,10 +49,6 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				currentStateChanged = false;
 				commitCurrentState();
-				if(hostComponent)
-				{
-					hostComponent.findSkinParts();
-				}
 			}
 		}
 		
@@ -97,10 +93,6 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				currentStateChanged = false;
 				commitCurrentState();
-				if(hostComponent)
-				{
-					hostComponent.findSkinParts();
-				}
 			}
 			else
 			{

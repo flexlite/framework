@@ -135,7 +135,6 @@ package org.flexlite.domUI.components
 			{
 				currentStateChanged = false;
 				commitCurrentState();
-				_hostComponent.findSkinParts();
 			}
 		}
 		
@@ -391,7 +390,6 @@ package org.flexlite.domUI.components
 				{
 					currentStateChanged = false;
 					commitCurrentState();
-					_hostComponent.findSkinParts();
 				}
 				else
 				{

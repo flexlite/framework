@@ -78,6 +78,8 @@ package org.flexlite.domUI.skins.vector
 			promptDisplay.textColor = 0xa9a9a9;
 			promptDisplay.mouseChildren = false;
 			promptDisplay.mouseEnabled = false;
+			if(hostComponent)
+				hostComponent.findSkinParts();
 		}
 		
 		/**

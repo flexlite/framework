@@ -1,8 +1,7 @@
 package org.flexlite.domUI.states
 {
-	import org.flexlite.domUI.core.IDeferredInstance;
-	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IVisualElement;
 	
 	
 	/**
@@ -37,10 +36,6 @@ package org.flexlite.domUI.states
 		}
 		
 		/**
-		 * 创建项目的工厂类实例 
-		 */		
-		public var targetFactory:IDeferredInstance;
-		/**
 		 * 要添加到的属性 
 		 */		
 		public var propertyName:String = "";
@@ -56,14 +51,9 @@ package org.flexlite.domUI.states
 		public var relativeTo:String;
 		
 		/**
-		 * 目标显示元素 
+		 * 目标实例名
 		 */		
-		private var target:IVisualElement;
-		
-		override public function initialize():void
-		{
-			target = targetFactory.getInstance() as IVisualElement;
-		}
+		public var target:String;
 		
 		override public function apply(parent:IContainer):void
 		{
@@ -75,11 +65,10 @@ package org.flexlite.domUI.states
 			}
 			catch(e:Error)
 			{
-				
 			}
-			var dest:IContainer = propertyName==null||propertyName==""?
-					parent:parent[propertyName] as IContainer;
-			if(dest==null)
+			var targetElement:IVisualElement = parent[target] as IVisualElement;
+			var dest:IContainer = propertyName?parent[propertyName]:parent as IContainer;
+			if(!targetElement||!dest)
 				return;
 			switch (position)
 			{
@@ -98,18 +87,19 @@ package org.flexlite.domUI.states
 			}    
 			if (index == -1)
 				index = dest.numElements;
-			dest.addElementAt(target,index);
+			dest.addElementAt(targetElement,index);
 		}
 		
 		override public function remove(parent:IContainer):void
 		{
 			var dest:IContainer = propertyName==null||propertyName==""?
 				parent:parent[propertyName] as IContainer;
-			if(dest==null)
+			var targetElement:IVisualElement = parent[target] as IVisualElement;
+			if(!targetElement||!dest)
 				return;
-			if(dest.getElementIndex(target)!=-1)
+			if(dest.getElementIndex(targetElement)!=-1)
 			{
-				dest.removeElement(target);
+				dest.removeElement(targetElement);
 			}
 		}
 	}

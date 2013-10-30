@@ -198,6 +198,8 @@ package org.flexlite.domUI.skins.vector
 			popUp.popUpWidthMatchesAnchorWidth = true;
 			popUp.popUp = dropDown;
 			addElement(popUp);
+			if(hostComponent)
+				hostComponent.findSkinParts();
 		}
 		
 	}
