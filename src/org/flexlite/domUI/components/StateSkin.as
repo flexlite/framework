@@ -405,7 +405,7 @@ package org.flexlite.domUI.components
 		 */
 		public function hasState(stateName:String):Boolean
 		{
-			return (getState(stateName, false) != null); 
+			return (getState(stateName) != null); 
 		}
 		
 		/**
@@ -465,7 +465,7 @@ package org.flexlite.domUI.components
 		/**
 		 * 通过名称返回视图状态
 		 */		
-		private function getState(stateName:String, throwOnUndefined:Boolean=true):State
+		private function getState(stateName:String):State
 		{
 			if (!states || isBaseState(stateName))
 				return null;
@@ -476,10 +476,6 @@ package org.flexlite.domUI.components
 					return states[i];
 			}
 			
-			if (throwOnUndefined)
-			{
-				throw new ArgumentError("组件上找不到指定的视图状态："+stateName);
-			}
 			return null;
 		}
 		
