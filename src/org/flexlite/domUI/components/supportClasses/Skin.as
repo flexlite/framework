@@ -5,6 +5,7 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.ISkin;
 	import org.flexlite.domUI.core.IStateClient;
+	import org.flexlite.domUI.states.StateClientHelper;
 
 	use namespace dx_internal;
 	
@@ -13,7 +14,7 @@ package org.flexlite.domUI.components.supportClasses
 	/**
 	 * 皮肤布局基类<br/>
 	 * Skin及其子类中定义的公开属性,会在初始化完成后被直接当做SkinPart并将引用赋值到宿主组件的同名属性上，
-	 * 若有延迟加载的部件，请在加载完成后手动调用hostComponent.findSkinParts()方法应用部件。<br/>
+	 * 若有延迟创建的部件，请在加载完成后手动调用hostComponent.findSkinParts()方法应用部件。<br/>
 	 * @author DOM
 	 */
 	public class Skin extends Group 
@@ -22,6 +23,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function Skin()
 		{
 			super();
+			stateClientHelper = new StateClientHelper(this);
 		}
 		
 		private var _hostComponent:SkinnableComponent;
@@ -45,69 +47,52 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
-			if (currentStateChanged)
+			if(stateClientHelper.currentStateChanged)
 			{
-				currentStateChanged = false;
+				stateClientHelper.commitCurrentState();
 				commitCurrentState();
 			}
 		}
 		
 		//========================state相关函数===============start=========================
 		
-		private var _states:Array = [];
+		private var stateClientHelper:StateClientHelper;
 		/**
 		 * 为此组件定义的视图状态。
 		 */
 		public function get states():Array
 		{
-			return _states;
+			return stateClientHelper.states;
 		}
 		
 		public function set states(value:Array):void
 		{
-			_states = value;
+			stateClientHelper.states = value;
 		}
 		
-		dx_internal var _currentState:String;
-		
-		/**
-		 * 当前视图状态发生改变 
-		 */		
-		dx_internal var currentStateChanged:Boolean;
 		/**
 		 * 组件的当前视图状态。
 		 */
 		public function get currentState():String
 		{
-			if(_currentState==null||_currentState=="")
-				return _states[0];
-			return _currentState;
+			return stateClientHelper.currentState;
 		}
-		
 		public function set currentState(value:String):void
 		{
-			if(_currentState==value)
-				return;
-			_currentState = value;
-			if (initialized||hasParent)
+			stateClientHelper.currentState = value;
+
+			if(stateClientHelper.currentStateChanged)
 			{
-				currentStateChanged = false;
-				commitCurrentState();
+				if(initialized||hasParent)
+				{
+					stateClientHelper.commitCurrentState();
+					commitCurrentState();
+				}
+				else
+				{
+					invalidateProperties();
+				}
 			}
-			else
-			{
-				currentStateChanged = true;
-				invalidateProperties();
-			}
-			
-		}
-		
-		/**
-		 * 应用当前的视图状态
-		 */		
-		protected function commitCurrentState():void
-		{
-			
 		}
 		
 		/**
@@ -116,12 +101,15 @@ package org.flexlite.domUI.components.supportClasses
 		 */				
 		public function hasState(stateName:String):Boolean
 		{
-			for each(var state:String in states)
-			{
-				if(state==stateName)
-					return true;
-			}
-			return false;
+			return stateClientHelper.hasState(stateName);
+		}
+		
+		/**
+		 * 应用当前的视图状态
+		 */		
+		protected function commitCurrentState():void
+		{
+			
 		}
 		
 		//========================state相关函数===============end=========================

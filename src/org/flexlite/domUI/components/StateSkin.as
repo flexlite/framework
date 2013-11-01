@@ -2,7 +2,6 @@ package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IContainer;
@@ -12,7 +11,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.StateChangeEvent;
-	import org.flexlite.domUI.states.State;
+	import org.flexlite.domUI.states.StateClientHelper;
 	
 	use namespace dx_internal;
 	
@@ -44,7 +43,7 @@ package org.flexlite.domUI.components
 	 * @author DOM
 	 */
 	public class StateSkin extends EventDispatcher 
-		implements IContainer, ISkin, IStateClient
+		implements IStateClient, ISkin, IContainer
 	{
 		/**
 		 * 构造函数
@@ -52,6 +51,7 @@ package org.flexlite.domUI.components
 		public function StateSkin()
 		{
 			super();
+			stateClientHelper = new StateClientHelper(this);
 		}
 		
 		/**
@@ -92,6 +92,58 @@ package org.flexlite.domUI.components
 		public var percentWidth:Number = NaN;
 		public var percentHeight:Number = NaN;
 		
+		//========================state相关函数===============start=========================
+
+		private var stateClientHelper:StateClientHelper;
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get states():Array
+		{
+			return stateClientHelper.states;
+		}
+		
+		public function set states(value:Array):void
+		{
+			stateClientHelper.states = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get currentState():String
+		{
+			return stateClientHelper.currentState;
+		}
+		
+		public function set currentState(value:String):void
+		{
+			stateClientHelper.currentState = value;
+			if (_hostComponent&&stateClientHelper.currentStateChanged)
+			{
+				stateClientHelper.commitCurrentState();
+				commitCurrentState();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function hasState(stateName:String):Boolean
+		{
+			return stateClientHelper.hasState(stateName); 
+		}
+		
+		/**
+		 * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
+		 */
+		protected function commitCurrentState():void
+		{
+			
+		}
+		//========================state相关函数===============end=========================
+		
 		private var _hostComponent:SkinnableComponent;
 		/**
 		 * @inheritDoc
@@ -130,11 +182,11 @@ package org.flexlite.domUI.components
 						IContainer(elt.owner).removeElement(elt);
 					elementAdded(elt, i);
 				}
-			}
-			if (currentStateChanged)
-			{
-				currentStateChanged = false;
-				commitCurrentState();
+				if(stateClientHelper.currentStateChanged)
+				{
+					stateClientHelper.commitCurrentState();
+					commitCurrentState();
+				}
 			}
 		}
 		
@@ -345,256 +397,6 @@ package org.flexlite.domUI.components
 			
 			_hostComponent.invalidateSize();
 			_hostComponent.invalidateDisplayList();
-		}
-		
-		private var _states:Array = [];
-		/**
-		 * @inheritDoc
-		 */
-		public function get states():Array
-		{
-			return _states;
-		}
-		
-		public function set states(value:Array):void
-		{
-			_states = value;
-		}
-		/**
-		 * 当前视图状态发生改变 
-		 */		
-		private var currentStateChanged:Boolean;
-		
-		private var _currentState:String;
-		/**
-		 * 存储还未验证的视图状态 
-		 */		
-		private var requestedCurrentState:String;
-		/**
-		 * @inheritDoc
-		 */
-		public function get currentState():String
-		{
-			return currentStateChanged ? requestedCurrentState : _currentState;
-		}
-		
-		public function set currentState(value:String):void
-		{
-			value = isBaseState(value) ? getDefaultState() : value;
-			
-			if (value != currentState &&
-				!(isBaseState(value) && isBaseState(currentState)))
-			{
-				requestedCurrentState = value;
-				if (_hostComponent)
-				{
-					currentStateChanged = false;
-					commitCurrentState();
-				}
-				else
-				{
-					currentStateChanged = true;
-				}
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function hasState(stateName:String):Boolean
-		{
-			return (getState(stateName) != null); 
-		}
-		
-		/**
-		 * 是否为基本状态
-		 */		
-		private function isBaseState(stateName:String):Boolean
-		{
-			return !stateName || stateName == "";
-		}
-		
-		/**
-		 * 返回默认状态
-		 */		
-		private function getDefaultState():String
-		{
-			return states.length > 0 ? states[0].name : null;
-		}
-		/**
-		 * 应用当前的视图状态
-		 */
-		protected function commitCurrentState():void
-		{
-			var commonBaseState:String = findCommonBaseState(_currentState, requestedCurrentState);
-			var event:StateChangeEvent;
-			var oldState:String = _currentState ? _currentState : "";
-			var destination:State = getState(requestedCurrentState);
-			
-			initializeState(requestedCurrentState);
-			
-			if (hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) 
-			{
-				event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
-				event.oldState = oldState;
-				event.newState = requestedCurrentState ? requestedCurrentState : "";
-				dispatchEvent(event);
-			}
-			
-			removeState(_currentState, commonBaseState);
-			_currentState = requestedCurrentState;
-			
-			if (!isBaseState(currentState)) 
-			{
-				applyState(_currentState, commonBaseState);
-			}
-			
-			if (hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGE))
-			{
-				event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE);
-				event.oldState = oldState;
-				event.newState = _currentState ? _currentState : "";
-				dispatchEvent(event);
-			}
-			
-		}
-		
-		
-		/**
-		 * 通过名称返回视图状态
-		 */		
-		private function getState(stateName:String):State
-		{
-			if (!states || isBaseState(stateName))
-				return null;
-			
-			for (var i:int = 0; i < states.length; i++)
-			{
-				if (states[i].name == stateName)
-					return states[i];
-			}
-			
-			return null;
-		}
-		
-		/**
-		 * 返回两个视图状态的共同父级状态
-		 */		
-		private function findCommonBaseState(state1:String, state2:String):String
-		{
-			var firstState:State = getState(state1);
-			var secondState:State = getState(state2);
-			
-			if (!firstState || !secondState)
-				return "";
-			
-			if (isBaseState(firstState.basedOn) && isBaseState(secondState.basedOn))
-				return "";
-			
-			var firstBaseStates:Array = getBaseStates(firstState);
-			var secondBaseStates:Array = getBaseStates(secondState);
-			var commonBase:String = "";
-			
-			while (firstBaseStates[firstBaseStates.length - 1] ==
-				secondBaseStates[secondBaseStates.length - 1])
-			{
-				commonBase = firstBaseStates.pop();
-				secondBaseStates.pop();
-				
-				if (!firstBaseStates.length || !secondBaseStates.length)
-					break;
-			}
-			
-			if (firstBaseStates.length &&
-				firstBaseStates[firstBaseStates.length - 1] == secondState.name)
-			{
-				commonBase = secondState.name;
-			}
-			else if (secondBaseStates.length &&
-				secondBaseStates[secondBaseStates.length - 1] == firstState.name)
-			{
-				commonBase = firstState.name;
-			}
-			
-			return commonBase;
-		}
-		
-		/**
-		 * 获取指定视图状态的所有父级状态列表
-		 */		
-		private function getBaseStates(state:State):Array
-		{
-			var baseStates:Array = [];
-			
-			while (state && state.basedOn)
-			{
-				baseStates.push(state.basedOn);
-				state = getState(state.basedOn);
-			}
-			
-			return baseStates;
-		}
-		
-		/**
-		 * 移除指定的视图状态以及所依赖的所有父级状态，除了与新状态的共同状态外
-		 */		
-		private function removeState(stateName:String, lastState:String):void
-		{
-			var state:State = getState(stateName);
-			
-			if (stateName == lastState)
-				return;
-			
-			if (state)
-			{
-				state.dispatchExitState();
-				
-				var overrides:Array = state.overrides;
-				
-				for (var i:int = overrides.length; i; i--)
-					overrides[i-1].remove(this);
-				
-				if (state.basedOn != lastState)
-					removeState(state.basedOn, lastState);
-			}
-		}
-		
-		/**
-		 * 应用新状态
-		 */
-		private function applyState(stateName:String, lastState:String):void
-		{
-			var state:State = getState(stateName);
-			
-			if (stateName == lastState)
-				return;
-			
-			if (state)
-			{
-				if (state.basedOn != lastState)
-					applyState(state.basedOn, lastState);
-				
-				var overrides:Array = state.overrides;
-				
-				for (var i:int = 0; i < overrides.length; i++)
-					overrides[i].apply(this);
-				
-				state.dispatchEnterState();
-			}
-		}
-		
-		/**
-		 * 初始化指定的视图状态以及其父级状态
-		 */
-		private function initializeState(stateName:String):void
-		{
-			var state:State = getState(stateName);
-			
-			while (state)
-			{
-				state.initialize();
-				state = getState(state.basedOn);
-			}
 		}
 	}
 }
