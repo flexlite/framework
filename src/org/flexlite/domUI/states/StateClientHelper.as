@@ -40,10 +40,11 @@ package org.flexlite.domUI.states
 			if(_states == value)
 				return;
 			_states = value;
-			if(!_currentStateChanged)
+			_currentStateChanged = true;
+			requestedCurrentState = _currentState;
+			if(!hasState(requestedCurrentState))
 			{
-				_currentStateChanged = true;
-				requestedCurrentState = _currentState?_currentState:getDefaultState();
+				requestedCurrentState = getDefaultState();
 			}
 		}
 
