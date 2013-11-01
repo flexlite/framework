@@ -251,7 +251,7 @@ package org.flexlite.domUI.states
 				var overrides:Array = state.overrides;
 				
 				for (var i:int = overrides.length; i; i--)
-					overrides[i-1].remove(this);
+					overrides[i-1].remove(target);
 				
 				if (state.basedOn != lastState)
 					removeState(state.basedOn, lastState);
