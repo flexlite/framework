@@ -15,7 +15,9 @@ package org.flexlite.domUI.utils
 
 import flash.display.Shape;
 import flash.events.Event;
+import flash.events.UncaughtErrorEvent;
 
+import org.flexlite.domCore.dx_internal;
 import org.flexlite.domUI.core.DomGlobals;
 
 /**
@@ -80,6 +82,30 @@ class DelayCall extends Shape
 	 */		
 	private function onCallBack(event:Event):void
 	{
+		if(DomGlobals.catchCallLaterExceptions)
+		{
+			try
+			{
+				doCallBackFunction(event);
+			}
+			catch(e:Error)
+			{
+				if(DomGlobals.stage)
+				{
+					var errorEvent:UncaughtErrorEvent = new UncaughtErrorEvent("callLaterError",false,true,e.getStackTrace());
+					DomGlobals.stage.dispatchEvent(errorEvent);
+				}
+			}
+		}
+		else
+		{
+			doCallBackFunction(event);
+		}
+		
+	}
+	
+	private function doCallBackFunction(event:Event):void
+	{
 		var element:MethodQueueElement;
 		var onRender:Boolean = Boolean(event.type==Event.RENDER);
 		var startIndex:int = methodQueue.length-1;
@@ -126,7 +152,7 @@ class DelayCall extends Shape
 				removeEventListener(Event.ENTER_FRAME,onCallBack);
 				listenForEnterFrame = false;
 			}
-			   
+			
 		}
 	}
 }

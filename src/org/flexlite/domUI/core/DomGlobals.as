@@ -79,8 +79,9 @@ package org.flexlite.domUI.core
 			return null;
 		}
 		/**
-		 * 是否屏蔽失效验证阶段的所有报错,这个接口仅预留给编辑器使用。
+		 * 是否屏蔽失效验证阶段和callLater方法延迟调用的所有报错。
+		 * 建议在发行版中启用，避免因为一处报错引起全局的延迟调用失效。
 		 */		
-		dx_internal static var catchCallLaterExceptions:Boolean = false;
+		public static var catchCallLaterExceptions:Boolean = false;
 	}
 }
