@@ -26,6 +26,10 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DXML(show="false")]
 	
+	[SkinState("normal")]
+	[SkinState("open")]
+	[SkinState("disabled")]
+	
 	/**
 	 * 下拉列表控件基类
 	 * @author DOM
