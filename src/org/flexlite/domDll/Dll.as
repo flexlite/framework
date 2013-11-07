@@ -104,6 +104,16 @@ package org.flexlite.domDll
 			instance.loadGroup(name,priority);
 		}
 		/**
+		 * 创建自定义的加载资源组
+		 * @param name 要创建的加载资源组的组名
+		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @return 是否创建成功，如果已经存在同名的组，或传入的keys为空，或keys全部无效，则创建失败。
+		 */			
+		public static function createGroup(name:String,keys:Array):Boolean
+		{
+			return instance.createGroup(name,keys);
+		}
+		/**
 		 * 语言版本,如"cn","en","tw"等。
 		 */		
 		public static function get language():String
@@ -324,6 +334,16 @@ package org.flexlite.domDll
 			{
 				groupNameList.push({name:name,priority:priority});
 			}
+		}
+		/**
+		 * 创建自定义的加载资源组
+		 * @param name 要创建的加载资源组的组名
+		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @return 是否创建成功，如果已经存在同名的组，或传入的keys为空，或keys全部无效，则创建失败。
+		 */		
+		private function createGroup(name:String,keys:Array):Boolean
+		{
+			return dllConfig.createGroup(name,keys);
 		}
 		/**
 		 * dll配置数据
