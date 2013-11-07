@@ -22,4 +22,5 @@
 57.提供PageLayout,支持水平翻页时垂直排列元素。
 58.Accordion组件
 61.增加Image控件，继承UIComponent，集成Scale9GridBitmap，RepeatBitmap以及其他位图效果的直接操作。
+62.Dll增加运行时动态创建组的功能。
 
