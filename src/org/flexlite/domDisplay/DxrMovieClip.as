@@ -313,9 +313,13 @@ package org.flexlite.domDisplay
 			{
 				gotoFrame(0);
 			}
+			var callBack:Function = callBackFuncs[_currentFrame];
+			if(callBack!=null)
+			{
+				callBack();
+			}
 			if(_currentFrame>=total-1)
 			{
-				_currentFrame = total-1;
 				if(!_repeatPlay)
 				{
 					checkEventListener(true);
@@ -567,8 +571,7 @@ package org.flexlite.domDisplay
 		public function gotoAndPlay(frame:Object):void
 		{
 			gotoFrame(frame);
-			isStop = false;
-			checkEventListener();
+			play();
 		}
 		/**
 		 * @inheritDoc
@@ -576,8 +579,7 @@ package org.flexlite.domDisplay
 		public function gotoAndStop(frame:Object):void
 		{
 			gotoFrame(frame);
-			isStop = true;
-			checkEventListener();
+			stop();
 		}
 		/**
 		 * @inheritDoc
@@ -594,6 +596,19 @@ package org.flexlite.domDisplay
 		{
 			isStop = true;
 			checkEventListener();
+		}
+		/**
+		 * 帧回调函数列表
+		 */		
+		private var callBackFuncs:Array = [];
+		/**
+		 * @inheritDoc
+		 */
+		public function addFrameScript(frame:int,callBack:Function):void
+		{
+			if(frame<0)
+				return;
+			callBackFuncs[frame] = callBack;
 		}
 		
 		/**
@@ -619,6 +634,8 @@ package org.flexlite.domDisplay
 			{
 				return;
 			}
+			if(_currentFrame<0)
+				_currentFrame = 0;
 			if(_currentFrame>totalFrames-1)
 				_currentFrame = totalFrames-1;
 			applyCurrentFrameData();

@@ -43,5 +43,11 @@ package org.flexlite.domCore
 		 * 在当前帧停止播放
 		 */		
 		function stop():void;
+		/**
+		 * 为指定帧添加回调函数。注意：同一帧只能添加一个回调函数。后添加的回调函数将会覆盖之前的。
+		 * @param frame 要添加回调的帧索引，从0开始。
+		 * @param callBack 回调函数。设置为null，将取消之前添加的回调函数。
+		 */		
+		function addFrameScript(frame:int,callBack:Function):void;
 	}
 }
