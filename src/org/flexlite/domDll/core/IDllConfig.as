@@ -26,9 +26,10 @@ package org.flexlite.domDll.core
 		 * 创建自定义的加载资源组
 		 * @param name 要创建的加载资源组的组名
 		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @return 是否创建成功，如果已经存在同名的组，或传入的keys为空，或keys全部无效，则创建失败。
+		 * @param override 是否覆盖已经存在的同名资源组,默认false。
+		 * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
 		 */	
-		function createGroup(name:String,keys:Array):Boolean;
+		function createGroup(name:String,keys:Array,override:Boolean=false):Boolean;
 		/**
 		 * 获取加载项类型。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
