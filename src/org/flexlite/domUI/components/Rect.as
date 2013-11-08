@@ -194,13 +194,6 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}
 		
-		override protected function measure():void
-		{
-			super.measure();
-			measuredWidth = 50;
-			measuredHeight = 50;
-		}
-
 		/**
 		 * @inheritDoc
 		 */
