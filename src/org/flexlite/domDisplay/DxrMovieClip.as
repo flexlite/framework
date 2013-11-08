@@ -305,20 +305,6 @@ package org.flexlite.domDisplay
 			var total:int = totalFrames;
 			if(total<=1||!visible)
 				return;
-			if(_currentFrame>=totalFrames-1)
-			{
-				_currentFrame = totalFrames-1;
-				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
-				{
-					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
-					dispatchEvent(event);
-				}
-				if(!_repeatPlay)
-				{
-					checkEventListener(true);
-					return;
-				}
-			}
 			if(_currentFrame<total-1)
 			{
 				gotoFrame(_currentFrame+1);
@@ -326,6 +312,19 @@ package org.flexlite.domDisplay
 			else
 			{
 				gotoFrame(0);
+			}
+			if(_currentFrame>=total-1)
+			{
+				_currentFrame = total-1;
+				if(!_repeatPlay)
+				{
+					checkEventListener(true);
+				}
+				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
+				{
+					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
+					dispatchEvent(event);
+				}
 			}
 		}
 		
@@ -571,6 +570,31 @@ package org.flexlite.domDisplay
 			isStop = false;
 			checkEventListener();
 		}
+		/**
+		 * @inheritDoc
+		 */	
+		public function gotoAndStop(frame:Object):void
+		{
+			gotoFrame(frame);
+			isStop = true;
+			checkEventListener();
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public function play():void
+		{
+			isStop = false;
+			checkEventListener();
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public function stop():void
+		{
+			isStop = true;
+			checkEventListener();
+		}
 		
 		/**
 		 * 帧标签字典索引
@@ -599,15 +623,7 @@ package org.flexlite.domDisplay
 				_currentFrame = totalFrames-1;
 			applyCurrentFrameData();
 		}
-		/**
-		 * @inheritDoc
-		 */	
-		public function gotoAndStop(frame:Object):void
-		{
-			gotoFrame(frame);
-			isStop = true;
-			checkEventListener();
-		}
+		
 		/**
 		 * @inheritDoc
 		 */

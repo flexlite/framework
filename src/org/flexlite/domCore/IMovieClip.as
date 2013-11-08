@@ -35,5 +35,13 @@ package org.flexlite.domCore
 		 * @param frame 可以是帧索引或者帧标签，帧索引从0开始。
 		 */
 		function gotoAndStop(frame:Object):void;
+		/**
+		 * 从当期帧开始播放
+		 */		
+		function play():void;
+		/**
+		 * 在当前帧停止播放
+		 */		
+		function stop():void;
 	}
 }
