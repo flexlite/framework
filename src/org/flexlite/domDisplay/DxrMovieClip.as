@@ -313,7 +313,7 @@ package org.flexlite.domDisplay
 			{
 				gotoFrame(0);
 			}
-			var callBack:Function = callBackFuncs[_currentFrame];
+			var callBack:Function = callBackList[_currentFrame];
 			if(callBack!=null)
 			{
 				callBack();
@@ -600,15 +600,13 @@ package org.flexlite.domDisplay
 		/**
 		 * 帧回调函数列表
 		 */		
-		private var callBackFuncs:Array = [];
+		private var callBackList:Array = [];
 		/**
 		 * @inheritDoc
 		 */
 		public function addFrameScript(frame:int,callBack:Function):void
 		{
-			if(frame<0)
-				return;
-			callBackFuncs[frame] = callBack;
+			callBackList[frame] = callBack;
 		}
 		
 		/**
