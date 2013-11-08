@@ -313,17 +313,21 @@ package org.flexlite.domDisplay
 			{
 				gotoFrame(0);
 			}
-			var callBack:Function = callBackList[_currentFrame];
-			if(callBack!=null)
-			{
-				callBack();
-			}
-			if(_currentFrame>=total-1)
+			var lastFrame:Boolean = (_currentFrame>=total-1);
+			if(lastFrame)
 			{
 				if(!_repeatPlay)
 				{
 					checkEventListener(true);
 				}
+			}
+			var callBack:Function = callBackList[_currentFrame];
+			if(callBack!=null)
+			{
+				callBack();
+			}
+			if(lastFrame)
+			{	
 				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
 				{
 					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
