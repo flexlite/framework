@@ -189,7 +189,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		dx_internal var _proposedSelectedIndex:int = NO_PROPOSED_SELECTION;
 		
-		private var _selectedIndex:int = NO_SELECTION;
+		dx_internal var _selectedIndex:int = NO_SELECTION;
 		
 		/**
 		 * 选中项目的基于 0 的索引。<br/>
@@ -217,7 +217,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 索引改变后是否需要抛出事件 
 		 */		
-		private var dispatchChangeAfterSelection:Boolean = false;
+		dx_internal var dispatchChangeAfterSelection:Boolean = false;
 		
 		/**
 		 * 设置选中项

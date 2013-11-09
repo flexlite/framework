@@ -115,31 +115,6 @@ package org.flexlite.domUI.components
 				}
 			}
 		}  
-		/**
-		 * 根据索引获取对应的ItemRender
-		 */		
-		private function getItemRenderer(index:int):IVisualElement
-		{
-			if (!dataGroup || (index < 0) || (index >= dataGroup.numElements))
-				return null;
-			
-			return dataGroup.getElementAt(index);
-		}
-		
-		 
-		/**
-		 * @inheritDoc
-		 */
-		override protected function itemSelected(index:int, selected:Boolean):void
-		{
-			super.itemSelected(index, selected);
-			
-			const renderer:IItemRenderer = getItemRenderer(index) as IItemRenderer;
-			if (renderer)
-			{
-				renderer.selected = selected;
-			}
-		}
 		
 		/**
 		 * @inheritDoc
