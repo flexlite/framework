@@ -21,6 +21,15 @@ package org.flexlite.domUI.components.supportClasses
 		public function TreeItemRenderer()
 		{
 			super();
+			addEventListener(MouseEvent.MOUSE_DOWN,onItemMouseDown,false,1000);
+		}
+		
+		private function onItemMouseDown(event:MouseEvent):void
+		{
+			if(event.target==disclosureButton)
+			{
+				event.stopImmediatePropagation();
+			}
 		}
 		/**
 		 * @inheritDoc
