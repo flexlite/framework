@@ -115,7 +115,7 @@ package org.flexlite.domUI.collections
 					return i;
 				}
 			}
-			return 0;
+			return -1;
 		}
 		
 		/**

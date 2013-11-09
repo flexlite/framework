@@ -366,9 +366,6 @@ package org.flexlite.domUI.components.supportClasses
 				}
 			}
 			
-			if(dispatchChangeAfterSelection)
-				dispatchChangeAfterSelection = false;
-			
 			if (labelFieldOrFunctionChanged)
 			{
 				if (dataGroup!=null)
@@ -541,6 +538,7 @@ package org.flexlite.domUI.components.supportClasses
 					dataProvider && dataProvider.length > 0)
 				{
 					_proposedSelectedIndex = NO_PROPOSED_SELECTION;
+					dispatchChangeAfterSelection = false;
 					return false;
 				}
 			}
@@ -556,8 +554,10 @@ package org.flexlite.domUI.components.supportClasses
 				{
 					itemSelected(_proposedSelectedIndex, false);
 					_proposedSelectedIndex = NO_PROPOSED_SELECTION;
+					dispatchChangeAfterSelection = false;
 					return false;
 				}
+				
 			}
 			
 			_selectedIndex = tmpProposedIndex;
