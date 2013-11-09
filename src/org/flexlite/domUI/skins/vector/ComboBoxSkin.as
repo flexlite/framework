@@ -28,7 +28,7 @@ package org.flexlite.domUI.skins.vector
 		public function ComboBoxSkin()
 		{
 			super();
-			this.states = ["open","normal","disabled"];
+			this.states = ["normal","open","disabled"];
 		}
 		
 		public var dataGroup:DataGroup;
