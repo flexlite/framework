@@ -119,6 +119,18 @@ package org.flexlite.domUI.collections
 		}
 		
 		/**
+		 * 通知视图，某个项目的属性已更新。
+		 */
+		public function itemUpdated(item:Object):void
+		{
+			var index:int = getItemIndex(item);
+			if(index!=-1)
+			{
+				dispatchCoEvent(CollectionEventKind.UPDATE,index,-1,[item]);
+			}
+		}
+		
+		/**
 		 * 删除指定节点
 		 */
 		public function removeItem(item:Object):void
