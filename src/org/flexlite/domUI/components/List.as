@@ -97,6 +97,20 @@ package org.flexlite.domUI.components
 			setSelectedIndices(value, false);
 		}
 		/**
+		 * @inheritDoc
+		 */
+		override public function get selectedIndex():int
+		{
+			if(_proposedSelectedIndices)
+			{
+				if(_proposedSelectedIndices.length>0)
+					return _proposedSelectedIndices[0];
+				return -1;
+			}
+			return super.selectedIndex;
+		}
+		
+		/**
 		 * 当前选中的一个或多个项目的数据源列表
 		 */		
 		public function get selectedItems():Vector.<Object>

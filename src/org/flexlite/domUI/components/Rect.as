@@ -5,7 +5,8 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.utils.GraphicsUtil;
 	
-	[DXML(show="false")]
+	[DXML(show="true")]
+	
 	/**
 	 * 矩形绘图元素。矩形的角可以是圆角,此组件可响应鼠标事件。
 	 * @author DOM

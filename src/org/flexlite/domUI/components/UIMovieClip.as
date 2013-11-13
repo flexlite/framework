@@ -4,6 +4,8 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domCore.IMovieClip;
 	
+	[DXML(show="true")]
+	
 	/**
 	 * 影片剪辑素材包装器,通常用于在UI中控制动画素材的播放。
 	 * @author DOM
