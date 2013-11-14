@@ -117,7 +117,7 @@ package org.flexlite.domUI.components
 		override protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
 		{
 			super.dataGroup_rendererAddHandler(event);
-			if(event.renderer is TreeItemRenderer)
+			if(event.renderer is ITreeItemRenderer)
 				event.renderer.addEventListener(TreeEvent.ITEM_OPENING,onItemOpening);
 		}
 		/**
@@ -125,7 +125,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function onItemOpening(event:TreeEvent):void
 		{
-			var renderer:TreeItemRenderer = event.itemRenderer;
+			var renderer:ITreeItemRenderer = event.itemRenderer;
 			var item:Object = event.item;
 			if(!renderer||!(dataProvider is ITreeCollection))
 				return;
@@ -145,7 +145,7 @@ package org.flexlite.domUI.components
 		override protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
 		{
 			super.dataGroup_rendererRemoveHandler(event);
-			if(event.renderer is TreeItemRenderer)
+			if(event.renderer is ITreeItemRenderer)
 				event.renderer.removeEventListener(TreeEvent.ITEM_OPENING,onItemOpening);
 		}
 		/**
@@ -217,8 +217,8 @@ package org.flexlite.domUI.components
 			super.dataProvider_collectionChangeHandler(event);
 			if(event.kind == CollectionEventKind.OPEN||event.kind == CollectionEventKind.CLOSE)
 			{
-				var renderer:TreeItemRenderer = dataGroup?
-					dataGroup.getElementAt(event.location) as TreeItemRenderer:null;
+				var renderer:ITreeItemRenderer = dataGroup?
+					dataGroup.getElementAt(event.location) as ITreeItemRenderer:null;
 				if(renderer)
 				{
 					updateRenderer(renderer,event.location,event.items[0]);
@@ -263,7 +263,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function updateRendererIconProperty(itemIndex:int):void
 		{
-			var renderer:TreeItemRenderer = dataGroup.getElementAt(itemIndex) as TreeItemRenderer; 
+			var renderer:ITreeItemRenderer = dataGroup.getElementAt(itemIndex) as ITreeItemRenderer; 
 			if (renderer)
 				renderer.iconSkinName = itemToIcon(renderer.data); 
 		}
