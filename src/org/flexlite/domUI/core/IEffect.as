@@ -24,7 +24,7 @@ package org.flexlite.domUI.core
 		function get duration():Number;
 		function set duration(value:Number):void;
 		/**
-		 * 是否正在播放动画
+		 * 是否开始播放动画的标志，包括startDelay的阶段。
 		 */
 		function get isPlaying():Boolean;
 		/**
