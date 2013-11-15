@@ -231,21 +231,24 @@ package org.flexlite.domUI.collections
 		 */		
 		private function openNode(item:Object):void
 		{
-			var index:int = nodeList.indexOf(item);
-			if(index!=-1&&_openNodes.indexOf(item)==-1)
+			if(_openNodes.indexOf(item)==-1)
 			{
 				_openNodes.push(item);
-				var list:Array = [];
-				addChildren(item,list);
-				var i:int = index;
-				while(list.length)
+				var index:int = nodeList.indexOf(item);
+				if(index!=-1)
 				{
-					i++;
-					var node:Object = list.shift();
-					nodeList.splice(i,0,node);
-					dispatchCoEvent(CollectionEventKind.ADD,i,-1,[node]);
+					var list:Array = [];
+					addChildren(item,list);
+					var i:int = index;
+					while(list.length)
+					{
+						i++;
+						var node:Object = list.shift();
+						nodeList.splice(i,0,node);
+						dispatchCoEvent(CollectionEventKind.ADD,i,-1,[node]);
+					}
+					dispatchCoEvent("open",index,index,[item]);
 				}
-				dispatchCoEvent(CollectionEventKind.OPEN,index,index,[item]);
 			}
 		}
 		/**
