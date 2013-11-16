@@ -59,5 +59,10 @@ package org.flexlite.domUI.events
 		 * 下拉框关闭事件
 		 */		
 		public static const CLOSE:String = "close";
+		
+		/**
+		 * UIMoveClip一次播放完成事件。仅当UIMovieClip.totalFrames>1时会抛出此事件。 
+		 */		
+		public static const PLAY_COMPLETE:String = "playComplete"
 	}
 }

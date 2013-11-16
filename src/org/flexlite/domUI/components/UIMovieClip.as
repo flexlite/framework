@@ -3,9 +3,14 @@ package org.flexlite.domUI.components
 	import flash.display.MovieClip;
 	
 	import org.flexlite.domCore.IMovieClip;
+	import org.flexlite.domUI.events.UIEvent;
 	
 	[DXML(show="true")]
 	
+	/**
+	 * UIMoveClip一次播放完成事件。仅当UIMovieClip.totalFrames>1时会抛出此事件。 
+	 */	
+	[Event(name="playComplete", type="org.flexlite.domUI.events.UIEvent")]
 	/**
 	 * 影片剪辑素材包装器,通常用于在UI中控制动画素材的播放。
 	 * @author DOM
@@ -40,8 +45,11 @@ package org.flexlite.domUI.components
 			{
 				movieClip = null;
 			}
+			_totalFrames = 0;
+			_frameLabels = [];
 			if(movieClip)
 				attachMovieClip(movieClip);
+			actionCache = [];
 		}
 		
 		private var actionCache:Array = [];
@@ -58,6 +66,14 @@ package org.flexlite.domUI.components
 		 */		
 		protected function attachMovieClip(movieClip:Object):void
 		{
+			_totalFrames = movieClip.totalFrames;
+			if(movieClip)
+			{
+				if(isMovieClip)
+					_frameLabels = movieClip.currentLabels;
+				else
+					_frameLabels = movieClip.frameLabels;
+			}
 			for(var frame:* in frameMarkList)
 			{
 				if(movieClip.totalFrames-1==frame)
@@ -65,12 +81,11 @@ package org.flexlite.domUI.components
 				else
 					movieClip.addFrameScript(frame,callBackFunction);
 			}
-			if(isMovieClip)
+			if(_totalFrames>1)
 			{
-				if(!_repeatPlay)
-					addCallBackAtFrame(movieClip.totalFrames-1);
+				addCallBackAtFrame(movieClip.totalFrames-1);
 			}
-			else
+			if(!isMovieClip)
 			{
 				movieClip.repeatPlay = _repeatPlay;
 			}
@@ -81,7 +96,6 @@ package org.flexlite.domUI.components
 				else
 					ac.func.apply(null,ac.args);
 			}
-			actionCache = [];
 		}
 		
 		/**
@@ -93,8 +107,9 @@ package org.flexlite.domUI.components
 			{
 				movieClip.addFrameScript(frame,null);
 			}
-			if(isMovieClip&&!_repeatPlay)
-				removeCallBackAtFrame(movieClip.totalFrames-1);
+			movieClip = null;
+			if(_totalFrames>1)
+				removeCallBackAtFrame(_totalFrames-1);
 		}
 		
 		/**
@@ -120,28 +135,22 @@ package org.flexlite.domUI.components
 			return frame;
 		}
 		
+		private var _totalFrames:int = 0;
 		/**
 		 * @inheritDoc
 		 */
 		public function get totalFrames():int
 		{
-			return movieClip?movieClip.totalFrames:0;
+			return _totalFrames;
 		}
 		
+		private var _frameLabels:Array = [];
 		/**
 		 * @inheritDoc
 		 */		
 		public function get frameLabels():Array
 		{
-			var labels:Array = [];
-			if(movieClip)
-			{
-				if(isMovieClip)
-					labels = movieClip.currentLabels;
-				else
-					labels = movieClip.frameLabels;
-			}
-			return labels;
+			return _frameLabels.concat();
 		}
 		
 		private var _repeatPlay:Boolean = true;
@@ -159,14 +168,7 @@ package org.flexlite.domUI.components
 			_repeatPlay = value;
 			if(movieClip)
 			{
-				if(isMovieClip)
-				{
-					if(_repeatPlay)
-						removeCallBackAtFrame(movieClip.totalFrames-1);
-					else
-						addCallBackAtFrame(movieClip.totalFrames-1);
-				}
-				else
+				if(!isMovieClip)
 				{
 					movieClip.repeatPlay = _repeatPlay;
 				}
@@ -259,7 +261,7 @@ package org.flexlite.domUI.components
 			frameMarkList[frame] = true;
 			if(movieClip)
 			{
-				if(movieClip.totalFrames-1==frame)
+				if(_totalFrames-1==frame)
 					movieClip.addFrameScript(frame,endCallBackFunction);
 				else
 					movieClip.addFrameScript(frame,callBackFunction);
@@ -272,8 +274,7 @@ package org.flexlite.domUI.components
 		{
 			if(!frameMarkList[frame])
 				return;
-			if(movieClip is MovieClip&&movieClip.totalFrames-1==frame&&
-				(!_repeatPlay||callBackList[frame]!=null))
+			if(movieClip&&_totalFrames-1==frame||callBackList[frame]!=null)
 				return;
 			delete frameMarkList[frame];
 			if(movieClip)
@@ -299,10 +300,15 @@ package org.flexlite.domUI.components
 		{
 			if(!_repeatPlay&&isMovieClip)
 			{
-				if(movieClip.currentFrame==movieClip.totalFrames)//MovieClip.currentFrame从1开始
-					movieClip.stop();
+				movieClip.stop();
 			}
 			callBackFunction();
+			
+			if(hasEventListener(UIEvent.PLAY_COMPLETE))
+			{
+				var event:UIEvent = new UIEvent(UIEvent.PLAY_COMPLETE);
+				dispatchEvent(event);
+			}
 		}
 		
 	}
