@@ -139,6 +139,8 @@ package org.flexlite.domUI.core
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		//用于返回正确的文本高度，去除最后一行的行间距。
+		dx_internal var leading:int = 0;
 		/**
 		 * Flash Player在计算TextField.textHeight时，
 		 * 没有包含空白的4像素,为了方便使用，在这里做了统一处理,
@@ -146,7 +148,7 @@ package org.flexlite.domUI.core
 		 */	
 		override public function get textHeight():Number
 		{
-			return super.textHeight+4;
+			return super.textHeight+4-leading;
 		}
 		/**
 		 * Flash Player在计算TextField.textWidth时，

@@ -240,10 +240,10 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
-		private var _leading:int = 0;
+		private var _leading:int = 2;
 		
 		/**
-		 * 行距,默认值为0。
+		 * 行距,默认值为2。
 		 */
 		public function get leading():int
 		{
@@ -255,10 +255,17 @@ package org.flexlite.domUI.components.supportClasses
 			if(_leading==value)
 				return;
 			_leading = value;
+			if(textField)
+				textField.leading = realLeading;
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		
+		dx_internal function get realLeading():int
+		{
+			return _leading;
 		}
 		
 		/**
@@ -624,6 +631,7 @@ package org.flexlite.domUI.components.supportClasses
 					textField.$htmlText = explicitHTMLText;
 				else
 					textField.$text = _text;
+				textField.leading = realLeading;
 				condenseWhiteChanged = true;
 				selectableChanged = true;
 				textChanged = true;

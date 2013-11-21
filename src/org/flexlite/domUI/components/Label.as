@@ -106,10 +106,17 @@ package org.flexlite.domUI.components
 			if(_verticalAlign==value)
 				return;
 			_verticalAlign = value;
+			if(textField)
+				textField.leading = realLeading;
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		
+		override dx_internal function get realLeading():int
+		{
+			return _verticalAlign==VerticalAlign.JUSTIFY?0:leading;
 		}
 		
 		/**
