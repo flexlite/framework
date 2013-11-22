@@ -164,7 +164,7 @@ package org.flexlite.domUI.components
 			{
 				setSelectedIndex(index,false);
 			}
-			else if (index <= selectedIndex)
+			else if (index <= selectedIndex&&initialized)
 			{
 				setSelectedIndex(selectedIndex + 1);
 			}
