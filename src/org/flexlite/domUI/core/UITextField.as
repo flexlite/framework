@@ -48,14 +48,20 @@ package org.flexlite.domUI.core
 			if(changed)
 				dispatchEvent(new Event("widthChanged"));
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
+		override public function get height():Number
+		{
+			return super.height-leading;
+		}
 		/**
 		 * @inheritDoc
 		 */
 		override public function set height(value:Number):void
 		{
-			var changed:Boolean = super.height != value;
-			super.height = value;
+			var changed:Boolean = height != value;
+			super.height = value+leading;
 			if(changed)
 				dispatchEvent(new Event("heightChanged"));
 		}
@@ -175,9 +181,9 @@ package org.flexlite.domUI.core
 		 */			
 		dx_internal final function set $height(value:Number):void
 		{
-			if(super.height == value)
+			if(height == value)
 				return;
-			super.height = value;
+			super.height = value+leading;
 		}
 		
 		/**
