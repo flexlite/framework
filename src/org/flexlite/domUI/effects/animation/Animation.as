@@ -262,11 +262,11 @@ package org.flexlite.domUI.effects.animation
 			{
 				updateFunction(this);
 			}
+			stopAnimation();
 			if(endFunction!=null)
 			{
 				endFunction(this);
 			}
-			stopAnimation();
 		}
 		
 		/**
