@@ -2,8 +2,8 @@ package org.flexlite.domUI.effects.supportClasses
 {
 	import flash.events.EventDispatcher;
 	
-	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -159,6 +159,14 @@ package org.flexlite.domUI.effects.supportClasses
 		public function get isPlaying():Boolean
 		{
 			return animator.isPlaying;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get started():Boolean
+		{
+			return animator.started;
 		}
 		
 		

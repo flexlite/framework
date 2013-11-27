@@ -337,10 +337,9 @@ package org.flexlite.domUI.components
 		 */		
 		private function getScrollVByVertitcalPos(value:Number):int
 		{
-			var numLines:int = textField.numLines;
-			if(numLines==0)
+			if(textField.numLines==0)
 				return 1;
-			var lineHeight:Number = (textField.textHeight-4)/numLines;
+			var lineHeight:Number = textField.getLineMetrics(0).height;
 			return int((value)/lineHeight)+1;
 		}
 		/**
@@ -348,18 +347,15 @@ package org.flexlite.domUI.components
 		 */		
 		private function getVerticalPosByScrollV(scrollV:int):Number
 		{
-			if(scrollV == 1)
+			if(scrollV == 1||textField.numLines == 0)
 				return 0;
-			var numLines:int = textField.numLines;
-			if(numLines == 0)
-				return 0;
-			var lineHeight:Number = (textField.textHeight-4)/numLines;
+			var lineHeight:Number = textField.getLineMetrics(0).height;
 			if(scrollV == textField.maxScrollV)
 			{
 				var offsetHeight:Number = (height-4)%lineHeight;
 				return textField.textHeight + offsetHeight-height;
 			}
-			return lineHeight*(scrollV-1);
+			return lineHeight*(scrollV-1)+2;
 		}
 		/**
 		 * @inheritDoc

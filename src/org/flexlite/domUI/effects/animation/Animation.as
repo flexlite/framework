@@ -40,11 +40,9 @@ package org.flexlite.domUI.effects.animation
 		}
 
 		
-		private var _isActuallyPlaying:Boolean
-		
-		private var _isPlaying:Boolean = false;
+		private var _isPlaying:Boolean
 		/**
-		 * 是否开始播放动画的标志，包括startDelay的阶段。
+		 * 是否正在播放动画，不包括延迟等待和暂停的阶段
 		 */
 		public function get isPlaying():Boolean
 		{
@@ -202,7 +200,7 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		public function reverse():void
 		{
-			if(_isReverse||!_isActuallyPlaying)
+			if(_isReverse||!_isPlaying)
 				return;
 			_isReverse = true;
 			var runningTime:Number = currentTime-startTime-_startDelay;
@@ -229,9 +227,8 @@ package org.flexlite.domUI.effects.animation
 		private function start():void
 		{
 			playedTimes = 0;
-			started = true;
-			_isPlaying = true;
-			_isActuallyPlaying = false;
+			_started = true;
+			_isPlaying = false;
 			_currentValue = {};
 			caculateCurrentValue(0);
 			startTime = getTimer();
@@ -245,7 +242,7 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		public function end():void
 		{
-			if(!started)
+			if(!_started)
 			{
 				caculateCurrentValue(0);
 				if(startFunction!=null)
@@ -284,10 +281,9 @@ package org.flexlite.domUI.effects.animation
 		private function stopAnimation():void
 		{
 			playedTimes = 0;
-			_isActuallyPlaying = false;
 			_isPlaying = false;
 			startTime = 0;
-			started = false;
+			_started = false;
 			removeAnimation(this);
 		}
 		
@@ -309,11 +305,10 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		public function pause():void
 		{
-			if(!started)
+			if(!_started)
 				return;
 			_isPaused = true;
 			pauseTime = getTimer();
-			_isActuallyPlaying = false;
 			_isPlaying = false;
 			removeAnimation(this);
 		}
@@ -322,10 +317,9 @@ package org.flexlite.domUI.effects.animation
 		 */		
 		public function resume():void
 		{
-			if(!started||!_isPaused)
+			if(!_started||!_isPaused)
 				return;
 			_isPaused = false;
-			_isPlaying = true;
 			startTime += getTimer()-pauseTime;
 			pauseTime = -1;
 			addAnimation(this);
@@ -335,10 +329,17 @@ package org.flexlite.domUI.effects.animation
 		 * 动画启动时刻
 		 */		
 		private var startTime:Number = 0;
+		
+		private var _started:Boolean = false;
+
 		/**
-		 * 动画已经开始的标志，包括延迟等待的阶段。
-		 */		
-		private var started:Boolean = false;
+		 * 动画已经开始的标志，包括延迟等待和暂停的阶段。
+		 */
+		public function get started():Boolean
+		{
+			return _started;
+		}
+
 		
 		/**
 		 * 已经播放的次数。
@@ -355,9 +356,9 @@ package org.flexlite.domUI.effects.animation
 			{
 				return false;
 			}
-			if(!_isActuallyPlaying)
+			if(!_isPlaying)
 			{
-				_isActuallyPlaying = true;
+				_isPlaying = true;
 				if(playedTimes==0)
 				{
 					if(startFunction!=null)
@@ -377,7 +378,6 @@ package org.flexlite.domUI.effects.animation
 			if(isEnded)
 			{
 				playedTimes++;
-				_isActuallyPlaying = false;
 				_isPlaying = false;
 				startTime =  currentTime;
 				if(_repeatCount==0||playedTimes<_repeatCount)
@@ -391,7 +391,7 @@ package org.flexlite.domUI.effects.animation
 				else
 				{
 					removeAnimation(this);
-					started = false;
+					_started = false;
 					playedTimes = 0;
 				}
 			}
