@@ -9,6 +9,9 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.TreeEvent;
 	
 	use namespace dx_internal;
+	
+	[DXML(show="false")]
+	
 	/**
 	 * Tree组件的项呈示器基类
 	 * @author DOM
