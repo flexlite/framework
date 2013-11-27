@@ -590,11 +590,11 @@ package org.flexlite.domUI.layouts
 		 */		
 		private function updateMaxElementSizeVirtual():void
 		{
-			if(typicalLayoutRect)
-			{
-				maxElementWidth = Math.max(maxElementWidth,typicalLayoutRect.width);
-				maxElementHeight = Math.max(maxElementHeight,typicalLayoutRect.height);
-			}
+			var typicalHeight:Number = typicalLayoutRect?typicalLayoutRect.height:22;
+			var typicalWidth:Number = typicalLayoutRect?typicalLayoutRect.width:22;
+			maxElementWidth = Math.max(maxElementWidth,typicalWidth);
+			maxElementHeight = Math.max(maxElementHeight,typicalHeight);
+
 			if ((startIndex != -1) && (endIndex != -1))
 			{
 				for (var index:int = startIndex; index <= endIndex; index++)
