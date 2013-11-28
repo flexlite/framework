@@ -62,7 +62,7 @@ package org.flexlite.domUI.components
 				return;
 			_skinName = value;
 			skinNameExplicitlySet = true;
-			if(initialized||hasParent)
+			if(createChildrenCalled)
 			{
 				parseSkinName();
 			}
@@ -106,6 +106,7 @@ package org.flexlite.domUI.components
 				validateNow();
 		}
 		
+		private var createChildrenCalled:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
@@ -116,6 +117,7 @@ package org.flexlite.domUI.components
 			{
 				parseSkinName();
 			}
+			createChildrenCalled = true;
 		}
 		
 		/**
