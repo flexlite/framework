@@ -1,6 +1,7 @@
 package org.flexlite.domUI.states
 {
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.events.StateChangeEvent;
 	
@@ -129,8 +130,6 @@ package org.flexlite.domUI.states
 			var event:StateChangeEvent;
 			var oldState:String = _currentState ? _currentState : "";
 			var destination:State = getState(requestedCurrentState);
-			
-			initializeState(requestedCurrentState);
 			
 			if (target.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) 
 			{
@@ -276,23 +275,27 @@ package org.flexlite.domUI.states
 				var overrides:Array = state.overrides;
 				
 				for (var i:int = 0; i < overrides.length; i++)
-					overrides[i].apply(target);
+					overrides[i].apply(target as IContainer);
 				
 				state.dispatchEnterState();
 			}
 		}
 		
+		private var initialized:Boolean = false;
 		/**
-		 * 初始化指定的视图状态以及其父级状态
+		 * 初始化所有视图状态
 		 */
-		private function initializeState(stateName:String):void
+		public function initializeStates():void
 		{
-			var state:State = getState(stateName);
-			
-			while (state)
+			if(initialized)
+				return;
+			initialized = true;
+			for (var i:int = 0; i < _states.length; i++)
 			{
-				state.initialize();
-				state = getState(state.basedOn);
+				var state:State = _states[i] as State;
+				if(!state)
+					break;
+				state.initialize(target);
 			}
 		}
 	}

@@ -345,7 +345,7 @@ package org.flexlite.domUI.core
 		/**
 		 * 初始化组件
 		 */
-		private function initialize():void
+		dx_internal function initialize():void
 		{
 			if(initializeCalled)
 				return;

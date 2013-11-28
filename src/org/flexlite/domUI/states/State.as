@@ -5,6 +5,8 @@ package org.flexlite.domUI.states
 	import flash.events.EventDispatcher;
 	
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IStateClient;
 	
 	
 	use namespace dx_internal;
@@ -56,14 +58,14 @@ package org.flexlite.domUI.states
 		/**
 		 * 初始化视图
 		 */		
-		dx_internal function initialize():void
+		dx_internal function initialize(parent:IStateClient):void
 		{
 			if (!initialized)
 			{
 				initialized = true;
 				for (var i:int = 0; i < overrides.length; i++)
 				{
-					IOverride(overrides[i]).initialize();
+					IOverride(overrides[i]).initialize(parent);
 				}
 			}
 		}

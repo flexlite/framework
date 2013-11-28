@@ -1,8 +1,13 @@
 package org.flexlite.domUI.states
 {
+	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.components.SkinnableComponent;
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.ISkinnableClient;
+	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.core.IVisualElement;
 	
+	use namespace dx_internal;
 	
 	/**
 	 * 添加显示元素
@@ -54,6 +59,26 @@ package org.flexlite.domUI.states
 		 * 目标实例名
 		 */		
 		public var target:String;
+		
+		private var INITIALIZE_FUNCTION:QName = new QName(dx_internal, "initialize")
+		
+		override public function initialize(parent:IStateClient):void
+		{
+			var targetElement:IVisualElement = parent[target] as IVisualElement;
+			if(!targetElement||targetElement is SkinnableComponent)
+				return;
+			//让UIAsset和UIMovieClip等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
+			if(targetElement is ISkinnableClient)
+			{
+				try
+				{
+					targetElement[INITIALIZE_FUNCTION]();
+				}
+				catch(e:Error)
+				{
+				}
+			}
+		}
 		
 		override public function apply(parent:IContainer):void
 		{

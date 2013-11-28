@@ -64,7 +64,6 @@ package org.flexlite.domUI.components
 			skinNameExplicitlySet = true;
 			if(initialized||hasParent)
 			{
-				skinNameChanged = false;
 				parseSkinName();
 			}
 			else
@@ -115,7 +114,6 @@ package org.flexlite.domUI.components
 			super.createChildren();
 			if(skinNameChanged)
 			{
-				skinNameChanged = false;
 				parseSkinName();
 			}
 		}
@@ -135,6 +133,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function parseSkinName():void
 		{
+			skinNameChanged = false;
 			var adapter:ISkinAdapter = skinAdapter;
 			if(!adapter)
 			{

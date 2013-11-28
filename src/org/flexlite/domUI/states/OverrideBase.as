@@ -1,6 +1,7 @@
 package org.flexlite.domUI.states
 {
 	import org.flexlite.domUI.core.IContainer;
+	import org.flexlite.domUI.core.IStateClient;
 	import org.flexlite.domUI.utils.OnDemandEventDispatcher;
 	
 	/**
@@ -11,7 +12,9 @@ package org.flexlite.domUI.states
 	{
 		public function OverrideBase() {}
 		
-		public function initialize():void {}
+		public function initialize(parent:IStateClient):void 
+		{
+		}
 		
 		public function apply(parent:IContainer):void 
 		{

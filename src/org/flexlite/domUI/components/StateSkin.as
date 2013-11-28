@@ -182,6 +182,9 @@ package org.flexlite.domUI.components
 						IContainer(elt.owner).removeElement(elt);
 					elementAdded(elt, i);
 				}
+				
+				stateClientHelper.initializeStates();
+				
 				if(stateClientHelper.currentStateChanged)
 				{
 					stateClientHelper.commitCurrentState();

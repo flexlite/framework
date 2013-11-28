@@ -41,6 +41,12 @@ package org.flexlite.domUI.components.supportClasses
 			_hostComponent = value;
 		}
 		
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			stateClientHelper.initializeStates();
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
