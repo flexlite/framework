@@ -123,14 +123,20 @@ package org.flexlite.domUI.states
 			_currentStateChanged = false;
 			if(states&&states[0] is String)
 			{
-				_currentState = requestedCurrentState;
+				if(states.indexOf(requestedCurrentState)==-1)
+					_currentState = getDefaultState();
+				else
+					_currentState = requestedCurrentState;
 				return;
+			}
+			var destination:State = getState(requestedCurrentState);
+			if(!destination)
+			{
+				requestedCurrentState = getDefaultState();
 			}
 			var commonBaseState:String = findCommonBaseState(_currentState, requestedCurrentState);
 			var event:StateChangeEvent;
 			var oldState:String = _currentState ? _currentState : "";
-			var destination:State = getState(requestedCurrentState);
-			
 			if (target.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) 
 			{
 				event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
