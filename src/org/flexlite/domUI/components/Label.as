@@ -471,7 +471,7 @@ package org.flexlite.domUI.components
 			rangeFormatChanged = false;
 			if(!rangeFormatDic||!textField||!_text)
 				return;
-			var useLeading:Boolean = Boolean(expLeading);
+			var useLeading:Boolean = Boolean(expLeading!=null);
 			for(var beginIndex:* in rangeFormatDic)
 			{
 				var endDic:Dictionary = rangeFormatDic[beginIndex] as Dictionary;
@@ -620,7 +620,7 @@ package org.flexlite.domUI.components
 		private var _truncateToFit:Boolean = true;
 		/**
 		 * 如果此属性为true，并且Label控件大小小于其文本大小，则使用"..."截断 Label控件的文本。
-		 * 反之将直接截断文本。注意：当使用htmlText显示文本时，始终直接截断文本,不显示...。
+		 * 反之将直接截断文本。注意：当使用htmlText显示文本或设置maxDisplayedLines=1时，始终直接截断文本,不显示...。
 		 */
 		public function get truncateToFit():Boolean
 		{
@@ -648,10 +648,18 @@ package org.flexlite.domUI.components
 			
 			var expLeading:Object = verticalAlign==VerticalAlign.JUSTIFY?0:null;
 			
-			var lastLineIndex:int = textField.getLineIndexAtPoint(2,textField.height-2);
-			if(lastLineIndex<0)
-				lastLineIndex = 0;
-			lastLineIndex += 1;
+			try
+			{
+				var lineM:TextLineMetrics = textField.getLineMetrics(0);
+				var realTextHeight:Number = textField.height-4+textField.leading;
+				var lastLineIndex:int =int(realTextHeight/lineM.height);
+			}
+			catch(e:Error)
+			{
+				lastLineIndex = 1;
+			}
+			if(lastLineIndex<1)
+				lastLineIndex = 1;
 			if(textField.numLines>lastLineIndex&&textField.textHeight>textField.height)
 			{
 				var offset:int = textField.getLineOffset(lastLineIndex);
