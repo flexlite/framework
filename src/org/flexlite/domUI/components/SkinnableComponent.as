@@ -86,13 +86,13 @@ package org.flexlite.domUI.components
 			return SkinnableComponent;
 		}
 		
-		private var _invisibleSkin:Object 
+		private var _skinObject:Object 
 		/**
-		 * 存储皮肤适配器解析skinName得到的非显示对象皮肤
+		 * 存储皮肤适配器解析skinName得到的原始皮肤对象，包括非显示对象皮肤的实例。
 		 */
-		public function get invisibleSkin():Object
+		public function get skinObject():Object
 		{
-			return _invisibleSkin;
+			return _skinObject;
 		}
 		
 		/**
@@ -100,7 +100,7 @@ package org.flexlite.domUI.components
 		 */
 		override protected function onGetSkin(skin:Object,skinName:Object):void
 		{
-			var oldSkin:Object = getCurrentSkin();
+			var oldSkin:Object = _skinObject;
 			detachSkin(oldSkin);
 			if(_skin)
 			{
@@ -109,8 +109,6 @@ package org.flexlite.domUI.components
 					removeFromDisplayList(_skin); 
 				}
 			}
-			_skin = null;
-			_invisibleSkin = null;
 			
 			if(skin is DisplayObject)
 			{
@@ -119,19 +117,12 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				_invisibleSkin = skin;
+				_skin = null;
 			}
-			var newSkin:Object = getCurrentSkin();
-			attachSkin(newSkin);
+			_skinObject = skin;
+			attachSkin(_skinObject);
 			invalidateSize();
 			invalidateDisplayList();
-		}
-		/**
-		 * 获取当前的skin对象，当附加的皮肤为非显示对象时，并不存储在skin属性中。返回非显示对象版本skin。
-		 */		
-		dx_internal function getCurrentSkin():Object
-		{
-			return _invisibleSkin?_invisibleSkin:_skin;
 		}
 		
 		/**
@@ -164,7 +155,7 @@ package org.flexlite.domUI.components
 		 */	
 		public function findSkinParts():void
 		{
-			var curSkin:Object = getCurrentSkin();
+			var curSkin:Object = _skinObject;
 			if(!curSkin||!(curSkin is ISkin))
 				return;
 			var skinParts:Vector.<String> = SkinPartUtil.getSkinParts(this);
@@ -288,7 +279,7 @@ package org.flexlite.domUI.components
 		{
 			var curState:String = getCurrentSkinState();
 			var hasState:Boolean = false;
-			var curSkin:Object = _invisibleSkin?_invisibleSkin:_skin;
+			var curSkin:Object = _skinObject;
 			if(curSkin is IStateClient)
 			{
 				(curSkin as IStateClient).currentState = curState;
@@ -453,35 +444,36 @@ package org.flexlite.domUI.components
 			{
 				layout.measure();
 			}
-			if(_invisibleSkin)
+			var skinObject:Object = _skinObject;
+			if(!_skin&&skinObject)
 			{//为非显示对象的皮肤测量
 				var measuredW:Number = this.measuredWidth;
 				var measuredH:Number = this.measuredHeight;
 				try
 				{
-					if(!isNaN(_invisibleSkin.width))
-						measuredW = Math.ceil(_invisibleSkin.width);
-					if(!isNaN(_invisibleSkin.height))
-						measuredH = Math.ceil(_invisibleSkin.height);
-					if(_invisibleSkin.hasOwnProperty("minWidth")&&
-						measuredW<_invisibleSkin.minWidth)
+					if(!isNaN(skinObject.width))
+						measuredW = Math.ceil(skinObject.width);
+					if(!isNaN(skinObject.height))
+						measuredH = Math.ceil(skinObject.height);
+					if(skinObject.hasOwnProperty("minWidth")&&
+						measuredW<skinObject.minWidth)
 					{
-						measuredW = _invisibleSkin.minWidth;
+						measuredW = skinObject.minWidth;
 					}
-					if(_invisibleSkin.hasOwnProperty("maxWidth")&&
-						measuredW>_invisibleSkin.maxWidth)
+					if(skinObject.hasOwnProperty("maxWidth")&&
+						measuredW>skinObject.maxWidth)
 					{
-						measuredW = _invisibleSkin.maxWidth;
+						measuredW = skinObject.maxWidth;
 					}
-					if(_invisibleSkin.hasOwnProperty("minHeight")&&
-						measuredH<_invisibleSkin.minHeight)
+					if(skinObject.hasOwnProperty("minHeight")&&
+						measuredH<skinObject.minHeight)
 					{
-						measuredH = _invisibleSkin.minHeight;
+						measuredH = skinObject.minHeight;
 					}
-					if(_invisibleSkin.hasOwnProperty("maxHeight")&&
-						measuredH>_invisibleSkin.maxHeight)
+					if(skinObject.hasOwnProperty("maxHeight")&&
+						measuredH>skinObject.maxHeight)
 					{
-						measuredH = _invisibleSkin.maxHeight
+						measuredH = skinObject.maxHeight
 					}
 					this.measuredWidth = measuredW;
 					this.measuredHeight = measuredH;

@@ -309,19 +309,15 @@ package org.flexlite.domUI.components
 			
 			checkForRangeError(index, true);
 			
-			var host:DisplayObject = element.parent; 
+			var host:Object = element.owner; 
 			if (host == this)
 			{
 				setElementIndex(element, index);
 				return element;
 			}
-			else if (host is IVisualElementContainer)
+			else if(host is IContainer)
 			{
-				IVisualElementContainer(host).removeElement(element);
-			}
-			else if(element.owner is IContainer)
-			{
-				IContainer(element.owner).removeElement(element);
+				IContainer(host).removeElement(element);
 			}
 			
 			_elementsContent.splice(index, 0, element);
