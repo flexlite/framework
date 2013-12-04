@@ -253,6 +253,8 @@ package org.flexlite.domUI.components
 				
 				if(elt.parent is IVisualElementContainer)
 					IVisualElementContainer(elt.parent).removeElement(elt);
+				else if(elt.owner is IContainer)
+					IContainer(elt.owner).removeElement(elt);
 				
 				elementAdded(elt, i);
 			}
@@ -309,15 +311,19 @@ package org.flexlite.domUI.components
 			
 			checkForRangeError(index, true);
 			
-			var host:Object = element.owner; 
+			var host:DisplayObject = element.parent; 
 			if (host == this)
 			{
 				setElementIndex(element, index);
 				return element;
 			}
-			else if(host is IContainer)
+			else if (host is IVisualElementContainer)
 			{
-				IContainer(host).removeElement(element);
+				IVisualElementContainer(host).removeElement(element);
+			}
+			else if(element.owner is IContainer)
+			{
+				IContainer(element.owner).removeElement(element);
 			}
 			
 			_elementsContent.splice(index, 0, element);

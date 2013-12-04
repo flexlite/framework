@@ -176,7 +176,9 @@ package org.flexlite.domUI.components
 				for (i = 0; i < n; i++)
 				{   
 					var elt:IVisualElement = _elementsContent[i];
-					if(elt.owner is IContainer)
+					if (elt.parent is IVisualElementContainer)
+						IVisualElementContainer(elt.parent).removeElement(elt);
+					else if(elt.owner is IContainer)
 						IContainer(elt.owner).removeElement(elt);
 					elementAdded(elt, i);
 				}
@@ -225,7 +227,9 @@ package org.flexlite.domUI.components
 				{   
 					var elt:IVisualElement = _elementsContent[i];
 					
-					if(elt.owner is IContainer)
+					if(elt.parent is IVisualElementContainer)
+						IVisualElementContainer(elt.parent).removeElement(elt);
+					else if(elt.owner is IContainer)
 						IContainer(elt.owner).removeElement(elt);
 					elementAdded(elt, i);
 				}
@@ -287,6 +291,10 @@ package org.flexlite.domUI.components
 			{
 				setElementIndex(element, index);
 				return element;
+			}
+			else if (element.parent is IVisualElementContainer)
+			{
+				IVisualElementContainer(element.parent).removeElement(element);
 			}
 			else if(host is IContainer)
 			{

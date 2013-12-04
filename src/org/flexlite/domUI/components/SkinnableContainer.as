@@ -219,10 +219,16 @@ package org.flexlite.domUI.components
 					var sourceContent:Array = _placeHolderGroup.getElementsContent().concat();
 					for (var i:int = _placeHolderGroup.numElements; i > 0; i--)
 					{
-						_placeHolderGroup.removeElementAt(0);  
+						var element:IVisualElement = _placeHolderGroup.removeElementAt(0);  
+						element.ownerChanged(null);
 					}
 					removeFromDisplayList(_placeHolderGroup);
 					contentGroup.elementsContent = sourceContent;
+					for (i = sourceContent.numElements; i > 0; i--)
+					{
+						element = sourceContent[i];  
+						element.ownerChanged(this);
+					}
 					_placeHolderGroup = null;
 				}
 				contentGroup.addEventListener(
