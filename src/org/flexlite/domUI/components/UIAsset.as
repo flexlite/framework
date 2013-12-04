@@ -2,7 +2,7 @@ package org.flexlite.domUI.components
 {
 
 	import flash.display.DisplayObject;
-	import flash.text.TextField;
+	import flash.geom.Rectangle;
 	
 	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.IInvalidateDisplay;
@@ -13,7 +13,6 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.core.ISkinAdapter;
 	import org.flexlite.domUI.core.ISkinnableClient;
 	import org.flexlite.domUI.core.UIComponent;
-	import org.flexlite.domUI.core.UITextField;
 	import org.flexlite.domUI.events.UIEvent;
 
 	use namespace dx_internal;
@@ -88,7 +87,7 @@ package org.flexlite.domUI.components
 		 */		
 		protected function onGetSkin(skin:Object,skinName:Object):void
 		{
-			if(_skin!==skin)
+			if(_skin!==skin)//如果皮肤是重用的，就不用执行添加和移除操作。
 			{
 				if(_skin&&_skin.parent==this)
 				{
@@ -100,6 +99,7 @@ package org.flexlite.domUI.components
 					super.addChildAt(_skin,0);
 				}
 			}
+			aspectRatio = NaN;
 			invalidateSize();
 			invalidateDisplayList();
 			if(stage)
@@ -185,22 +185,28 @@ package org.flexlite.domUI.components
 			super.measure();
 			if(!_skin)
 				return;
+			if(_skin is ILayoutElement&&!(_skin as ILayoutElement).includeInLayout)
+				return;
+			var rect:Rectangle = getMeasuredSize();
+			this.measuredWidth = rect.width;
+			this.measuredHeight = rect.height;
+		}
+		
+		/**
+		 * 获取测量大小
+		 */		
+		private function getMeasuredSize():Rectangle
+		{
+			var rect:Rectangle = new Rectangle();
 			if(_skin is ILayoutElement)
 			{
-				if(!(_skin as ILayoutElement).includeInLayout)
-					return;
-				measuredWidth = (_skin as ILayoutElement).preferredWidth;
-				measuredHeight = (_skin as ILayoutElement).preferredHeight;
+				rect.width = (_skin as ILayoutElement).preferredWidth;
+				rect.height = (_skin as ILayoutElement).preferredHeight;
 			}
 			else if(_skin is IBitmapAsset)
 			{
-				measuredWidth = (_skin as IBitmapAsset).measuredWidth;
-				measuredHeight = (_skin as IBitmapAsset).measuredHeight;
-			}
-			else if(_skin is TextField&&!(_skin is UITextField))
-			{
-				measuredWidth = (_skin as TextField).textWidth+5;
-				measuredHeight = (_skin as TextField).textHeight+4;
+				rect.width = (_skin as IBitmapAsset).measuredWidth;
+				rect.height = (_skin as IBitmapAsset).measuredHeight;
 			}
 			else
 			{
@@ -208,33 +214,35 @@ package org.flexlite.domUI.components
 				var oldScaleY:Number = _skin.scaleY;
 				_skin.scaleX = 1;
 				_skin.scaleY = 1;
-				measuredWidth = _skin.width;
-				measuredHeight = _skin.height;
+				rect.width = _skin.width;
+				rect.height = _skin.height;
 				_skin.scaleX = oldScaleX;
 				_skin.scaleY = oldScaleY;
 			}
+			return rect;
 		}
 		
-		private var _scaleSkin:Boolean = true;
-
+		private var _maintainAspectRatio:Boolean = false;
 		/**
-		 * 是否让skin跟随组件尺寸缩放,默认true。
+		 * 是否保持皮肤的宽高比,默认为false。
 		 */
-		public function get scaleSkin():Boolean
+		public function get maintainAspectRatio():Boolean
 		{
-			return _scaleSkin;
+			return _maintainAspectRatio;
 		}
 
-		public function set scaleSkin(value:Boolean):void
+		public function set maintainAspectRatio(value:Boolean):void
 		{
-			if(_scaleSkin==value)
+			if(_maintainAspectRatio==value)
 				return;
-			_scaleSkin = value;
-			if(!value&&_skin&&_skin is ILayoutElement)
-			{//取消之前的强制布局
-				(_skin as ILayoutElement).setLayoutBoundsSize(NaN,NaN);
-			}
+			_maintainAspectRatio = value;
+			invalidateDisplayList();
 		}
+		
+		/**
+		 * 皮肤宽高比
+		 */		
+		dx_internal var aspectRatio:Number = NaN;
 
 		/**
 		 * @inheritDoc
@@ -242,17 +250,51 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(_scaleSkin&&_skin)
+			if(_skin)
 			{
+				var layoutBoundsX:Number = 0;
+				var layoutBoundsY:Number = 0;
+				if(_maintainAspectRatio)
+				{
+					if(isNaN(aspectRatio))
+					{
+						var rect:Rectangle = getMeasuredSize();
+						if(rect.width==0||rect.height==0)
+							aspectRatio = 0;
+						else
+							aspectRatio = rect.width/rect.height;
+					}
+					if(aspectRatio>0&&unscaledHeight>0&&unscaledWidth>0)
+					{
+						var ratio:Number = unscaledWidth/unscaledHeight;
+						if(ratio>aspectRatio)
+						{
+							var newWidth:Number = unscaledHeight*aspectRatio;
+							layoutBoundsX = Math.round((unscaledWidth-newWidth)*0.5);
+							unscaledWidth = newWidth;
+						}
+						else
+						{
+							var newHeight:Number = unscaledWidth/aspectRatio;
+							layoutBoundsY = Math.round((unscaledHeight-newHeight)*0.5);
+							unscaledHeight = newHeight;
+						}
+					}
+				}
 				if(_skin is ILayoutElement)
 				{
 					if((_skin as ILayoutElement).includeInLayout)
+					{
 						(_skin as ILayoutElement).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
+						(_skin as ILayoutElement).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
+					}
 				}
 				else
 				{
 					_skin.width = unscaledWidth;
 					_skin.height = unscaledHeight;
+					_skin.x = layoutBoundsX;
+					_skin.y = layoutBoundsY;
 					if(_skin is IInvalidateDisplay)
 						IInvalidateDisplay(_skin).validateNow();
 				}
