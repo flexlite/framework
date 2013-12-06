@@ -252,10 +252,10 @@ package org.flexlite.domUI.components
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			if(_skin)
 			{
-				var layoutBoundsX:Number = 0;
-				var layoutBoundsY:Number = 0;
 				if(_maintainAspectRatio)
 				{
+					var layoutBoundsX:Number = 0;
+					var layoutBoundsY:Number = 0;
 					if(isNaN(aspectRatio))
 					{
 						var rect:Rectangle = getMeasuredSize();
@@ -279,6 +279,19 @@ package org.flexlite.domUI.components
 							layoutBoundsY = Math.round((unscaledHeight-newHeight)*0.5);
 							unscaledHeight = newHeight;
 						}
+						
+						if(_skin is ILayoutElement)
+						{
+							if((_skin as ILayoutElement).includeInLayout)
+							{
+								(_skin as ILayoutElement).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
+							}
+						}
+						else
+						{
+							_skin.x = layoutBoundsX;
+							_skin.y = layoutBoundsY;
+						}
 					}
 				}
 				if(_skin is ILayoutElement)
@@ -286,15 +299,12 @@ package org.flexlite.domUI.components
 					if((_skin as ILayoutElement).includeInLayout)
 					{
 						(_skin as ILayoutElement).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
-						(_skin as ILayoutElement).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
 					}
 				}
 				else
 				{
 					_skin.width = unscaledWidth;
 					_skin.height = unscaledHeight;
-					_skin.x = layoutBoundsX;
-					_skin.y = layoutBoundsY;
 					if(_skin is IInvalidateDisplay)
 						IInvalidateDisplay(_skin).validateNow();
 				}
