@@ -63,6 +63,13 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		/**
+		 * 用户在操作系统中可以设置将鼠标滚轮每滚动一个单位应滚动多少行。
+		 * 当使用鼠标滚轮滚动此组件的目标容器时，true表示根据用户系统设置的值滚动对应的行数。
+		 * false则忽略系统设置，始终只滚动一行。默认值为true。
+		 */
+		dx_internal var useMouseWheelDelta:Boolean
+
+		/**
 		 * 正在步进增大值的标志
 		 */		
 		private var steppingDown:Boolean;
