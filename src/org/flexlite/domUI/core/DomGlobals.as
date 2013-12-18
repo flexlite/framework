@@ -1,6 +1,7 @@
 package org.flexlite.domUI.core
 {
 	import flash.display.Stage;
+	import flash.events.Event;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
@@ -52,6 +53,8 @@ package org.flexlite.domUI.core
 				focusManager = new FocusManager();
 			}
 			focusManager.stage = stage;
+			//屏蔽callLaterError
+			stage.addEventListener("callLaterError",function(event:Event):void{});
 			initlized = true;
 		}
 		/**
