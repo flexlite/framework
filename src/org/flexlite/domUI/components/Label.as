@@ -684,6 +684,7 @@ package org.flexlite.domUI.components
 		{
 			super.createTextField();
 			textField.wordWrap = true;
+			textField.multiline = true;
 			textField.visible = false;
 		}
 		
