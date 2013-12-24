@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.geom.Point;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
@@ -9,6 +10,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.effects.easing.Sine;
+	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
 	
 	[DXML(show="true")]
@@ -198,7 +200,8 @@ package org.flexlite.domUI.components
 			{
 				if(track is UIComponent)
 				{
-					track.addEventListener(ResizeEvent.RESIZE,onTrackResize);
+					track.addEventListener(ResizeEvent.RESIZE,onTrackResizeOrMove);
+					track.addEventListener(MoveEvent.MOVE,onTrackResizeOrMove);
 				}
 			}
 		}
@@ -212,20 +215,37 @@ package org.flexlite.domUI.components
 			{
 				if(track is UIComponent)
 				{
-					track.removeEventListener(ResizeEvent.RESIZE,onTrackResize);
+					track.removeEventListener(ResizeEvent.RESIZE,onTrackResizeOrMove);
+					track.removeEventListener(MoveEvent.MOVE,onTrackResizeOrMove);
 				}
 			}
 		}
 		
-		private function onTrackResize(event:ResizeEvent):void
+		private var trackResizedOrMoved:Boolean = false;
+		/**
+		 * track的位置或尺寸发生改变
+		 */		
+		private function onTrackResizeOrMove(event:Event):void
 		{
-			updateSkinDisplayList();
+			trackResizedOrMoved = true;
+			invalidateProperties();
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(trackResizedOrMoved)
+			{
+				trackResizedOrMoved = false;
+				updateSkinDisplayList();
+			}
 		}
 		/**
 		 * 更新皮肤部件大小和可见性。
 		 */		
 		protected function updateSkinDisplayList():void
 		{
+			trackResizedOrMoved = false;
 			var currentValue:Number = isNaN(value)?0:value;
 			var maxValue:Number = isNaN(maximum)?0:maximum;
 			if(thumb&&track)
