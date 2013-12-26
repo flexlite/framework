@@ -71,7 +71,7 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function buttonReleased():void
 		{
 			super.buttonReleased();
-			if(!autoSelected)
+			if(!autoSelected||!enabled)
 				return;
 			selected = !selected;
 			dispatchEvent(new Event(Event.CHANGE));

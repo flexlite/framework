@@ -182,7 +182,7 @@ package org.flexlite.domUI.components
 		 */		
 		private var hasCreatedSkinParts:Boolean = false;
 		/**
-		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart是调用。
+		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart时调用。
 		 */		
 		dx_internal function createSkinParts():void
 		{
