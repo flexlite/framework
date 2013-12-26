@@ -18,9 +18,13 @@ package org.flexlite.domUI.components.supportClasses
 	 * 当控件的值由于用户交互操作而发生更改时分派。 
 	 */	
 	[Event(name="change", type="flash.events.Event")]
-	
+	/**
+	 * 改变结束
+	 */	
 	[Event(name="changeEnd", type="org.flexlite.domUI.events.UIEvent")]
-	
+	/**
+	 * 改变开始
+	 */	
 	[Event(name="changeStart", type="org.flexlite.domUI.events.UIEvent")]
 	
 	/**
@@ -34,7 +38,7 @@ package org.flexlite.domUI.components.supportClasses
 	[Event(name="thumbPress", type="org.flexlite.domUI.events.TrackBaseEvent")]
 	
 	/**
-	 * 按下滑块（即用户在滑块上按下鼠标按钮）时分派。
+	 * 放开滑块（即用户在滑块上弹起鼠标按钮）时分派。
 	 */	
 	[Event(name="thumbRelease", type="org.flexlite.domUI.events.TrackBaseEvent")]
 	
