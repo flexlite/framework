@@ -231,6 +231,11 @@ package org.flexlite.domUI.managers.impl
 				if (mouseIsOver(target))
 					hideImmediately(target);
 			}
+			else if(hasNew&&currentToolTip)
+			{
+				currentTipData = newToolTip;
+				initializeTip();
+			}
 		}
 		/**
 		 * 检测鼠标是否处于目标对象上
