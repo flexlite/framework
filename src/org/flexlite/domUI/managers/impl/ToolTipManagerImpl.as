@@ -231,7 +231,7 @@ package org.flexlite.domUI.managers.impl
 				if (mouseIsOver(target))
 					hideImmediately(target);
 			}
-			else if(hasNew&&currentToolTip)
+			else if(hasNew&&currentToolTip&&currentTarget===target)
 			{
 				currentTipData = newToolTip;
 				initializeTip();
