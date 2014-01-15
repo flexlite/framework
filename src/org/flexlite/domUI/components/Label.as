@@ -686,6 +686,7 @@ package org.flexlite.domUI.components
 			textField.wordWrap = true;
 			textField.multiline = true;
 			textField.visible = false;
+			textField.mouseWheelEnabled = false;
 		}
 		
 		/**
