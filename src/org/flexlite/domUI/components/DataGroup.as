@@ -109,6 +109,8 @@ package org.flexlite.domUI.components
 		
 		override public function setVirtualElementIndicesInView(startIndex:int, endIndex:int):void
 		{
+			if(!layout||!layout.useVirtualLayout)
+				return;
 			virtualRendererIndices = new Vector.<int>();
 			for(var i:int=startIndex;i<=endIndex;i++)
 			{
@@ -398,9 +400,12 @@ package org.flexlite.domUI.components
 					break;
 				case CollectionEventKind.RESET:
 				case CollectionEventKind.REFRESH:
-					for(var index:* in indexToRenderer)
+					if(layout&&layout.useVirtualLayout)
 					{
-						freeRendererByIndex(index);
+						for(var index:* in indexToRenderer)
+						{
+							freeRendererByIndex(index);
+						}
 					}
 					dataProviderChanged = true;
 					invalidateProperties();
