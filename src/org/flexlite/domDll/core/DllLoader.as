@@ -33,16 +33,21 @@ package org.flexlite.domDll.core
 		 * 构造函数
 		 * @param thread 最大同时加载数
 		 */		
-		public function DllLoader(thread:int=2)
+		public function DllLoader(thread:int=2,retryTimes:int=3)
 		{
 			super();
 			this.thread = thread;
+			this.retryTimes = retryTimes;
 		}
 		
 		/**
 		 * 最大并发加载数 
 		 */		
 		private var thread:int = 2;
+		/**
+		 * 加载失败的重试次数
+		 */		
+		private var retryTimes:int = 3;
 		
 		private var _version:String;
 		/**
@@ -55,29 +60,38 @@ package org.flexlite.domDll.core
 
 		
 		/**
-		 * 当前队列总文件大小
+		 * 当前队列文件字节流总大小,key为groupName
 		 */		
 		private var totalSizeDic:Dictionary = new Dictionary;
 		/**
-		 * 已经加载的字节数
+		 * 已经加载的字节数,key为groupName
 		 */		
 		private var loadedSizeDic:Dictionary = new Dictionary;
 		/**
-		 * 当前组加载的项个数
+		 * 当前组加载的项总个数,key为groupName
 		 */		
 		private var groupTotalDic:Dictionary = new Dictionary;
 		/**
-		 * 已经加载的项个数
+		 * 已经加载的项个数,key为groupName
 		 */		
 		private var numLoadedDic:Dictionary = new Dictionary;
 		/**
-		 * 组列表字典
+		 * 正在加载的组列表,key为groupName
 		 */		
 		private var itemListDic:Dictionary = new Dictionary;
+		
 		/**
-		 * 优先级队列
+		 * 优先级队列,key为priority，value为groupName列表
 		 */		
 		private var priorityQueue:Object = {};
+		/**
+		 * 加载失败的项列表
+		 */		
+		private var retryTimesDic:Dictionary = new Dictionary();
+		/**
+		 * 加载失败的项列表
+		 */		
+		private var failedList:Vector.<DllItem> = new Vector.<DllItem>();
 		/**
 		 * 检查指定的组是否正在加载中
 		 */		
@@ -97,7 +111,8 @@ package org.flexlite.domDll.core
 				return;
 			if(!list||list.length==0)
 			{
-				var event:Event = new Event(Event.COMPLETE);
+				var event:DllEvent = new DllEvent(DllEvent.GROUP_COMPLETE);
+				event.groupName = groupName;
 				dispatchEvent(event);
 				return;
 			}
@@ -188,6 +203,8 @@ package org.flexlite.domDll.core
 		 */		
 		private function getOneDllItem():DllItem
 		{
+			if(failedList.length>0)
+				return failedList.shift();
 			var maxPriority:int = int.MIN_VALUE;
 			for(var p:* in priorityQueue)
 			{
@@ -198,7 +215,8 @@ package org.flexlite.domDll.core
 			{
 				if(lazyLoadList.length==0)
 					return null;
-				return lazyLoadList.shift();
+				//后请求的先加载，以便更快获取当前需要的资源
+				return lazyLoadList.pop();
 			}
 			var length:int = queue.length;
 			var list:Vector.<DllItem>;
@@ -237,6 +255,22 @@ package org.flexlite.domDll.core
 		private function onItemComplete(dllItem:DllItem):void
 		{
 			loadingCount--;
+			if(!dllItem.loaded)
+			{
+				if(!retryTimesDic[dllItem])
+					retryTimesDic[dllItem] = 0;
+				retryTimesDic[dllItem]++;
+				if(retryTimesDic[dllItem]<=retryTimes)
+				{
+					failedList.push(dllItem);
+					next();
+					return;
+				}
+				else
+				{
+					delete retryTimesDic[dllItem];
+				}
+			}
 			dllItem._loadTime = getTimer()-dllItem.startTime;
 			var groupName:String = dllItem._groupName;
 			var itemLoadEvent:DllEvent = new DllEvent(DllEvent.ITEM_LOAD_FINISHED);

@@ -5,7 +5,7 @@ package org.flexlite.domUI.core
 	 * 可设置外观的组件接口
 	 * @author DOM
 	 */
-	public interface ISkinnableClient
+	public interface ISkinnableClient extends IVisualElement
 	{
 		/**
 		 * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型。

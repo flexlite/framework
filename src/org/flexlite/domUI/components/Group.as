@@ -6,8 +6,10 @@ package org.flexlite.domUI.components
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
+	import org.flexlite.domUI.core.IContainer;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
+	import org.flexlite.domUI.events.DragEvent;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	
 	use namespace dx_internal;
@@ -100,6 +102,10 @@ package org.flexlite.domUI.components
 				case MouseEvent.ROLL_OVER:
 				case MouseEvent.MOUSE_UP:
 				case MouseEvent.MOUSE_WHEEL:
+				case DragEvent.DRAG_ENTER:
+				case DragEvent.DRAG_OVER:
+				case DragEvent.DRAG_DROP:
+				case DragEvent.DRAG_EXIT:
 					if (++mouseEventReferenceCount > 0)
 						hasMouseListeners = true;
 			}
@@ -171,7 +177,7 @@ package org.flexlite.domUI.components
 		/**
 		 * createChildren()方法已经执行过的标志
 		 */		
-		dx_internal var createChildrenCalled:Boolean = false;
+		private var createChildrenCalled:Boolean = false;
 		
 		/**
 		 * @inheritDoc
@@ -233,12 +239,9 @@ package org.flexlite.domUI.components
 		{
 			var i:int;
 			
-			if (_elementsContent != value)
+			for (i = _elementsContent.length - 1; i >= 0; i--)
 			{
-				for (i = _elementsContent.length - 1; i >= 0; i--)
-				{
-					elementRemoved(_elementsContent[i], i);
-				}
+				elementRemoved(_elementsContent[i], i);
 			}
 			
 			_elementsContent = value.concat();
@@ -248,8 +251,10 @@ package org.flexlite.domUI.components
 			{   
 				var elt:IVisualElement = _elementsContent[i];
 				
-				if (elt.parent!=null && (elt.parent is IVisualElementContainer))
+				if(elt.parent is IVisualElementContainer)
 					IVisualElementContainer(elt.parent).removeElement(elt);
+				else if(elt.owner is IContainer)
+					IContainer(elt.owner).removeElement(elt);
 				
 				elementAdded(elt, i);
 			}
@@ -315,6 +320,10 @@ package org.flexlite.domUI.components
 			else if (host is IVisualElementContainer)
 			{
 				IVisualElementContainer(host).removeElement(element);
+			}
+			else if(element.owner is IContainer)
+			{
+				IContainer(element.owner).removeElement(element);
 			}
 			
 			_elementsContent.splice(index, 0, element);

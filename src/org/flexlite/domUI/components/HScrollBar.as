@@ -240,7 +240,7 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented() || !vp || !vp.visible||!visible)
 				return;
 			
-			var nSteps:uint = Math.abs(event.delta);
+			var nSteps:uint = useMouseWheelDelta?Math.abs(event.delta):1;
 			var navigationUnit:uint;
 			navigationUnit = (event.delta < 0) ? NavigationUnit.RIGHT : NavigationUnit.LEFT;
 			for (var hStep:int = 0; hStep < nSteps; hStep++)

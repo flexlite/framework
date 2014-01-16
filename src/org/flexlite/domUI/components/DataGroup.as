@@ -2,10 +2,10 @@ package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
@@ -17,6 +17,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.HorizontalAlign;
 	import org.flexlite.domUI.layouts.VerticalLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
@@ -44,6 +45,9 @@ package org.flexlite.domUI.components
 	 */
 	public class DataGroup extends GroupBase
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function DataGroup()
 		{
 			super();
@@ -74,7 +78,7 @@ package org.flexlite.domUI.components
 			if (value == layout)
 				return; 
 			
-			if (layout!=null)
+			if (layout)
 			{
 				layout.typicalLayoutRect = null;
 				layout.removeEventListener("useVirtualLayoutChanged", layout_useVirtualLayoutChangedHandler);
@@ -103,36 +107,52 @@ package org.flexlite.domUI.components
 		 */		
 		private var virtualRendererIndices:Vector.<int>;
 		
+		override public function setVirtualElementIndicesInView(startIndex:int, endIndex:int):void
+		{
+			if(!layout||!layout.useVirtualLayout)
+				return;
+			virtualRendererIndices = new Vector.<int>();
+			for(var i:int=startIndex;i<=endIndex;i++)
+			{
+				virtualRendererIndices.push(i);
+			}
+			for(var index:* in indexToRenderer)
+			{
+				if(virtualRendererIndices.indexOf(index)==-1)
+				{
+					freeRendererByIndex(index);
+				}
+			}
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
-		override public function getVirtualElementAt(index:int,changeElementInViews:Boolean=false):IVisualElement
+		override public function getVirtualElementAt(index:int):IVisualElement
 		{
 			if(index<0||index>=dataProvider.length)
 				return null;
-			if(changeElementInViews)
-				virtualRendererIndices.push(index);
-			if(indexToRenderer[index]!=null)
+			var element:IVisualElement = indexToRenderer[index];
+			if(!element)
 			{
-				return indexToRenderer[index];
+				var item:Object = dataProvider.getItemAt(index);
+				var renderer:IItemRenderer = createVirtualRenderer(index);
+				indexToRenderer[index] = renderer;
+				updateRenderer(renderer,index,item);
+				if(createNewRendererFlag)
+				{
+					if(renderer is IInvalidating)
+						(renderer as IInvalidating).validateNow();
+					createNewRendererFlag = false;
+					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
+						false, false, renderer, index, item));
+				}
+				element = renderer as IVisualElement;
 			}
-			
-			var item:Object = dataProvider[index];
-			var renderer:IItemRenderer = createVirtualRenderer(index);
-			indexToRenderer[index] = renderer;
-			updateRenderer(renderer,index,item);
-			if(createNewRendererFlag)
-			{
-				createNewRendererFlag = false;
-				if(renderer is IInvalidating)
-					(renderer as IInvalidating).validateNow();
-				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-					false, false, renderer, index, item));
-			}
-			return renderer as IVisualElement;
+			return element;
 		}
 		
-		
+		private var rendererToClassMap:Dictionary = new Dictionary(true);
 		private var freeRenderers:Dictionary = new Dictionary;
 		
 		/**
@@ -140,11 +160,11 @@ package org.flexlite.domUI.components
 		 */		
 		private function freeRendererByIndex(index:int):void
 		{
-			if(indexToRenderer[index]==null)
+			if(!indexToRenderer[index])
 				return;
 			var renderer:IItemRenderer = indexToRenderer[index] as IItemRenderer;
 			delete indexToRenderer[index];
-			if(renderer!=null&&renderer is DisplayObject)
+			if(renderer&&renderer is DisplayObject)
 			{
 				doFreeRenderer(renderer);
 			}
@@ -154,8 +174,8 @@ package org.flexlite.domUI.components
 		 */		
 		private function doFreeRenderer(renderer:IItemRenderer):void
 		{
-			var rendererClass:Class = getDefinitionByName(getQualifiedClassName(renderer)) as Class;
-			if(freeRenderers[rendererClass]==null)
+			var rendererClass:Class = rendererToClassMap[renderer];
+			if(!freeRenderers[rendererClass])
 			{
 				freeRenderers[rendererClass] = new Vector.<IItemRenderer>();
 			}
@@ -169,14 +189,23 @@ package org.flexlite.domUI.components
 		private var createNewRendererFlag:Boolean = false;
 		
 		/**
+		 * @inheritDoc
+		 */
+		override public function invalidateSize():void
+		{
+			if(!createNewRendererFlag)//虚拟布局时创建子项不需要重新验证
+				super.invalidateSize();
+		}
+		
+		/**
 		 * 为指定索引创建虚拟的项呈示器
 		 */		
 		private function createVirtualRenderer(index:int):IItemRenderer
 		{
-			var item:Object = dataProvider[index];
+			var item:Object = dataProvider.getItemAt(index);
 			var renderer:IItemRenderer;
 			var rendererClass:Class = itemToRendererClass(item);
-			if(freeRenderers[rendererClass]!=null
+			if(freeRenderers[rendererClass]
 				&&freeRenderers[rendererClass].length>0)
 			{
 				renderer = freeRenderers[rendererClass].pop();
@@ -191,34 +220,106 @@ package org.flexlite.domUI.components
 		 */		
 		private function createOneRenderer(rendererClass:Class):IItemRenderer
 		{
-			var renderer:IItemRenderer = new rendererClass() as IItemRenderer;
-			if(renderer==null||!(renderer is DisplayObject))
+			var renderer:IItemRenderer;
+			if(recyclerDic[rendererClass])
+			{
+				var hasExtra:Boolean = false;
+				for(var key:* in recyclerDic[rendererClass])
+				{
+					if(!renderer)
+					{
+						renderer = key as IItemRenderer;
+					}
+					else
+					{
+						hasExtra = true;
+						break;
+					}
+				}
+				delete recyclerDic[rendererClass][renderer];
+				if(!hasExtra)
+					delete recyclerDic[rendererClass];
+			}
+			if(!renderer)
+			{
+				renderer = new rendererClass() as IItemRenderer;
+				rendererToClassMap[renderer] = rendererClass;
+			}
+			if(!renderer||!(renderer is DisplayObject))
 				return null;
 			if(_itemRendererSkinName)
 			{
-				var client:ISkinnableClient = renderer as ISkinnableClient;
-				if(client&&client.skinName==null)
-					client.skinName = _itemRendererSkinName;
+				setItemRenderSkinName(renderer);
 			}
 			super.addChild(renderer as DisplayObject);
 			return renderer;
 		}
+		/**
+		 * 设置项呈示器的默认皮肤
+		 */		
+		private function setItemRenderSkinName(renderer:IItemRenderer):void
+		{
+			if(!renderer)
+				return;
+			var comp:SkinnableComponent = renderer as SkinnableComponent;
+			if(comp)
+			{
+				if(!comp.skinNameExplicitlySet)
+					comp.skinName = _itemRendererSkinName;
+			}
+			else
+			{
+				var client:ISkinnableClient = renderer as ISkinnableClient;
+				if(client&&!client.skinName)
+					client.skinName = _itemRendererSkinName;
+			}
+		}
 		
+		private var cleanTimer:Timer;
 		/**
 		 * 虚拟布局结束清理不可见的项呈示器
 		 */		
 		private function finishVirtualLayout():void
 		{
-			if(!virtualLayoutUnderWay)
+			if(!virtualLayoutUnderway)
 				return;
-			for(var index:* in indexToRenderer)
+			virtualLayoutUnderway = false;
+			var found:Boolean = false;
+			for(var clazz:* in freeRenderers)
 			{
-				if(virtualRendererIndices.indexOf(index)==-1)
+				if(freeRenderers[clazz].length>0)
 				{
-					freeRendererByIndex(index);
+					found = true;
+					break;
 				}
 			}
-			virtualLayoutUnderWay = false;
+			if(!found)
+				return;
+			if(!cleanTimer)
+			{
+				cleanTimer = new Timer(3000,1);
+				cleanTimer.addEventListener(TimerEvent.TIMER,cleanAllFreeRenderer);
+			}
+			//为了提高持续滚动过程中的性能，防止反复地添加移除子项，这里不直接清理而是延迟后在滚动停止时清理一次。
+			cleanTimer.reset();
+			cleanTimer.start();
+		}
+		/**
+		 * 延迟清理多余的在显示列表中的ItemRenderer。
+		 */		
+		private function cleanAllFreeRenderer(event:TimerEvent=null):void
+		{
+			var renderer:IItemRenderer;
+			for each(var list:Vector.<IItemRenderer> in freeRenderers)
+			{
+				for each(renderer in list)
+				{
+					DisplayObject(renderer).visible = true;
+					recycle(renderer);
+				}
+			}
+			freeRenderers = new Dictionary;
+			cleanFreeRenderer = false;
 		}
 		
 		/**
@@ -226,9 +327,9 @@ package org.flexlite.domUI.components
 		 */
 		override public function getElementIndicesInView():Vector.<int>
 		{
-			if(layout != null&&layout.useVirtualLayout)
-				return virtualRendererIndices==null?
-					new Vector.<int>(0):virtualRendererIndices;
+			if(layout&&layout.useVirtualLayout)
+				return virtualRendererIndices?
+					virtualRendererIndices:new Vector.<int>(0);
 			return super.getElementIndicesInView();
 		}
 		
@@ -263,13 +364,15 @@ package org.flexlite.domUI.components
 			dataProviderChanged = true;
 			cleanFreeRenderer = true;
 			invalidateProperties();
+			invalidateSize();
+			invalidateDisplayList();
 		}
 		/**
 		 * 移除数据源监听
 		 */		
 		private function removeDataProviderListener():void
 		{
-			if(_dataProvider!=null)
+			if(_dataProvider)
 				_dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE,onCollectionChange);
 		}
 		/**
@@ -297,9 +400,12 @@ package org.flexlite.domUI.components
 					break;
 				case CollectionEventKind.RESET:
 				case CollectionEventKind.REFRESH:
-					for(var index:* in indexToRenderer)
+					if(layout&&layout.useVirtualLayout)
 					{
-						freeRendererByIndex(index);
+						for(var index:* in indexToRenderer)
+						{
+							freeRendererByIndex(index);
+						}
 					}
 					dataProviderChanged = true;
 					invalidateProperties();
@@ -407,12 +513,34 @@ package org.flexlite.domUI.components
 			dispatchEvent(new RendererExistenceEvent(
 				RendererExistenceEvent.RENDERER_REMOVE, false, false, oldRenderer, index, item));
 			
-			if(oldRenderer!=null&&oldRenderer is DisplayObject)
+			if(oldRenderer&&oldRenderer is DisplayObject)
 			{
-				super.removeChild(oldRenderer as DisplayObject);
+				recycle(oldRenderer);
 				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
 			}
+		}
+		
+		/**
+		 * 对象池字典
+		 */		
+		private var recyclerDic:Dictionary = new Dictionary();
+		/**
+		 * 回收一个ItemRenderer实例
+		 */		
+		private function recycle(renderer:IItemRenderer):void
+		{
+			super.removeChild(renderer as DisplayObject);
+			if(renderer is IVisualElement)
+			{
+				(renderer as IVisualElement).ownerChanged(null);
+			}
+			var rendererClass:Class = rendererToClassMap[renderer];
+			if(!recyclerDic[rendererClass])
+			{
+				recyclerDic[rendererClass] = new Dictionary(true);
+			}
+			recyclerDic[rendererClass][renderer] = null;
 		}
 		/**
 		 * 更新当前所有项的索引
@@ -443,7 +571,7 @@ package org.flexlite.domUI.components
 				return;//防止无限循环
 			
 			var renderer:IItemRenderer = indexToRenderer[location];
-			if(renderer!=null)
+			if(renderer)
 				updateRenderer(renderer,location,item);
 		}
 		/**
@@ -484,6 +612,8 @@ package org.flexlite.domUI.components
 			invalidateProperties();
 		}
 		
+		private var itemRendererSkinNameChange:Boolean = false;
+		
 		private var _itemRendererSkinName:Object;
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
@@ -495,7 +625,14 @@ package org.flexlite.domUI.components
 		}
 		public function set itemRendererSkinName(value:Object):void
 		{
+			if(_itemRendererSkinName==value)
+				return;
 			_itemRendererSkinName = value;
+			if(_itemRendererSkinName&&initialized)
+			{
+				itemRendererSkinNameChange = true;
+				invalidateProperties();
+			}
 		}
 
 
@@ -531,14 +668,14 @@ package org.flexlite.domUI.components
 			if(_itemRendererFunction!=null)
 			{
 				rendererClass = _itemRendererFunction(item);
-				if(rendererClass == null)
+				if(!rendererClass)
 					rendererClass = _itemRenderer;
 			}
 			else
 			{
 				rendererClass = _itemRenderer;
 			}
-			return rendererClass!=null?rendererClass:ItemRenderer;
+			return rendererClass?rendererClass:ItemRenderer;
 		}
 		
 		/**
@@ -547,9 +684,12 @@ package org.flexlite.domUI.components
 		 */		
 		override protected function createChildren():void
 		{
-			if(layout==null)
+			if(!layout)
 			{
-				layout = new VerticalLayout;
+				var _layout:VerticalLayout = new VerticalLayout();
+				_layout.gap = 0;
+				_layout.horizontalAlign = HorizontalAlign.CONTENT_JUSTIFY;
+				layout = _layout;
 			}
 			super.createChildren();
 		}
@@ -563,13 +703,13 @@ package org.flexlite.domUI.components
 			if(itemRendererChanged||dataProviderChanged||useVirtualLayoutChanged)
 			{
 				removeAllRenderers();
-				if(layout!=null)
+				if(layout)
 					layout.clearVirtualLayoutCache();
 				useVirtualLayoutChanged = false;
 				itemRendererChanged = false;
-				if(_dataProvider!=null)
+				if(_dataProvider)
 					_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGE,onCollectionChange);
-				if(layout!=null&&layout.useVirtualLayout)
+				if(layout&&layout.useVirtualLayout)
 				{
 					invalidateSize();
 					invalidateDisplayList();
@@ -590,9 +730,35 @@ package org.flexlite.domUI.components
 			if(typicalItemChanged)
 			{
 				typicalItemChanged = false;
-				measureRendererSize();
+				if (_dataProvider&&_dataProvider.length > 0)
+				{
+					typicalItem = _dataProvider.getItemAt(0);
+					measureRendererSize();
+				}
 			}
-
+			if(itemRendererSkinNameChange)
+			{
+				itemRendererSkinNameChange = false;
+				var length:int = indexToRenderer.length;
+				var client:ISkinnableClient;
+				var comp:SkinnableComponent;
+				for(var i:int=0;i<length;i++)
+				{
+					setItemRenderSkinName(indexToRenderer[i]);
+				}
+				for(var clazz:* in freeRenderers)
+				{
+					var list:Vector.<IItemRenderer> = freeRenderers[clazz];
+					if(list)
+					{
+						length = list.length;
+						for(i=0;i<length;i++)
+						{
+							setItemRenderSkinName(list[i]);
+						}
+					}
+				}
+			}
 		}
 		
 		/**
@@ -610,21 +776,20 @@ package org.flexlite.domUI.components
 		/**
 		 * 正在进行虚拟布局阶段 
 		 */		
-		private var virtualLayoutUnderWay:Boolean = false;
+		private var virtualLayoutUnderway:Boolean = false;
 		
 		/**
 		 * @inheritDoc
 		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
-			if(layoutInvalidateDisplayListFlag&&layout!=null&&layout.useVirtualLayout)
+			if(layoutInvalidateDisplayListFlag&&layout&&layout.useVirtualLayout)
 			{
-				virtualLayoutUnderWay = true;
-				virtualRendererIndices = new Vector.<int>();
+				virtualLayoutUnderway = true;
 				ensureTypicalLayoutElement();
 			}
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(virtualLayoutUnderWay)
+			if(virtualLayoutUnderway)
 				finishVirtualLayout();
 		}
 		
@@ -661,11 +826,12 @@ package org.flexlite.domUI.components
 			}
 			var rendererClass:Class = itemToRendererClass(typicalItem);
 			var typicalRenderer:IItemRenderer = createOneRenderer(rendererClass);
-			if(typicalRenderer==null)
+			if(!typicalRenderer)
 			{
 				setTypicalLayoutRect(null);
 				return;
 			}
+			createNewRendererFlag = true;
 			var displayObj:DisplayObject = typicalRenderer as DisplayObject;
 			updateRenderer(typicalRenderer,0,typicalItem);
 			if(typicalRenderer is IInvalidating)
@@ -674,8 +840,9 @@ package org.flexlite.domUI.components
 			var h:Number = isNaN(displayObj.height)?0:displayObj.height;
 			var rect:Rectangle = new Rectangle(0,0,
 				Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
-			super.removeChild(displayObj);
+			recycle(typicalRenderer);
 			setTypicalLayoutRect(rect);
+			createNewRendererFlag = false;
 		} 
 		
 		/**
@@ -711,9 +878,9 @@ package org.flexlite.domUI.components
 			for(var i:int=0;i<length;i++)
 			{
 				renderer = indexToRenderer[i];
-				if(renderer!=null)
+				if(renderer)
 				{
-					super.removeChild(renderer as DisplayObject);
+					recycle(renderer);
 					dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
 						false, false, renderer, renderer.itemIndex, renderer.data));
 				}
@@ -722,15 +889,7 @@ package org.flexlite.domUI.components
 			virtualRendererIndices = null;
 			if(!cleanFreeRenderer)
 				return;
-			for each(var list:Vector.<IItemRenderer> in freeRenderers)
-			{
-				for each(renderer in list)
-				{
-					super.removeChild(renderer as DisplayObject);
-				}
-			}
-			freeRenderers = new Dictionary;
-			cleanFreeRenderer = false;
+			cleanAllFreeRenderer();
 		}
 		
 		/**
@@ -738,14 +897,16 @@ package org.flexlite.domUI.components
 		 */		
 		private function createRenderers():void
 		{
-			if(_dataProvider==null)
+			if(!_dataProvider)
 				return;
 			var index:int = 0;
-			for each(var item:Object in _dataProvider)
+			var length:int = _dataProvider.length;
+			for(var i:int=0;i<length;i++)
 			{
+				var item:Object = _dataProvider.getItemAt(i);
 				var rendererClass:Class = itemToRendererClass(item);
 				var renderer:IItemRenderer = createOneRenderer(rendererClass);
-				if(renderer == null)
+				if(!renderer)
 					continue;
 				indexToRenderer[index] = renderer;
 				updateRenderer(renderer,index,item);
@@ -776,7 +937,7 @@ package org.flexlite.domUI.components
 			{
 				if(renderer is IVisualElement)
 				{
-					(renderer as IVisualElement).owner = this;
+					(renderer as IVisualElement).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
 				renderer.label = itemToLabel(data);
@@ -793,7 +954,7 @@ package org.flexlite.domUI.components
 		 */		
 		protected function itemToLabel(item:Object):String
 		{
-			if (item !== null)
+			if (item)
 				return item.toString();
 			else return " ";
 		}
@@ -811,7 +972,7 @@ package org.flexlite.domUI.components
 		 */
 		override public function getElementIndex(element:IVisualElement):int
 		{
-			if(element==null)
+			if(!element)
 				return -1;
 			return indexToRenderer.indexOf(element);
 		}
@@ -821,7 +982,7 @@ package org.flexlite.domUI.components
 		 */
 		override public function get numElements():int
 		{
-			if(_dataProvider==null)
+			if(!_dataProvider)
 				return 0;
 			return _dataProvider.length;
 		}

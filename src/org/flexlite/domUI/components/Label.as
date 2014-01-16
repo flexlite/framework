@@ -1,12 +1,15 @@
 package org.flexlite.domUI.components
 {
 	import flash.events.Event;
+	import flash.text.Font;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
 	import flash.utils.Dictionary;
 	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.TextBase;
+	import org.flexlite.domUI.core.ITranslator;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.layouts.VerticalAlign;
 	
@@ -24,8 +27,50 @@ package org.flexlite.domUI.components
 		public function Label()
 		{
 			super();
-			mouseChildren = false;
 			addEventListener(UIEvent.UPDATE_COMPLETE, updateCompleteHandler);
+			if(isFirstLabel)
+			{
+				isFirstLabel = false;
+				try
+				{
+					translator = Injector.getInstance(ITranslator);
+				}
+				catch(e:Error){}
+			}
+		}
+		/**
+		 * 是否只显示嵌入的字体。此属性对只所有Label实例有效。true表示如果指定的fontFamily没有被嵌入，
+		 * 即使用户机上存在该设备字体也不显示。而将使用默认的字体。默认值为false。
+		 */		
+		public static var showEmbedFontsOnly:Boolean = false;
+		/**
+		 * 是否是第一个创建的Label实例
+		 */		
+		private static var isFirstLabel:Boolean = true;
+		/**
+		 * 注入的文本翻译对象
+		 */		
+		private static var translator:ITranslator;
+		/**
+		 * @inheritDoc
+		 */
+		override public function set fontFamily(value:String):void
+		{
+			if(fontFamily==value)
+				return;
+			var fontList:Array = Font.enumerateFonts(false);
+			embedFonts = false;
+			for each(var font:Font in fontList)
+			{
+				if(font.fontName==value)
+				{
+					embedFonts = true;
+					break;
+				}
+			}
+			if(!embedFonts&&showEmbedFontsOnly)
+				return;
+			super.fontFamily = value;
 		}
 		
 		private var toolTipSet:Boolean = false;
@@ -56,7 +101,23 @@ package org.flexlite.domUI.components
 		{
 			return _verticalAlign;
 		}
+		public function set verticalAlign(value:String):void
+		{
+			if(_verticalAlign==value)
+				return;
+			_verticalAlign = value;
+			if(textField)
+				textField.leading = realLeading;
+			defaultStyleChanged = true;
+			invalidateProperties();
+			invalidateSize();
+			invalidateDisplayList();
+		}
 		
+		override dx_internal function get realLeading():int
+		{
+			return _verticalAlign==VerticalAlign.JUSTIFY?0:leading;
+		}
 		
 		/**
 		 * @inheritDoc
@@ -78,11 +139,8 @@ package org.flexlite.domUI.components
 		 * 从另外一个文本组件复制默认文字格式信息到自身，不包括对setFormatOfRange()的调用。<br/>
 		 * 复制的值包含：<br/>
 		 * fontFamily，size，textColor，bold，italic，underline，textAlign，<br/>
-		 * leading，letterSpacing，disabledColor,若目标textBase为Label还复制verticalAlign属性。
+		 * leading，letterSpacing，disabledColor,verticalAlign属性。
 		 */	
-		/**
-		 * @inheritDoc
-		 */
 		override public function copyDefaultFormatFrom(textBase:TextBase):void
 		{
 			super.copyDefaultFormatFrom(textBase);
@@ -92,20 +150,10 @@ package org.flexlite.domUI.components
 			}
 		}
 		
-		public function set verticalAlign(value:String):void
-		{
-			if(_verticalAlign==value)
-				return;
-			_verticalAlign = value;
-			defaultStyleChanged = true;
-			invalidateProperties();
-			invalidateSize();
-			invalidateDisplayList();
-		}
 		
 		private var _maxDisplayedLines:int = 0;
 		/**
-		 * 最大显示行数,0或负值代表不限制
+		 * 最大显示行数,0或负值代表不限制。
 		 */
 		public function get maxDisplayedLines():int
 		{
@@ -130,7 +178,10 @@ package org.flexlite.domUI.components
 				value = "";
 			if (!isHTML && value == _text)
 				return;
-			super.text = value;
+			if(translator)
+				super.text = translator.translate(value);
+			else
+				super.text = value;
 			rangeFormatDic = null;
 		}
 		
@@ -149,15 +200,32 @@ package org.flexlite.domUI.components
 			
 			rangeFormatDic = null;
 		}
-		
 		/**
 		 * 上一次测量的宽度 
 		 */		
 		private var lastUnscaledWidth:Number = NaN;
 		
-		private var _paddingLeft:Number = 0;
+		private var _padding:Number = 0;
 		/**
-		 * 文字距离左边缘的空白像素
+		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
+		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 */
+		public function get padding():Number
+		{
+			return _padding;
+		}
+		public function set padding(value:Number):void
+		{
+			if(_padding==value)
+				return;
+			_padding = value;
+			invalidateSize();
+			invalidateDisplayList();
+		}
+		
+		private var _paddingLeft:Number = NaN;
+		/**
+		 * 文字距离左边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingLeft():Number
 		{
@@ -174,9 +242,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingRight:Number = 0;
+		private var _paddingRight:Number = NaN;
 		/**
-		 * 文字距离右边缘的空白像素
+		 * 文字距离右边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingRight():Number
 		{
@@ -193,9 +261,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingTop:Number = 0;
+		private var _paddingTop:Number = NaN;
 		/**
-		 * 文字距离顶部边缘的空白像素
+		 * 文字距离顶部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingTop():Number
 		{
@@ -212,9 +280,9 @@ package org.flexlite.domUI.components
 			invalidateDisplayList();
 		}    
 		
-		private var _paddingBottom:Number = 0;
+		private var _paddingBottom:Number = NaN;
 		/**
-		 * 文字距离底部边缘的空白像素
+		 * 文字距离底部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
 		 */
 		public function get paddingBottom():Number
 		{
@@ -230,8 +298,6 @@ package org.flexlite.domUI.components
 			invalidateSize();
 			invalidateDisplayList();
 		}    
-
-		
 		
 		/**
 		 * @inheritDoc
@@ -245,7 +311,7 @@ package org.flexlite.domUI.components
 			
 			if(rangeFormatChanged)
 			{
-				if(!needSetDefaultFormat)
+				if(!needSetDefaultFormat)//如果样式发生改变，父级会执行样式刷新的过程。这里就不用重复了。
 					textField.$setTextFormat(defaultTextFormat);
 				applyRangeFormat();
 				rangeFormatChanged = false;
@@ -258,6 +324,9 @@ package org.flexlite.domUI.components
 		 */
 		override protected function measure():void
 		{
+			//先提交属性，防止样式发生改变导致的测量不准确问题。
+			if(invalidatePropertiesFlag)
+				validateProperties();
 			if (isSpecialCase())
 			{
 				if (isNaN(lastUnscaledWidth))
@@ -298,21 +367,27 @@ package org.flexlite.domUI.components
 		 */	
 		private function measureUsingWidth(w:Number):void
 		{
-			if(_isTruncated)
+			var originalText:String = textField.text;
+			if(_isTruncated||textChanged||htmlTextChanged)
 			{
 				if (isHTML)
 					textField.$htmlText = explicitHTMLText;
 				else
-					textField.$text = text;
+					textField.$text = _text;
 				applyRangeFormat();
 			}
 			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+
 			textField.autoSize = "left";
 			
-			var originalText:String = textField.text;
 			if (!isNaN(w))
 			{
-				textField.$width = w - _paddingLeft - _paddingRight;
+				textField.$width = w - paddingL - paddingR;
 				measuredWidth = Math.ceil(textField.textWidth);
 				measuredHeight = Math.ceil(textField.textHeight);
 			}
@@ -335,8 +410,8 @@ package org.flexlite.domUI.components
 				measuredHeight = lineM.height*_maxDisplayedLines-lineM.leading+4;
 			}
 			
-			measuredWidth += _paddingLeft + _paddingRight;
-			measuredHeight += _paddingTop + _paddingBottom;
+			measuredWidth += paddingL + paddingR;
+			measuredHeight += paddingT + paddingB;
 			
 			if(_isTruncated)
 			{
@@ -365,9 +440,9 @@ package org.flexlite.domUI.components
 		 */		
 		public function setFormatOfRange(format:TextFormat, beginIndex:int=-1, endIndex:int=-1):void
 		{
-			if(rangeFormatDic==null)
+			if(!rangeFormatDic)
 				rangeFormatDic = new Dictionary;
-			if(rangeFormatDic[beginIndex]==null)
+			if(!rangeFormatDic[beginIndex])
 				rangeFormatDic[beginIndex] = new Dictionary;
 			rangeFormatDic[beginIndex][endIndex] = cloneTextFormat(format);
 			
@@ -394,17 +469,17 @@ package org.flexlite.domUI.components
 		private function applyRangeFormat(expLeading:Object=null):void
 		{
 			rangeFormatChanged = false;
-			if(rangeFormatDic==null||textField==null||text==""||text==null)
+			if(!rangeFormatDic||!textField||!_text)
 				return;
-			var useLeading:Boolean = expLeading!=null;
+			var useLeading:Boolean = Boolean(expLeading!=null);
 			for(var beginIndex:* in rangeFormatDic)
 			{
 				var endDic:Dictionary = rangeFormatDic[beginIndex] as Dictionary;
-				if(endDic!=null)
+				if(endDic)
 				{
 					for(var index:* in endDic)
 					{
-						if(endDic[index]==null)
+						if(!endDic[index])
 							continue;
 						var oldLeading:Object;
 						if(useLeading)
@@ -437,8 +512,15 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number,unscaledHeight:Number):void
 		{
 			$updateDisplayList(unscaledWidth,unscaledHeight);
-			textField.x = _paddingLeft;
-			textField.y = _paddingTop;
+			
+			var padding:Number = isNaN(_padding)?0:_padding;
+			var paddingL:Number = isNaN(_paddingLeft)?padding:_paddingLeft;
+			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
+			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
+			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
+			
+			textField.x = paddingL;
+			textField.y = paddingT;
 			if (isSpecialCase())
 			{
 				var firstTime:Boolean = isNaN(lastUnscaledWidth) ||
@@ -452,6 +534,11 @@ package org.flexlite.domUI.components
 					return;
 				}
 			}
+			//防止在父级validateDisplayList()阶段改变的text属性值，
+			//接下来直接调用自身的updateDisplayList()而没有经过measu(),使用的测量尺寸是上一次的错误值。
+			if(invalidateSizeFlag)
+				validateSize();
+			
 			if(!textField.visible)//解决初始化时文本闪烁问题
 				textField.visible = true;
 			if(_isTruncated)
@@ -463,12 +550,13 @@ package org.flexlite.domUI.components
 			textField.scrollH = 0;
 			textField.scrollV = 1;
 			
-			textField.$width = unscaledWidth - _paddingLeft - _paddingRight;
-			var unscaledTextHeight:Number = unscaledHeight - _paddingTop - _paddingBottom;
+			textField.$width = unscaledWidth - paddingL - paddingR;
+			var unscaledTextHeight:Number = unscaledHeight - paddingT - paddingB;
 			textField.$height = unscaledTextHeight;
 			
-			
-			if (Math.floor(width) < Math.floor(measuredWidth))
+			if(_maxDisplayedLines==1)
+				textField.wordWrap = false;
+			else if (Math.floor(width) < Math.floor(measuredWidth))
 				textField.wordWrap = true;
 			
 			_textWidth = textField.textWidth;
@@ -522,7 +610,7 @@ package org.flexlite.domUI.components
 		private var _isTruncated:Boolean = false;
 		
 		/**
-		 * 文本是否已截断的标志。
+		 * 文本是否已经截断并以...结尾的标志。注意：当使用htmlText显示文本时，始终直接截断文本,不显示...。
 		 */		
 		public function get isTruncated():Boolean
 		{
@@ -532,7 +620,7 @@ package org.flexlite.domUI.components
 		private var _truncateToFit:Boolean = true;
 		/**
 		 * 如果此属性为true，并且Label控件大小小于其文本大小，则使用"..."截断 Label控件的文本。
-		 * 如果此属性为 false，则将直接截断文本。
+		 * 反之将直接截断文本。注意：当使用htmlText显示文本或设置maxDisplayedLines=1时，始终直接截断文本,不显示...。
 		 */
 		public function get truncateToFit():Boolean
 		{
@@ -553,22 +641,32 @@ package org.flexlite.domUI.components
 		 */		
 		private function truncateTextToFit():Boolean
 		{
+			if(isHTML)
+				return false;
 			var truncationIndicator:String = "...";
 			var originalText:String = text;
 			
 			var expLeading:Object = verticalAlign==VerticalAlign.JUSTIFY?0:null;
 			
-			var lastLineIndex:int = textField.getLineIndexAtPoint(2,textField.height-2);
-			if(lastLineIndex<0)
-				lastLineIndex = 0;
-			
-			if(textField.numLines>lastLineIndex+1)
+			try
 			{
-				var offset:int = textField.getLineOffset(lastLineIndex+1);
+				var lineM:TextLineMetrics = textField.getLineMetrics(0);
+				var realTextHeight:Number = textField.height-4+textField.leading;
+				var lastLineIndex:int =int(realTextHeight/lineM.height);
+			}
+			catch(e:Error)
+			{
+				lastLineIndex = 1;
+			}
+			if(lastLineIndex<1)
+				lastLineIndex = 1;
+			if(textField.numLines>lastLineIndex&&textField.textHeight>textField.height)
+			{
+				var offset:int = textField.getLineOffset(lastLineIndex);
 				originalText = originalText.substr(0,offset);
 				textField.$text = originalText+truncationIndicator;
 				applyRangeFormat(expLeading);
-				while (originalText.length > 1 && textField.numLines>lastLineIndex+1)
+				while (originalText.length > 1 && textField.numLines>lastLineIndex)
 				{
 					originalText = originalText.slice(0, -1);
 					textField.$text = originalText+truncationIndicator;
@@ -584,12 +682,11 @@ package org.flexlite.domUI.components
 		 */
 		override protected function createTextField():void
 		{
-			if (textField==null)
-			{
-				super.createTextField();
-				textField.wordWrap = true;
-				textField.visible = false;
-			}
+			super.createTextField();
+			textField.wordWrap = true;
+			textField.multiline = true;
+			textField.visible = false;
+			textField.mouseWheelEnabled = false;
 		}
 		
 		/**

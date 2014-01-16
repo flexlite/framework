@@ -2,8 +2,8 @@ package org.flexlite.domUI.effects.supportClasses
 {
 	import flash.events.EventDispatcher;
 	
-	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.core.IEffect;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -27,6 +27,8 @@ package org.flexlite.domUI.effects.supportClasses
 	 * 对于任何重复次数超过一次的动画，当动画开始新的一次重复时分派。
 	 */	
 	[Event(name="effectRepeat", type="org.flexlite.domUI.events.EffectEvent")]
+	
+	
 	/**
 	 * 动画特效基类
 	 * @author DOM
@@ -157,6 +159,14 @@ package org.flexlite.domUI.effects.supportClasses
 		public function get isPlaying():Boolean
 		{
 			return animator.isPlaying;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get started():Boolean
+		{
+			return animator.started;
 		}
 		
 		
@@ -306,6 +316,14 @@ package org.flexlite.domUI.effects.supportClasses
 		public function resume():void
 		{
 			animator.resume();
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public function reset():void
+		{
+			animator.stop();
+			_targets = [];
 		}
 	}
 }

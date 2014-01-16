@@ -7,8 +7,6 @@ package org.flexlite.domDisplay
 	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.dx_internal;
 	
-	use namespace dx_internal;
-	
 	/**
 	 * DXR位图显示对象。
 	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
@@ -45,10 +43,12 @@ package org.flexlite.domDisplay
 			_dxrData = value;
 			if(value)
 			{
-				var sizeOffset:Point = dxrData.filterOffsetList[0]?dxrData.filterOffsetList[0]:new Point;
+				var sizeOffset:Point = dxrData.getFilterOffset(0);
+				if(!sizeOffset)
+					sizeOffset = new Point();
 				filterWidth = sizeOffset.x;
 				filterHeight = sizeOffset.y;
-				super.bitmapData = dxrData.frameList[0];
+				super.bitmapData = dxrData.getBitmapData(0);
 				smoothing = true;
 				if(widthExplicitSet)
 					super.width = _width==0?0:_width+filterWidth;

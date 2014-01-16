@@ -45,11 +45,13 @@ package org.flexlite.domDisplay
 			if(value)
 			{
 				scale9Grid = dxrData._scale9Grid;
-				_offsetPoint = dxrData.frameOffsetList[0];
-				var sizeOffset:Point = dxrData.filterOffsetList[0]?dxrData.filterOffsetList[0]:new Point;
+				_offsetPoint = dxrData.getFrameOffset(0);
+				var sizeOffset:Point = dxrData.getFilterOffset(0);
+				if(!sizeOffset)
+					sizeOffset = new Point();
 				filterWidth = sizeOffset.x;
 				filterHeight = sizeOffset.y;
-				super.bitmapData = dxrData.frameList[0];
+				super.bitmapData = dxrData.getBitmapData(0);
 			}
 			else
 			{

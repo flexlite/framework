@@ -3,9 +3,9 @@ package org.flexlite.domUI.components
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.DropDownListBase;
 	import org.flexlite.domUI.components.supportClasses.ListBase;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
@@ -81,6 +81,27 @@ package org.flexlite.domUI.components
 		public function get labelToItemFunction():Function
 		{
 			return _labelToItemFunction;
+		}
+		
+		private var _prompt:String;
+		
+		private var promptChanged:Boolean = false;
+		/**
+		 * 输入文本为 null 时要显示的文本。 <p/>
+		 * 先创建控件时将显示提示文本。控件获得焦点、输入文本为非 null 或选择了列表中的项目时提示文本将消失。
+		 * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为 null 或空字符串）。
+		 */
+		public function get prompt():String
+		{
+			return _prompt;
+		}
+		public function set prompt(value:String):void
+		{
+			if(_prompt==value)
+				return;
+			_prompt = value;
+			promptChanged = true;
+			invalidateProperties();       
 		}
 		
 		private var _maxChars:int = 0;
@@ -278,6 +299,11 @@ package org.flexlite.domUI.components
 			
 			if (textInput)
 			{
+				if(promptChanged)
+				{
+					textInput.prompt = _prompt;
+					promptChanged = false;
+				}
 				if (maxCharsChanged)
 				{
 					textInput.maxChars = _maxChars;

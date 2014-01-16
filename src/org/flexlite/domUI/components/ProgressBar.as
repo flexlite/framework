@@ -1,6 +1,7 @@
 package org.flexlite.domUI.components
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.geom.Point;
 	
 	import org.flexlite.domUI.components.supportClasses.Range;
@@ -9,12 +10,13 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
 	import org.flexlite.domUI.effects.easing.Sine;
+	import org.flexlite.domUI.events.MoveEvent;
 	import org.flexlite.domUI.events.ResizeEvent;
 	
 	[DXML(show="true")]
 	
 	/**
-	 * 进度条控件。注意：此控件默认禁用鼠标事件。
+	 * 进度条控件。
 	 * @author chenglong
 	 */
 	public class ProgressBar extends Range
@@ -22,8 +24,6 @@ package org.flexlite.domUI.components
 		public function ProgressBar()
 		{
 			super();
-			mouseChildren = false;
-			mouseEnabled = false;
 		}
 		
 		/**
@@ -87,10 +87,33 @@ package org.flexlite.domUI.components
 		
 		public function set slideDuration(value:Number):void
 		{
+			if(_slideDuration==value)
+				return;
 			_slideDuration = value;
+			if(animator&&animator.isPlaying)
+			{
+				animator.stop();
+				super.value = slideToValue;
+			}
 		}
 		
-		private static var sineEaser:IEaser = new Sine(0);
+		private var _direction:String = ProgressBarDirection.LEFT_TO_RIGHT;
+		/**
+		 * 进度条增长方向。请使用ProgressBarDirection定义的常量。默认值：ProgressBarDirection.LEFT_TO_RIGHT。
+		 */
+		public function get direction():String
+		{
+			return _direction;
+		}
+
+		public function set direction(value:String):void
+		{
+			if(_direction==value)
+				return;
+			_direction = value;
+			invalidateDisplayList();
+		}
+
 		/**
 		 * 动画实例
 		 */	
@@ -119,18 +142,23 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
+				validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
+				slideToValue = nearestValidValue(newValue, snapInterval);
+				if(slideToValue==super.value)
+					return;
 				if (!animator)
 				{
 					animator = new Animation(animationUpdateHandler);
-					animator.endFunction = animationEndHandler;
-					
-					animator.easer = sineEaser;
+					animator.easer = null;
 				}
 				if (animator.isPlaying)
+				{
+					setValue(nearestValidValue(animator.motionPaths[0].valueTo, snapInterval));
 					animator.stop();
-				slideToValue = nearestValidValue(newValue, snapInterval);
-				animator.duration = _slideDuration * 
+				}
+				var duration:Number = _slideDuration * 
 					(Math.abs(super.value - slideToValue) / (maximum - minimum));
+				animator.duration = duration===Infinity?0:duration;
 				animator.motionPaths = new <MotionPath>[
 					new MotionPath("value", super.value, slideToValue)];
 				animator.play();
@@ -143,14 +171,6 @@ package org.flexlite.domUI.components
 		private function animationUpdateHandler(animation:Animation):void
 		{
 			setValue(nearestValidValue(animation.currentValue["value"], snapInterval));
-		}
-		
-		/**
-		 * 动画播放完毕
-		 */	
-		private function animationEndHandler(animation:Animation):void
-		{
-			setValue(slideToValue);
 		}
 		
 		/**
@@ -180,7 +200,8 @@ package org.flexlite.domUI.components
 			{
 				if(track is UIComponent)
 				{
-					track.addEventListener(ResizeEvent.RESIZE,onTrackResize);
+					track.addEventListener(ResizeEvent.RESIZE,onTrackResizeOrMove);
+					track.addEventListener(MoveEvent.MOVE,onTrackResizeOrMove);
 				}
 			}
 		}
@@ -194,31 +215,72 @@ package org.flexlite.domUI.components
 			{
 				if(track is UIComponent)
 				{
-					track.removeEventListener(ResizeEvent.RESIZE,onTrackResize);
+					track.removeEventListener(ResizeEvent.RESIZE,onTrackResizeOrMove);
+					track.removeEventListener(MoveEvent.MOVE,onTrackResizeOrMove);
 				}
 			}
 		}
 		
-		private function onTrackResize(event:ResizeEvent):void
+		private var trackResizedOrMoved:Boolean = false;
+		/**
+		 * track的位置或尺寸发生改变
+		 */		
+		private function onTrackResizeOrMove(event:Event):void
 		{
-			updateSkinDisplayList();
+			trackResizedOrMoved = true;
+			invalidateProperties();
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(trackResizedOrMoved)
+			{
+				trackResizedOrMoved = false;
+				updateSkinDisplayList();
+			}
 		}
 		/**
 		 * 更新皮肤部件大小和可见性。
 		 */		
 		protected function updateSkinDisplayList():void
 		{
+			trackResizedOrMoved = false;
 			var currentValue:Number = isNaN(value)?0:value;
 			var maxValue:Number = isNaN(maximum)?0:maximum;
 			if(thumb&&track)
 			{
-				var w:Number = isNaN(track.width)?0:track.width;
-				
-				var thumbWidth:Number = (value/maximum)*w;
-				if(thumbWidth<0)
+				var trackWidth:Number = isNaN(track.width)?0:track.width;
+				trackWidth *= track.scaleX;
+				var trackHeight:Number = isNaN(track.height)?0:track.height;
+				trackHeight *= track.scaleY;
+				var thumbWidth:Number = Math.round((currentValue/maxValue)*trackWidth);
+				if(isNaN(thumbWidth)||thumbWidth<0||thumbWidth===Infinity)
 					thumbWidth = 0;
-				thumb.width = Math.round(isNaN(thumbWidth)?0:thumbWidth);
-				thumb.x = globalToLocal(track.localToGlobal(new Point)).x;
+				var thumbHeight:Number = Math.round((currentValue/maxValue)*trackHeight);
+				if(isNaN(thumbHeight)||thumbHeight<0||thumbHeight===Infinity)
+					thumbHeight = 0;
+				var thumbPos:Point = globalToLocal(track.localToGlobal(new Point));
+				switch(_direction)
+				{
+					case ProgressBarDirection.LEFT_TO_RIGHT:
+						thumb.width = thumbWidth;
+						thumb.x = thumbPos.x;
+						break;
+					case ProgressBarDirection.RIGHT_TO_LEFT:
+						thumb.width = thumbWidth;
+						thumb.x = thumbPos.x+trackWidth-thumbWidth;
+						break;
+					case ProgressBarDirection.TOP_TO_BOTTOM:
+						thumb.height = thumbHeight;
+						thumb.y = thumbPos.y;
+						break;
+					case ProgressBarDirection.BOTTOM_TO_TOP:
+						thumb.height = thumbHeight;
+						thumb.y = thumbPos.y+trackHeight-thumbHeight;
+						break;
+				}
+				
 			}
 			if(labelDisplay)
 			{

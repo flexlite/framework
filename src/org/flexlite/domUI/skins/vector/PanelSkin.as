@@ -20,7 +20,8 @@ package org.flexlite.domUI.skins.vector
 		public function PanelSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
+			this.minHeight = 60;
+			this.minWidth = 80;
 		}
 		
 		public var titleDisplay:Label;
@@ -52,6 +53,7 @@ package org.flexlite.domUI.skins.vector
 			contentGroup.left = 1;
 			contentGroup.right = 1;
 			contentGroup.bottom = 1;
+			contentGroup.clipAndEnableScrolling = true;
 			addElement(contentGroup);
 			
 			titleDisplay = new Label();

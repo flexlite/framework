@@ -16,8 +16,6 @@ package org.flexlite.domUI.skins.vector
 		public function VSliderSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
-			this.currentState = "normal";
 			this.minWidth = 11;
 			this.minHeight = 50;
 		}

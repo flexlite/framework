@@ -18,6 +18,7 @@ package org.flexlite.domDll
 	import org.flexlite.domDll.resolvers.DxrResolver;
 	import org.flexlite.domDll.resolvers.GrpResolver;
 	import org.flexlite.domDll.resolvers.ImgResolver;
+	import org.flexlite.domDll.resolvers.RslResolver;
 	import org.flexlite.domDll.resolvers.SoundResolver;
 	import org.flexlite.domDll.resolvers.SwfResolver;
 	import org.flexlite.domDll.resolvers.TxtResolver;
@@ -103,12 +104,38 @@ package org.flexlite.domDll
 			instance.loadGroup(name,priority);
 		}
 		/**
+		 * 创建自定义的加载资源组
+		 * @param name 要创建的加载资源组的组名
+		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @param override 是否覆盖已经存在的同名资源组,默认false。
+		 * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+		 */				
+		public static function createGroup(name:String,keys:Array,override:Boolean = false):Boolean
+		{
+			return instance.createGroup(name,keys,override);
+		}
+		/**
+		 * 语言版本,如"cn","en","tw"等。
+		 */		
+		public static function get language():String
+		{
+			return instance.language;
+		}
+		/**
 		 * 检查某个资源组是否已经加载完成
 		 * @param groupName 组名
 		 */		
 		public static function isGroupLoaded(name:String):Boolean
 		{
 			return instance.isGroupLoaded(name);
+		}
+		/**
+		 * 根据组名获取组加载项列表
+		 * @param name 组名
+		 */		
+		public static function getGroupByName(name:String):Vector.<DllItem>
+		{
+			return instance.getGroupByName(name);
 		}
 		/**
 		 * 检查配置文件里是否含有指定的资源
@@ -125,9 +152,11 @@ package org.flexlite.domDll
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @return 
 		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
+		 * "rsl" key是name返回:Loader key是subkey返回:Class<br/>
 		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
 		 * "amf" key是name返回:Object<br/>
 		 * "xml" key是name返回:XML<br/>
+		 * "txt" key是name返回:String<br/>
 		 * "img" key是name返回:BitmapData<br/>
 		 * "sound" key是name返回:Sound<br/>
 		 * "bin" key是name返回:ByteArray
@@ -140,7 +169,8 @@ package org.flexlite.domDll
 		 * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。<br/>
 		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
 		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+		 * 回调函数的参数类型参考getRes()方法注释。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
 		public static function getResAsync(key:String,compFunc:Function,other:Object=null):void
@@ -151,7 +181,8 @@ package org.flexlite.domDll
 		 * 通过URL方式获取外部资源。<br/>
 		 * 注意:通过此方式获取的资源不具有缓存和共享功能。若需要缓存和共享资源，请把资源加入配置文件，通过getResAs()或getResAsync()获取。
 		 * @param url 要加载文件的外部路径。
-		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void
+		 * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+		 * 回调函数的参数类型参考getRes()方法注释。
 		 * @param type 文件类型(可选)。请使用DllItem类中定义的静态常量。若不设置将根据文件扩展名生成。
 		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
@@ -206,6 +237,8 @@ package org.flexlite.domDll
 				Injector.mapClass(IResolver,ImgResolver,DllItem.TYPE_IMG);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_SWF))
 				Injector.mapClass(IResolver,SwfResolver,DllItem.TYPE_SWF);
+			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_RSL))
+				Injector.mapClass(IResolver,RslResolver,DllItem.TYPE_RSL);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_DXR))
 				Injector.mapClass(IResolver,DxrResolver,DllItem.TYPE_DXR);
 			if(!Injector.hasMapRule(IResolver,DllItem.TYPE_TXT))
@@ -236,6 +269,10 @@ package org.flexlite.domDll
 		 */		
 		private var configComplete:Boolean = false;
 		/**
+		 * 语言版本
+		 */		
+		private var language:String = "cn";
+		/**
 		 * 加载配置文件并解析
 		 * @param configList 配置文件信息列表
 		 * @param version 资源版本号。请求资源时加在url后的Get参数，以避免浏览器缓存问题而获取错误的资源。
@@ -243,6 +280,7 @@ package org.flexlite.domDll
 		 */	
 		private function loadConfig(configList:Vector.<ConfigItem>,version:String="",language:String="cn"):void
 		{
+			this.language = language;
 			dllLoader.setVersion(version);
 			dllConfig.setLanguage(language);
 			var itemList:Vector.<DllItem> = new Vector.<DllItem>();
@@ -269,6 +307,14 @@ package org.flexlite.domDll
 		{
 			return loadedGroups.indexOf(name)!=-1;
 		}
+		/**
+		 * 根据组名获取组加载项列表
+		 * @param name 组名
+		 */		
+		private function getGroupByName(name:String):Vector.<DllItem>
+		{
+			return dllConfig.getGroupByName(name);
+		}
 		
 		private var groupNameList:Array = [];
 		/**
@@ -289,6 +335,17 @@ package org.flexlite.domDll
 			{
 				groupNameList.push({name:name,priority:priority});
 			}
+		}
+		/**
+		 * 创建自定义的加载资源组
+		 * @param name 要创建的加载资源组的组名
+		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+		 * @param override 是否覆盖已经存在的同名资源组,默认false。
+		 * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+		 */			
+		private function createGroup(name:String,keys:Array,override:Boolean=false):Boolean
+		{
+			return dllConfig.createGroup(name,keys,override);
 		}
 		/**
 		 * dll配置数据
@@ -332,21 +389,6 @@ package org.flexlite.domDll
 			return dllConfig.getType(key)!="";
 		}
 		
-		/**
-		 * 同步方式获取配置里的资源。<br/>
-		 * 预加载的资源可以同步获取，但位图资源或含有需要异步解码的资源除外。<br/>
-		 * 注意:获取的资源是全局共享的，若你需要修改它，请确保不会对其他模块造成影响，否则建议创建资源的副本以操作。
-		 * @param key 对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @return 
-		 * "swf" key是name返回:Loader key是subkey返回:Class<br/>
-		 * "dxr" key是name返回:DxrFile key是subkey返回:DxrData<br/>
-		 * "amf" key是name返回:Object<br/>
-		 * "xml" key是name返回:XML<br/>
-		 * "img" key是name返回:BitmapData<br/>
-		 * "sound" key是name返回:Sound<br/>
-		 * "bin" key是name返回:ByteArray
-		 * "txt" key是name返回:String
-		 */		
 		private function getRes(key:String):*
 		{
 			var type:String = dllConfig.getType(key);
@@ -499,7 +541,7 @@ package org.flexlite.domDll
 				var resolver:IResolver = getResolverByType(args.type);
 				resolver.destroyRes(name);
 			}
-			if(other)
+			if(other!=null)
 				compFunc(data,other);
 			else 
 				compFunc(data);
@@ -509,7 +551,7 @@ package org.flexlite.domDll
 		 */		
 		private function doCompFunc(compFunc:Function,res:*,other:Object):void
 		{
-			if(other)
+			if(other!=null)
 				compFunc(res,other);
 			else 
 				compFunc(res);
@@ -520,7 +562,7 @@ package org.flexlite.domDll
 		private function doGetResAsync(resolver:IResolver,key:String,compFunc:Function,other:Object):void
 		{
 			resolver.getResAsync(key,function(data:*):void{
-				if(other)
+				if(other!=null)
 					compFunc(data,other);
 				else 
 					compFunc(data);

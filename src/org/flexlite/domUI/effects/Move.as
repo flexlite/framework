@@ -7,6 +7,8 @@ package org.flexlite.domUI.effects
 
 	use namespace dx_internal;
 	
+	[DXML(show="false")]
+	
 	/**
 	 * 移动特效
 	 * @author DOM
@@ -46,10 +48,11 @@ package org.flexlite.domUI.effects
 		 */	
 		public var xTo:Number = NaN;
 		/**
-		 * 重置所有移动属性为初始状态
-		 */
-		public function reset():void
+		 * @inheritDoc
+		 */		
+		override public function reset():void
 		{
+			super.reset();
 			yBy = yFrom = yTo = xBy = xFrom = xTo = NaN;
 		}
 		/**

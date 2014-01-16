@@ -24,9 +24,13 @@ package org.flexlite.domUI.core
 		function get duration():Number;
 		function set duration(value:Number):void;
 		/**
-		 * 是否正在播放动画
+		 * 是否正在播放动画，不包括延迟等待和暂停的阶段。
 		 */
 		function get isPlaying():Boolean;
+		/**
+		 * 动画已经开始的标志，包括延迟等待和暂停的阶段。
+		 */		
+		function get started():Boolean;
 		/**
 		 * 正在暂停中
 		 */
@@ -59,5 +63,9 @@ package org.flexlite.domUI.core
 		 * 继续播放
 		 */		
 		function resume():void;
+		/**
+		 * 重置所有属性为初始状态。若正在播放中，同时立即停止动画。
+		 */
+		function reset():void;
 	}
 }

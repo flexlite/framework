@@ -2,13 +2,14 @@ package org.flexlite.domUI.components.supportClasses
 {
 	
 	import flash.display.DisplayObject;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import org.flexlite.domUI.collections.ICollection;
-	import org.flexlite.domUI.components.List;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.collections.ICollection;
+	import org.flexlite.domUI.components.IItemRenderer;
+	import org.flexlite.domUI.components.List;
 	import org.flexlite.domUI.events.CollectionEvent;
+	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.UIEvent;
 	
 	use namespace dx_internal;
@@ -25,6 +26,10 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DXML(show="false")]
 	
+	[SkinState("normal")]
+	[SkinState("open")]
+	[SkinState("disabled")]
+	
 	/**
 	 * 下拉列表控件基类
 	 * @author DOM
@@ -37,6 +42,7 @@ package org.flexlite.domUI.components.supportClasses
 		public function DropDownListBase()
 		{
 			super();
+			captureItemRenderer = false;
 			dropDownController = new DropDownController();
 		}
 		
@@ -249,15 +255,12 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * @inheritDoc
 		 */
-		override protected function dataProvider_collectionChangeHandler(event:Event):void
+		override protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
 		{       
 			super.dataProvider_collectionChangeHandler(event);
 			
-			if (event is CollectionEvent)
-			{
-				labelChanged = true;
-				invalidateProperties();         
-			}
+			labelChanged = true;
+			invalidateProperties();
 		}
 		
 		/**
@@ -266,6 +269,10 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function item_mouseDownHandler(event:MouseEvent):void
 		{
 			super.item_mouseDownHandler(event);
+			
+			var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
+			dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+			
 			userProposedSelectedIndex = selectedIndex;
 			closeDropDown(true);
 		}

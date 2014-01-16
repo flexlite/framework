@@ -1,9 +1,7 @@
 package org.flexlite.domUI.components.supportClasses
 {
 	import flash.events.Event;
-	import flash.system.IME;
 	import flash.text.AntiAliasType;
-	import flash.text.Font;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
@@ -114,12 +112,12 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 是否使用嵌入字体
 		 */		
-		private var embedFonts:Boolean = false;
+		dx_internal var embedFonts:Boolean = false;
 		
-		private var _fontFamily:String = "Times New Roman";
+		private var _fontFamily:String = "SimSun";
 		
 		/**
-		 * 字体名称 。默认值：Times New Roman
+		 * 字体名称 。默认值：SimSun
 		 */
 		public function get fontFamily():String
 		{
@@ -131,16 +129,6 @@ package org.flexlite.domUI.components.supportClasses
 			if(_fontFamily==value)
 				return;
 			_fontFamily = value;
-			var fontList:Array = Font.enumerateFonts(false);
-			embedFonts = false;
-			for each(var font:Font in fontList)
-			{
-				if(font.fontName==value)
-				{
-					embedFonts = true;
-					break;
-				}
-			}
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
@@ -252,10 +240,10 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		
 		
-		private var _leading:int = 0;
+		private var _leading:int = 2;
 		
 		/**
-		 * 行距,默认值为0。
+		 * 行距,默认值为2。
 		 */
 		public function get leading():int
 		{
@@ -267,10 +255,17 @@ package org.flexlite.domUI.components.supportClasses
 			if(_leading==value)
 				return;
 			_leading = value;
+			if(textField)
+				textField.leading = realLeading;
 			defaultStyleChanged = true;
 			invalidateProperties();
 			invalidateSize();
 			invalidateDisplayList();
+		}
+		
+		dx_internal function get realLeading():int
+		{
+			return _leading;
 		}
 		
 		/**
@@ -279,9 +274,8 @@ package org.flexlite.domUI.components.supportClasses
 		private var pendingColor:uint = 0x000000;
 		
 		private var _textColor:uint = 0x000000;
-		
 		/**
-		 * 文字颜色,默认值为0x000000。
+		 * @inheritDoc
 		 */
 		public function get textColor():uint
 		{
@@ -444,6 +438,8 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_htmlText = value;
+			if(textField)
+				textField.$htmlText = _htmlText;
 			htmlTextChanged = true;
 			_text = null;
 			
@@ -458,7 +454,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		dx_internal function get isHTML():Boolean
 		{
-			return explicitHTMLText != null;
+			return Boolean(explicitHTMLText);
 		}
 		
 		private var pendingSelectable:Boolean = false;
@@ -511,6 +507,8 @@ package org.flexlite.domUI.components.supportClasses
 				return;
 			
 			_text = value;
+			if(textField)
+				textField.$text = _text;
 			textChanged = true;
 			_htmlText = null;
 			
@@ -560,9 +558,9 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super.createChildren();
 			
-			if (textField == null)
+			if (!textField)
 			{
-				createTextField();
+				checkTextField();
 			}
 		}
 		
@@ -573,13 +571,9 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			super.commitProperties();
 			
-			if(textField==null)
+			if(!textField)
 			{
-				createTextField();
-				condenseWhiteChanged = true;
-				selectableChanged = true;
-				textChanged = true;
-				defaultStyleChanged = true;
+				checkTextField();
 			}
 			
 			if (condenseWhiteChanged)
@@ -602,16 +596,13 @@ package org.flexlite.domUI.components.supportClasses
 				textField.$setTextFormat(defaultTextFormat);
 				textField.defaultTextFormat = defaultTextFormat;
 				textField.embedFonts = embedFonts;
+				if(isHTML)
+					textField.$htmlText = explicitHTMLText;
 			}
 			
 			if (textChanged || htmlTextChanged)
 			{
-				if (isHTML)
-					textField.$htmlText = explicitHTMLText;
-				else
-					textField.$text = _text;
-				
-				textFieldChanged(false);
+				textFieldChanged(true);
 				textChanged = false;
 				htmlTextChanged = false;
 			}
@@ -628,31 +619,46 @@ package org.flexlite.domUI.components.supportClasses
 				DomGlobals.stage.focus = textField;
 			}
 		}
-		
+		/**
+		 * 检查是否创建了textField对象，没有就创建一个。
+		 */		
+		private function checkTextField():void
+		{
+			if(!textField)
+			{
+				createTextField();
+				if (isHTML)
+					textField.$htmlText = explicitHTMLText;
+				else
+					textField.$text = _text;
+				textField.leading = realLeading;
+				condenseWhiteChanged = true;
+				selectableChanged = true;
+				textChanged = true;
+				defaultStyleChanged = true;
+				invalidateProperties();
+			}
+		}
 		
 		/**
 		 * 创建文本显示对象
 		 */		
 		protected function createTextField():void
 		{   
-			if (textField==null)
-			{
-				textField = new UITextField;
-				textField.selectable = selectable;
-				textField.antiAliasType = AntiAliasType.ADVANCED; 
-				textField.mouseWheelEnabled = false;
-				
-				textField.addEventListener("textChanged",
-					textField_textModifiedHandler);
-				textField.addEventListener("widthChanged",
-					textField_textFieldSizeChangeHandler);
-				textField.addEventListener("heightChanged",
-					textField_textFieldSizeChangeHandler);
-				textField.addEventListener("textFormatChanged",
-					textField_textFormatChangeHandler);
-				addChild(textField);
-				
-			}
+			textField = new UITextField;
+			textField.selectable = selectable;
+			textField.antiAliasType = AntiAliasType.ADVANCED; 
+			textField.mouseWheelEnabled = false;
+			
+			textField.addEventListener("textChanged",
+				textField_textModifiedHandler);
+			textField.addEventListener("widthChanged",
+				textField_textFieldSizeChangeHandler);
+			textField.addEventListener("heightChanged",
+				textField_textFieldSizeChangeHandler);
+			textField.addEventListener("textFormatChanged",
+				textField_textFormatChangeHandler);
+			addChild(textField);
 		}
 		
 		

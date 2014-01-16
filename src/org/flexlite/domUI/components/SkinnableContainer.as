@@ -1,7 +1,6 @@
 package org.flexlite.domUI.components
 {
 	import org.flexlite.domCore.dx_internal;
-
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
@@ -51,12 +50,12 @@ package org.flexlite.domUI.components
 		/**
 		 * 实体容器实例化之前缓存子对象的容器 
 		 */		
-		private var _placeHolderGroup:Group;
+		dx_internal var _placeHolderGroup:Group;
 		
 		/**
 		 * 获取当前的实体容器
 		 */		
-		private function get currentContentGroup():Group
+		dx_internal function get currentContentGroup():Group
 		{          
 			if (contentGroup==null)
 			{
@@ -64,7 +63,7 @@ package org.flexlite.domUI.components
 				{
 					_placeHolderGroup = new Group();
 					_placeHolderGroup.visible = false;
-					addToDisplyList(_placeHolderGroup);
+					addToDisplayList(_placeHolderGroup);
 				}
 				_placeHolderGroup.addEventListener(
 					ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
@@ -211,19 +210,25 @@ package org.flexlite.domUI.components
 					contentGroup.layout = contentGroupProperties.layout;
 					contentGroupProperties = {};
 				}
-				if(_placeHolderGroup!=null)
+				if(_placeHolderGroup)
 				{
 					_placeHolderGroup.removeEventListener(
 						ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
 					_placeHolderGroup.removeEventListener(
 						ElementExistenceEvent.ELEMENT_REMOVE, contentGroup_elementRemovedHandler);
-					var sourceContent:Array = _placeHolderGroup.getElementsContent();
-					contentGroup.elementsContent = sourceContent ? sourceContent.slice() : null;
+					var sourceContent:Array = _placeHolderGroup.getElementsContent().concat();
 					for (var i:int = _placeHolderGroup.numElements; i > 0; i--)
 					{
-						_placeHolderGroup.removeElementAt(0);  
+						var element:IVisualElement = _placeHolderGroup.removeElementAt(0);  
+						element.ownerChanged(null);
 					}
 					removeFromDisplayList(_placeHolderGroup);
+					contentGroup.elementsContent = sourceContent;
+					for (i = sourceContent.numElements; i > 0; i--)
+					{
+						element = sourceContent[i];  
+						element.ownerChanged(this);
+					}
 					_placeHolderGroup = null;
 				}
 				contentGroup.addEventListener(
@@ -268,7 +273,7 @@ package org.flexlite.domUI.components
 		 */		
 		dx_internal function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
 		{
-			event.element.owner = this
+			event.element.ownerChanged(this);
 			dispatchEvent(event);
 		}
 		/**
@@ -276,7 +281,7 @@ package org.flexlite.domUI.components
 		 */		
 		dx_internal function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
 		{
-			event.element.owner = null;
+			event.element.ownerChanged(null);
 			dispatchEvent(event);
 		}
 
@@ -288,7 +293,7 @@ package org.flexlite.domUI.components
 			contentGroup = new Group();
 			contentGroup.percentWidth = 100;
 			contentGroup.percentHeight = 100;
-			addToDisplyList(contentGroup);
+			addToDisplayList(contentGroup);
 			partAdded("contentGroup",contentGroup);
 		}
 				

@@ -9,11 +9,18 @@ package org.flexlite.domUI.core
 	public interface IVisualElement extends ILayoutElement
 	{
 		/**
-		 * 此IVisualElement对象的所有者。默认情况下，为parent属性的值。
-		 * 但当此对象在Skin内部时，它的owner指向Skin的主机组件。
+		 * 此IVisualElement对象的所有者。<br/>
+		 * 0.默认情况下，owner指向parent属性的值。<br/>
+		 * 1.当此对象被PopUpAnchor组件弹出时，owner指向PopUpAnchor<br/>
+		 * 2.当此对象作为皮肤内contentGroup的子项时，owner指向主机组件SkinnableContainer<br/>
+		 * 3.当此对象作为ItemRenderer时，owner指向DataGroup或者主机组件SkinnableDataContainer<br/>
+		 * 4.当此对象作为非显示对象容器IContainer的子项时,owner指向IContainer。
 		 */		
-		function get owner():DisplayObjectContainer;
-		function set owner(value:DisplayObjectContainer):void;
+		function get owner():Object;
+		/**
+		 * owner属性由框架内部管理，请不要自行改变它的值，否则可能引发未知的问题。
+		 */		
+		function ownerChanged(value:Object):void;
 		/**
 		 * 元素名称。此属性在TabNavigator里作为选项卡显示的字符串。
 		 */		

@@ -3,6 +3,8 @@ package org.flexlite.domUI.core
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	
 	use namespace dx_internal;
@@ -17,7 +19,24 @@ package org.flexlite.domUI.core
 		public function UITextField()
 		{
 			super();
+			if(isFirstTextFiled)
+			{
+				isFirstTextFiled = false;
+				try
+				{
+					translator = Injector.getInstance(ITranslator);
+				}
+				catch(e:Error){}
+			}
 		}
+		/**
+		 * 是否是第一个创建的Label实例
+		 */		
+		private static var isFirstTextFiled:Boolean = true;
+		/**
+		 * 注入的文本翻译对象
+		 */		
+		private static var translator:ITranslator;
 		
 		/**
 		 * @inheritDoc
@@ -29,14 +48,20 @@ package org.flexlite.domUI.core
 			if(changed)
 				dispatchEvent(new Event("widthChanged"));
 		}
-		
+		/**
+		 * @inheritDoc
+		 */
+		override public function get height():Number
+		{
+			return super.height-leading;
+		}
 		/**
 		 * @inheritDoc
 		 */
 		override public function set height(value:Number):void
 		{
-			var changed:Boolean = super.height != value;
-			super.height = value;
+			var changed:Boolean = height != value;
+			super.height = value+leading;
 			if(changed)
 				dispatchEvent(new Event("heightChanged"));
 		}
@@ -59,7 +84,10 @@ package org.flexlite.domUI.core
 				value = "";
 			var changed:Boolean = super.text != value;
 			
-			super.text = value;
+			if(translator)
+				super.text = translator.translate(value);
+			else
+				super.text = value;
 			
 			if(changed)
 				dispatchEvent(new Event("textChanged"));
@@ -117,17 +145,19 @@ package org.flexlite.domUI.core
 			dispatchEvent(new Event("textChanged"));
 		}
 		
+		//用于返回正确的文本高度，去除最后一行的行间距。
+		dx_internal var leading:int = 0;
 		/**
-		 * Flash Player在计算TextFiled.textHeight时，
+		 * Flash Player在计算TextField.textHeight时，
 		 * 没有包含空白的4像素,为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给heihgt，不会造成截断
 		 */	
 		override public function get textHeight():Number
 		{
-			return super.textHeight+4;
+			return super.textHeight+4-leading;
 		}
 		/**
-		 * Flash Player在计算TextFiled.textWidth时，
+		 * Flash Player在计算TextField.textWidth时，
 		 * 没有包含空白的5像素,为了方便使用，在这里做了统一处理,
 		 * 此属性返回的值可以直接赋值给width，不会造成截断
 		 */
@@ -151,9 +181,9 @@ package org.flexlite.domUI.core
 		 */			
 		dx_internal final function set $height(value:Number):void
 		{
-			if(super.height == value)
+			if(height == value)
 				return;
-			super.height = value;
+			super.height = value+leading;
 		}
 		
 		/**
@@ -171,7 +201,7 @@ package org.flexlite.domUI.core
 		 */			
 		dx_internal final function set $text(value:String):void
 		{
-			if (!value)
+			if (value==null)
 				value = "";
 			super.text = value;
 		}

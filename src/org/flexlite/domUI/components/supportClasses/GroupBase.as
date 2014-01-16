@@ -149,7 +149,7 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function createChildren():void
 		{
 			super.createChildren();
-			if(_layout==null)
+			if(!_layout)
 			{
 				layout = new BasicLayout;
 			}
@@ -289,7 +289,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		override protected function measure():void
 		{
-			if(_layout==null||!layoutInvalidateSizeFlag)
+			if(!_layout||!layoutInvalidateSizeFlag)
 				return;
 			super.measure();
 			_layout.measure();
@@ -354,7 +354,7 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			if (layoutInvalidateDisplayListFlag&&_layout!=null)
+			if (layoutInvalidateDisplayListFlag&&_layout)
 			{
 				layoutInvalidateDisplayListFlag = false;
 				_layout.updateDisplayList(unscaledWidth, unscaledHeight);
@@ -363,8 +363,6 @@ package org.flexlite.domUI.components.supportClasses
 		}
 		/**
 		 * 此容器中的可视元素的数量。
-		 * 可视元素包括实现 IVisualElement 接口的类，
-		 * 例如，UIComponent 和 GraphicElement 的子类。
 		 */
 		public function get numElements():int
 		{
@@ -380,15 +378,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			return null;
 		}
-		/**
-		 * 支持 useVirtualLayout 属性的布局类在 updateDisplayList() 中使用此方法来获取“处于视图中”的布局元素 
-		 * @param index 要检索的元素的索引。
-		 * @param changeElementInViews 是否把当前索引加入可视索引列表内，仅对采用虚拟布局的容器有效。
-		 */		
-		public function getVirtualElementAt(index:int,changeElementInViews:Boolean=false):IVisualElement
-		{
-			return getElementAt(index);            
-		}
+		
 		/**
 		 * 返回可视元素的索引位置。若不存在，则返回-1。
 		 * @param element 可视元素。
@@ -424,7 +414,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			var visibleIndices:Vector.<int> = new Vector.<int>();
 			var index:int
-			if(scrollRect==null)
+			if(!scrollRect)
 			{
 				for(index = 0;index < numChildren;index++)
 				{
@@ -436,7 +426,7 @@ package org.flexlite.domUI.components.supportClasses
 				for(index = 0;index < numChildren;index++)
 				{
 					var layoutElement:ILayoutElement = getChildAt(index) as ILayoutElement;
-					if (layoutElement==null)
+					if (!layoutElement)
 						continue;
 					var eltR:Rectangle = new Rectangle();
 					eltR.x = layoutElement.layoutBoundsX;
@@ -448,6 +438,25 @@ package org.flexlite.domUI.components.supportClasses
 				}
 			}
 			return visibleIndices;
+		}
+		/**
+		 * 在支持虚拟布局的容器中，设置容器内可见的子元素索引范围。此方法在不支持虚拟布局的容器中无效。
+		 * 通常在即将连续调用getVirtualElementAt()之前需要显式设置一次，以便容器提前释放已经不可见的子元素。
+		 * @param startIndex 可视元素起始索引
+		 * @param endIndex 可视元素结束索引
+		 */		
+		public function setVirtualElementIndicesInView(startIndex:int,endIndex:int):void
+		{
+			
+		}
+		
+		/**
+		 * 支持useVirtualLayout属性的布局类在updateDisplayList()中使用此方法来获取“处于视图中”的布局元素 
+		 * @param index 要检索的元素的索引。
+		 */		
+		public function getVirtualElementAt(index:int):IVisualElement
+		{
+			return getElementAt(index);            
 		}
 		/**
 		 * @inheritDoc

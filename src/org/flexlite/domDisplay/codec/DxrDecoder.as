@@ -2,15 +2,17 @@ package org.flexlite.domDisplay.codec
 {
 	import flash.display.BitmapData;
 	import flash.display.FrameLabel;
-	import flash.display.Sprite;
-	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domDisplay.DxrData;
+	import org.flexlite.domDisplay.image.Jpeg32Decoder;
+	import org.flexlite.domDisplay.image.PngDecoder;
 	
 	use namespace dx_internal;
 	
@@ -20,10 +22,31 @@ package org.flexlite.domDisplay.codec
 	 */	
 	public class DxrDecoder
 	{
+		/**
+		 * 构造函数
+		 */		
 		public function DxrDecoder()
 		{
+			if(!injected)
+			{
+				injected = true;
+				doInject();
+			}
 		}
 		
+		private static var injected:Boolean = false;
+		/**
+		 * 执行位图解码器注入
+		 */		
+		private static function doInject():void
+		{
+			if(!Injector.hasMapRule(IBitmapDecoder,"png"))
+				Injector.mapClass(IBitmapDecoder,PngDecoder,"png");
+			if(!Injector.hasMapRule(IBitmapDecoder,"jpegxr"))
+				Injector.mapClass(IBitmapDecoder,PngDecoder,"jpegxr");
+			if(!Injector.hasMapRule(IBitmapDecoder,"jpeg32"))
+				Injector.mapClass(IBitmapDecoder,Jpeg32Decoder,"jpeg32");
+		}
 		/**
 		 * 解码完成回调函数
 		 */		
@@ -61,7 +84,7 @@ package org.flexlite.domDisplay.codec
 			currentIndex = 0;
 			dxrSourceData = data;
 			bitmapDataList = new Vector.<BitmapData>();
-			this.bitmapDecoder =Injector.getInstance(IBitmapDecoder,dxrData.codecKey);
+			this.bitmapDecoder = Injector.getInstance(IBitmapDecoder,dxrData.codecKey);
 			addToDecodeList(this);
 		}
 		/**
@@ -99,12 +122,20 @@ package org.flexlite.domDisplay.codec
 			var rect:Rectangle;
 			for each(var info:Array in dxrSourceData.frameInfo)
 			{
-				bd = new BitmapData(info[3],info[4],true,0);
-				rect = new Rectangle(info[1],info[2],info[3],info[4]);
-				bd.copyPixels(bitmapDataList[info[0]],rect,new Point(0,0),null,null,true);
+				if(info.length==10)
+				{
+					var copyFromIndex:int = info[9];
+					bd = dxrData.frameList[copyFromIndex];
+				}
+				else
+				{
+					bd = new BitmapData(info[3],info[4],true,0);
+					rect = new Rectangle(info[1],info[2],info[3],info[4]);
+					bd.copyPixels(bitmapDataList[info[0]],rect,new Point(0,0),null,null,true);
+				}
 				dxrData.frameList.push(bd);
 				dxrData.frameOffsetList.push(new Point(info[5],info[6]));
-				if(info[7])
+				if(info.length>=9)
 				{
 					dxrData.filterOffsetList[dxrData.frameList.length-1] = new Point(info[7],info[8]);
 				}
@@ -122,7 +153,6 @@ package org.flexlite.domDisplay.codec
 			if(dxrSourceData.hasOwnProperty("frameLabels"))
 			{
 				var fls:Array = dxrSourceData.frameLabels as Array;
-				dxrData._frameLabels = [];
 				for each(var label:Array in fls)
 				{
 					dxrData._frameLabels.push(new FrameLabel(label[1],label[0]));
@@ -140,9 +170,9 @@ package org.flexlite.domDisplay.codec
 		}
 		
 		/**
-		 * EnterFrame事件抛出者
-		 */		
-		private static var eventDispatcher:Sprite = new Sprite();
+		 * Timer事件抛出者
+		 */
+		private static var timer:Timer = new Timer(40);
 		/**
 		 * 待解码列表
 		 */		
@@ -157,19 +187,20 @@ package org.flexlite.domDisplay.codec
 			decodeList.push(decoder);
 			if(decodeList.length==1)
 			{
-				eventDispatcher.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+				timer.addEventListener(TimerEvent.TIMER, onTimer);
+				timer.start();
 			}
 		}
 		/**
 		 * 每帧最大解码字节流总大小
 		 */		
-		dx_internal static var MAX_DECODE_LENGTH:int = 5000;
+		public static var maxDecodeLength:int = 5000;
 		/**
-		 * EnterFrame事件处理函数
+		 * Timer事件处理函数
 		 */		
-		private static function onEnterFrame(event:Event):void
+		private static function onTimer(event:TimerEvent):void
 		{
-			var max:int = MAX_DECODE_LENGTH;
+			var max:int = maxDecodeLength;
 			var total:int = 0;
 			while(total<max&&decodeList.length>0)
 			{
@@ -182,7 +213,9 @@ package org.flexlite.domDisplay.codec
 			}
 			if(decodeList.length==0)
 			{
-				eventDispatcher.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
+				timer.stop();
+				timer.removeEventListener(TimerEvent.TIMER, onTimer);
+				timer.reset();
 			}
 		}
 		
@@ -194,7 +227,7 @@ package org.flexlite.domDisplay.codec
 		{
 			if(data==null)
 			{
-				throw new Error("DXR动画文件字节流为空！");
+				trace("DXR动画文件字节流为空！");
 			}
 			try
 			{
@@ -219,7 +252,7 @@ package org.flexlite.domDisplay.codec
 			}
 			catch(e:Error)
 			{
-				throw new Error("不是有效的DXR动画文件！");
+				trace("不是有效的DXR动画文件！");
 			}
 			return null;
 		}

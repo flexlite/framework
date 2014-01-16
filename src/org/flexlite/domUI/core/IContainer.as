@@ -10,7 +10,6 @@ package org.flexlite.domUI.core
 		/**
 		 * 此容器中的可视元素的数量。
 		 * 可视元素包括实现 IVisualElement 接口的类，
-		 * 例如，UIComponent 和 GraphicElement 的子类。
 		 */		
 		function get numElements():int;
 		/**

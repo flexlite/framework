@@ -5,21 +5,24 @@ package org.flexlite.domDisplay
 	import flash.display.FrameLabel;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import org.flexlite.domCore.IBitmapAsset;
 	import org.flexlite.domCore.IInvalidateDisplay;
 	import org.flexlite.domCore.IMovieClip;
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domDisplay.events.MoveClipPlayEvent;
+	import org.flexlite.domDisplay.events.MovieClipPlayEvent;
 	
 	use namespace dx_internal;
 	
 	/**
 	 * 一次播放完成事件
 	 */	
-	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MoveClipPlayEvent")]
+	[Event(name="playComplete", type="org.flexlite.domDisplay.events.MovieClipPlayEvent")]
 	
 	/**
 	 * DXR影片剪辑。
@@ -30,20 +33,63 @@ package org.flexlite.domDisplay
 		IMovieClip,IBitmapAsset,IDxrDisplay,IInvalidateDisplay
 	{
 		/**
+		 * 所有DxrMovieClip初始化时默认的帧率。默认24。
+		 */		
+		public static var defaultFrameRate:int = 24;
+		/**
+		 * Timer字典,每种帧率对应一个Timer实例。
+		 */		
+		private static var timerDic:Array = [];
+		/**
+		 * 每种帧率的Timer实例被添加监听的次数。
+		 */		
+		private static var timerEventCount:Array = [];
+		/**
+		 * 零坐标点
+		 */		
+		private static var zeroPoint:Point = new Point;
+		/**
 		 * 构造函数
 		 * @param data 被引用的DxrData对象
 		 * @param smoothing 在缩放时是否对位图进行平滑处理。
+		 * @param frameRate 播放帧率。若不设置，将采用defaultFrameRate的值。
 		 */
-		public function DxrMovieClip(data:DxrData=null,smoothing:Boolean=true)
+		public function DxrMovieClip(data:DxrData=null,smoothing:Boolean=true,frameRate:int=-1)
 		{
 			super();
 			addEventListener(Event.ADDED_TO_STAGE,onAddedOrRemoved);
 			addEventListener(Event.REMOVED_FROM_STAGE,onAddedOrRemoved);
 			mouseChildren = false;
-			this._smoothing = smoothing;
+			_smoothing = smoothing;
+			_frameRate = frameRate==-1?defaultFrameRate:frameRate;
 			if(data)
 				dxrData = data;
 		}
+		
+		private var _frameRate:int = 24;
+		/**
+		 * 播放帧率，即每秒钟播放的次数。有效值为1~60。
+		 * 注意：修改此属性只影响当前实例，若要同时修改所有实例的默认帧率，请设置静态属性defaultFrameRate
+		 */
+		public function get frameRate():int
+		{
+			return _frameRate;
+		}
+		public function set frameRate(value:int):void
+		{
+			if(value<1)
+				value==1;
+			if(value>60)
+				value = 60;
+			if(value==_frameRate)
+				return;
+			var isPlaying:Boolean = eventListenerAdded;
+			removeTimerEventListener();
+			_frameRate = value;
+			if(isPlaying)
+				attachTimerEventListener();
+		}
+		
 		
 		/**
 		 * smoothing改变标志
@@ -67,15 +113,18 @@ package org.flexlite.domDisplay
 			smoothingChanged = true;
 			invalidateProperties();
 		}
-		
+		/**
+		 * 是否在舞台上的标志。
+		 */		
+		private var inStage:Boolean = false;
 		/**
 		 * 被添加到显示列表时
 		 */		
 		private function onAddedOrRemoved(event:Event):void
 		{
+			inStage = Boolean(event.type==Event.ADDED_TO_STAGE);
 			checkEventListener();
 		}		
-		
 		/**
 		 * 位图显示对象
 		 */		
@@ -95,7 +144,7 @@ package org.flexlite.domDisplay
 		{
 			return _dxrData;
 		}
-
+		
 		public function set dxrData(value:DxrData):void
 		{
 			if(_dxrData==value)
@@ -156,16 +205,16 @@ package org.flexlite.domDisplay
 		{
 			frameScaleX = 1;
 			frameScaleY = 1;
-			var sizeOffset:Point = dxrData.filterOffsetList[0];
+			var sizeOffset:Point = dxrData.getFilterOffset(0);
 			initFilterWidth = sizeOffset?sizeOffset.x:0;
 			initFilterHeight = sizeOffset?sizeOffset.y:0;
 			if(widthExplicitSet)
 			{
-				frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
+				frameScaleX = _width/(_dxrData.getBitmapData(0).width-initFilterWidth);
 			}
 			if(heightExplicitSet)
 			{
-				frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
+				frameScaleY = _height/(_dxrData.getBitmapData(0).height-initFilterHeight);
 			}
 			if(useScale9Grid)
 			{
@@ -201,40 +250,100 @@ package org.flexlite.domDisplay
 		 */			
 		private function checkEventListener(remove:Boolean=false):void
 		{
-			var needAddEventListener:Boolean = (!remove&&stage&&!isStop&&totalFrames>1);
+			var needAddEventListener:Boolean = (!remove&&inStage&&!isStop&&totalFrames>1&&visible);
 			if(eventListenerAdded==needAddEventListener)
 				return;
 			if(eventListenerAdded)
 			{
-				this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
-				eventListenerAdded = false;
+				removeTimerEventListener();
 			}
 			else
 			{
-				this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
-				eventListenerAdded = true;
+				attachTimerEventListener();
 			}
+		}
+		/**
+		 * 移除当前的Timer事件监听
+		 */		
+		private function removeTimerEventListener():void
+		{
+			if(!eventListenerAdded)
+				return;
+			var timer:Timer = timerDic[_frameRate];
+			timer.removeEventListener(TimerEvent.TIMER,render);
+			timerEventCount[_frameRate] --;
+			if(timerEventCount[_frameRate]<=0)
+				timer.stop();
+			eventListenerAdded = false;
+		}
+		/**
+		 * 添加当前的Timer事件监听
+		 */
+		private function attachTimerEventListener():void
+		{
+			if(eventListenerAdded)
+				return;
+			var timer:Timer = timerDic[_frameRate];
+			if(!timer)
+			{
+				timer = new Timer(1000 / _frameRate);
+				timerDic[_frameRate] = timer;
+				timerEventCount[_frameRate] = 0;
+			}
+			if(!timer.running)
+				timer.start();
+			timer.addEventListener(TimerEvent.TIMER,render);
+			timerEventCount[_frameRate] ++;
+			eventListenerAdded = true;
 		}
 		
 		/**
-		 * 帧标签字典索引
+		 * 执行一次渲染
 		 */		
-		private var frameLabelDic:Dictionary;
-		
-		private function onEnterFrame(event:Event):void
+		private function render(evt:TimerEvent):void
 		{
-			render();
+			var total:int = totalFrames;
+			if(total<=1||!visible)
+				return;
+			if(_currentFrame<total-1)
+			{
+				gotoFrame(_currentFrame+1);
+			}
+			else
+			{
+				gotoFrame(0);
+			}
+			var lastFrame:Boolean = (_currentFrame>=total-1);
+			if(lastFrame)
+			{
+				if(!_repeatPlay)
+				{
+					checkEventListener(true);
+				}
+			}
+			var callBack:Function = callBackList[_currentFrame];
+			if(callBack!=null)
+			{
+				callBack();
+			}
+			if(lastFrame)
+			{	
+				if(hasEventListener(MovieClipPlayEvent.PLAY_COMPLETE))
+				{
+					var event:MovieClipPlayEvent = new MovieClipPlayEvent(MovieClipPlayEvent.PLAY_COMPLETE);
+					dispatchEvent(event);
+				}
+			}
 		}
 		
-		private static var zeroPoint:Point = new Point;
 		/**
 		 * 应用当前帧的位图数据
 		 */		
 		private function applyCurrentFrameData():void
 		{
-			var bitmapData:BitmapData = dxrData.frameList[_currentFrame];
-			var pos:Point = dxrData.frameOffsetList[_currentFrame];
-			var sizeOffset:Point = dxrData.filterOffsetList[_currentFrame];
+			var bitmapData:BitmapData = dxrData.getBitmapData(_currentFrame);
+			var pos:Point = dxrData.getFrameOffset(_currentFrame);
+			var sizeOffset:Point = dxrData.getFilterOffset(_currentFrame);
 			if(!sizeOffset)
 				sizeOffset = zeroPoint;
 			filterWidth = sizeOffset.x;
@@ -293,7 +402,7 @@ package org.flexlite.domDisplay
 		{
 			return escapeNaN(_width);
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -306,7 +415,7 @@ package org.flexlite.domDisplay
 			if(widthExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleX = _width/(_dxrData.frameList[0].width-initFilterWidth);
+					frameScaleX = _width/(_dxrData.getBitmapData(0).width-initFilterWidth);
 			}
 			else
 			{
@@ -332,7 +441,7 @@ package org.flexlite.domDisplay
 		{
 			return escapeNaN(_height);
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -345,7 +454,7 @@ package org.flexlite.domDisplay
 			if(heightExplicitSet)
 			{
 				if(_dxrData)
-					frameScaleY = _height/(_dxrData.frameList[0].height-initFilterHeight);
+					frameScaleY = _height/(_dxrData.getBitmapData(0).height-initFilterHeight);
 			}
 			else 
 			{
@@ -415,7 +524,7 @@ package org.flexlite.domDisplay
 				}
 			}
 		}
-
+		
 		private var _currentFrame:int = 0;
 		/**
 		 * @inheritDoc
@@ -424,13 +533,13 @@ package org.flexlite.domDisplay
 		{
 			return _currentFrame;
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
 		public function get totalFrames():int
 		{
-			return dxrData?dxrData.frameList.length:0;
+			return dxrData?dxrData.totalFrames:0;
 		}
 		
 		/**
@@ -445,38 +554,6 @@ package org.flexlite.domDisplay
 		 * 是否停止播放
 		 */		
 		private var isStop:Boolean = false;
-		
-		/**
-		 * 执行一次渲染
-		 */		
-		public function render():void
-		{
-			var total:int = totalFrames;
-			if(total<=1||!visible)
-				return;
-			if(_currentFrame>=totalFrames-1)
-			{
-				_currentFrame = totalFrames-1;
-				if(hasEventListener(MoveClipPlayEvent.PLAY_COMPLETE))
-				{
-					var event:MoveClipPlayEvent = new MoveClipPlayEvent(MoveClipPlayEvent.PLAY_COMPLETE);
-					dispatchEvent(event);
-				}
-				if(!_repeatPlay)
-				{
-					checkEventListener(true);
-					return;
-				}
-			}
-			if(_currentFrame<total-1)
-			{
-				gotoFrame(_currentFrame+1);
-			}
-			else
-			{
-				gotoFrame(0);
-			}
-		}
 		
 		private var _repeatPlay:Boolean = true;
 		/**
@@ -498,9 +575,48 @@ package org.flexlite.domDisplay
 		public function gotoAndPlay(frame:Object):void
 		{
 			gotoFrame(frame);
+			play();
+		}
+		/**
+		 * @inheritDoc
+		 */	
+		public function gotoAndStop(frame:Object):void
+		{
+			gotoFrame(frame);
+			stop();
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public function play():void
+		{
 			isStop = false;
 			checkEventListener();
 		}
+		/**
+		 * @inheritDoc
+		 */
+		public function stop():void
+		{
+			isStop = true;
+			checkEventListener();
+		}
+		/**
+		 * 帧回调函数列表
+		 */		
+		private var callBackList:Array = [];
+		/**
+		 * @inheritDoc
+		 */
+		public function addFrameScript(frame:int,callBack:Function):void
+		{
+			callBackList[frame] = callBack;
+		}
+		
+		/**
+		 * 帧标签字典索引
+		 */		
+		private var frameLabelDic:Dictionary;
 		/**
 		 * 跳到指定帧
 		 */		
@@ -520,25 +636,19 @@ package org.flexlite.domDisplay
 			{
 				return;
 			}
+			if(_currentFrame<0)
+				_currentFrame = 0;
 			if(_currentFrame>totalFrames-1)
 				_currentFrame = totalFrames-1;
 			applyCurrentFrameData();
 		}
-		/**
-		 * @inheritDoc
-		 */	
-		public function gotoAndStop(frame:Object):void
-		{
-			gotoFrame(frame);
-			isStop = true;
-			checkEventListener();
-		}
+		
 		/**
 		 * @inheritDoc
 		 */
 		public function get bitmapData():BitmapData
 		{
-			return dxrData?dxrData.frameList[_currentFrame]:null;
+			return dxrData?dxrData.getBitmapData(_currentFrame):null;
 		}
 		/**
 		 * 滤镜宽度

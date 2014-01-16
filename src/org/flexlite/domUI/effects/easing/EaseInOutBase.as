@@ -13,7 +13,7 @@ package org.flexlite.domUI.effects.easing
 		 * @param easeInFraction 缓入过程所占动画播放时间的百分比。剩余即为缓出的时间。
 		 * 默认值为 EasingFraction.IN_OUT，它会缓入前一半时间，并缓出剩余的一半时间。
 		 */		
-		public function EaseInOutBase(easeInFraction:Number = EasingFraction.IN_OUT)
+		public function EaseInOutBase(easeInFraction:Number = 0.5)
 		{
 			this.easeInFraction = easeInFraction;
 		}

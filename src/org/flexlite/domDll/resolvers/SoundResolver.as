@@ -45,7 +45,10 @@ package org.flexlite.domDll.resolvers
 			}
 			if(!dllItem.groupName)
 			{
-				soundDic[dllItem.name] = new Sound(new URLRequest(dllItem.url));
+				var sound:Sound = new Sound();
+				sound.addEventListener(IOErrorEvent.IO_ERROR,onIoError);
+				sound.load(new URLRequest(dllItem.url));
+				soundDic[dllItem.name] = sound;
 				dllItem.loaded = true;
 				compFunc(dllItem);
 				return;
@@ -56,6 +59,12 @@ package org.flexlite.domDll.resolvers
 			loader.addEventListener(ProgressEvent.PROGRESS,onProgress);
 			dllItemDic[loader] = {item:dllItem,func:compFunc,progress:progressFunc};
 			loader.load(new URLRequest(dllItem.url));
+		}
+		/**
+		 * 防止加载不到音乐文件而报错
+		 */		
+		private function onIoError(event:Event):void
+		{
 		}
 		/**
 		 * 此方法无效,Sound在低版本的Flash Player上不能通过字节流加载。
@@ -85,7 +94,7 @@ package org.flexlite.domDll.resolvers
 			loader.removeEventListener(Event.COMPLETE,onLoadFinish);
 			loader.removeEventListener(ProgressEvent.PROGRESS,onProgress);
 			var data:Object = dllItemDic[loader];
-			delete dllItemDic[data];
+			delete dllItemDic[loader];
 			var dllItem:DllItem = data.item;
 			var compFunc:Function = data.func;
 			dllItem.loaded = (event.type==Event.COMPLETE);

@@ -10,19 +10,14 @@ package org.flexlite.domUI.events
 	 */	
 	public class ToolTipEvent extends Event
 	{
-		public static const TOOL_TIP_END:String = "toolTipEnd";
 		/**
-		 * 隐藏工具提示
+		 * 即将隐藏ToolTip
 		 */		
 		public static const TOOL_TIP_HIDE:String = "toolTipHide";
 		/**
-		 * 显示工具提示
+		 * 即将显示TooTip
 		 */		
 		public static const TOOL_TIP_SHOW:String = "toolTipShow";
-		
-		public static const TOOL_TIP_SHOWN:String = "toolTipShown";
-		
-		public static const TOOL_TIP_START:String = "toolTipStart";
 		
 		/**
 		 * 构造函数
@@ -36,7 +31,7 @@ package org.flexlite.domUI.events
 			this.toolTip = toolTip;
 		}
 		/**
-		 * 应用此事件的 ToolTip 对象。
+		 * 关联的ToolTip显示对象
 		 */		
 		public var toolTip:IToolTip;
 		

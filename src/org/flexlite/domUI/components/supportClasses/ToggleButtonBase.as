@@ -8,8 +8,19 @@ package org.flexlite.domUI.components.supportClasses
 	
 	use namespace dx_internal;
 	
-	
 	[Event(name="change", type="flash.events.Event")]
+	
+	[DXML(show="false")]
+	
+	[SkinState("up")]
+	[SkinState("over")]
+	[SkinState("down")]
+	[SkinState("disabled")]
+	[SkinState("upAndSelected")]
+	[SkinState("overAndSelected")]
+	[SkinState("downAndSelected")]
+	[SkinState("disabledAndSelected")]
+	
 	/**
 	 * 切换按钮组件基类
 	 * @author DOM
@@ -50,16 +61,19 @@ package org.flexlite.domUI.components.supportClasses
 			else
 				return super.getCurrentSkinState() + "AndSelected";
 		}
-		
+		/**
+		 * 是否根据鼠标事件自动变换选中状态,默认true。
+		 */		
+		dx_internal var autoSelected:Boolean = true;
 		/**
 		 * @inheritDoc
 		 */
 		override protected function buttonReleased():void
 		{
 			super.buttonReleased();
-			
+			if(!autoSelected||!enabled)
+				return;
 			selected = !selected;
-			
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 	}

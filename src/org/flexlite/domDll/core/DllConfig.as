@@ -43,6 +43,25 @@ package org.flexlite.domDll.core
 			return group;
 		}
 		/**
+		 * @inheritDoc
+		 */	
+		public function createGroup(name:String,keys:Array,override:Boolean=false):Boolean
+		{
+			if((!override&&groupDic[name])||!keys||keys.length==0)
+				return false;
+			var group:Array = [];
+			for each(var key:String in keys)
+			{
+				var item:Object = keyMap[key];
+				if(item&&group.indexOf(item)==-1)
+					group.push(item);
+			}
+			if(group.length==0)
+				return false;
+			groupDic[name] = group;
+			return true;
+		}
+		/**
 		 * 一级键名字典
 		 */		
 		private var keyMap:Dictionary = new Dictionary();
@@ -144,7 +163,7 @@ package org.flexlite.domDll.core
 			if(item.hasOwnProperty("subkeys"))
 			{
 				var subkeys:Array = String(item.subkeys).split(",");
-				delete item.subkeys;
+				item.subkeys = subkeys;
 				for each(var key:String in subkeys)
 				{
 					if(keyMap[key]!=null)

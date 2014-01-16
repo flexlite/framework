@@ -28,7 +28,7 @@ package org.flexlite.domUI.skins.vector
 		public function ComboBoxSkin()
 		{
 			super();
-			this.states = ["open","normal","disabled"];
+			this.states = ["normal","open","disabled"];
 		}
 		
 		public var dataGroup:DataGroup;
@@ -107,7 +107,8 @@ package org.flexlite.domUI.skins.vector
 					popUp.displayPopUp = true;
 					break;
 				case "normal":
-					popUp.displayPopUp = false;
+					if(popUp)
+						popUp.displayPopUp = false;
 					break;
 				case "disabled":
 					
@@ -164,6 +165,8 @@ package org.flexlite.domUI.skins.vector
 			popUp.popUpWidthMatchesAnchorWidth = true;
 			popUp.popUp = dropDown;
 			addElement(popUp);
+			if(hostComponent)
+				hostComponent.findSkinParts();
 		}
 		
 	}

@@ -18,6 +18,7 @@ package org.flexlite.domUI.skins
 		public function VectorSkin()
 		{
 			super();
+			this.states = ["normal","disabled"];
 		}
 		
 		/**

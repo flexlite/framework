@@ -12,7 +12,7 @@ package org.flexlite.domUI.layouts
 		public static const LEFT:String = "left";
 		
 		/**
-		 * 不将行两端对齐。 
+		 * 通过增大水平间隙将行两端对齐。
 		 */
 		public static const JUSTIFY_USING_GAP:String = "justifyUsingGap";
 		

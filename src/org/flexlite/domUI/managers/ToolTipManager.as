@@ -2,8 +2,8 @@ package org.flexlite.domUI.managers
 {
 	
 	import flash.display.DisplayObject;
-	import flash.events.EventDispatcher;
 	
+	import org.flexlite.domCore.Injector;
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IToolTip;
 	import org.flexlite.domUI.managers.impl.ToolTipManagerImpl;
@@ -12,10 +12,13 @@ package org.flexlite.domUI.managers
 	
 	
 	/**
-	 * 工具提示管理器
+	 * 工具提示管理器<p/>
+	 * 若项目需要自定义工具提示管理器，请实现IToolTipManager接口，
+	 * 并在项目初始化前调用Injector.mapClass(IToolTipManager,YourToolTipManager)，
+	 * 注入自定义的工具提示管理器类。
 	 * @author DOM
 	 */	
-	public class ToolTipManager extends EventDispatcher
+	public class ToolTipManager
 	{
 		/**
 		 * 构造函数
@@ -25,16 +28,23 @@ package org.flexlite.domUI.managers
 			super();
 		}
 
-		private static var _impl:ToolTipManagerImpl;
+		private static var _impl:IToolTipManager;
 		
 		/**
 		 * 获取单例
 		 */
-		private static function get impl():ToolTipManagerImpl
+		private static function get impl():IToolTipManager
 		{
 			if (!_impl)
 			{
-				_impl = new ToolTipManagerImpl();
+				try
+				{
+					_impl = Injector.getInstance(IToolTipManager);
+				}
+				catch(e:Error)
+				{
+					_impl = new ToolTipManagerImpl();
+				}
 			}
 			return _impl;
 		}

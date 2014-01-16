@@ -6,10 +6,10 @@ package org.flexlite.domUI.components.supportClasses
 	import flash.geom.Point;
 	import flash.utils.Timer;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Button;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.core.IViewport;
-	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.effects.animation.Animation;
 	import org.flexlite.domUI.effects.animation.MotionPath;
 	import org.flexlite.domUI.effects.easing.IEaser;
@@ -62,6 +62,13 @@ package org.flexlite.domUI.components.supportClasses
 			return _animator;
 		}
 		
+		/**
+		 * 用户在操作系统中可以设置将鼠标滚轮每滚动一个单位应滚动多少行。
+		 * 当使用鼠标滚轮滚动此组件的目标容器时，true表示根据用户系统设置的值滚动对应的行数。
+		 * false则忽略系统设置，始终只滚动一行。默认值为true。
+		 */
+		dx_internal var useMouseWheelDelta:Boolean
+
 		/**
 		 * 正在步进增大值的标志
 		 */		
@@ -286,7 +293,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 开始播放动画
 		 */		
-		private function startAnimation(duration:Number, valueTo:Number, 
+		dx_internal function startAnimation(duration:Number, valueTo:Number, 
 										easer:IEaser, startDelay:Number = 0):void
 		{
 			animator.stop();
@@ -323,17 +330,6 @@ package org.flexlite.domUI.components.supportClasses
 				_pageSize = nearestValidSize(_pageSize);
 				pageSizeChanged = false;
 			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override protected function getCurrentSkinState():String
-		{
-			if (maximum <= minimum)
-				return "inactive";
-			
-			return super.getCurrentSkinState();
 		}
 		
 		/**
@@ -695,7 +691,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 立即停止动画的播放
 		 */		
-		private function stopAnimation():void
+		dx_internal function stopAnimation():void
 		{
 			if (animator.isPlaying)
 				animationEndHandler(animator);
@@ -708,6 +704,8 @@ package org.flexlite.domUI.components.supportClasses
 		private function trackScrollTimerHandler(event:Event):void
 		{
 			var newScrollValue:Number = pointToValue(trackPosition.x, trackPosition.y);
+			if(newScrollValue==value)
+				return;
 			var fixedThumbSize:Boolean = _fixedThumbSize !== false;
 			if (trackScrollDown)
 			{

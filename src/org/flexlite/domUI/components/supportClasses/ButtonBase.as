@@ -28,6 +28,11 @@ package org.flexlite.domUI.components.supportClasses
 	
 	[DefaultProperty(name="label",array="false")]
 	
+	[SkinState("up")]
+	[SkinState("over")]
+	[SkinState("down")]
+	[SkinState("disabled")]
+	
 	/**
 	 * 按钮组件基类
 	 * @author DOM
@@ -44,6 +49,7 @@ package org.flexlite.domUI.components.supportClasses
 			buttonMode = true;
 			useHandCursor = true;
 			focusEnabled = true;
+			autoMouseEnabled = false;
 			addHandlers();
 		}
 		
@@ -505,7 +511,7 @@ package org.flexlite.domUI.components.supportClasses
 			text.right = 10;
 			text.top = 2;
 			text.bottom = 2;
-			addToDisplyList(text);
+			addToDisplayList(text);
 			labelDisplay = text;
 			partAdded("labelDisplay",labelDisplay);
 		}

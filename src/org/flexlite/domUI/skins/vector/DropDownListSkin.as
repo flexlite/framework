@@ -30,7 +30,7 @@ package org.flexlite.domUI.skins.vector
 		public function DropDownListSkin()
 		{
 			super();
-			this.states = ["open","normal","disabled"];
+			this.states = ["normal","open","disabled"];
 		}
 		
 		public var dataGroup:DataGroup;
@@ -42,6 +42,10 @@ package org.flexlite.domUI.skins.vector
 		public var popUp:PopUpAnchor;
 		
 		public var scroller:Scroller;
+		/**
+		 * 滚动条皮肤
+		 */		
+		public var scrollerSkinName:Object;
 		
 		public var labelDisplay:Label;
 		
@@ -134,7 +138,8 @@ package org.flexlite.domUI.skins.vector
 					popUp.displayPopUp = true;
 					break;
 				case "normal":
-					popUp.displayPopUp = false;
+					if(popUp)
+						popUp.displayPopUp = false;
 					break;
 				case "disabled":
 					
@@ -159,6 +164,8 @@ package org.flexlite.domUI.skins.vector
 			scroller.right = 2;
 			scroller.bottom = 2;
 			scroller.minViewportInset = 1;
+			if(scrollerSkinName)
+				scroller.skinName = scrollerSkinName;
 			scroller.viewport = dataGroup;
 			//dropShadow
 			var dropShadow:RectangularDropShadow = new RectangularDropShadow();
@@ -191,6 +198,8 @@ package org.flexlite.domUI.skins.vector
 			popUp.popUpWidthMatchesAnchorWidth = true;
 			popUp.popUp = dropDown;
 			addElement(popUp);
+			if(hostComponent)
+				hostComponent.findSkinParts();
 		}
 		
 	}

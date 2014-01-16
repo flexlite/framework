@@ -2,10 +2,14 @@ package org.flexlite.domUI.managers
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.UncaughtErrorEvent;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.DomGlobals;
 	import org.flexlite.domUI.events.UIEvent;
 	import org.flexlite.domUI.managers.layoutClass.DepthQueue;
+	
+	use namespace dx_internal;
 	
 	/**
 	 * 所有组件的一次三个延迟验证渲染阶段全部完成 
@@ -57,7 +61,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidatePropertiesQueue.shift();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateProperties();
 					if (!client.updateCompletePendingFlag)
@@ -100,7 +104,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidateSizeQueue.pop();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateSize();
 					if (!client.updateCompletePendingFlag)
@@ -140,7 +144,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidateDisplayListQueue.shift();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateDisplayList();
 					if (!client.updateCompletePendingFlag)
@@ -163,19 +167,39 @@ package org.flexlite.domUI.managers
 		 */		
 		private function attachListeners():void
 		{
-			DomGlobals.stage.addEventListener(Event.ENTER_FRAME,doPhasedInstantiation);
-			DomGlobals.stage.addEventListener(Event.RENDER, doPhasedInstantiation);
-			if(DomGlobals.stage)
-				DomGlobals.stage.invalidate();
+			DomGlobals.stage.addEventListener(Event.ENTER_FRAME,doPhasedInstantiationCallBack);
+			DomGlobals.stage.addEventListener(Event.RENDER, doPhasedInstantiationCallBack);
+			DomGlobals.stage.invalidate();
 			listenersAttached = true;
 		}
+		
 		/**
 		 * 执行属性应用
 		 */		
-		private function doPhasedInstantiation(event:Event=null):void
+		private function doPhasedInstantiationCallBack(event:Event=null):void
 		{
-			DomGlobals.stage.removeEventListener(Event.ENTER_FRAME,doPhasedInstantiation);
-			DomGlobals.stage.removeEventListener(Event.RENDER, doPhasedInstantiation);
+			DomGlobals.stage.removeEventListener(Event.ENTER_FRAME,doPhasedInstantiationCallBack);
+			DomGlobals.stage.removeEventListener(Event.RENDER, doPhasedInstantiationCallBack);
+			if(DomGlobals.catchCallLaterExceptions)
+			{
+				try
+				{
+					doPhasedInstantiation();
+				}
+				catch(e:Error)
+				{
+					var errorEvent:UncaughtErrorEvent = new UncaughtErrorEvent("callLaterError",false,true,e.getStackTrace());
+					DomGlobals.stage.dispatchEvent(errorEvent);
+				}
+			}
+			else
+			{
+				doPhasedInstantiation();
+			}
+		}
+		
+		private function doPhasedInstantiation():void
+		{
 			if (invalidatePropertiesFlag)
 			{
 				validateProperties();
@@ -184,7 +208,7 @@ package org.flexlite.domUI.managers
 			{
 				validateSize();
 			}
-				
+			
 			if (invalidateDisplayListFlag)
 			{
 				validateDisplayList();
@@ -209,7 +233,7 @@ package org.flexlite.domUI.managers
 					client.updateCompletePendingFlag = false;
 					client = updateCompleteQueue.pop();
 				}
-
+				
 				dispatchEvent(new UIEvent(UIEvent.UPDATE_COMPLETE));
 			}
 		}
@@ -220,7 +244,7 @@ package org.flexlite.domUI.managers
 		{
 			var infiniteLoopGuard:int = 0;
 			while (listenersAttached && infiniteLoopGuard++ < 100)
-				doPhasedInstantiation();
+				doPhasedInstantiationCallBack();
 		}
 		/**
 		 * 使大于等于指定组件层级的元素立即应用属性 
@@ -245,7 +269,7 @@ package org.flexlite.domUI.managers
 				obj = ILayoutManagerClient(invalidatePropertiesQueue.removeSmallestChild(target));
 				while (obj)
 				{
-					if (obj.hasParent)
+					if (obj.parent)
 					{
 						obj.validateProperties();
 						if (!obj.updateCompletePendingFlag)
@@ -266,7 +290,7 @@ package org.flexlite.domUI.managers
 				obj = ILayoutManagerClient(invalidateSizeQueue.removeLargestChild(target));
 				while (obj)
 				{
-					if (obj.hasParent)
+					if (obj.parent)
 					{
 						obj.validateSize();
 						if (!obj.updateCompletePendingFlag)
@@ -301,7 +325,7 @@ package org.flexlite.domUI.managers
 					obj = ILayoutManagerClient(invalidateDisplayListQueue.removeSmallestChild(target));
 					while (obj)
 					{
-						if (obj.hasParent)
+						if (obj.parent)
 						{
 							obj.validateDisplayList();
 							if (!obj.updateCompletePendingFlag)

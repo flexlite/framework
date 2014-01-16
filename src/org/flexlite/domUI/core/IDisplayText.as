@@ -10,7 +10,6 @@ package org.flexlite.domUI.core
 		 * 此文本组件所显示的文本。
 		 */		
 		function get text():String;
-		
 		function set text(value:String):void;
 	}
 }

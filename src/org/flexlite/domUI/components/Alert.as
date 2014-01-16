@@ -33,7 +33,8 @@ package org.flexlite.domUI.components
 		 * event的detail属性包含 Alert.FIRST_BUTTON、Alert.SECOND_BUTTON和Alert.CLOSE_BUTTON。
 		 * @param firstButtonLabel 第一个按钮上显示的文本。
 		 * @param secondButtonLabel 第二个按钮上显示的文本，若为null，则不显示第二个按钮。
-		 * @param modal 是否启用模态。即禁用弹出层以下的鼠标事件。默认true。
+		 * @param modal 是否启用模态。即禁用弹出框以下的鼠标事件。默认true。
+		 * @param center 是否居中。默认true。
 		 * @return 弹出的对话框实例的引用
 		 */		
 		public static function show(text:String="",title:String="",closeHandler:Function=null,
@@ -46,7 +47,7 @@ package org.flexlite.domUI.components
 			alert._firstButtonLabel = firstButtonLabel;
 			alert._secondButtonLabel = secondButtonLabel;
 			alert.closeHandler = closeHandler;
-			PopUpManager.addPopUp(alert,modal);
+			PopUpManager.addPopUp(alert,modal,center);
 			return alert;
 		}
 		/**
@@ -184,6 +185,7 @@ package org.flexlite.domUI.components
 			}
 			else if(instance==secondButton)
 			{
+				secondButton.label = _secondButtonLabel;
 				secondButton.includeInLayout = secondButton.visible
 					= (_secondButtonLabel!=""&&_secondButtonLabel!=null);
 				secondButton.addEventListener(MouseEvent.CLICK,onClose);

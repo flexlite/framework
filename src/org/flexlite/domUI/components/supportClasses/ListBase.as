@@ -6,10 +6,8 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.collections.ICollection;
-
 	import org.flexlite.domUI.components.IItemRenderer;
 	import org.flexlite.domUI.components.SkinnableDataContainer;
-
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.CollectionEvent;
 	import org.flexlite.domUI.events.CollectionEventKind;
@@ -17,7 +15,6 @@ package org.flexlite.domUI.components.supportClasses
 	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
 	import org.flexlite.domUI.events.UIEvent;
-
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
 
 	use namespace dx_internal;
@@ -45,7 +42,7 @@ package org.flexlite.domUI.components.supportClasses
 	 */	
 	[Event(name="change", type="org.flexlite.domUI.events.IndexChangeEvent")]
 	/**
-	 * 属性提交事件
+	 * 属性改变事件
 	 */	
 	[Event(name="valueCommit", type="org.flexlite.domUI.events.UIEvent")]
 
@@ -155,7 +152,7 @@ package org.flexlite.domUI.components.supportClasses
 			if (value == _labelFunction)
 				return 
 				
-				_labelFunction = value;
+			_labelFunction = value;
 			labelFieldOrFunctionChanged = true;
 			invalidateProperties(); 
 		}
@@ -192,7 +189,7 @@ package org.flexlite.domUI.components.supportClasses
 		 */
 		dx_internal var _proposedSelectedIndex:int = NO_PROPOSED_SELECTION;
 		
-		private var _selectedIndex:int = NO_SELECTION;
+		dx_internal var _selectedIndex:int = NO_SELECTION;
 		
 		/**
 		 * 选中项目的基于 0 的索引。<br/>
@@ -220,7 +217,7 @@ package org.flexlite.domUI.components.supportClasses
 		/**
 		 * 索引改变后是否需要抛出事件 
 		 */		
-		private var dispatchChangeAfterSelection:Boolean = false;
+		dx_internal var dispatchChangeAfterSelection:Boolean = false;
 		
 		/**
 		 * 设置选中项
@@ -368,9 +365,6 @@ package org.flexlite.domUI.components.supportClasses
 					dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
 				}
 			}
-			
-			if(dispatchChangeAfterSelection)
-				dispatchChangeAfterSelection = false;
 			
 			if (labelFieldOrFunctionChanged)
 			{
@@ -544,6 +538,7 @@ package org.flexlite.domUI.components.supportClasses
 					dataProvider && dataProvider.length > 0)
 				{
 					_proposedSelectedIndex = NO_PROPOSED_SELECTION;
+					dispatchChangeAfterSelection = false;
 					return false;
 				}
 			}
@@ -559,8 +554,10 @@ package org.flexlite.domUI.components.supportClasses
 				{
 					itemSelected(_proposedSelectedIndex, false);
 					_proposedSelectedIndex = NO_PROPOSED_SELECTION;
+					dispatchChangeAfterSelection = false;
 					return false;
 				}
+				
 			}
 			
 			_selectedIndex = tmpProposedIndex;
@@ -615,11 +612,11 @@ package org.flexlite.domUI.components.supportClasses
 			if (selectedIndex == NO_SELECTION)
 			{
 				if (requireSelection)
-					adjustSelection(index);
+					adjustSelection(index,true);
 			}
 			else if (index <= selectedIndex)
 			{
-				adjustSelection(selectedIndex + 1);
+				adjustSelection(selectedIndex + 1,true);
 			}
 		}
 		
@@ -644,22 +641,13 @@ package org.flexlite.domUI.components.supportClasses
 						setSelectedIndex(0, false);
 				}
 				else
-					adjustSelection(-1);
+					adjustSelection(-1,false);
 			}
 			else if (index < selectedIndex)
 			{
-				adjustSelection(selectedIndex - 1);
+				adjustSelection(selectedIndex - 1,false);
 			}
 		}
-		
-		/**
-		 * 数据源刷新
-		 */
-		protected function dataProviderRefreshed():void
-		{
-			setSelectedIndex(NO_SELECTION, false);
-		}
-		
 		
 		
 		/**
@@ -674,7 +662,6 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.addEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.addEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.addEventListener(MouseEvent.CLICK, item_mouseEventHandler,false,-50);
 		}
 		/**
 		 * 项呈示器被移除
@@ -688,11 +675,10 @@ package org.flexlite.domUI.components.supportClasses
 			
 			renderer.removeEventListener(MouseEvent.ROLL_OVER, item_mouseEventHandler);
 			renderer.removeEventListener(MouseEvent.ROLL_OUT, item_mouseEventHandler);
-			renderer.removeEventListener(MouseEvent.CLICK, item_mouseEventHandler);
 		}
 		
 		private static const TYPE_MAP:Object = {rollOver:"itemRollOver",
-			rollOut:"itemRollOut",click:"itemClick"};
+			rollOut:"itemRollOut"};
 		
 		/**
 		 * 项呈示器鼠标事件
@@ -704,69 +690,81 @@ package org.flexlite.domUI.components.supportClasses
 			if (hasEventListener(type))
 			{
 				var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
-				
-				var itemIndex:int = -1;
-				if (itemRenderer)
-					itemIndex = itemRenderer.itemIndex;
-				else
-					itemIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
-				
-				var listEvent:ListEvent = new ListEvent(type, false, false,
-					event.localX,
-					event.localY,
-					event.relatedObject,
-					event.ctrlKey,
-					event.altKey,
-					event.shiftKey,
-					event.buttonDown,
-					event.delta,
-					itemIndex,
-					dataProvider.getItemAt(itemIndex),
-					itemRenderer);
-				dispatchEvent(listEvent);
+				dispatchListEvent(event,type,itemRenderer);
 			}
+		}
+		/**
+		 * 抛出列表事件
+		 * @param mouseEvent 相关联的鼠标事件
+		 * @param type 事件名称
+		 * @param itemRenderer 关联的条目渲染器实例
+		 */		
+		dx_internal function dispatchListEvent(mouseEvent:MouseEvent,type:String,itemRenderer:IItemRenderer):void
+		{
+			var itemIndex:int = -1;
+			if (itemRenderer)
+				itemIndex = itemRenderer.itemIndex;
+			else
+				itemIndex = dataGroup.getElementIndex(mouseEvent.currentTarget as IVisualElement);
+
+			var listEvent:ListEvent = new ListEvent(type, false, false,
+				mouseEvent.localX,
+				mouseEvent.localY,
+				mouseEvent.relatedObject,
+				mouseEvent.ctrlKey,
+				mouseEvent.altKey,
+				mouseEvent.shiftKey,
+				mouseEvent.buttonDown,
+				mouseEvent.delta,
+				itemIndex,
+				dataProvider.getItemAt(itemIndex),
+				itemRenderer);
+			dispatchEvent(listEvent);
 		}
 		
 		/**
 		 * 数据源发生改变
 		 */
-		protected function dataProvider_collectionChangeHandler(event:Event):void
+		protected function dataProvider_collectionChangeHandler(event:CollectionEvent):void
 		{
-			if (event is CollectionEvent)
+			var items:Array = event.items;
+			if (event.kind == CollectionEventKind.ADD)
 			{
-				var ce:CollectionEvent = CollectionEvent(event);
-				
-				if (ce.kind == CollectionEventKind.ADD)
+				var length:int = items.length;
+				for (var i:int = 0; i < length; i++)
 				{
-					itemAdded(ce.location);
-				}
-				else if (ce.kind == CollectionEventKind.REMOVE)
-				{
-					itemRemoved(ce.location);
-				}
-				else if (ce.kind == CollectionEventKind.RESET)
-				{
-					if (dataProvider.length == 0)
-					{
-						setSelectedIndex(NO_SELECTION, false);
-					}
-					else
-					{
-						dataProviderChanged = true; 
-						invalidateProperties(); 
-					}
-				}
-				else if (ce.kind == CollectionEventKind.REFRESH)
-				{
-					dataProviderRefreshed();
-				}
-				else if (ce.kind == CollectionEventKind.REPLACE ||
-					ce.kind == CollectionEventKind.MOVE)
-				{
-					
+					itemAdded(event.location + i);
 				}
 			}
-			
+			else if (event.kind == CollectionEventKind.REMOVE)
+			{
+				length = items.length;
+				for (i = length-1; i >= 0; i--)
+				{
+					itemRemoved(event.location + i);
+				}
+			}
+			else if (event.kind == CollectionEventKind.MOVE)
+			{
+				itemRemoved(event.oldLocation);
+				itemAdded(event.location);
+			}
+			else if (event.kind == CollectionEventKind.RESET)
+			{
+				if (dataProvider.length == 0)
+				{
+					setSelectedIndex(NO_SELECTION, false);
+				}
+				else
+				{
+					dataProviderChanged = true; 
+					invalidateProperties(); 
+				}
+			}
+			else if (event.kind == CollectionEventKind.REFRESH)
+			{
+				setSelectedIndex(NO_SELECTION, false);
+			}
 		}
 	}
 }

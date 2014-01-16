@@ -2,6 +2,7 @@ package org.flexlite.domUI.components
 {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
@@ -154,7 +155,9 @@ package org.flexlite.domUI.components
 				animationEndHandler(animator);
 				animator.stop();
 			}
-			animator.duration = _pageDuration;
+			var pageSize:Number = Math.max(1,_viewport.width);
+			var duration:Number = Math.abs(valueTo-valueFrom)/pageSize*_pageDuration;
+			animator.duration = int(Math.min(_pageDuration,duration));
 			animator.motionPaths = new <MotionPath>[
 				new MotionPath("scrollPosition", valueFrom, valueTo)];
 			animator.play();
@@ -176,19 +179,28 @@ package org.flexlite.domUI.components
 			return (pageIndex+1)+"/"+totalPages;
 		}
 		
-		private var _currentPage:int = -1;
+		/**
+		 * 未设置缓存选中项的值
+		 */
+		private static const NO_PROPOSED_PAGE:int = -2;
+		/**
+		 * 在属性提交前缓存外部显式设置的页码值
+		 */
+		dx_internal var proposedCurrentPage:int = NO_PROPOSED_PAGE;
+		
+		private var _currentPage:int = 0;
 		/**
 		 * 当前页码索引，从0开始。
 		 */
 		public function get currentPage():int
 		{
-			return _currentPage;
+			return proposedCurrentPage == NO_PROPOSED_PAGE ?
+				_currentPage : proposedCurrentPage;
 		}
 		
 		public function set currentPage(value:int):void
 		{
-			_currentPage = value;
-			callLater(gotoPage,[value]);
+			gotoPage(value);
 		}
 		
 		private var _totalPages:int = 0;
@@ -212,7 +224,7 @@ package org.flexlite.domUI.components
 		
 		public function set viewport(value:IViewport):void
 		{
-			if (value == _viewport)
+			if(value == _viewport)
 				return;
 			
 			uninstallViewport();
@@ -229,7 +241,7 @@ package org.flexlite.domUI.components
 			if (contentGroup&&_viewport)
 			{
 				_viewport.clipAndEnableScrolling = true;
-				_viewport.percentHeight = _viewport.percentWidth = 100;
+				_viewport.left = _viewport.right = _viewport.top = _viewport.bottom = 0;
 				contentGroup.addElementAt(_viewport, 0);
 				_viewport.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
@@ -264,7 +276,7 @@ package org.flexlite.domUI.components
 			if (skin && _viewport)
 			{
 				_viewport.clipAndEnableScrolling = false;
-				_viewport.percentHeight = _viewport.percentWidth = NaN;
+				_viewport.left = _viewport.right = _viewport.top = _viewport.bottom = NaN;
 				contentGroup.removeElement(_viewport);
 				_viewport.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
 				_viewport.removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);	
@@ -285,11 +297,14 @@ package org.flexlite.domUI.components
 		 */		
 		private function onLayoutChanged(event:Event=null):void
 		{
+			var oldDirection:Boolean = pageDirectionIsVertical;
 			pageDirectionIsVertical = updateDirection();
+			if(pageDirectionIsVertical!=oldDirection)
+				updateaTotalPages();
 			if(event.type=="layoutChanged"&&_viewport is GroupBase)
 			{
 				var layout:LayoutBase = (_viewport as GroupBase).layout;
-				if(layout&&!layout.hasEventListener("gapChanged"))
+				if(layout&&!layout.hasEventListener("orientationChanged"))
 				{
 					layout.addEventListener("orientationChanged",onLayoutChanged,false,0,true);
 				}
@@ -383,15 +398,17 @@ package org.flexlite.domUI.components
 			checkButtonEnabled();
 		}
 
+		private var scrollPostionMap:Array = [0];
 		/**
 		 * 更新总页码
 		 */		
 		private function updateaTotalPages():void
 		{
 			totalPagesChanged = false;
-			if(!_viewport||(_animator&&_animator.isPlaying))
+			if(!_viewport)
 				return;
 			adjustingScrollPostion = true;
+			scrollPostionMap = [0];
 			_totalPages = 1;
 			var oldScrollPostion:Number;
 			var maxScrollPostion:Number;
@@ -400,7 +417,8 @@ package org.flexlite.domUI.components
 			{
 				oldScrollPostion = _viewport.verticalScrollPosition;
 				_viewport.verticalScrollPosition = 0;
-				maxScrollPostion = _viewport.contentHeight-_viewport.height;
+				maxScrollPostion = _viewport.contentHeight-Math.max(0,_viewport.height);
+				maxScrollPostion = Math.min(_viewport.contentHeight,maxScrollPostion);
 				while(_viewport.verticalScrollPosition<maxScrollPostion)
 				{
 					_viewport.verticalScrollPosition += 
@@ -408,8 +426,8 @@ package org.flexlite.domUI.components
 					if(!currentPageFoud&&_viewport.verticalScrollPosition>oldScrollPostion)
 					{
 						currentPageFoud = true;
-						_currentPage = _totalPages-1;
 					}
+					scrollPostionMap[_totalPages] = _viewport.verticalScrollPosition;
 					_totalPages++;
 				}
 				var h:Number = isNaN(_viewport.height)?0:_viewport.height;
@@ -420,7 +438,8 @@ package org.flexlite.domUI.components
 			{
 				oldScrollPostion = _viewport.horizontalScrollPosition;
 				_viewport.horizontalScrollPosition = 0;
-				maxScrollPostion = _viewport.contentWidth-_viewport.width;
+				maxScrollPostion = _viewport.contentWidth-Math.max(0,_viewport.width);
+				maxScrollPostion = Math.min(_viewport.contentWidth,maxScrollPostion);
 				while(_viewport.horizontalScrollPosition<maxScrollPostion)
 				{
 					_viewport.horizontalScrollPosition += 
@@ -428,8 +447,8 @@ package org.flexlite.domUI.components
 					if(!currentPageFoud&&_viewport.horizontalScrollPosition>oldScrollPostion)
 					{
 						currentPageFoud = true;
-						_currentPage = _totalPages-1;
 					}
+					scrollPostionMap[_totalPages] = _viewport.horizontalScrollPosition;
 					_totalPages++;
 				}
 				var w:Number = isNaN(_viewport.width)?0:_viewport.width;
@@ -437,97 +456,86 @@ package org.flexlite.domUI.components
 					= Math.max(0,Math.min(oldScrollPostion,_viewport.contentWidth-w));
 				
 			}
-			if(!currentPageFoud)
+			if(_animator&&_animator.isPlaying)
 			{
-				_currentPage = totalPages-1;
+				proposedCurrentPage = _currentPage;
+				doChangePage();
 			}
-			checkButtonEnabled();
-			if(labelDisplay)
-				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+			else
+			{
+				if(_currentPage>_totalPages-1)
+					_currentPage = _totalPages-1;
+				checkButtonEnabled();
+				if(labelDisplay)
+					labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+				if(pageDirectionIsVertical)
+				{
+					_viewport.verticalScrollPosition = scrollPostionMap[_currentPage];
+				}
+				else
+				{
+					_viewport.horizontalScrollPosition = scrollPostionMap[_currentPage];
+				}
+			}
 			adjustingScrollPostion = false;
 		}
 		
+		private var pageIndexChanged:Boolean = false;
 		/**
 		 * 跳转到指定索引的页面
 		 */			
 		private function gotoPage(index:int):void
 		{
-			if(!_viewport)
-				return;
 			if(index<0)
 				index = 0;
-			if(index>_totalPages-1)
-				index = _totalPages-1;
-			adjustingScrollPostion = true;
-			var length:int = Math.abs(_currentPage-index);
-			var i:int;
-			var navigatorUint:uint;
-			var oldScrollPostion:Number;
-			if(pageDirectionIsVertical)
-			{
-				oldScrollPostion = _viewport.verticalScrollPosition;
-				if(index==0)
-				{
-					_viewport.verticalScrollPosition += 
-						_viewport.getVerticalScrollPositionDelta(NavigationUnit.HOME);
-				}
-				else if(index==_totalPages-1)
-				{
-					_viewport.verticalScrollPosition += 
-						_viewport.getVerticalScrollPositionDelta(NavigationUnit.END);
-				}
-				else
-				{
-					navigatorUint = index<_currentPage?NavigationUnit.PAGE_UP:NavigationUnit.PAGE_DOWN;
-					for(i=0;i<length;i++)
-					{
-						_viewport.verticalScrollPosition += 
-							_viewport.getVerticalScrollPositionDelta(navigatorUint);
-					}
-				}
-			}
-			else
-			{
-				oldScrollPostion = _viewport.horizontalScrollPosition;
-				if(index==0)
-				{
-					_viewport.horizontalScrollPosition += 
-						_viewport.getHorizontalScrollPositionDelta(NavigationUnit.HOME);
-				}
-				else if(index==_totalPages-1)
-				{
-					_viewport.horizontalScrollPosition += 
-						_viewport.getHorizontalScrollPositionDelta(NavigationUnit.END);
-				}
-				else
-				{
-					navigatorUint = index<_currentPage?NavigationUnit.PAGE_LEFT:NavigationUnit.PAGE_RIGHT;
-					for(i=0;i<length;i++)
-					{
-						_viewport.horizontalScrollPosition += 
-							_viewport.getHorizontalScrollPositionDelta(navigatorUint);
-					}
-				}
-			}
-			_currentPage = index;
+			proposedCurrentPage = index;
+			if(pageIndexChanged)
+				return;
+			pageIndexChanged = true;
+			callLater(doChangePage);
+		}
+		
+		/**
+		 * 执行翻页操作
+		 */		
+		private function doChangePage():void
+		{
+			pageIndexChanged = false;
+			if(!_viewport)
+				return;
+			_currentPage = proposedCurrentPage;
+			if(_currentPage>_totalPages-1)
+				_currentPage = _totalPages-1;
 			checkButtonEnabled();
 			if(labelDisplay)
 				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+			
+			destScrollPostion = scrollPostionMap[_currentPage];
 			if(_pageDuration>0&&stage)
 			{
+				var oldScrollPostion:Number;
 				if(pageDirectionIsVertical)
 				{
-					destScrollPostion = _viewport.verticalScrollPosition;
-					_viewport.verticalScrollPosition = oldScrollPostion;
+					oldScrollPostion = _viewport.verticalScrollPosition;
 				}
 				else
 				{
-					destScrollPostion = _viewport.horizontalScrollPosition;
-					_viewport.horizontalScrollPosition = oldScrollPostion;
+					oldScrollPostion = _viewport.horizontalScrollPosition;
 				}
 				startAnimation(oldScrollPostion,destScrollPostion);
 			}
-			adjustingScrollPostion = false;
+			else
+			{
+				if(pageDirectionIsVertical)
+				{
+					_viewport.verticalScrollPosition = destScrollPostion;
+				}
+				else
+				{
+					_viewport.horizontalScrollPosition = destScrollPostion;
+				}
+			}
+			proposedCurrentPage = NO_PROPOSED_PAGE;
 		}
 		/**
 		 * 检查页码并设置按钮禁用状态
@@ -540,11 +548,11 @@ package org.flexlite.domUI.components
 			var last:Boolean = false;
 			if(_totalPages>1)
 			{
-				if(_currentPage<_totalPages-1)
+				if(currentPage<_totalPages-1)
 				{
 					last = next = true;
 				}
-				if(_currentPage>0)
+				if(currentPage>0)
 				{
 					first = prev = true;
 				}
@@ -617,7 +625,7 @@ package org.flexlite.domUI.components
 			}
 			else if(instance==labelDisplay)
 			{
-				labelDisplay.text = pageToLabel(_currentPage,_totalPages);
+				labelDisplay.text = pageToLabel(currentPage,_totalPages);
 			}
 		}
 		
@@ -669,7 +677,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			gotoPage(_currentPage+1);
+			gotoPage(Math.min(_totalPages-1,currentPage+1));
 		}
 		/**
 		 * "上一页"按钮被点击
@@ -678,7 +686,7 @@ package org.flexlite.domUI.components
 		{
 			if(!_viewport)
 				return;
-			gotoPage(_currentPage-1);
+			gotoPage(currentPage-1);
 		}
 		
 		
@@ -691,9 +699,9 @@ package org.flexlite.domUI.components
 			if (event.isDefaultPrevented() || !vp || !vp.visible)
 				return;
 			if(event.delta>0)
-				gotoPage(_currentPage-1);
+				gotoPage(currentPage-1);
 			else
-				gotoPage(_currentPage+1);
+				gotoPage(Math.min(_totalPages-1,currentPage+1));
 			event.preventDefault();
 			
 		}

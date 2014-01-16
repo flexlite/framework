@@ -17,8 +17,9 @@ package org.flexlite.domDll.resolvers
 	import org.flexlite.domUtils.SharedMap;
 	
 	/**
-	 * SWF文件解析器<br/>
+	 * SWF素材文件解析器<br/>
 	 * 在IOS下将swf加载到当前程序域。其他平台默认加载到子程序域。
+	 * 若是共享的代码库，只能加载到当前域的，请使用RslResolver。
 	 * @author DOM
 	 */
 	public class SwfResolver implements IResolver
@@ -30,11 +31,11 @@ package org.flexlite.domDll.resolvers
 		{
 			super();
 			if(Capabilities.os.substr(0,9)=="iPhone OS")
-				inIOS = true;
+				loadInCurrentDomain = true;
 		}
 		
 		/**
-		 * 字节流数据缓存字典
+		 * Loader对象缓存字典
 		 */		
 		private var swfDic:Dictionary = new Dictionary;
 		/**
@@ -53,7 +54,7 @@ package org.flexlite.domDll.resolvers
 		/**
 		 * 在IOS系统中运行的标志
 		 */		
-		private var inIOS:Boolean = false;
+		protected var loadInCurrentDomain:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
@@ -70,7 +71,7 @@ package org.flexlite.domDll.resolvers
 			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,onProgress);
 			dllItemDic[loader] = {item:dllItem,func:compFunc,progress:progressFunc};
 			loadingCount++;
-			if(inIOS)
+			if(loadInCurrentDomain)
 			{
 				var loaderContext:LoaderContext = 
 					new LoaderContext(false,ApplicationDomain.currentDomain);
@@ -108,7 +109,7 @@ package org.flexlite.domDll.resolvers
 				if(!swfDic[dllItem.name])
 				{
 					swfDic[dllItem.name] = loader;
-					if(!inIOS)
+					if(!loadInCurrentDomain)
 						appDomainList.push(loader.contentLoaderInfo.applicationDomain);
 				}
 			}
@@ -138,7 +139,19 @@ package org.flexlite.domDll.resolvers
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,checkAsyncList); 
 			nameDic[loader] = name;
 			loadingCount++;
-			loader.loadBytes(bytes);
+			var loaderContext:LoaderContext;
+			if(loadInCurrentDomain)
+			{
+				loaderContext = new LoaderContext(false,ApplicationDomain.currentDomain);
+				
+			}
+			else
+			{
+				loaderContext = new LoaderContext();
+			}
+			if(loaderContext.hasOwnProperty("allowCodeImport"))
+				loaderContext["allowCodeImport"] = true;
+			loader.loadBytes(bytes,loaderContext);
 		}
 		
 		/**
@@ -151,7 +164,7 @@ package org.flexlite.domDll.resolvers
 			delete nameDic[loader];
 			swfDic[name] = loader;
 			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, bytesComplete); 
-			if(!inIOS)
+			if(!loadInCurrentDomain)
 				appDomainList.push(loader.contentLoaderInfo.applicationDomain);
 			checkAsyncList();
 		}
@@ -227,15 +240,16 @@ package org.flexlite.domDll.resolvers
 		{
 			if(swfDic[name])
 			{
-				var domain:ApplicationDomain = (swfDic[name] as Loader).contentLoaderInfo.applicationDomain;
-				if(domain==ApplicationDomain.currentDomain)
-					
-				for(var i:int=0;i<appDomainList.length>0;i++)
+				if(!loadInCurrentDomain)
 				{
-					if(appDomainList[i]==domain)
+					var domain:ApplicationDomain = (swfDic[name] as Loader).contentLoaderInfo.applicationDomain;
+					for(var i:int=0;i<appDomainList.length>0;i++)
 					{
-						appDomainList.splice(i,1);
-						break;
+						if(appDomainList[i]==domain)
+						{
+							appDomainList.splice(i,1);
+							break;
+						}
 					}
 				}
 				delete swfDic[name];

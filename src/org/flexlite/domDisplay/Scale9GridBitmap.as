@@ -1,5 +1,6 @@
 package org.flexlite.domDisplay
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Shape;
@@ -63,6 +64,10 @@ package org.flexlite.domDisplay
 		 * 要绘制到的目标Graphics对象。
 		 */		
 		private var target:Graphics;
+		/**
+		 * bitmapData发生改变
+		 */		
+		private var bitmapDataChanged:Boolean = false;
 		
 		private var _bitmapData:BitmapData;
 		/**
@@ -82,7 +87,12 @@ package org.flexlite.domDisplay
 			cachedDestGrid = null;
 			if(value)
 			{
-				applyBitmapData();
+				if(!widthExplicitSet)
+					_width = _bitmapData.width-filterWidth;
+				if(!heightExplicitSet)
+					_height = _bitmapData.height-filterHeight;
+				bitmapDataChanged = true;
+				invalidateProperties();
 			}
 			else
 			{
@@ -111,7 +121,7 @@ package org.flexlite.domDisplay
 		 */
 		override public function set scale9Grid(value:Rectangle):void
 		{
-			if(value==_scale9Grid)
+			if(value&&_scale9Grid&&value.equals(_scale9Grid))
 				return;
 			cachedDestGrid = null;
 			cachedSourceGrid = null;
@@ -254,9 +264,10 @@ package org.flexlite.domDisplay
 		 */
 		protected function commitProperties():void
 		{
-			if(widthChanged||heightChanged||scale9GridChanged||offsetPointChanged||smoothingChanged)
+			if(bitmapDataChanged||widthChanged||heightChanged||
+				scale9GridChanged||offsetPointChanged||smoothingChanged)
 			{
-				if(bitmapData)
+				if(_bitmapData)
 					applyBitmapData();
 				scale9GridChanged = false;
 				offsetPointChanged = false;
@@ -264,14 +275,6 @@ package org.flexlite.domDisplay
 			}
 		}
 
-		/**
-		 * 缓存的源九宫格网格坐标数据
-		 */		
-		private var cachedSourceGrid:Array;
-		/**
-		 * 缓存的目标九宫格网格坐标数据
-		 */		
-		private var cachedDestGrid:Array;
 		/**
 		 * 滤镜宽度,在子类中赋值
 		 */		
@@ -281,16 +284,19 @@ package org.flexlite.domDisplay
 		 */		
 		dx_internal var filterHeight:Number = 0;
 		/**
+		 * 缓存的源九宫格网格坐标数据
+		 */		
+		private var cachedSourceGrid:Array;
+		/**
+		 * 缓存的目标九宫格网格坐标数据
+		 */		
+		private var cachedDestGrid:Array;
+		/**
 		 * 应用bitmapData属性
 		 */		
 		private function applyBitmapData():void
 		{
 			target.clear();
-			if(!widthExplicitSet)
-				_width = _bitmapData.width-filterWidth;
-			if(!heightExplicitSet)
-				_height = _bitmapData.height-filterHeight;
-			
 			if(_scale9Grid)
 			{
 				if(widthChanged||heightChanged)
@@ -334,11 +340,26 @@ package org.flexlite.domDisplay
 			{
 				offset = new Point();
 			}
-			var roundedDrawX:Number = Math.round(offset.x);
-			var roundedDrawY:Number = Math.round(offset.y);
+			var roundedDrawX:Number = Math.round(offset.x*width/bitmapData.width);
+			var roundedDrawY:Number = Math.round(offset.y*height/bitmapData.height);
 			var s9g:Rectangle = new Rectangle(
-				target.scale9Grid.x-roundedDrawX,target.scale9Grid.y-roundedDrawY,
+				target.scale9Grid.x-Math.round(offset.x),target.scale9Grid.y-Math.round(offset.y),
 				target.scale9Grid.width,target.scale9Grid.height);
+			//防止空心的情况出现。
+			if(s9g.top==s9g.bottom)
+			{
+				if(s9g.bottom<bitmapData.height)
+					s9g.bottom ++;
+				else
+					s9g.top --;
+			}
+			if(s9g.left==s9g.right)
+			{
+				if(s9g.right<bitmapData.width)
+					s9g.right ++;
+				else
+					s9g.left --;
+			}
 			var cachedSourceGrid:Array = target.cachedSourceGrid;
 			if (cachedSourceGrid == null)
 			{
@@ -396,9 +417,11 @@ package org.flexlite.domDisplay
 					
 					destSection.topLeft = cachedDestGrid[rowIndex][colIndex];
 					destSection.bottomRight = cachedDestGrid[rowIndex+1][colIndex+1];
-					
+					if(destSection.width==0||destSection.height==0||
+						sourceSection.width==0||sourceSection.height==0)
+						continue;
 					matrix.identity();
-					matrix.scale(destSection.width / sourceSection.width, destSection.height / sourceSection.height);
+					matrix.scale(destSection.width / sourceSection.width,destSection.height / sourceSection.height);
 					matrix.translate(destSection.x - sourceSection.x * matrix.a, destSection.y - sourceSection.y * matrix.d);
 					matrix.translate(roundedDrawX, roundedDrawY);
 					

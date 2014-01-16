@@ -4,14 +4,12 @@ package org.flexlite.domUI.managers.impl
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
-	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.sensors.Accelerometer;
 	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	
@@ -27,6 +25,7 @@ package org.flexlite.domUI.managers.impl
 	import org.flexlite.domUI.events.ToolTipEvent;
 	import org.flexlite.domUI.managers.ILayoutManagerClient;
 	import org.flexlite.domUI.managers.ISystemManager;
+	import org.flexlite.domUI.managers.IToolTipManager;
 	import org.flexlite.domUI.managers.IToolTipManagerClient;
 	import org.flexlite.domUtils.SharedMap;
 	
@@ -38,7 +37,7 @@ package org.flexlite.domUI.managers.impl
 	 * 工具提示管理器实现类
 	 * @author DOM
 	 */	
-	public class ToolTipManagerImpl extends EventDispatcher
+	public class ToolTipManagerImpl implements IToolTipManager
 	{
 		/**
 		 * 构造函数
@@ -208,7 +207,7 @@ package org.flexlite.domUI.managers.impl
 		 * @param oldToolTip 之前的ToolTip数据
 		 * @param newToolTip 现在的ToolTip数据
 		 */		
-		dx_internal function registerToolTip(target:DisplayObject,
+		public function registerToolTip(target:DisplayObject,
 										oldToolTip:Object,
 										newToolTip:Object):void
 		{
@@ -231,6 +230,11 @@ package org.flexlite.domUI.managers.impl
 					toolTipMouseOutHandler);
 				if (mouseIsOver(target))
 					hideImmediately(target);
+			}
+			else if(hasNew&&currentToolTip&&currentTarget===target)
+			{
+				currentTipData = newToolTip;
+				initializeTip();
 			}
 		}
 		/**
@@ -322,17 +326,9 @@ package org.flexlite.domUI.managers.impl
 			
 			if (previousTarget && currentToolTip)
 			{
-				if (currentToolTip is IToolTip)
-				{
-					event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);
-					event.toolTip = currentToolTip;
-					previousTarget.dispatchEvent(event);
-				}
-				else
-				{
-					if (hasEventListener(ToolTipEvent.TOOL_TIP_HIDE))
-						dispatchEvent(new Event(ToolTipEvent.TOOL_TIP_HIDE));
-				}
+				event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);
+				event.toolTip = currentToolTip;
+				previousTarget.dispatchEvent(event);
 			}   
 			
 			reset();
@@ -340,10 +336,8 @@ package org.flexlite.domUI.managers.impl
 			if (currentTarget)
 			{
 				
-				if (currentTipData==null||currentTipData == "")
+				if (!currentTipData)
 					return;
-				event = new ToolTipEvent(ToolTipEvent.TOOL_TIP_START);
-				currentTarget.dispatchEvent(event);
 				
 				if (_showDelay==0||showImmediatelyFlag||scrubTimer.running)
 				{
@@ -379,12 +373,11 @@ package org.flexlite.domUI.managers.impl
 			{
 				currentToolTip = new tipClass();
 				toolTipCacheMap.set(key,currentToolTip);
+				if(currentToolTip is InteractiveObject)
+					InteractiveObject(currentToolTip).mouseEnabled = false;
+				if(currentToolTip is DisplayObjectContainer)
+					DisplayObjectContainer(currentToolTip).mouseChildren = false;
 			}
-			if(currentToolTip is InteractiveObject)
-				InteractiveObject(currentToolTip).mouseEnabled = false;
-			if(currentToolTip is DisplayObjectContainer)
-				DisplayObjectContainer(currentToolTip).mouseChildren = false;
-			currentToolTip.visible = false;
 			toolTipContainer.addElement(currentToolTip);
 		}
 		/**
@@ -404,19 +397,10 @@ package org.flexlite.domUI.managers.impl
 		 */		
 		private function initializeTip():void
 		{
-			if (currentToolTip is IToolTip)
-				IToolTip(currentToolTip).toolTipData = currentTipData;
+			currentToolTip.toolTipData = currentTipData;
 			
-			sizeTip(currentToolTip);
-		}
-		/**
-		 * 设置ToolTip大小
-		 */		
-		private function sizeTip(toolTip:IToolTip):void
-		{
-			if (toolTip is IInvalidating)
-				IInvalidating(toolTip).validateNow();
-			toolTip.setActualSize(toolTip.preferredWidth,toolTip.preferredHeight);
+			if (currentToolTip is IInvalidating)
+				IInvalidating(currentToolTip).validateNow();
 		}
 		/**
 		 * 设置ToolTip位置
@@ -425,12 +409,12 @@ package org.flexlite.domUI.managers.impl
 		{
 			var x:Number;
 			var y:Number;
-			var dp:DisplayObject = currentToolTip as DisplayObject;
-			var sm:DisplayObjectContainer = dp.parent;
-			var toolTipRect:Rectangle = dp.getBounds(dp);
+			var sm:DisplayObjectContainer = currentToolTip.parent;
+			var toolTipWidth:Number = currentToolTip.layoutBoundsWidth;
+			var toolTipHeight:Number = currentToolTip.layoutBoundsHeight;
 			var rect:Rectangle = DisplayObject(currentTarget).getRect(sm);
-			var centerX:Number = rect.left+(rect.width - toolTipRect.width)*0.5;
-			var centetY:Number = rect.top+(rect.height - toolTipRect.height)*0.5;
+			var centerX:Number = rect.left+(rect.width - toolTipWidth)*0.5;
+			var centetY:Number = rect.top+(rect.height - toolTipHeight)*0.5;
 			switch(currentTarget.toolTipPosition)
 			{
 				case PopUpPosition.BELOW:
@@ -439,10 +423,10 @@ package org.flexlite.domUI.managers.impl
 					break;
 				case PopUpPosition.ABOVE:
 					x = centerX;
-					y = rect.top-toolTipRect.height;
+					y = rect.top-toolTipHeight;
 					break;
 				case PopUpPosition.LEFT:
-					x = rect.left-toolTipRect.width;
+					x = rect.left-toolTipWidth;
 					y = centetY;
 					break;
 				case PopUpPosition.RIGHT:
@@ -462,8 +446,6 @@ package org.flexlite.domUI.managers.impl
 					y = sm.mouseY + 20;
 					break;
 			}
-			x -= toolTipRect.left;
-			y -= toolTipRect.top;
 			var offset:Point = currentTarget.toolTipOffset;
 			if(offset)
 			{
@@ -472,10 +454,14 @@ package org.flexlite.domUI.managers.impl
 			}
 			var screenWidth:Number = sm.width;
 			var screenHeight:Number = sm.height;
-			if (x + toolTipRect.width > screenWidth)
-				x = screenWidth - toolTipRect.width;
-			if (y + toolTipRect.height > screenHeight)
-				y = screenHeight - toolTipRect.height;
+			if (x + toolTipWidth > screenWidth)
+				x = screenWidth - toolTipWidth;
+			if (y + toolTipHeight > screenHeight)
+				y = screenHeight - toolTipHeight;
+			if(x<0)
+				x = 0;
+			if(y<0)
+				y = 0;
 			currentToolTip.x = x;
 			currentToolTip.y = y;
 		}
@@ -491,14 +477,22 @@ package org.flexlite.domUI.managers.impl
 			
 			DomGlobals.stage.addEventListener(MouseEvent.MOUSE_DOWN,
 				stage_mouseDownHandler);
-			currentToolTip.visible = true;
+			if (_hideDelay == 0)
+			{
+				hideTip();
+			}
+			else if (_hideDelay < Infinity)
+			{
+				hideTimer.delay = _hideDelay;
+				hideTimer.start();
+			}
 		}
 		/**
 		 * 隐藏ToolTip
 		 */		
 		private function hideTip():void
 		{
-			if (previousTarget)
+			if (previousTarget&&currentToolTip)
 			{
 				var event:ToolTipEvent =
 					new ToolTipEvent(ToolTipEvent.TOOL_TIP_HIDE);
@@ -506,13 +500,12 @@ package org.flexlite.domUI.managers.impl
 				previousTarget.dispatchEvent(event);
 			}
 			
-			if (currentToolTip)
-				currentToolTip.visible = false;
 			if (previousTarget)
 			{
 				DomGlobals.stage.removeEventListener(MouseEvent.MOUSE_DOWN,
 					stage_mouseDownHandler);
 			}
+			reset();
 		}
 		
 		/**
@@ -557,7 +550,8 @@ package org.flexlite.domUI.managers.impl
 			
 			toolTip.toolTipData = toolTipData;
 			
-			sizeTip(toolTip);
+			if (currentToolTip is IInvalidating)
+				IInvalidating(currentToolTip).validateNow();
 			var pos:Point = toolTip.parent.globalToLocal(new Point(x,y));
 			toolTip.x = pos.x;
 			toolTip.y = pos.y;

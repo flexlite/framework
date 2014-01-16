@@ -40,6 +40,39 @@ package org.flexlite.domUI.core
 	 * 组件的一次三个延迟验证渲染阶段全部完成 
 	 */	
 	[Event(name="updateComplete", type="org.flexlite.domUI.events.UIEvent")]
+	/**
+	 * 即将显示ToolTip显示对象
+	 */	
+	[Event(name="toolTipShow", type="org.flexlite.domUI.events.ToolTipEvent")]
+	/**
+	 * 即将隐藏ToolTip显示对象
+	 */	
+	[Event(name="toolTipHide", type="org.flexlite.domUI.events.ToolTipEvent")]
+	
+	/**
+	 * 拖拽开始,此事件由启动拖拽的组件自身抛出。
+	 */
+	[Event(name="dragStart", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽完成，此事件由拖拽管理器在启动拖拽的组件上抛出。
+	 */
+	[Event(name="dragComplete", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 在目标区域放下拖拽的数据,此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragDrop", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽进入目标区域，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragEnter", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽移出目标区域，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */	
+	[Event(name="dragExit", type="org.flexlite.domUI.events.DragEvent")]
+	/**
+	 * 拖拽经过目标区域，相当于MouseOver事件，此事件由拖拽管理器在经过的目标组件上抛出。
+	 */
+	[Event(name="dragOver", type="org.flexlite.domUI.events.DragEvent")]
 	
 	[DXML(show="false")]
 	
@@ -58,19 +91,6 @@ package org.flexlite.domUI.core
 		{
 			super();
 			focusRect = false;
-			if(DomGlobals.stage==null)
-			{
-				if(stage)
-				{
-					_hasParent = true;
-					onAddedToStage();
-				}
-				else
-				{
-					addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-				}
-			}
-			addEventListener(Event.ADDED,onAdded);
 		}
 		
 		private var _id:String;
@@ -163,16 +183,18 @@ package org.flexlite.domUI.core
 			_isPopUp = value;
 		}
 		
-		private var _owner:DisplayObjectContainer;
+		private var _owner:Object;
 		/**
 		 * @inheritDoc
 		 */
-		public function get owner():DisplayObjectContainer
+		public function get owner():Object
 		{
-			return _owner ? _owner : parent;
+			return _owner? _owner : parent;
 		}
-		
-		public function set owner(value:DisplayObjectContainer):void
+		/**
+		 * @inheritDoc
+		 */
+		public function ownerChanged(value:Object):void
 		{
 			_owner = value;
 		}
@@ -223,54 +245,6 @@ package org.flexlite.domUI.core
 			}
 		}
 		
-		private var _hasParent:Boolean = false;
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function get hasParent():Boolean
-		{
-			return _hasParent||parent!=null;
-		}
-		/**
-		 * 添加到舞台
-		 */		
-		private function onAddedToStage(e:Event=null):void
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			DomGlobals.initlize(stage);
-			checkInvalidateFlag();
-		}
-		/**
-		 * 被添加到显示列表时
-		 */		
-		private function onAdded(event:Event):void
-		{
-			if(event.target==this)
-			{
-				removeEventListener(Event.ADDED,onAdded);
-				addEventListener(Event.REMOVED,onRemoved);
-				_hasParent = true;
-				checkInvalidateFlag();
-				initialize();
-			}
-		}		
-		
-		/**
-		 * 从显示列表移除时
-		 */		
-		private function onRemoved(event:Event):void
-		{
-			if(event.target==this)
-			{
-				removeEventListener(Event.REMOVED,onRemoved);
-				addEventListener(Event.ADDED,onAdded);
-				_nestLevel = 0;
-				_hasParent = false;
-				systemManager = null;
-			}
-		}
-		
 		private var _updateCompletePendingFlag:Boolean = false;
 		/**
 		 * @inheritDoc
@@ -310,7 +284,7 @@ package org.flexlite.domUI.core
 		/**
 		 * 初始化组件
 		 */
-		private function initialize():void
+		dx_internal function initialize():void
 		{
 			if(initializeCalled)
 				return;
@@ -365,11 +339,9 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
-			if(child is ILayoutManagerClient)
-			{
-				(child as ILayoutManagerClient).nestLevel = _nestLevel+1;
-			}
-			return super.addChild(child);
+			super.addChild(child);
+			childAdded(child);
+			return child;
 		}
 		
 		/**
@@ -377,11 +349,65 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
+			super.addChildAt(child,index);
+			childAdded(child);
+			return child;
+		}
+		
+		/**
+		 * 添加一个子项
+		 */		
+		dx_internal function childAdded(child:DisplayObject):void
+		{
 			if(child is ILayoutManagerClient)
 			{
 				(child as ILayoutManagerClient).nestLevel = _nestLevel+1;
 			}
-			return super.addChildAt(child,index);
+			if(child is InteractiveObject)
+			{
+				if(doubleClickEnabled)
+					InteractiveObject(child).doubleClickEnabled = true;
+			}
+			if(child is UIComponent)
+			{
+				UIComponent(child).initialize();
+				UIComponent(child).checkInvalidateFlag();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function removeChild(child:DisplayObject):DisplayObject
+		{
+			super.removeChild(child);
+			childRemoved(child);
+			return child;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function removeChildAt(index:int):DisplayObject
+		{
+			var child:DisplayObject = super.removeChildAt(index);
+			childRemoved(child);
+			return child;
+		}
+		
+		/**
+		 * 移除一个子项
+		 */		
+		dx_internal function childRemoved(child:DisplayObject):void
+		{
+			if(child is ILayoutManagerClient)
+			{
+				(child as ILayoutManagerClient).nestLevel = 0;
+			}
+			if(child is IUIComponent)
+			{
+				IUIComponent(child).systemManager = null;
+			}
 		}
 		
 		/**
@@ -433,26 +459,6 @@ package org.flexlite.domUI.core
 			}
 		}
 		
-		/**
-		 * enabled禁用时记录的mouseChildre值 
-		 */		
-		private var oldMouseChilren:Boolean = true;
-		
-		/**
-		 * @inheritDoc
-		 */		
-		override public function set mouseChildren(enable:Boolean):void
-		{
-			if(_enabled)
-			{
-				super.mouseChildren = enable;
-			}
-			else
-			{
-				oldMouseChilren = enable;
-			}
-		}
-		
 		private var _enabled:Boolean = true;
 		/**
 		 * @inheritDoc
@@ -464,22 +470,9 @@ package org.flexlite.domUI.core
 		
 		public function set enabled(value:Boolean):void
 		{
-			if(_enabled == value)
+			if(_enabled==value)
 				return;
-			
 			_enabled = value;
-			mouseEnabled = value;
-			if(value)
-			{
-				super.mouseChildren = oldMouseChilren;
-			}
-			else
-			{
-				oldMouseChilren = super.mouseChildren;
-				super.mouseChildren = false;
-			}
-			invalidateDisplayList();
-			
 			dispatchEvent(new Event("enabledChanged"));
 		}
 		
@@ -753,7 +746,7 @@ package org.flexlite.domUI.core
 			{
 				invalidatePropertiesFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateProperties(this);
 			}
 		}
@@ -781,7 +774,7 @@ package org.flexlite.domUI.core
 			{
 				invalidateSizeFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateSize(this);
 			}
 		}
@@ -876,7 +869,7 @@ package org.flexlite.domUI.core
 			{
 				invalidateDisplayListFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateDisplayList(this);
 			}
 		}
@@ -941,7 +934,7 @@ package org.flexlite.domUI.core
 		 */		
 		protected function invalidateParentSizeAndDisplayList():void
 		{
-			if (!_hasParent||!_includeInLayout)
+			if (!parent||!_includeInLayout)
 				return;
 			var p:IInvalidating = parent as IInvalidating;
 			if (!p)

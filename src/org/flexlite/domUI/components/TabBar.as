@@ -1,12 +1,18 @@
 package org.flexlite.domUI.components
 {
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import org.flexlite.domUI.components.supportClasses.ListBase;
-	import org.flexlite.domUI.components.supportClasses.TabBarHorizontalLayout;
-	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domCore.dx_internal;
+	import org.flexlite.domUI.collections.ICollection;
+	import org.flexlite.domUI.components.supportClasses.ListBase;
+	import org.flexlite.domUI.core.IVisualElement;
+	import org.flexlite.domUI.events.IndexChangeEvent;
+	import org.flexlite.domUI.events.ListEvent;
 	import org.flexlite.domUI.events.RendererExistenceEvent;
+	import org.flexlite.domUI.layouts.HorizontalAlign;
+	import org.flexlite.domUI.layouts.HorizontalLayout;
+	import org.flexlite.domUI.layouts.VerticalAlign;
 	
 	use namespace dx_internal;  
 	
@@ -18,7 +24,9 @@ package org.flexlite.domUI.components
 	 */	
 	public class TabBar extends ListBase
 	{
-		
+		/**
+		 * 构造函数
+		 */		
 		public function TabBar()
 		{
 			super();
@@ -35,7 +43,6 @@ package org.flexlite.domUI.components
 		{
 			return TabBar;
 		}
-		
 		/**
 		 * requireSelection改变标志
 		 */
@@ -57,6 +64,41 @@ package org.flexlite.domUI.components
 		/**
 		 * @inheritDoc
 		 */
+		override public function set dataProvider(value:ICollection):void
+		{
+			if(dataProvider is ViewStack)
+			{
+				dataProvider.removeEventListener("IndexChanged",onViewStackIndexChange);
+				removeEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
+			}
+			
+			if(value is ViewStack)
+			{
+				value.addEventListener("IndexChanged",onViewStackIndexChange);
+				addEventListener(IndexChangeEvent.CHANGE,onIndexChanged);
+			}
+			super.dataProvider = value;
+		}
+		/**
+		 * 鼠标点击的选中项改变
+		 */		
+		private function onIndexChanged(event:IndexChangeEvent):void
+		{
+			ViewStack(dataProvider).setSelectedIndex(event.newIndex,false);
+		}
+		
+		/**
+		 * ViewStack选中项发生改变
+		 */		
+		private function onViewStackIndexChange(event:Event):void
+		{
+			setSelectedIndex(ViewStack(dataProvider).selectedIndex, false);
+		}
+		
+		
+		/**
+		 * @inheritDoc
+		 */
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
@@ -73,31 +115,6 @@ package org.flexlite.domUI.components
 				}
 			}
 		}  
-		/**
-		 * 根据索引获取对应的ItemRender
-		 */		
-		private function getItemRenderer(index:int):IVisualElement
-		{
-			if (!dataGroup || (index < 0) || (index >= dataGroup.numElements))
-				return null;
-			
-			return dataGroup.getElementAt(index);
-		}
-		
-		 
-		/**
-		 * @inheritDoc
-		 */
-		override protected function itemSelected(index:int, selected:Boolean):void
-		{
-			super.itemSelected(index, selected);
-			
-			const renderer:IItemRenderer = getItemRenderer(index) as IItemRenderer;
-			if (renderer)
-			{
-				renderer.selected = selected;
-			}
-		}
 		
 		/**
 		 * @inheritDoc
@@ -131,13 +148,13 @@ package org.flexlite.domUI.components
 		 */		
 		private function item_clickHandler(event:MouseEvent):void
 		{
-			var newIndex:int;
-			if (event.currentTarget is IItemRenderer)
-				newIndex = IItemRenderer(event.currentTarget).itemIndex;
+			var itemRenderer:IItemRenderer = event.currentTarget as IItemRenderer;
+			var newIndex:int
+			if (itemRenderer)
+				newIndex = itemRenderer.itemIndex;
 			else
 				newIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
 			
-			var oldSelectedIndex:int = selectedIndex;
 			if (newIndex == selectedIndex)
 			{
 				if (!requireSelection)
@@ -145,19 +162,24 @@ package org.flexlite.domUI.components
 			}
 			else
 				setSelectedIndex(newIndex, true);
+			dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
-		override protected function partAdded(partName:String, instance:Object):void
+		override dx_internal function createSkinParts():void
 		{
-			super.partAdded(partName,instance);
-			if(instance==dataGroup)
-			{
-				if(!dataGroup.layout||!(dataGroup.layout is TabBarHorizontalLayout))
-					dataGroup.layout = new TabBarHorizontalLayout();
-			}
+			dataGroup = new DataGroup();
+			dataGroup.percentHeight = dataGroup.percentWidth = 100;
+			dataGroup.clipAndEnableScrolling = true;
+			var layout:HorizontalLayout = new HorizontalLayout();
+			layout.gap = -1;
+			layout.horizontalAlign = HorizontalAlign.JUSTIFY;
+			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
+			dataGroup.layout = layout;
+			addToDisplayList(dataGroup);
+			partAdded("dataGroup",dataGroup);
 		}
 	}
 }

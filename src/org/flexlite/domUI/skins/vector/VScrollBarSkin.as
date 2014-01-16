@@ -14,8 +14,6 @@ package org.flexlite.domUI.skins.vector
 		public function VScrollBarSkin()
 		{
 			super();
-			this.states = ["normal","disabled"];
-			this.currentState = "normal";
 			this.minWidth = 15;
 			this.minHeight = 50;
 		}

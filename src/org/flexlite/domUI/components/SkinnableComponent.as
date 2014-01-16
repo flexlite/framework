@@ -15,7 +15,6 @@ package org.flexlite.domUI.components
 	
 	use namespace dx_internal;
 	
-	[DXML(show="false")]
 	/**
 	 * 皮肤部件附加事件 
 	 */	
@@ -26,6 +25,9 @@ package org.flexlite.domUI.components
 	[Event(name="partRemoved", type="org.flexlite.domUI.events.SkinPartEvent")]
 	
 	[DXML(show="false")]
+	
+	[SkinState("normal")]
+	[SkinState("disabled")]
 	
 	/**
 	 * 复杂可设置外观组件的基类，接受ISkin类或任何显示对象作为皮肤。
@@ -44,7 +46,6 @@ package org.flexlite.domUI.components
 		{
 			super();
 			mouseChildren = true;
-			mouseEnabled = true;
 		}
 		
 		/**
@@ -63,6 +64,7 @@ package org.flexlite.domUI.components
 			if(defaultTheme&&skinName==null)
 			{
 				skinName = defaultTheme.getSkinName(hostComponentKey);
+				skinNameExplicitlySet = false;
 			}
 			if(skinName==null)
 			{//让部分组件在没有皮肤的情况下创建默认的子部件。
@@ -84,13 +86,13 @@ package org.flexlite.domUI.components
 			return SkinnableComponent;
 		}
 		
-		private var _invisibleSkin:Object 
+		private var _skinObject:Object 
 		/**
-		 * 存储皮肤适配器解析skinName得到的非显示对象皮肤
+		 * 存储皮肤适配器解析skinName得到的原始皮肤对象，包括非显示对象皮肤的实例。
 		 */
-		public function get invisibleSkin():Object
+		public function get skinObject():Object
 		{
-			return _invisibleSkin;
+			return _skinObject;
 		}
 		
 		/**
@@ -98,7 +100,7 @@ package org.flexlite.domUI.components
 		 */
 		override protected function onGetSkin(skin:Object,skinName:Object):void
 		{
-			var oldSkin:Object = getCurrentSkin();
+			var oldSkin:Object = _skinObject;
 			detachSkin(oldSkin);
 			if(_skin)
 			{
@@ -107,29 +109,21 @@ package org.flexlite.domUI.components
 					removeFromDisplayList(_skin); 
 				}
 			}
-			_skin = null;
-			_invisibleSkin = null;
 			
 			if(skin is DisplayObject)
 			{
 				_skin = skin as DisplayObject;
-				addToDisplyListAt(_skin,0);
+				addToDisplayListAt(_skin,0);
 			}
 			else
 			{
-				_invisibleSkin = skin;
+				_skin = null;
 			}
-			var newSkin:Object = getCurrentSkin();
-			attachSkin(newSkin);
+			_skinObject = skin;
+			attachSkin(_skinObject);
+			aspectRatio = NaN;
 			invalidateSize();
 			invalidateDisplayList();
-		}
-		/**
-		 * 获取当前的skin对象，当附加的皮肤为非显示对象时，并不存储在skin属性中。返回非显示对象版本skin。
-		 */		
-		dx_internal function getCurrentSkin():Object
-		{
-			return _invisibleSkin?_invisibleSkin:_skin;
 		}
 		
 		/**
@@ -141,18 +135,20 @@ package org.flexlite.domUI.components
 			{
 				var newSkin:ISkin = skin as ISkin;
 				newSkin.hostComponent = this;
-				skinLayoutEnabled = false;
 				findSkinParts();
 			}
 			else
 			{
-				skinLayoutEnabled = true;
 				if(!hasCreatedSkinParts)
 				{
 					createSkinParts();
 					hasCreatedSkinParts = true;
 				}
 			}
+			if(skin is ISkin&&skin is DisplayObject)
+				skinLayoutEnabled = false;
+			else
+				skinLayoutEnabled = true;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
@@ -160,7 +156,7 @@ package org.flexlite.domUI.components
 		 */	
 		public function findSkinParts():void
 		{
-			var curSkin:Object = getCurrentSkin();
+			var curSkin:Object = _skinObject;
 			if(!curSkin||!(curSkin is ISkin))
 				return;
 			var skinParts:Vector.<String> = SkinPartUtil.getSkinParts(this);
@@ -186,7 +182,7 @@ package org.flexlite.domUI.components
 		 */		
 		private var hasCreatedSkinParts:Boolean = false;
 		/**
-		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart是调用。
+		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart时调用。
 		 */		
 		dx_internal function createSkinParts():void
 		{
@@ -210,7 +206,6 @@ package org.flexlite.domUI.components
 			}
 			if(skin is ISkin)
 			{
-				(skin as ISkin).hostComponent = null;
 				var skinParts:Vector.<String> = SkinPartUtil.getSkinParts(this);
 				for each(var partName:String in skinParts)
 				{
@@ -222,6 +217,7 @@ package org.flexlite.domUI.components
 					}
 					this[partName] = null;
 				}
+				(skin as ISkin).hostComponent = null;
 			}
 		}
 		
@@ -284,7 +280,7 @@ package org.flexlite.domUI.components
 		{
 			var curState:String = getCurrentSkinState();
 			var hasState:Boolean = false;
-			var curSkin:Object = _invisibleSkin?_invisibleSkin:_skin;
+			var curSkin:Object = _skinObject;
 			if(curSkin is IStateClient)
 			{
 				(curSkin as IStateClient).currentState = curState;
@@ -312,14 +308,72 @@ package org.flexlite.domUI.components
 			}
 		}
 		
+		private var _autoMouseEnabled:Boolean = true;
+		/**
+		 * 在enabled属性发生改变时是否自动开启或禁用鼠标事件的响应。默认值为true。
+		 */
+		public function get autoMouseEnabled():Boolean
+		{
+			return _autoMouseEnabled;
+		}
+		
+		public function set autoMouseEnabled(value:Boolean):void
+		{
+			if(_autoMouseEnabled==value)
+				return;
+			_autoMouseEnabled = value;
+			if(_autoMouseEnabled)
+			{
+				super.mouseChildren = enabled ? explicitMouseChildren : false;
+				super.mouseEnabled  = enabled ? explicitMouseEnabled  : false;
+			}
+			else
+			{
+				super.mouseChildren = explicitMouseChildren;
+				super.mouseEnabled  = explicitMouseEnabled;
+			}
+		}
+		
+		/**
+		 * 外部显式设置的mouseChildren属性值 
+		 */		
+		private var explicitMouseChildren:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */		
+		override public function set mouseChildren(value:Boolean):void
+		{
+			if(enabled)
+				super.mouseChildren = value;
+			explicitMouseChildren = value;
+		}
+		/**
+		 * 外部显式设置的mouseEnabled属性值
+		 */		
+		private var explicitMouseEnabled:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */	
+		override public function set mouseEnabled(value:Boolean):void
+		{
+			if(enabled)
+				super.mouseEnabled = value;
+			explicitMouseEnabled = value;
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
 		override public function set enabled(value:Boolean):void
 		{
-			if(enabled==value)
+			if(super.enabled==value)
 				return;
 			super.enabled = value;
+			if(_autoMouseEnabled)
+			{
+				super.mouseChildren = value ? explicitMouseChildren : false;
+				super.mouseEnabled  = value ? explicitMouseEnabled  : false;
+			}
 			invalidateSkinState();
 		}
 		
@@ -365,6 +419,20 @@ package org.flexlite.domUI.components
 				layout.target = null;
  				layout = null;
 			}
+			invalidateSize();
+			invalidateDisplayList();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override dx_internal function childXYChanged():void
+		{
+			if(layout)
+			{
+				invalidateSize();
+				invalidateDisplayList();
+			}
 		}
 		
 		/**
@@ -376,6 +444,42 @@ package org.flexlite.domUI.components
 			if(layout)
 			{
 				layout.measure();
+			}
+			var skinObject:Object = _skinObject;
+			if(!_skin&&skinObject)
+			{//为非显示对象的皮肤测量
+				var measuredW:Number = this.measuredWidth;
+				var measuredH:Number = this.measuredHeight;
+				try
+				{
+					if(!isNaN(skinObject.width))
+						measuredW = Math.ceil(skinObject.width);
+					if(!isNaN(skinObject.height))
+						measuredH = Math.ceil(skinObject.height);
+					if(skinObject.hasOwnProperty("minWidth")&&
+						measuredW<skinObject.minWidth)
+					{
+						measuredW = skinObject.minWidth;
+					}
+					if(skinObject.hasOwnProperty("maxWidth")&&
+						measuredW>skinObject.maxWidth)
+					{
+						measuredW = skinObject.maxWidth;
+					}
+					if(skinObject.hasOwnProperty("minHeight")&&
+						measuredH<skinObject.minHeight)
+					{
+						measuredH = skinObject.minHeight;
+					}
+					if(skinObject.hasOwnProperty("maxHeight")&&
+						measuredH>skinObject.maxHeight)
+					{
+						measuredH = skinObject.maxHeight
+					}
+					this.measuredWidth = measuredW;
+					this.measuredHeight = measuredH;
+				}
+				catch(e:Error){}
 			}
 		}
 		

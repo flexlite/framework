@@ -1,9 +1,7 @@
 package org.flexlite.domUI.components
 {
-	import flash.events.Event;
-	
 	import org.flexlite.domCore.dx_internal;
-	import org.flexlite.domUI.collections.ArrayCollection;
+	import org.flexlite.domUI.core.IViewStack;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.ElementExistenceEvent;
 	import org.flexlite.domUI.events.IndexChangeEvent;
@@ -25,7 +23,7 @@ package org.flexlite.domUI.components
 	 * 使用子项的name属性作为选项卡上显示的字符串。
 	 * @author DOM
 	 */
-	public class TabNavigator extends SkinnableContainer
+	public class TabNavigator extends SkinnableContainer implements IViewStack
 	{
 		/**
 		 * 构造函数
@@ -50,10 +48,57 @@ package org.flexlite.domUI.components
 		{
 			return contentGroup as ViewStack;
 		}
+		/**
+		 * @inheritDoc
+		 */
+		override dx_internal function get currentContentGroup():Group
+		{
+			if (!contentGroup)
+			{
+				if (!_placeHolderGroup)
+				{
+					_placeHolderGroup = new ViewStack();
+					_placeHolderGroup.visible = false;
+					addToDisplayList(_placeHolderGroup);
+				}
+				_placeHolderGroup.addEventListener(
+					ElementExistenceEvent.ELEMENT_ADD, contentGroup_elementAddedHandler);
+				_placeHolderGroup.addEventListener(
+					ElementExistenceEvent.ELEMENT_REMOVE, contentGroup_elementRemovedHandler);
+				return _placeHolderGroup;
+			}
+			else
+			{
+				return contentGroup;    
+			}
+		}
 		
 		private var viewStackProperties:Object = {};
+		
+		private var _createAllChildren:Boolean = false;
 		/**
-		 * 当前可见的子容器。
+		 * 是否立即初始化化所有子项。false表示当子项第一次被显示时再初始化它。默认值false。
+		 */
+		public function get createAllChildren():Boolean
+		{
+			return viewStack?viewStack.createAllChildren:
+				viewStackProperties.createAllChildren;
+		}
+
+		public function set createAllChildren(value:Boolean):void
+		{
+			if(viewStack)
+			{
+				viewStack.createAllChildren = value;
+			}
+			else
+			{
+				viewStackProperties.createAllChildren = value;
+			}
+		}
+
+		/**
+		 * @inheritDoc
 		 */		
 		public function get selectedChild():IVisualElement
 		{
@@ -74,8 +119,8 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * 当前可见子容器的索引。索引从0开始。
-		 */		
+		 * @inheritDoc
+		 */	
 		public function get selectedIndex():int
 		{
 			if(viewStack)
@@ -98,10 +143,6 @@ package org.flexlite.domUI.components
 		}
 		
 		/**
-		 * TabBar数据源
-		 */		
-		private var tabBarData:ArrayCollection = new ArrayCollection;
-		/**
 		 * @inheritDoc
 		 */
 		override protected function partAdded(partName:String, instance:Object):void
@@ -109,14 +150,16 @@ package org.flexlite.domUI.components
 			super.partAdded(partName,instance);
 			if(instance==tabBar)
 			{
-				tabBar.dataProvider = tabBarData;
+				if(viewStack&&tabBar.dataProvider != viewStack)
+					tabBar.dataProvider = viewStack;
 				tabBar.selectedIndex = viewStack?viewStack.selectedIndex:-1;
-				tabBar.addEventListener(IndexChangeEvent.CHANGE,onTabBarIndexChange);
+				tabBar.addEventListener(IndexChangeEvent.CHANGE,dispatchEvent);
 				tabBar.addEventListener(IndexChangeEvent.CHANGING,onTabBarIndexChanging);
 			}
 			else if(instance==viewStack)
 			{
-				viewStack.addEventListener(IndexChangeEvent.CHANGE,onViewStackIndexChange);
+				if(tabBar&&tabBar.dataProvider != viewStack)
+					tabBar.dataProvider = viewStack;
 				if(viewStackProperties.selectedIndex!==undefined)
 				{
 					viewStack.selectedIndex = viewStackProperties.selectedIndex;
@@ -124,6 +167,10 @@ package org.flexlite.domUI.components
 				else if(viewStackProperties.selectedChild!==undefined)
 				{
 					viewStack.selectedChild = viewStackProperties.selectedChild;
+				}
+				else if(viewStackProperties.createAllChildren!==undefined)
+				{
+					viewStack.createAllChildren = viewStackProperties.createAllChildren;
 				}
 				viewStackProperties = {};
 			}
@@ -135,22 +182,13 @@ package org.flexlite.domUI.components
 			if(instance==tabBar)
 			{
 				tabBar.dataProvider = null;
-				tabBar.removeEventListener(IndexChangeEvent.CHANGE,onTabBarIndexChange);
+				tabBar.removeEventListener(IndexChangeEvent.CHANGE,dispatchEvent);
 				tabBar.removeEventListener(IndexChangeEvent.CHANGING,onTabBarIndexChanging);
 			}
 			else if(instance==viewStack)
 			{
-				viewStack.removeEventListener(IndexChangeEvent.CHANGE,onViewStackIndexChange);
 				viewStackProperties.selectedIndex = viewStack.selectedIndex;
 			}
-		}
-		/**
-		 * ViewStack选中项改变事件
-		 */		
-		private function onViewStackIndexChange(event:IndexChangeEvent):void
-		{
-			if(tabBar)
-				tabBar.selectedIndex = event.newIndex;
 		}
 		
 		/**
@@ -161,33 +199,7 @@ package org.flexlite.domUI.components
 			if(!dispatchEvent(event))
 				event.preventDefault();
 		}
-		/**
-		 * TabBar选中项改变事件
-		 */		
-		private function onTabBarIndexChange(event:IndexChangeEvent):void
-		{
-			if(viewStack)
-				viewStack.setSelectedIndex(event.newIndex,false);
-			dispatchEvent(event);
-		}
 
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function contentGroup_elementAddedHandler(event:ElementExistenceEvent):void
-		{
-			super.contentGroup_elementAddedHandler(event);
-			tabBarData.addItemAt(event.element.name,event.index);
-		}
-		/**
-		 * @inheritDoc
-		 */
-		override dx_internal function contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void
-		{
-			super.contentGroup_elementRemovedHandler(event);
-			tabBarData.removeItemAt(event.index);
-		}
-		
 		/**
 		 * @inheritDoc
 		 */

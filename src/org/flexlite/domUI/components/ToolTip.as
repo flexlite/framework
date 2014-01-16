@@ -139,7 +139,9 @@ package org.flexlite.domUI.components
 				textField.selectable = false;
 				textField.wordWrap = false;
 				var tf:TextFormat = textField.getTextFormat();
+				tf.font = "SimSun";
 				tf.color = 0xFFFFFF;
+				tf.leading = 2;
 				textField.defaultTextFormat = tf;
 				
 				if (childIndex == -1)

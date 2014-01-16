@@ -22,6 +22,8 @@ package org.flexlite.domDisplay
 		public function DxrFile(data:ByteArray,path:String="")
 		{
 			keyObject = DxrDecoder.readObject(data);
+			if(!keyObject)
+				keyObject = {keyList:{}};
 			this._path = path;
 		}
 		
@@ -67,49 +69,48 @@ package org.flexlite.domDisplay
 		/**
 		 * DxrData缓存表
 		 */		
-		private var dxrDataMap:SharedMap;
+		private var dxrDataMap:SharedMap = new SharedMap();
 		/**
 		 * 回调函数字典
 		 */		
-		private var compFuncDic:Dictionary;
+		private var compDic:Dictionary = new Dictionary();
 		
 		/**
 		 * 通过动画导出键名获取指定的DxrData动画数据
 		 * @param key 动画导出键名
-		 * @param onComp 结果回调函数，示例：onComp(data:DxrData);
+		 * @param onComp 结果回调函数，示例：onComp(data:DxrData):void,若设置了other参数则为:onComp(data,other):void
+		 * @param other 回调参数(可选),若设置了此参数，获取资源后它将会作为回调函数的第二个参数传入。
 		 */		
-		public function getDxrData(key:String,onComp:Function):void
+		public function getDxrData(key:String,onComp:Function,other:Object=null):void
 		{
 			if(onComp==null)
 				return;
-			if(!dxrDataMap)
-			{
-				dxrDataMap = new SharedMap;
-			}
 			var dxr:DxrData = dxrDataMap.get(key);
 			if(dxr)
 			{
-				onComp(dxr);
+				if(other==null)
+					onComp(dxr);
+				else
+					onComp(dxr,other);
 				return;
 			}
 			
 			var data:Object = keyObject.keyList[key];
 			if(!data)
 			{
-				onComp(null);
+				if(other==null)
+					onComp(null);
+				else
+					onComp(null,other);
 				return;
 			}
-			if(compFuncDic==null)
+			if(compDic[key])
 			{
-				compFuncDic = new Dictionary;
-			}
-			if(compFuncDic[key])
-			{
-				(compFuncDic[key] as Vector.<Function>).push(onComp);
+				compDic[key].push({onComp:onComp,other:other});
 			}
 			else
 			{
-				compFuncDic[key] = new <Function>[onComp];
+				compDic[key] = [{onComp:onComp,other:other}];
 				var decoder:DxrDecoder = new DxrDecoder();
 				decoder.decode(data,key,onGetDxrData);
 			}
@@ -121,10 +122,16 @@ package org.flexlite.domDisplay
 		private function onGetDxrData(dxrData:DxrData):void
 		{
 			dxrDataMap.set(dxrData.key,dxrData);
-			var funcVec:Vector.<Function> = compFuncDic[dxrData.key];
-			delete compFuncDic[dxrData.key];
-			for each(var compFunc:Function in funcVec)
-				compFunc(dxrData);
+			var compArr:Array = compDic[dxrData.key];
+			delete compDic[dxrData.key];
+			var other:Object;
+			for each(var data:Object in compArr)
+			{
+				if(data.other==null)
+					data.onComp(dxrData);
+				else
+					data.onComp(dxrData,data.other);
+			}
 		}
 		
 	}

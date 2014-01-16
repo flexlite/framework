@@ -4,7 +4,8 @@ package org.flexlite.domUI.utils
 	 * 延迟函数到屏幕重绘前执行。
 	 * @param method 要延迟执行的函数
 	 * @param args 函数参数列表
-	 * @param delayFrames 延迟的帧数，0表示在当前帧的屏幕重绘前执行,1表示下一帧，以此类推。默认值0。
+	 * @param delayFrames 延迟的帧数，0表示在当前帧的屏幕重绘前(Render事件)执行；
+	 * 1表示下一帧EnterFrame事件时执行,2表示两帧后的EnterFrame事件时执行，以此类推。默认值0。
 	 */		
 	public function callLater(method:Function,args:Array=null,delayFrames:int=0):void
 	{
@@ -14,7 +15,9 @@ package org.flexlite.domUI.utils
 
 import flash.display.Shape;
 import flash.events.Event;
+import flash.events.UncaughtErrorEvent;
 
+import org.flexlite.domCore.dx_internal;
 import org.flexlite.domUI.core.DomGlobals;
 
 /**
@@ -51,49 +54,72 @@ class DelayCall extends Shape
 	 * 延迟函数到屏幕重绘前执行。
 	 * @param method 要延迟执行的函数
 	 * @param args 函数参数列表
-	 * @param delayFrames 延迟的帧数，0表示在当前帧的屏幕重绘前执行,1表示下一帧，以此类推。默认值0。
+	 * @param delayFrames 延迟的帧数，0表示在当前帧的屏幕重绘前(Render事件)执行；
+	 * 1表示下一帧EnterFrame事件时执行,2表示两帧后的EnterFrame事件时执行，以此类推。默认值0。
 	 */		
 	public function callLater(method:Function,args:Array=null,delayFrames:int=0):void
 	{
-		methodQueue.push(new MethodQueueElement(method,args,delayFrames));
+		var element:MethodQueueElement = 
+			new MethodQueueElement(method,args,delayFrames,delayFrames==0)
+		methodQueue.push(element);
 		if(!listenForEnterFrame)
 		{
-			addEventListener(Event.ENTER_FRAME,onEnterFrame);
+			addEventListener(Event.ENTER_FRAME,onCallBack);
 			listenForEnterFrame = true;
 		}
-		if(!listenForRender&&DomGlobals.stage)
+		if(element.onRender)
 		{
-			DomGlobals.stage.addEventListener(Event.RENDER,onCallBack,false,-1000);
-			DomGlobals.stage.invalidate();
-			listenForRender = true;
+			if(!listenForRender&&DomGlobals.stage)
+			{
+				DomGlobals.stage.addEventListener(Event.RENDER,onCallBack,false,-1000);
+				DomGlobals.stage.invalidate();
+				listenForRender = true;
+			}
 		}
-	}
-	/**
-	 * EnterFrame事件
-	 */	
-	private function onEnterFrame(event:Event):void
-	{
-		if(listenForRender)
-			DomGlobals.stage.invalidate();
-		else
-			onCallBack();
 	}
 	/**
 	 * 执行延迟函数
 	 */		
-	private function onCallBack(event:Event=null):void
+	private function onCallBack(event:Event):void
+	{
+		if(DomGlobals.catchCallLaterExceptions)
+		{
+			try
+			{
+				doCallBackFunction(event);
+			}
+			catch(e:Error)
+			{
+				if(DomGlobals.stage)
+				{
+					var errorEvent:UncaughtErrorEvent = new UncaughtErrorEvent("callLaterError",false,true,e.getStackTrace());
+					DomGlobals.stage.dispatchEvent(errorEvent);
+				}
+			}
+		}
+		else
+		{
+			doCallBackFunction(event);
+		}
+		
+	}
+	
+	private function doCallBackFunction(event:Event):void
 	{
 		var element:MethodQueueElement;
-		for(var i:int=0;i<methodQueue.length;i++)
+		var onRender:Boolean = Boolean(event.type==Event.RENDER);
+		var startIndex:int = methodQueue.length-1;
+		for(var i:int=startIndex;i>=0;i--)
 		{
 			element = methodQueue[i];
-			if(element.delayFrames>0)
-			{
-				element.delayFrames--;
+			if(onRender&&!element.onRender)
 				continue;
-			}
+			if(!element.onRender)
+				element.delayFrames--;
+			if(element.delayFrames>0)
+				continue;
 			methodQueue.splice(i,1);
-			i--;
+			startIndex--;
 			if(element.args==null)
 			{
 				element.method();
@@ -103,6 +129,22 @@ class DelayCall extends Shape
 				element.method.apply(null,element.args);
 			}
 		}
+		var length:int = methodQueue.length;
+		var hasOnRender:Boolean = false;
+		startIndex = Math.max(0,startIndex);
+		for(i=startIndex;i<length;i++)
+		{
+			if(methodQueue[i].onRender)
+			{
+				hasOnRender = true;
+				break;
+			}
+		}
+		if(!hasOnRender&&listenForRender)
+		{
+			DomGlobals.stage.removeEventListener(Event.RENDER,onCallBack);
+			listenForRender = false; 
+		}
 		if(methodQueue.length==0)
 		{
 			if(listenForEnterFrame)
@@ -110,11 +152,7 @@ class DelayCall extends Shape
 				removeEventListener(Event.ENTER_FRAME,onCallBack);
 				listenForEnterFrame = false;
 			}
-			if(listenForRender)
-			{
-				DomGlobals.stage.removeEventListener(Event.RENDER,onCallBack);
-				listenForRender = false;
-			}
+			
 		}
 	}
 }
@@ -125,11 +163,12 @@ class DelayCall extends Shape
 class MethodQueueElement
 {
 	
-	public function MethodQueueElement(method:Function,args:Array = null,delayFrames:int=0)
+	public function MethodQueueElement(method:Function,args:Array = null,delayFrames:int=0,onRender:Boolean=true)
 	{
 		this.method = method;
 		this.args = args;
 		this.delayFrames = delayFrames;
+		this.onRender = onRender;
 	}
 	
 	public var method:Function;
@@ -137,4 +176,8 @@ class MethodQueueElement
 	public var args:Array;
 	
 	public var delayFrames:int;
+	/**
+	 * 在render事件触发
+	 */	
+	public var onRender:Boolean;
 }

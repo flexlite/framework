@@ -10,9 +10,13 @@ package org.flexlite.domDll.core
 	public class DllItem
 	{
 		/**
-		 * SWF文件
+		 * SWF素材文件
 		 */		
 		public static const TYPE_SWF:String = "swf";
+		/**
+		 * RSL文件,对必须加载到当前域的SWF文件,使用这种文件类型。
+		 */		
+		public static const TYPE_RSL:String = "rsl";
 		/** 
 		 * XML文件  
 		 */		
@@ -78,6 +82,13 @@ package org.flexlite.domDll.core
 		 * 加载项文件大小(单位:字节)
 		 */		
 		public var size:int = 0;
+		/**
+		 * 二级键名列表
+		 */		
+		public function get subkeys():Array
+		{
+			return data?data.subkeys:null;
+		}
 		
 		dx_internal var _groupName:String;
 		/**
