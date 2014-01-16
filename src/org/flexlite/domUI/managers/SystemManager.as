@@ -36,10 +36,6 @@ package org.flexlite.domUI.managers
 		{
 			super();
 			mouseEnabledWhereTransparent = false;
-			if(stage&&!DomGlobals.stage)
-			{
-				DomGlobals.initlize(stage);
-			}
 			addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE,onRemoveFromStage);
 			addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
@@ -51,10 +47,6 @@ package org.flexlite.domUI.managers
 		 */		
 		private function onAddToStage(event:Event=null):void
 		{
-			if(!DomGlobals.stage)
-			{
-				DomGlobals.initlize(stage);
-			}
 			var systemManagers:Vector.<ISystemManager> = DomGlobals._systemManagers;
 			if(systemManagers.length==0)
 			{

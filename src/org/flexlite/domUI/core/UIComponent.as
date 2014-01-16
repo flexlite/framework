@@ -91,6 +91,20 @@ package org.flexlite.domUI.core
 		{
 			super();
 			focusRect = false;
+			if(!DomGlobals.stage)
+			{
+				addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			}
+		}
+		
+		/**
+		 * 添加到舞台
+		 */		
+		private function onAddedToStage(e:Event=null):void
+		{
+			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			DomGlobals.initlize(stage);
+			checkInvalidateFlag();
 		}
 		
 		private var _id:String;
@@ -413,7 +427,7 @@ package org.flexlite.domUI.core
 		/**
 		 * 检查属性失效标记并应用
 		 */		
-		private function checkInvalidateFlag():void
+		dx_internal function checkInvalidateFlag():void
 		{
 			if(DomGlobals.layoutManager==null)
 				return;
