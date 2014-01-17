@@ -91,19 +91,20 @@ package org.flexlite.domUI.core
 		{
 			super();
 			focusRect = false;
-			if(!DomGlobals.stage)
-			{
-				if(stage)
-				{
-					_hasParent = true;
-					onAddedToStage();
-				}
-				else
-				{
-					addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-				}
-			}
-			addEventListener(Event.ADDED,onAdded);
+			addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			addEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
+		}
+		
+		/**
+		 * 添加到舞台
+		 */		
+		private function onAddedToStage(e:Event):void
+		{
+			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			initialize();
+			DomGlobals.initlize(stage);
+			if(_nestLevel>0)
+				checkInvalidateFlag();
 		}
 		
 		private var _id:String;
@@ -258,54 +259,6 @@ package org.flexlite.domUI.core
 			}
 		}
 		
-		private var _hasParent:Boolean = false;
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function get hasParent():Boolean
-		{
-			return _hasParent||parent!=null;
-		}
-		/**
-		 * 添加到舞台
-		 */		
-		private function onAddedToStage(e:Event=null):void
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			DomGlobals.initlize(stage);
-			checkInvalidateFlag();
-		}
-		/**
-		 * 被添加到显示列表时
-		 */		
-		private function onAdded(event:Event):void
-		{
-			if(event.target==this)
-			{
-				removeEventListener(Event.ADDED,onAdded);
-				addEventListener(Event.REMOVED,onRemoved);
-				_hasParent = true;
-				checkInvalidateFlag();
-				initialize();
-			}
-		}		
-		
-		/**
-		 * 从显示列表移除时
-		 */		
-		private function onRemoved(event:Event):void
-		{
-			if(event.target==this)
-			{
-				removeEventListener(Event.REMOVED,onRemoved);
-				addEventListener(Event.ADDED,onAdded);
-				_nestLevel = 0;
-				_hasParent = false;
-				systemManager = null;
-			}
-		}
-		
 		private var _updateCompletePendingFlag:Boolean = false;
 		/**
 		 * @inheritDoc
@@ -349,6 +302,10 @@ package org.flexlite.domUI.core
 		{
 			if(initializeCalled)
 				return;
+			if(DomGlobals.stage)
+			{
+				removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			}
 			initializeCalled = true;
 			dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
 			createChildren();
@@ -384,7 +341,15 @@ package org.flexlite.domUI.core
 		
 		public function set nestLevel(value:int):void
 		{
+			if(_nestLevel==value)
+				return;
 			_nestLevel = value;
+			
+			if(_nestLevel==0)
+				addEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
+			else
+				removeEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
+			
 			for(var i:int=numChildren-1;i>=0;i--)
 			{
 				var child:ILayoutManagerClient = getChildAt(i) as ILayoutManagerClient;
@@ -401,7 +366,9 @@ package org.flexlite.domUI.core
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
 			addingChild(child);
-			return super.addChild(child);
+			super.addChild(child);
+			childAdded(child);
+			return child;
 		}
 		
 		/**
@@ -410,8 +377,11 @@ package org.flexlite.domUI.core
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
 			addingChild(child);
-			return super.addChildAt(child,index);
+			super.addChildAt(child,index);
+			childAdded(child);
+			return child;
 		}
+		
 		/**
 		 * 即将添加一个子项
 		 */		
@@ -429,11 +399,58 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
+		 * 已经添加一个子项
+		 */		
+		dx_internal function childAdded(child:DisplayObject):void
+		{
+			if(child is UIComponent)
+			{
+				UIComponent(child).initialize();
+				UIComponent(child).checkInvalidateFlag();
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function removeChild(child:DisplayObject):DisplayObject
+		{
+			super.removeChild(child);
+			childRemoved(child);
+			return child;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function removeChildAt(index:int):DisplayObject
+		{
+			var child:DisplayObject = super.removeChildAt(index);
+			childRemoved(child);
+			return child;
+		}
+		
+		/**
+		 * 已经移除一个子项
+		 */		
+		dx_internal function childRemoved(child:DisplayObject):void
+		{
+			if(child is ILayoutManagerClient)
+			{
+				(child as ILayoutManagerClient).nestLevel = 0;
+			}
+			if(child is IUIComponent)
+			{
+				IUIComponent(child).systemManager = null;
+			}
+		}
+		
+		/**
 		 * 检查属性失效标记并应用
 		 */		
-		private function checkInvalidateFlag():void
+		private function checkInvalidateFlag(event:Event=null):void
 		{
-			if(DomGlobals.layoutManager==null)
+			if(!DomGlobals.layoutManager)
 				return;
 			if(invalidatePropertiesFlag)
 			{
@@ -764,7 +781,7 @@ package org.flexlite.domUI.core
 			{
 				invalidatePropertiesFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateProperties(this);
 			}
 		}
@@ -792,7 +809,7 @@ package org.flexlite.domUI.core
 			{
 				invalidateSizeFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateSize(this);
 			}
 		}
@@ -887,7 +904,7 @@ package org.flexlite.domUI.core
 			{
 				invalidateDisplayListFlag = true;
 				
-				if (_hasParent&&DomGlobals.layoutManager)
+				if (parent&&DomGlobals.layoutManager)
 					DomGlobals.layoutManager.invalidateDisplayList(this);
 			}
 		}
@@ -952,7 +969,7 @@ package org.flexlite.domUI.core
 		 */		
 		protected function invalidateParentSizeAndDisplayList():void
 		{
-			if (!_hasParent||!_includeInLayout)
+			if (!parent||!_includeInLayout)
 				return;
 			var p:IInvalidating = parent as IInvalidating;
 			if (!p)

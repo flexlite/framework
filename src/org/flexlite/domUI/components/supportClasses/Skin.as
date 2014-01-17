@@ -89,7 +89,7 @@ package org.flexlite.domUI.components.supportClasses
 
 			if(stateClientHelper.currentStateChanged)
 			{
-				if(initialized||hasParent)
+				if(initialized||parent)
 				{
 					stateClientHelper.commitCurrentState();
 					commitCurrentState();

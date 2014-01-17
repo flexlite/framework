@@ -44,7 +44,7 @@ package org.flexlite.domUI.components.supportClasses
 		{
 			//这里不能加if(_data==value)return;的判断，会导致数据源无法刷新的问题
 			_data = value;
-			if(initialized||hasParent)
+			if(initialized||parent)
 			{
 				dataChangedFlag = false;
 				dataChanged();

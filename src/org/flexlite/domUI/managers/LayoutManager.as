@@ -61,7 +61,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidatePropertiesQueue.shift();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateProperties();
 					if (!client.updateCompletePendingFlag)
@@ -104,7 +104,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidateSizeQueue.pop();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateSize();
 					if (!client.updateCompletePendingFlag)
@@ -144,7 +144,7 @@ package org.flexlite.domUI.managers
 			var client:ILayoutManagerClient = invalidateDisplayListQueue.shift();
 			while(client)
 			{
-				if (client.hasParent)
+				if (client.parent)
 				{
 					client.validateDisplayList();
 					if (!client.updateCompletePendingFlag)
@@ -269,7 +269,7 @@ package org.flexlite.domUI.managers
 				obj = ILayoutManagerClient(invalidatePropertiesQueue.removeSmallestChild(target));
 				while (obj)
 				{
-					if (obj.hasParent)
+					if (obj.parent)
 					{
 						obj.validateProperties();
 						if (!obj.updateCompletePendingFlag)
@@ -290,7 +290,7 @@ package org.flexlite.domUI.managers
 				obj = ILayoutManagerClient(invalidateSizeQueue.removeLargestChild(target));
 				while (obj)
 				{
-					if (obj.hasParent)
+					if (obj.parent)
 					{
 						obj.validateSize();
 						if (!obj.updateCompletePendingFlag)
@@ -325,7 +325,7 @@ package org.flexlite.domUI.managers
 					obj = ILayoutManagerClient(invalidateDisplayListQueue.removeSmallestChild(target));
 					while (obj)
 					{
-						if (obj.hasParent)
+						if (obj.parent)
 						{
 							obj.validateDisplayList();
 							if (!obj.updateCompletePendingFlag)

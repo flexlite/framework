@@ -1,5 +1,6 @@
 package org.flexlite.domUI.managers
 {
+	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
 
 	/**
@@ -37,8 +38,8 @@ package org.flexlite.domUI.managers
 		function get updateCompletePendingFlag():Boolean;
 		function set updateCompletePendingFlag(value:Boolean):void;
 		/**
-		 * 是否含有父级显示对象
+		 * 父级显示对象
 		 */		
-		function get hasParent():Boolean;
+		function get parent():DisplayObjectContainer;
 	}
 }

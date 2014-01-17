@@ -17,7 +17,8 @@ package org.flexlite.domUI.managers
 	import org.flexlite.domUI.core.IVisualElementContainer;
 	import org.flexlite.domUI.layouts.BasicLayout;
 	import org.flexlite.domUI.layouts.supportClasses.LayoutBase;
-
+	import org.flexlite.domUI.utils.callLater;
+	
 	use namespace dx_internal;
 	
 	/**
@@ -35,12 +36,8 @@ package org.flexlite.domUI.managers
 		{
 			super();
 			mouseEnabledWhereTransparent = false;
-			if(stage)
-			{
-				onAddToStage();
-			}
 			addEventListener(Event.ADDED_TO_STAGE,onAddToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE,onRemoved);
+			addEventListener(Event.REMOVED_FROM_STAGE,onRemoveFromStage);
 			addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler, true, 1000);
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler, true, 1000);
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler, true, 1000);
@@ -50,15 +47,16 @@ package org.flexlite.domUI.managers
 		 */		
 		private function onAddToStage(event:Event=null):void
 		{
-			if(DomGlobals._systemManagers.length==0)
+			var systemManagers:Vector.<ISystemManager> = DomGlobals._systemManagers;
+			if(systemManagers.length==0)
 			{
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;
 				stage.stageFocusRect=false;
 			}
-			var index:int = DomGlobals._systemManagers.indexOf(this);
+			var index:int = systemManagers.indexOf(this);
 			if(index==-1)
-				DomGlobals._systemManagers.push(this);
+				systemManagers.push(this);
 			if(_autoResize)
 			{
 				stage.addEventListener(Event.RESIZE,onResize);
@@ -69,11 +67,12 @@ package org.flexlite.domUI.managers
 		/**
 		 * 从舞台移除
 		 */		
-		private function onRemoved(event:Event):void
+		private function onRemoveFromStage(event:Event):void
 		{
-			var index:int = DomGlobals._systemManagers.indexOf(this);
+			var systemManagers:Vector.<ISystemManager> = DomGlobals._systemManagers;
+			var index:int = systemManagers.indexOf(this);
 			if(index!=-1)
-				DomGlobals._systemManagers.splice(index,1);
+				systemManagers.splice(index,1);
 			if(_autoResize)
 			{
 				stage.removeEventListener(Event.RESIZE,onResize);
@@ -93,9 +92,9 @@ package org.flexlite.domUI.managers
 		 * @inheritDoc
 		 */
 		override public function addEventListener(type:String, listener:Function,
-												useCapture:Boolean = false,
-												priority:int = 0,
-												useWeakReference:Boolean = true/*将弱引用的默认值改成true*/):void
+												  useCapture:Boolean = false,
+												  priority:int = 0,
+												  useWeakReference:Boolean = true/*将弱引用的默认值改成true*/):void
 		{
 			super.addEventListener(type,listener,useCapture,priority,useWeakReference);
 		}
@@ -283,7 +282,7 @@ package org.flexlite.domUI.managers
 			if(value is BasicLayout)
 				super.layout = value;
 		}
-
+		
 		private var _popUpContainer:SystemContainer;
 		/**
 		 * 弹出窗口层容器。
@@ -446,7 +445,7 @@ package org.flexlite.domUI.managers
 		{
 			return removeElementAt(super.getElementIndex(element));
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -475,7 +474,7 @@ package org.flexlite.domUI.managers
 				noTopMostIndex--;
 			}
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
