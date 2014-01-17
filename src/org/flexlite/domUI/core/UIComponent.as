@@ -91,20 +91,20 @@ package org.flexlite.domUI.core
 		{
 			super();
 			focusRect = false;
-			if(!DomGlobals.stage)
-			{
-				addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
-			}
+			addEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			addEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
 		}
 		
 		/**
 		 * 添加到舞台
 		 */		
-		private function onAddedToStage(e:Event=null):void
+		private function onAddedToStage(e:Event):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			initialize();
 			DomGlobals.initlize(stage);
-			checkInvalidateFlag();
+			if(_nestLevel>0)
+				checkInvalidateFlag();
 		}
 		
 		private var _id:String;
@@ -302,6 +302,10 @@ package org.flexlite.domUI.core
 		{
 			if(initializeCalled)
 				return;
+			if(DomGlobals.stage)
+			{
+				removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+			}
 			initializeCalled = true;
 			dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
 			createChildren();
@@ -337,7 +341,15 @@ package org.flexlite.domUI.core
 		
 		public function set nestLevel(value:int):void
 		{
+			if(_nestLevel==value)
+				return;
 			_nestLevel = value;
+			
+			if(_nestLevel==0)
+				addEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
+			else
+				removeEventListener(Event.ADDED_TO_STAGE,checkInvalidateFlag);
+			
 			for(var i:int=numChildren-1;i>=0;i--)
 			{
 				var child:ILayoutManagerClient = getChildAt(i) as ILayoutManagerClient;
@@ -353,6 +365,7 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChild(child:DisplayObject):DisplayObject
 		{
+			addingChild(child);
 			super.addChild(child);
 			childAdded(child);
 			return child;
@@ -363,15 +376,16 @@ package org.flexlite.domUI.core
 		 */
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
+			addingChild(child);
 			super.addChildAt(child,index);
 			childAdded(child);
 			return child;
 		}
 		
 		/**
-		 * 添加一个子项
+		 * 即将添加一个子项
 		 */		
-		dx_internal function childAdded(child:DisplayObject):void
+		dx_internal function addingChild(child:DisplayObject):void
 		{
 			if(child is ILayoutManagerClient)
 			{
@@ -382,6 +396,13 @@ package org.flexlite.domUI.core
 				if(doubleClickEnabled)
 					InteractiveObject(child).doubleClickEnabled = true;
 			}
+		}
+		
+		/**
+		 * 已经添加一个子项
+		 */		
+		dx_internal function childAdded(child:DisplayObject):void
+		{
 			if(child is UIComponent)
 			{
 				UIComponent(child).initialize();
@@ -410,7 +431,7 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
-		 * 移除一个子项
+		 * 已经移除一个子项
 		 */		
 		dx_internal function childRemoved(child:DisplayObject):void
 		{
@@ -427,9 +448,9 @@ package org.flexlite.domUI.core
 		/**
 		 * 检查属性失效标记并应用
 		 */		
-		dx_internal function checkInvalidateFlag():void
+		private function checkInvalidateFlag(event:Event=null):void
 		{
-			if(DomGlobals.layoutManager==null)
+			if(!DomGlobals.layoutManager)
 				return;
 			if(invalidatePropertiesFlag)
 			{

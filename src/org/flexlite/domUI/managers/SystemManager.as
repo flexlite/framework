@@ -63,7 +63,6 @@ package org.flexlite.domUI.managers
 				stage.addEventListener(FullScreenEvent.FULL_SCREEN,onResize);
 				onResize();
 			}
-			initialize();
 		}
 		/**
 		 * 从舞台移除
