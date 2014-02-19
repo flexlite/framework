@@ -910,8 +910,6 @@ package org.flexlite.domUI.components
 					continue;
 				indexToRenderer[index] = renderer;
 				updateRenderer(renderer,index,item);
-				if(renderer is IInvalidating)
-					(renderer as IInvalidating).validateNow();
 				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 					false, false, renderer, index, item));
 				index ++;
