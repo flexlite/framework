@@ -122,6 +122,7 @@ package org.flexlite.domUI.components
 			_skinObject = skin;
 			attachSkin(_skinObject);
 			aspectRatio = NaN;
+			invalidateSkinState();
 			invalidateSize();
 			invalidateDisplayList();
 		}
