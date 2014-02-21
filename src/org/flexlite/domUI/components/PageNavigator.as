@@ -2,7 +2,6 @@ package org.flexlite.domUI.components
 {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.utils.Dictionary;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
@@ -273,7 +272,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function uninstallViewport():void
 		{
-			if (skin && _viewport)
+			if (skinObject && _viewport)
 			{
 				_viewport.clipAndEnableScrolling = false;
 				_viewport.left = _viewport.right = _viewport.top = _viewport.bottom = NaN;

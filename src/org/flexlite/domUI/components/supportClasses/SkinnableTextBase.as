@@ -458,6 +458,7 @@ package org.flexlite.domUI.components.supportClasses
 		override protected function getCurrentSkinState():String
 		{
 			var focus:InteractiveObject = DomGlobals.stage.focus;
+			var skin:Object = skinObject;
 			if(_prompt&&skin is IStateClient&&
 				(!focus||!contains(focus))&&text=="")
 			{

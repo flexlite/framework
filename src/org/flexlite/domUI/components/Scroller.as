@@ -196,7 +196,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function installViewport():void
 		{
-			if (skin && viewport)
+			if (skinObject && viewport)
 			{ 
 				viewport.clipAndEnableScrolling = true;
 				contentGroup.addElementAt(viewport,0);
