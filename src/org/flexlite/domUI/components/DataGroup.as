@@ -12,6 +12,7 @@ package org.flexlite.domUI.components
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
 	import org.flexlite.domUI.components.supportClasses.ItemRenderer;
 	import org.flexlite.domUI.core.IInvalidating;
+	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.ISkinnableClient;
 	import org.flexlite.domUI.core.IVisualElement;
 	import org.flexlite.domUI.events.CollectionEvent;
@@ -705,6 +706,7 @@ package org.flexlite.domUI.components
 				removeAllRenderers();
 				if(layout)
 					layout.clearVirtualLayoutCache();
+				setTypicalLayoutRect(null);
 				useVirtualLayoutChanged = false;
 				itemRendererChanged = false;
 				if(_dataProvider)
@@ -832,14 +834,23 @@ package org.flexlite.domUI.components
 				return;
 			}
 			createNewRendererFlag = true;
-			var displayObj:DisplayObject = typicalRenderer as DisplayObject;
 			updateRenderer(typicalRenderer,0,typicalItem);
 			if(typicalRenderer is IInvalidating)
 				(typicalRenderer as IInvalidating).validateNow();
-			var w:Number = isNaN(displayObj.width)?0:displayObj.width;
-			var h:Number = isNaN(displayObj.height)?0:displayObj.height;
-			var rect:Rectangle = new Rectangle(0,0,
-				Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
+			var layoutElement:ILayoutElement = typicalRenderer as ILayoutElement;
+			if(layoutElement)
+			{
+				rect = new Rectangle(0,0,layoutElement.preferredWidth,
+					layoutElement.preferredHeight);
+			}
+			else
+			{
+				var displayObj:DisplayObject = typicalRenderer as DisplayObject;
+				var w:Number = isNaN(displayObj.width)?0:displayObj.width;
+				var h:Number = isNaN(displayObj.height)?0:displayObj.height;
+				var rect:Rectangle = new Rectangle(0,0,
+					Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
+			}
 			recycle(typicalRenderer);
 			setTypicalLayoutRect(rect);
 			createNewRendererFlag = false;

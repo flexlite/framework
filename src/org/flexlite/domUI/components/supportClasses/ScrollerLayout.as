@@ -200,25 +200,11 @@ package org.flexlite.domUI.components.supportClasses
 			{
 				if (measuredSizeIncludesScrollBars)
 				{
-					var contentSize:Point = getLayoutContentSize(viewport);
-					
 					var viewportPreferredW:Number =  viewport.preferredWidth;
-					var viewportContentW:Number = contentSize.x;
-					var viewportW:Number = viewport.layoutBoundsWidth;  
-					var currentSizeNoHSB:Boolean = !isNaN(viewportW) && ((viewportW + SDT) > viewportContentW);
-					if (hAuto && !showHSB && ((viewportPreferredW + SDT) <= viewportContentW) && currentSizeNoHSB)
-						measuredW += viewportW;
-					else
-						measuredW += Math.max(viewportPreferredW, (showHSB) ? hsb.minWidth : 0);
+					measuredW += Math.max(viewportPreferredW, (showHSB) ? hsb.minWidth : 0);
 					
 					var viewportPreferredH:Number = viewport.preferredHeight;
-					var viewportContentH:Number = contentSize.y;
-					var viewportH:Number = viewport.layoutBoundsHeight;  
-					var currentSizeNoVSB:Boolean = !isNaN(viewportH) && ((viewportH + SDT) > viewportContentH);
-					if (vAuto && !showVSB && ((viewportPreferredH + SDT) <= viewportContentH) && currentSizeNoVSB)
-						measuredH += viewportH;
-					else
-						measuredH += Math.max(viewportPreferredH, (showVSB) ? vsb.minHeight : 0);
+					measuredH += Math.max(viewportPreferredH, (showVSB) ? vsb.minHeight : 0);
 				}
 				else
 				{
@@ -248,13 +234,12 @@ package org.flexlite.domUI.components.supportClasses
 		 * 布局计数，防止发生无限循环。
 		 */		
 		private var invalidationCount:int = 0;
-//		/**
-//		 * 当viewport含有相对布局元素的子项(content尺寸跟随viewport尺寸而变，这是不规范的用法)，且水平和垂直滚动条同时到达临界显示值时，会出现无限循环验证的情况。
-//		 * (显示滚动条会导致content尺寸变小，继而导致关闭滚动条，content尺寸又变大，又开启滚动条...)暂时没有根治的解决方案，只能通过计数检查的方式断开循环。
-//		 */		
-//		private var loopCount:int = 0;
-//		private var lastUnscaledWidth:Number;
-//		private var lastUnscaledHeight:Number;
+		
+//		Bug备注：
+//		当viewport含有相对布局元素的子项(content尺寸跟随viewport尺寸而变，这是不规范的用法)，
+//		且水平和垂直滚动条同时到达临界显示值时，会出现无限循环验证的情况。
+//		(显示滚动条会导致content尺寸变小，继而导致关闭滚动条，content尺寸又变大，又开启滚动条...)
+//		暂时没有根治的解决方案，只能通过计数检查的方式断开循环。
 		
 		/**
 		 * @inheritDoc
@@ -264,11 +249,6 @@ package org.flexlite.domUI.components.supportClasses
 			var scroller:Scroller = getScroller();
 			if (!scroller) 
 				return;
-//			if(loopCount>4)
-//			{
-//				loopCount = 0;
-//				return;
-//			}
 			var viewport:IViewport = scroller.viewport;
 			var hsb:ScrollBarBase = scroller.horizontalScrollBar;
 			var vsb:ScrollBarBase = scroller.verticalScrollBar;
@@ -426,17 +406,6 @@ package org.flexlite.domUI.components.supportClasses
 				invalidationCount = 0;
 			
 			target.setContentSize(w, h);
-//			if(w==lastUnscaledWidth&&h==lastUnscaledHeight&&vsbVisible==hsbVisible&&vAuto&&hAuto&&
-//				vsbVisible!=oldShowVSB&&hsbVisible!=oldShowHSB)
-//			{
-//				loopCount++;
-//			}
-//			else
-//			{
-//				lastUnscaledWidth = w;
-//				lastUnscaledHeight = h;
-//				loopCount = 0;
-//			}
 		}
 		
 	}
