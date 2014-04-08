@@ -253,6 +253,7 @@ package org.flexlite.domUI.components
 				setItemRenderSkinName(renderer);
 			}
 			super.addChild(renderer as DisplayObject);
+			renderer.setLayoutBoundsSize(NaN,NaN);
 			return renderer;
 		}
 		/**
@@ -837,20 +838,8 @@ package org.flexlite.domUI.components
 			updateRenderer(typicalRenderer,0,typicalItem);
 			if(typicalRenderer is IInvalidating)
 				(typicalRenderer as IInvalidating).validateNow();
-			var layoutElement:ILayoutElement = typicalRenderer as ILayoutElement;
-			if(layoutElement)
-			{
-				rect = new Rectangle(0,0,layoutElement.preferredWidth,
-					layoutElement.preferredHeight);
-			}
-			else
-			{
-				var displayObj:DisplayObject = typicalRenderer as DisplayObject;
-				var w:Number = isNaN(displayObj.width)?0:displayObj.width;
-				var h:Number = isNaN(displayObj.height)?0:displayObj.height;
-				var rect:Rectangle = new Rectangle(0,0,
-					Math.abs(w*displayObj.scaleX),Math.abs(h*displayObj.scaleY));
-			}
+			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
+				typicalRenderer.preferredHeight);
 			recycle(typicalRenderer);
 			setTypicalLayoutRect(rect);
 			createNewRendererFlag = false;
