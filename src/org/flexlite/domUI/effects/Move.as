@@ -90,7 +90,7 @@ package org.flexlite.domUI.effects
 				
 				if(yFromUseTarget)
 					yStart = target["y"];
-				if(xToUseTarget)
+				if(yToUseTarget)
 					yEnd = target["y"];
 				else if(yToSet)
 					yEnd = yTo;
