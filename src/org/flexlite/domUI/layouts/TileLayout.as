@@ -773,6 +773,7 @@ package org.flexlite.domUI.layouts
 			if(useVirtualLayout)
 			{
 				calculateRowAndColumn(width,height);
+				adjustForJustify(width,height);
 			}
 			
 			if(startIndex == -1||endIndex==-1)
