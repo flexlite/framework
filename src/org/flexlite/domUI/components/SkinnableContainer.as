@@ -224,7 +224,7 @@ package org.flexlite.domUI.components
 					}
 					removeFromDisplayList(_placeHolderGroup);
 					contentGroup.elementsContent = sourceContent;
-					for (i = sourceContent.numElements; i > 0; i--)
+					for (i = sourceContent.length-1; i >=0; i--)
 					{
 						element = sourceContent[i];  
 						element.ownerChanged(this);
