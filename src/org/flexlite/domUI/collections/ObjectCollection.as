@@ -336,7 +336,7 @@ package org.flexlite.domUI.collections
 					child[parentKey] = parent;
 				}
 				catch(e:Error){}
-				assignParent(child);
+				assignParent(child,childrenKey,parentKey);
 			}
 		}
 	}
