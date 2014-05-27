@@ -3,6 +3,7 @@ package org.flexlite.domUI.components
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.net.URLLoader;
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.supportClasses.GroupBase;
@@ -444,7 +445,7 @@ package org.flexlite.domUI.components
 		dx_internal function elementAdded(element:IVisualElement, index:int, notifyListeners:Boolean = true):void
 		{
 			if(element is DisplayObject)
-				addToDisplayList(DisplayObject(element), index);
+				addToDisplayListAt(DisplayObject(element), index);
 			
 			if (notifyListeners)
 			{
@@ -455,6 +456,7 @@ package org.flexlite.domUI.components
 			
 			invalidateSize();
 			invalidateDisplayList();
+			var loader:URLLoader;
 		}
 		/**
 		 * 从容器移除一个显示元素
@@ -471,23 +473,13 @@ package org.flexlite.domUI.components
 			var childDO:DisplayObject = element as DisplayObject; 
 			if (childDO && childDO.parent == this)
 			{
-				super.removeChild(childDO);
+				removeFromDisplayList(childDO);
 			}
 			
 			invalidateSize();
 			invalidateDisplayList();
 		}
 		
-		/**
-		 * 添加对象到显示列表
-		 */		
-		final dx_internal function addToDisplayList(child:DisplayObject, index:int = -1):void
-		{
-			if (child.parent == this)
-				super.setChildIndex(child, index != -1 ? index : super.numChildren - 1);
-			else
-				super.addChildAt(child, index != -1 ? index : super.numChildren);
-		}
 		
 		private static const errorStr:String = "在此组件中不可用，若此组件为容器类，请使用";
 		[Deprecated] 

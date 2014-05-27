@@ -252,7 +252,7 @@ package org.flexlite.domUI.components
 			{
 				setItemRenderSkinName(renderer);
 			}
-			super.addChild(renderer as DisplayObject);
+			addToDisplayList(renderer as DisplayObject);
 			renderer.setLayoutBoundsSize(NaN,NaN);
 			return renderer;
 		}
@@ -532,7 +532,7 @@ package org.flexlite.domUI.components
 		 */		
 		private function recycle(renderer:IItemRenderer):void
 		{
-			super.removeChild(renderer as DisplayObject);
+			removeFromDisplayList(renderer as DisplayObject);
 			if(renderer is IVisualElement)
 			{
 				(renderer as IVisualElement).ownerChanged(null);

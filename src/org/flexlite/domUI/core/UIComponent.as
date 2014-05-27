@@ -361,6 +361,50 @@ package org.flexlite.domUI.core
 		}
 		
 		/**
+		 * 添加对象到显示列表,此接口仅预留给框架内部使用
+		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
+		 */		
+		final dx_internal function addToDisplayList(child:DisplayObject):DisplayObject
+		{
+			addingChild(child);
+			super.addChild(child);
+			childAdded(child);
+			return child;
+		}
+		/**
+		 * 添加对象到显示列表,此接口仅预留给框架内部使用
+		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
+		 */		
+		final dx_internal function addToDisplayListAt(child:DisplayObject,index:int):DisplayObject
+		{
+			addingChild(child);
+			super.addChildAt(child,index);
+			childAdded(child);
+			return child;
+		}
+		/**
+		 * 添加对象到显示列表,此接口仅预留给框架内部使用
+		 * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
+		 */		
+		final dx_internal function removeFromDisplayList(child:DisplayObject):DisplayObject
+		{
+			super.removeChild(child);
+			childRemoved(child);
+			return child;
+		}
+		/**
+		 * 从显示列表移除指定索引的子项,此接口仅预留给框架内部使用
+		 * 如果需要管理子项，若有，请使用容器的removeElementAt()方法,非法使用有可能造成无法自动布局。
+		 */		
+		final dx_internal function removeFromDisplayListAt(index:int):DisplayObject
+		{
+			var child:DisplayObject = super.removeChildAt(index);
+			childRemoved(child);
+			return child;
+		}
+		
+		[Deprecated] //框架范围内不允许调用任何addChild，需要普通显示对象包装器，请使用UIAsset。
+		/**
 		 * @inheritDoc
 		 */
 		override public function addChild(child:DisplayObject):DisplayObject
@@ -370,7 +414,7 @@ package org.flexlite.domUI.core
 			childAdded(child);
 			return child;
 		}
-		
+		[Deprecated] 
 		/**
 		 * @inheritDoc
 		 */
@@ -409,7 +453,7 @@ package org.flexlite.domUI.core
 				UIComponent(child).checkInvalidateFlag();
 			}
 		}
-		
+		[Deprecated] 
 		/**
 		 * @inheritDoc
 		 */
@@ -419,7 +463,7 @@ package org.flexlite.domUI.core
 			childRemoved(child);
 			return child;
 		}
-		
+		[Deprecated] 
 		/**
 		 * @inheritDoc
 		 */

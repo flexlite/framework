@@ -658,7 +658,7 @@ package org.flexlite.domUI.components.supportClasses
 				textField_textFieldSizeChangeHandler);
 			textField.addEventListener("textFormatChanged",
 				textField_textFormatChangeHandler);
-			addChild(textField);
+			addToDisplayList(textField);
 		}
 		
 		

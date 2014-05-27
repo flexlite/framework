@@ -78,7 +78,7 @@ package org.flexlite.domUI.managers.impl
 			
 			if (dragImage)
 			{
-				dragProxy.addChild(dragImage);
+				dragProxy.addToDisplayList(dragImage);
 				if (dragImage is ILayoutManagerClient)
 					DomGlobals.layoutManager.validateClient(ILayoutManagerClient(dragImage), true);
 			}
@@ -116,7 +116,7 @@ package org.flexlite.domUI.managers.impl
 				dragProxy.parent.removeChild(dragProxy);	
 				
 				if (dragProxy.numChildren > 0)
-					dragProxy.removeChildAt(0);
+					dragProxy.removeFromDisplayListAt(0);
 				dragProxy = null;
 			}
 			dragInitiator = null;

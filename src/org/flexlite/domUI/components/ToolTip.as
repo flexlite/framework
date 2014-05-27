@@ -5,9 +5,12 @@ package org.flexlite.domUI.components
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	
+	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.core.IToolTip;
 	import org.flexlite.domUI.core.UIComponent;
 	import org.flexlite.domUI.core.UITextField;
+	
+	use namespace dx_internal;
 	
 	/**
 	 * 工具提示组件
@@ -145,9 +148,9 @@ package org.flexlite.domUI.components
 				textField.defaultTextFormat = tf;
 				
 				if (childIndex == -1)
-					addChild(textField);
+					addToDisplayList(textField);
 				else 
-					addChildAt(textField, childIndex);
+					addToDisplayListAt(textField, childIndex);
 			}
 		}
 		/**
@@ -157,7 +160,7 @@ package org.flexlite.domUI.components
 		{
 			if (textField)
 			{
-				removeChild(textField);
+				removeFromDisplayList(textField);
 				textField = null;
 			}
 		}

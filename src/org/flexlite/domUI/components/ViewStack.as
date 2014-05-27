@@ -149,7 +149,7 @@ package org.flexlite.domUI.components
 			if(_createAllChildren)
 			{
 				if(element is DisplayObject)
-					addToDisplayList(DisplayObject(element), index);
+					addToDisplayListAt(DisplayObject(element), index);
 			}
 			if (notifyListeners)
 			{
