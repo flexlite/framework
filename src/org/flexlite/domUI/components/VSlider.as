@@ -48,7 +48,8 @@ package org.flexlite.domUI.components
 			if (!thumb || !track)
 				return;
 			
-			var thumbRange:Number = track.layoutBoundsHeight - thumb.layoutBoundsHeight;
+			var thumbHeight:Number = thumb.layoutBoundsHeight
+			var thumbRange:Number = track.layoutBoundsHeight - thumbHeight;
 			var range:Number = maximum - minimum;
 			var thumbPosTrackY:Number = (range > 0) ? thumbRange - (((pendingValue - minimum) / range) * thumbRange) : 0;
 			var thumbPos:Point = track.localToGlobal(new Point(0, thumbPosTrackY));
@@ -57,9 +58,9 @@ package org.flexlite.domUI.components
 			thumb.setLayoutBoundsPosition(thumb.layoutBoundsX, Math.round(thumbPosParentY));
 			if(showTrackHighlight&&trackHighlight&&trackHighlight.parent)
 			{
-				var trackHighlightY:Number = trackHighlight.parent.globalToLocal(thumbPos).y-thumbPosTrackY;
-				trackHighlight.y = Math.round(trackHighlightY);
-				trackHighlight.height = Math.round(thumbPosTrackY);
+				var trackHighlightY:Number = this.trackHighlight.parent.globalToLocal(thumbPos).y;
+				trackHighlight.y = Math.round(trackHighlightY+thumbHeight);
+				trackHighlight.height = Math.round(thumbRange-trackHighlightY);
 			}
 		}
 	}
