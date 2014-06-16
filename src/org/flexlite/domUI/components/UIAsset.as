@@ -243,6 +243,10 @@ package org.flexlite.domUI.components
 		 * 皮肤宽高比
 		 */		
 		dx_internal var aspectRatio:Number = NaN;
+		/**
+		 * 是否缩放皮肤
+		 */		
+		public var scaleSkin:Boolean = true;
 
 		/**
 		 * @inheritDoc
@@ -250,7 +254,7 @@ package org.flexlite.domUI.components
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(_skin)
+			if(_skin&&scaleSkin)
 			{
 				if(_maintainAspectRatio)
 				{
