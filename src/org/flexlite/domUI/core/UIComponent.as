@@ -1275,8 +1275,6 @@ package org.flexlite.domUI.core
 		 */	
 		public function setLayoutBoundsSize(layoutWidth:Number,layoutHeight:Number):void
 		{
-			layoutWidth /= scaleX;
-			layoutHeight /= scaleY;
 			if(isNaN(layoutWidth))
 			{
 				layoutWidthExplicitlySet = false;
@@ -1296,13 +1294,19 @@ package org.flexlite.domUI.core
 				layoutHeightExplicitlySet = true;
 			}
 			
-			setActualSize(layoutWidth,layoutHeight);
+			setActualSize(layoutWidth/this.scaleX,layoutHeight/this.scaleY);
 		}
 		/**
 		 * @inheritDoc
 		 */	
 		public function setLayoutBoundsPosition(x:Number,y:Number):void
 		{
+			if(this.scaleX<0){
+				x += this.layoutBoundsWidth;
+			}
+			if(this.scaleY<0){
+				y += this.layoutBoundsHeight;
+			}
 			var changed:Boolean = false;
 			if(this.x!=x)
 			{
@@ -1328,6 +1332,10 @@ package org.flexlite.domUI.core
 			var w:Number = isNaN(_explicitWidth) ? measuredWidth:_explicitWidth;
 			if(isNaN(w))
 				return 0;
+			var scaleX:Number = this.scaleX;
+			if(scaleX<0){
+				scaleX = -scaleX;
+			}
 			return w*scaleX;
 		}
 		
@@ -1339,6 +1347,11 @@ package org.flexlite.domUI.core
 			var h:Number = isNaN(_explicitHeight) ? measuredHeight : _explicitHeight;
 			if(isNaN(h))
 				return 0;
+			var scaleY:Number = this.scaleY;
+			if(scaleY<0)
+			{
+				scaleY = -scaleY;
+			}
 			return h*scaleY;
 		}
 		
@@ -1347,7 +1360,9 @@ package org.flexlite.domUI.core
 		 */	
 		public function get preferredX():Number
 		{
-			return super.x;
+			if(scaleX>=0)
+				return super.x;
+			return super.x - preferredWidth;
 		}
 		
 		/**
@@ -1355,21 +1370,29 @@ package org.flexlite.domUI.core
 		 */
 		public function get preferredY():Number
 		{
-			return super.y;
+			if(scaleY>=0)
+				return super.y;
+			return super.y - preferredHeight;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public function get layoutBoundsX():Number
 		{
-			return super.x;
+			if(scaleX>0)
+				return super.x;
+			return super.x = layoutBoundsWidth;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public function get layoutBoundsY():Number
 		{
-			return super.y;
+			if(scaleY>=0)
+			{
+				return super.y;
+			}
+			return super.y - layoutBoundsHeight;
 		}
 		
 		/**
@@ -1377,6 +1400,10 @@ package org.flexlite.domUI.core
 		 */	
 		public function get layoutBoundsWidth():Number
 		{
+			var scaleX:Number = this.scaleX;
+			if(scaleX<0){
+				scaleX = -scaleX;
+			}
 			var w:Number =  0;
 			if(layoutWidthExplicitlySet)
 			{
@@ -1398,6 +1425,11 @@ package org.flexlite.domUI.core
 		 */		
 		public function get layoutBoundsHeight():Number
 		{
+			var scaleY:Number = this.scaleY;
+			if(scaleY<0)
+			{
+				scaleY = -scaleY;
+			}
 			var h:Number =  0
 			if(layoutHeightExplicitlySet)
 			{
