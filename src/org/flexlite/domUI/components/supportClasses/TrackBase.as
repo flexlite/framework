@@ -327,7 +327,7 @@ package org.flexlite.domUI.components.supportClasses
 				stage_mouseMoveHandler);
 			DomGlobals.stage.removeEventListener(MouseEvent.MOUSE_UP, 
 				stage_mouseUpHandler);
-			DomGlobals.stage.addEventListener(Event.MOUSE_LEAVE,
+			DomGlobals.stage.removeEventListener(Event.MOUSE_LEAVE,
 				stage_mouseUpHandler);
 			removeEventListener(Event.ENTER_FRAME,updateWhenMouseMove);
 			if(needUpdateValue)
