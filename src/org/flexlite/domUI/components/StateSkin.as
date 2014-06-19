@@ -220,6 +220,7 @@ package org.flexlite.domUI.components
 				var n:int = _elementsContent.length;
 				for (i = 0; i < n; i++)
 				{   
+					
 					var elt:IVisualElement = _elementsContent[i];
 					
 					if(elt.parent is IVisualElementContainer)
@@ -286,10 +287,6 @@ package org.flexlite.domUI.components
 			{
 				setElementIndex(element, index);
 				return element;
-			}
-			else if (element.parent is IVisualElementContainer)
-			{
-				IVisualElementContainer(element.parent).removeElement(element);
 			}
 			else if(host is IContainer)
 			{
