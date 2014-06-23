@@ -143,6 +143,14 @@ package org.flexlite.domUI.components
 			
 		}
 		//========================state相关函数===============end=========================
+		private var initialized:Boolean = false;
+		/**
+		 * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
+		 * 请务必调用super.createChildren()以完成父类组件的初始化
+		 */
+		protected function createChildren():void{
+			
+		}
 		
 		private var _hostComponent:SkinnableComponent;
 		/**
@@ -169,7 +177,10 @@ package org.flexlite.domUI.components
 			}
 			
 			_hostComponent = value;
-			
+			if(!initialized){
+				initialized = true;
+				createChildren();
+			}
 			if(_hostComponent)
 			{			
 				var n:int = _elementsContent.length;
