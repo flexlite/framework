@@ -6,7 +6,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * Group添加或移除元素时分派的事件。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ElementExistenceEvent extends Event
 	{

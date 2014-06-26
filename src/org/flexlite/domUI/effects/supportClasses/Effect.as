@@ -31,7 +31,7 @@ package org.flexlite.domUI.effects.supportClasses
 	
 	/**
 	 * 动画特效基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Effect extends EventDispatcher implements IEffect
 	{

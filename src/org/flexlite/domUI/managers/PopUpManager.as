@@ -15,7 +15,7 @@ package org.flexlite.domUI.managers
 	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
 	 * 并在项目初始化前调用Injector.mapClass(IPopUpManager,YourPopUpManager)，
 	 * 注入自定义的弹出框管理器类。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class PopUpManager
 	{

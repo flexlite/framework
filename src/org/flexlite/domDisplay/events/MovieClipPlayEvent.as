@@ -4,7 +4,7 @@ package org.flexlite.domDisplay.events
 	
 	/**
 	 * IMoveClip播放事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class MovieClipPlayEvent extends Event
 	{

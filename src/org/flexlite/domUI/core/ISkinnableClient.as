@@ -3,7 +3,7 @@ package org.flexlite.domUI.core
 	
 	/**
 	 * 可设置外观的组件接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ISkinnableClient extends IVisualElement
 	{

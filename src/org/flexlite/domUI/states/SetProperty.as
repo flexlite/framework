@@ -4,7 +4,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * 设置属性
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class SetProperty extends OverrideBase
 	{

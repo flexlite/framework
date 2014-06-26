@@ -15,7 +15,7 @@ package org.flexlite.domUI.components.supportClasses
 	 * 皮肤布局基类<br/>
 	 * Skin及其子类中定义的公开属性,会在初始化完成后被直接当做SkinPart并将引用赋值到宿主组件的同名属性上，
 	 * 若有延迟创建的部件，请在加载完成后手动调用hostComponent.findSkinParts()方法应用部件。<br/>
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Skin extends Group 
 		implements IStateClient,ISkin

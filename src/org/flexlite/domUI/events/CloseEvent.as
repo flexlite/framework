@@ -3,7 +3,7 @@ package org.flexlite.domUI.events
 	import flash.events.Event;
 	/**
 	 * 窗口关闭事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class CloseEvent extends Event
 	{

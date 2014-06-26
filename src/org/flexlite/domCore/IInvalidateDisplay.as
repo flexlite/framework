@@ -3,7 +3,7 @@ package org.flexlite.domCore
 	
 	/**
 	 * 具有延迟应用属性功能的显示对象接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IInvalidateDisplay
 	{

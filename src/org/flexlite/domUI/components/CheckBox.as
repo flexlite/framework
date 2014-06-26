@@ -6,7 +6,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 复选框
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class CheckBox extends ToggleButtonBase
 	{

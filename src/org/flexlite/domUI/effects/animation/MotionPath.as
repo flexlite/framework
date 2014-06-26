@@ -2,7 +2,7 @@ package org.flexlite.domUI.effects.animation
 {
 	/**
 	 * 数值运动路径。用于定义需要在Animation类中缓动的数值范围。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class MotionPath
 	{

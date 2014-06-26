@@ -6,7 +6,7 @@ package org.flexlite.domUI.skins.vector
 	use namespace dx_internal;
 	/**
 	 * 
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ProgressBarThumbSkin extends VectorSkin
 	{

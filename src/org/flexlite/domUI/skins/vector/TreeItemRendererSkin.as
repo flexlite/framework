@@ -10,7 +10,7 @@ package org.flexlite.domUI.skins.vector
 
 	/**
 	 * TreeItemRenderer默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TreeItemRendererSkin extends ItemRendererSkin
 	{

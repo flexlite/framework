@@ -9,7 +9,7 @@ package org.flexlite.domUI.skins.vector
 	use namespace dx_internal;
 	/**
 	 * 垂直滑块默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VSliderSkin extends VectorSkin
 	{

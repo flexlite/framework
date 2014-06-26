@@ -24,7 +24,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 树状列表组件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Tree extends List
 	{

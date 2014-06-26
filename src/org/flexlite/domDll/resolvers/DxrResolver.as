@@ -7,7 +7,7 @@ package org.flexlite.domDll.resolvers
 	
 	/**
 	 * DXR文件解析器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DxrResolver extends BinResolver
 	{

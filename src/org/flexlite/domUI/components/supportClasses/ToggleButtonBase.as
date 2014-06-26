@@ -23,7 +23,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 切换按钮组件基类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ToggleButtonBase extends ButtonBase
 	{

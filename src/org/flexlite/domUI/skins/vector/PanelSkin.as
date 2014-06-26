@@ -13,7 +13,7 @@ package org.flexlite.domUI.skins.vector
 	use namespace dx_internal;
 	/**
 	 * Panel默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PanelSkin extends VectorSkin
 	{

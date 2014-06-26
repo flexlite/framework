@@ -9,7 +9,7 @@ package org.flexlite.domUtils
 	 * 但当外部对value的所有引用都断开时，value会被GC标记为可回收对象，并从哈希表移除。<br/>
 	 * <b>注意：</b>
 	 * 只有引用型的value才能启用动态内存管理，若value是基本数据类型(例如String,int等)时，需手动remove()它。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SharedMap
 	{

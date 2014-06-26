@@ -6,7 +6,7 @@ package org.flexlite.domUI.effects.easing
 	 * 最后在由 easeOutFraction 属性指定的时期内减速，直到结束。 <br/>
 	 * 会计算这三个阶段的缓动值，以使恒定加速、线性运动和恒定减速的行为全部发生在动画的指定持续时间内。<br/>
 	 * 通过将 easeInFraction 和 easeOutFraction 设置为 0.0 可以实现严格的线性运动。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Linear implements IEaser
 	{

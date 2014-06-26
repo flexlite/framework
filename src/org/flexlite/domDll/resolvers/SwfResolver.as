@@ -20,7 +20,7 @@ package org.flexlite.domDll.resolvers
 	 * SWF素材文件解析器<br/>
 	 * 在IOS下将swf加载到当前程序域。其他平台默认加载到子程序域。
 	 * 若是共享的代码库，只能加载到当前域的，请使用RslResolver。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SwfResolver implements IResolver
 	{

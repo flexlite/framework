@@ -7,7 +7,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * 水平滑块track默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VSliderTrackHighlightSkin extends VectorSkin
 	{

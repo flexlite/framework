@@ -4,7 +4,7 @@ package org.flexlite.domDll.resolvers
 	
 	/**
 	 * XML文件解析器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class XmlResolver extends BinResolver
 	{

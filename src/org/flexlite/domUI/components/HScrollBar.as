@@ -18,7 +18,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 水平滚动条组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class HScrollBar extends ScrollBarBase
 	{

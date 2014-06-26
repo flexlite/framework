@@ -18,7 +18,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 自动布局容器基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class GroupBase extends UIComponent implements IViewport
 	{

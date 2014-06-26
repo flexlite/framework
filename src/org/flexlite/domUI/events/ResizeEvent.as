@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 尺寸改变事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ResizeEvent extends Event
 	{

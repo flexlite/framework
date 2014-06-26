@@ -11,7 +11,7 @@ package org.flexlite.domCore
 	 * ISkinAdapter:皮肤解析适配器实例。<br>
 	 * Theme:皮肤默认主题。<br>
 	 * IResolover:资源管理器调用的文件解析类实例。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Injector
 	{

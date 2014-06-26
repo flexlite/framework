@@ -28,7 +28,7 @@ package org.flexlite.domUI.managers.dragClasses
 	
 	/**
 	 * 拖拽过程中显示的图标
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DragProxy extends UIComponent
 	{

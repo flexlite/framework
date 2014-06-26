@@ -2,7 +2,7 @@ package code.app.mvc
 {
 	/**
 	 * 控制器基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Controller extends Actor
 	{

@@ -2,7 +2,7 @@ package org.flexlite.domUI.layouts
 {
 	/**
 	 * 水平布局策略常量
-	 * @author DOM
+	 * @author dom
 	 */
 	public class HorizontalAlign
 	{

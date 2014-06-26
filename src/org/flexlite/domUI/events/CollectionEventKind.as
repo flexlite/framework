@@ -3,7 +3,7 @@ package org.flexlite.domUI.events
 	/**
 	 * 定义  CollectionEvent 类 kind 属性的有效值的常量。
 	 * 这些常量指示对集合进行的更改类型。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class CollectionEventKind
 	{

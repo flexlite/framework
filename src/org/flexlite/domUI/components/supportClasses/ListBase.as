@@ -50,7 +50,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 支持选择内容的所有组件的基类。 
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ListBase extends SkinnableDataContainer
 	{

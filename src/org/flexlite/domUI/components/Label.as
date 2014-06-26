@@ -20,7 +20,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 一行或多行不可编辑的文本控件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Label extends TextBase
 	{

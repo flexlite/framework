@@ -8,7 +8,7 @@ package org.flexlite.domUI.events
 
 	/**
 	 * 拖拽事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DragEvent extends MouseEvent
 	{

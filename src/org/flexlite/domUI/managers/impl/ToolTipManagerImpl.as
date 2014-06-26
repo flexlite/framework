@@ -35,7 +35,7 @@ package org.flexlite.domUI.managers.impl
 	
 	/**
 	 * 工具提示管理器实现类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ToolTipManagerImpl implements IToolTipManager
 	{

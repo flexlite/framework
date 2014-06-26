@@ -18,7 +18,7 @@ package org.flexlite.domUI.managers.impl
 	
 	/**
 	 * 拖拽管理器实现类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DragManagerImpl implements IDragManager
 	{

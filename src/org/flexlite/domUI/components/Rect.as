@@ -9,7 +9,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 矩形绘图元素。矩形的角可以是圆角,此组件可响应鼠标事件。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Rect extends UIComponent
 	{

@@ -2,7 +2,7 @@ package org.flexlite.domUI.core
 {
 	/**
 	 * 支持视区的组件接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IViewport extends IVisualElement
 	{

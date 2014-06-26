@@ -6,7 +6,7 @@ package org.flexlite.domUI.utils
 
 	/**
 	 * 布局工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class LayoutUtil
 	{

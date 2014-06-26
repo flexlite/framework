@@ -15,7 +15,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 可设置外观的多行文本输入控件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TextArea extends SkinnableTextBase
 	{

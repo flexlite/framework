@@ -8,7 +8,7 @@ package org.flexlite.domUI.managers
 	 * 工具提示管理器接口。若项目需要自定义工具提示管理器，请实现此接口，
 	 * 并在项目初始化前调用Injector.mapClass(IToolTipManager,YourToolTipManager)，
 	 * 注入自定义的工具提示管理器类。
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IToolTipManager
 	{

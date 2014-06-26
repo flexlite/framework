@@ -2,7 +2,7 @@ package org.flexlite.domUI.core
 {
 	/**
 	 * 简单文本显示控件接口。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IDisplayText extends IUIComponent
 	{

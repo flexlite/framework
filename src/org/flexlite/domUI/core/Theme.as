@@ -6,7 +6,7 @@ package org.flexlite.domUI.core
 	/**
 	 * 主题管理类。
 	 * 在子类调用mapSkin()方法为每个组件映射默认的皮肤。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Theme
 	{

@@ -8,7 +8,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 列表事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ListEvent extends MouseEvent
 	{

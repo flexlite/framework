@@ -2,7 +2,7 @@ package org.flexlite.domUI.core
 {
 	/**
 	 * 拥有失效验证机制组件接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IInvalidating
 	{

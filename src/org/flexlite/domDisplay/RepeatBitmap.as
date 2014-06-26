@@ -11,7 +11,7 @@ package org.flexlite.domDisplay
 	/**
 	 * 具有平铺功能的位图显示对象
 	 * 注意：此类不具有鼠标事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class RepeatBitmap extends Shape implements IInvalidateDisplay
 	{

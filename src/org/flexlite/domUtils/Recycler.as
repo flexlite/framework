@@ -5,7 +5,7 @@ package org.flexlite.domUtils
 	/**
 	 * 对象缓存复用工具类，可用于构建对象池。
 	 * 利用了Dictionary弱引用特性。一段时间后会自动回收对象。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Recycler
 	{

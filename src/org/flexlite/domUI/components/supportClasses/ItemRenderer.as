@@ -8,7 +8,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 项呈示器基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ItemRenderer extends ButtonBase implements IItemRenderer
 	{

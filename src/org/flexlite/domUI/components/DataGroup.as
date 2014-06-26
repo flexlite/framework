@@ -42,7 +42,7 @@ package org.flexlite.domUI.components
 	/**
 	 * 数据项目的容器基类
 	 * 将数据项目转换为可视元素以进行显示。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DataGroup extends GroupBase
 	{

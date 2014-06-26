@@ -6,7 +6,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 在DataGroup添加或删除项呈示器时分派的事件。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class RendererExistenceEvent extends Event
 	{

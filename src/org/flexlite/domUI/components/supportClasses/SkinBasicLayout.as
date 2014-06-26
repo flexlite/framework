@@ -5,7 +5,7 @@ package org.flexlite.domUI.components.supportClasses
 
 	/**
 	 * 皮肤简单布局类。当SkinnableComponent的皮肤不是ISkinPartHost对象时启用。以提供子项的简单布局。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SkinBasicLayout
 	{

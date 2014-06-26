@@ -30,7 +30,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 翻页组件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PageNavigator extends SkinnableComponent implements IVisualElementContainer
 	{

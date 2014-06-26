@@ -11,7 +11,7 @@ package org.flexlite.domUI.managers
 	
 	/**
 	 * 焦点管理器，设置了stage属性后，开始管理全局的焦点。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class FocusManager implements IFocusManager
 	{

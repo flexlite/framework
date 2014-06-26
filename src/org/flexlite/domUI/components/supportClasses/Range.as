@@ -6,7 +6,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 范围选取组件,该组件包含一个值和这个值所允许的最大最小约束范围。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Range extends SkinnableComponent
 	{

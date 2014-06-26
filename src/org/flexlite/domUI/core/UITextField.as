@@ -12,7 +12,7 @@ package org.flexlite.domUI.core
 	/**
 	 * 框架中所有文本的显示对象使用的文本基类，隔离TextField,
 	 * 对常用属性的改变进行事件封装,以通知父级组件重新验证尺寸和布局。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class UITextField extends TextField
 	{

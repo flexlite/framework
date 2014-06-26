@@ -15,7 +15,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 选项卡组件的按钮条目
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TabBarButton extends ToggleButtonBase implements IItemRenderer
 	{

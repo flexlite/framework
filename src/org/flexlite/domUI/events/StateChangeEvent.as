@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 视图状态改变事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class StateChangeEvent extends Event
 	{

@@ -25,7 +25,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 可移动窗口组件。注意，此窗口必须使用PopUpManager.addPopUp()弹出之后才能移动。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TitleWindow extends Panel
 	{

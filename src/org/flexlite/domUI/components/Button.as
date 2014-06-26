@@ -10,7 +10,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 按钮控件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Button extends ButtonBase
 	{

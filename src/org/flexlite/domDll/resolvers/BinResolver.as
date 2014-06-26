@@ -17,7 +17,7 @@ package org.flexlite.domDll.resolvers
 	/**
 	 * 二进制文件解析器<br/>
 	 * 直接返回文件二进制字节流。若文件是"zlib"方式压缩的，缓存时会先解压它。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class BinResolver implements IResolver
 	{

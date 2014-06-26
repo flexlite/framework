@@ -7,7 +7,7 @@ package org.flexlite.domUI.managers
 	
 	/**
 	 * 
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ISystemManager extends IEventDispatcher
 	{

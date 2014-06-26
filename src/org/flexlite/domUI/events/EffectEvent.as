@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 动画特效事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class EffectEvent extends Event
 	{

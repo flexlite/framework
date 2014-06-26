@@ -13,7 +13,7 @@ package org.flexlite.domDisplay
 
 	/**
 	 * DXR动画数据
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DxrData
 	{

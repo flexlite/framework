@@ -15,7 +15,7 @@ package org.flexlite.domUI.layouts.supportClasses
 	
 	/**
 	 * 容器布局基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class LayoutBase extends OnDemandEventDispatcher
 	{

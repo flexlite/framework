@@ -12,7 +12,7 @@ package org.flexlite.domUI.layouts
 	
 	/**
 	 * 垂直布局
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VerticalLayout extends LayoutBase
 	{

@@ -12,7 +12,7 @@ package org.flexlite.domUI.effects
 	
 	/**
 	 * 尺寸调整特效。此动画作用于对象的width，height以及x，y属性。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Resize extends Effect
 	{

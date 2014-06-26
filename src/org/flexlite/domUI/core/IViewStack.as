@@ -3,7 +3,7 @@ package org.flexlite.domUI.core
 	
 	/**
 	 * 层级堆叠容器接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IViewStack
 	{

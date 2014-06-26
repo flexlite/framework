@@ -14,7 +14,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 工具提示组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ToolTip extends UIComponent implements IToolTip
 	{

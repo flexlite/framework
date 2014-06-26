@@ -4,7 +4,7 @@ package org.flexlite.domUI.core
 
 	/**
 	 * 具有视图状态的组件接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IStateClient extends IEventDispatcher
 	{

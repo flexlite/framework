@@ -16,7 +16,7 @@ package org.flexlite.domDisplay
 	/**
 	 * 具有九宫格缩放功能的位图显示对象
 	 * 注意：此类不具有鼠标事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Scale9GridBitmap extends Shape implements IInvalidateDisplay
 	{

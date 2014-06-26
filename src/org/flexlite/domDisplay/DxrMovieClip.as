@@ -27,7 +27,7 @@ package org.flexlite.domDisplay
 	/**
 	 * DXR影片剪辑。
 	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DxrMovieClip extends Sprite implements 
 		IMovieClip,IBitmapAsset,IDxrDisplay,IInvalidateDisplay

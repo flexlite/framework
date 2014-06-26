@@ -2,7 +2,7 @@ package org.flexlite.domUI.core
 {
 	/**
 	 * 可编辑文本控件接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IEditableText extends IDisplayText
 	{ 

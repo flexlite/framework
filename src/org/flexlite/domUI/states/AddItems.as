@@ -11,7 +11,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * 添加显示元素
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class AddItems extends OverrideBase 
 	{

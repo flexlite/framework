@@ -9,7 +9,7 @@ package code.app.mvc
 	
 	/**
 	 * 命令总线通讯基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Actor
 	{

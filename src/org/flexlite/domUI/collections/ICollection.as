@@ -5,7 +5,7 @@ package org.flexlite.domUI.collections
 	
 	/**
 	 * 列表的集合类数据源对象接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ICollection extends IEventDispatcher
 	{

@@ -24,7 +24,7 @@ package org.flexlite.domUI.components
 	[DXML(show="true")]
 	/**
 	 * PopUpAnchor组件用于定位布局中的弹出控件或下拉控件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class PopUpAnchor extends UIComponent
 	{

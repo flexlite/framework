@@ -4,7 +4,7 @@ package org.flexlite.domUI.effects.easing
 	 * EaseInOutBase 类是提供缓动功能的基类。<br/>
 	 * EaseInOutBase 类将缓动定义为由两个阶段组成：加速，或缓入阶段，接着是减速，或缓出阶段。<br/>
 	 * 此类的默认行为会为全部两个缓动阶段返回一个线性插值。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class EaseInOutBase implements IEaser
 	{

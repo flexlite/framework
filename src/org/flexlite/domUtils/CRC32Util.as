@@ -5,7 +5,7 @@ package org.flexlite.domUtils
 	
 	/**
 	 * CRC32工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class CRC32Util
 	{

@@ -7,7 +7,7 @@ package code.app
 	
 	/**
 	 * 程序初始化启动类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class AppInit extends Actor
 	{

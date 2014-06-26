@@ -22,7 +22,7 @@ package org.flexlite.domUI.collections
 	 * 通常作为列表组件的数据源，使用这种数据结构包装普通数组，
 	 * 能在数据源发生改变的时候主动通知视图刷新变更的数据项
 	 * 可以直接对其使用for in，for each in或ac[i]标方法遍历数据
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ArrayCollection extends Proxy implements ICollection
 	{

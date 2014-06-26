@@ -18,7 +18,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * State 类定义视图状态，即组件的特定视图。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class State extends EventDispatcher
 	{

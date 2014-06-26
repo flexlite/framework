@@ -9,7 +9,7 @@ package org.flexlite.domUI.layouts
 	
 	/**
 	 * 基本布局
-	 * @author DOM
+	 * @author dom
 	 */
 	public class BasicLayout extends LayoutBase
 	{

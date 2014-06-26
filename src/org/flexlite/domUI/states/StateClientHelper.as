@@ -11,7 +11,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * 视图状态组件辅助工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class StateClientHelper
 	{

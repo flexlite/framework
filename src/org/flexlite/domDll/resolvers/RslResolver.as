@@ -3,7 +3,7 @@ package org.flexlite.domDll.resolvers
 	
 	/**
 	 * RSL文件解析器,通常是将共享代码库加载到当前程序域。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class RslResolver extends SwfResolver
 	{

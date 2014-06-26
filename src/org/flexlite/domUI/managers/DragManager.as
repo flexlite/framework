@@ -13,7 +13,7 @@ package org.flexlite.domUI.managers
 	 * 若项目需要自定义拖拽管理器，请实现IDragManager接口，
 	 * 并在项目初始化前调用Injector.mapClass(IDragManager,YourDragManager)，
 	 * 注入自定义的拖拽管理器类。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DragManager
 	{

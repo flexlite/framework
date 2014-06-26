@@ -13,7 +13,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * ItemRenderer默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ItemRendererSkin extends VectorSkin
 	{

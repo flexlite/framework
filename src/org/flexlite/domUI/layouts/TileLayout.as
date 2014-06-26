@@ -10,7 +10,7 @@ package org.flexlite.domUI.layouts
 	
 	/**
 	 * 格子布局
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TileLayout extends LayoutBase
 	{

@@ -29,7 +29,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 单选按钮组
-	 * @author DOM
+	 * @author dom
 	 */
 	public class RadioButtonGroup extends EventDispatcher
 	{

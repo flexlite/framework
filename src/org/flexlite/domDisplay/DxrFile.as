@@ -11,7 +11,7 @@ package org.flexlite.domDisplay
 	use namespace dx_internal;
 	/**
 	 * DXR动画文件解析类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DxrFile
 	{

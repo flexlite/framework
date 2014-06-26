@@ -4,7 +4,7 @@ package org.flexlite.domUI.core
 
 	/**
 	 * 可布局元素接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ILayoutElement extends IEventDispatcher
 	{

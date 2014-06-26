@@ -7,7 +7,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 弹出管理器事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PopUpEvent extends Event
 	{

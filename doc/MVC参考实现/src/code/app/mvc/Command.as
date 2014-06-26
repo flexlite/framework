@@ -4,7 +4,7 @@ package code.app.mvc
 	
 	/**
 	 * 命令基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Command extends Event
 	{

@@ -29,7 +29,7 @@ package org.flexlite.domUI.skins.themes
 	
 	/**
 	 * Vector主题皮肤默认配置
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VectorTheme extends Theme
 	{

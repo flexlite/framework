@@ -8,7 +8,7 @@ package org.flexlite.domUI.managers.layoutClass
 	[ExcludeClass]
 	/**
 	 * 显示列表嵌套深度排序队列
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DepthQueue
 	{

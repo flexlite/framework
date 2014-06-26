@@ -25,7 +25,7 @@ package org.flexlite.domUI.managers
 	 * 系统管理器，应用程序顶级容器。
 	 * 通常情况下，一个程序应该只含有唯一的系统管理器,并且所有的组件都包含在它内部。
 	 * 它负责管理弹窗，鼠标样式，工具提示的显示层级，以及过滤鼠标和键盘事件为可以取消的。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class SystemManager extends Group implements ISystemManager
 	{

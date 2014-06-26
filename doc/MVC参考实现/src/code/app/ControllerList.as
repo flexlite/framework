@@ -2,7 +2,7 @@ package code.app
 {
 	/**
 	 * 控制器列表
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ControllerList
 	{

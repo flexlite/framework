@@ -4,7 +4,7 @@ package org.flexlite.domDll.core
 	
 	/**
 	 * 一项Dll配置文件信息
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ConfigItem
 	{

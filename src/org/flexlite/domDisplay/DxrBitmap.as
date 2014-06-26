@@ -12,7 +12,7 @@ package org.flexlite.domDisplay
 	 * 请根据实际需求选择最佳的IDxrDisplay呈现DxrData。
 	 * DxrBitmap为最轻量级的IDxrDisplay。不具有位图九宫格缩放和鼠标事件响应功能。
 	 * 注意：DxrBitmap需要在外部手动添加起始坐标偏移量。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DxrBitmap extends Bitmap implements IBitmapAsset,IDxrDisplay
 	{

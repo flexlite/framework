@@ -7,7 +7,7 @@ package org.flexlite.domDll.events
 	
 	/**
 	 * 资源管理器事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DllEvent extends Event
 	{

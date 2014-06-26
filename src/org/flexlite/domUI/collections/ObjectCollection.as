@@ -15,7 +15,7 @@ package org.flexlite.domUI.collections
 	[DefaultProperty(name="source")]
 	/**
 	 * Object的集合类数据结构包装器,通常作为Tree组件的数据源。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ObjectCollection extends EventDispatcher 
 		implements ICollection,ITreeCollection

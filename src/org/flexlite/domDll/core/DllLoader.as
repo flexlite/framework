@@ -25,7 +25,7 @@ package org.flexlite.domDll.core
 	[Event(name="itemLoadFinished",type="org.flexlite.domDll.events.DllEvent")]
 	/**
 	 * 多文件队列加载器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DllLoader extends EventDispatcher
 	{

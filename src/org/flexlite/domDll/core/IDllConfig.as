@@ -3,7 +3,7 @@ package org.flexlite.domDll.core
 	
 	/**
 	 * Dll配置文件解析器接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IDllConfig
 	{

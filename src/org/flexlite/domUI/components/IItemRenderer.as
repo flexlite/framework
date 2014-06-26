@@ -4,7 +4,7 @@ package org.flexlite.domUI.components
 
 	/**
 	 * 列表类组件的项呈示器接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IItemRenderer extends ILayoutElement
 	{

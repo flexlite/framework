@@ -46,7 +46,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * TrackBase类是具有一个轨道和一个或多个滑块按钮的组件的一个基类，如 Slider 和 ScrollBar。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TrackBase extends Range
 	{

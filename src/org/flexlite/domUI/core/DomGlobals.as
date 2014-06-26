@@ -14,7 +14,7 @@ package org.flexlite.domUI.core
 	
 	/**
 	 * 全局静态量
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DomGlobals
 	{

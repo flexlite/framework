@@ -2,7 +2,7 @@ package org.flexlite.domUI.effects.easing
 {
 	/**
 	 * Bounce 类实现缓动功能，该功能模拟目标对象上的重力牵引和回弹目标对象。效果目标的移动会向着最终值加速，然后对着最终值回弹几次。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Bounce implements IEaser
 	{

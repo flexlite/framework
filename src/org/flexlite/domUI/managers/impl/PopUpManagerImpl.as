@@ -20,7 +20,7 @@ package org.flexlite.domUI.managers.impl
 	
 	/**
 	 * 窗口弹出管理器实现类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PopUpManagerImpl extends EventDispatcher implements IPopUpManager
 	{

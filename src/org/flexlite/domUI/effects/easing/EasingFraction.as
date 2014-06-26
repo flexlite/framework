@@ -2,7 +2,7 @@ package org.flexlite.domUI.effects.easing
 {
 	/**
 	 * 
-	 * @author DOM
+	 * @author dom
 	 */	
 	public final class EasingFraction
 	{

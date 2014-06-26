@@ -4,7 +4,7 @@ package org.flexlite.domUI.core
 	
 	/**
 	 * 动画特效接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IEffect extends IEventDispatcher
 	{

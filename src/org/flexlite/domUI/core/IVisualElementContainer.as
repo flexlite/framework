@@ -3,7 +3,7 @@ package org.flexlite.domUI.core
 
 	/**
 	 * 具有管理IVisualElement子显示对象的容器接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IVisualElementContainer extends IVisualElement,IContainer
 	{

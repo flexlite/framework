@@ -21,7 +21,7 @@ package org.flexlite.domUI.components
 	/**
 	 * Tab导航容器。<br/>
 	 * 使用子项的name属性作为选项卡上显示的字符串。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TabNavigator extends SkinnableContainer implements IViewStack
 	{

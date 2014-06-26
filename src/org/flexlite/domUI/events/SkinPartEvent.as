@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 皮肤组件附加移除事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SkinPartEvent extends Event
 	{

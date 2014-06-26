@@ -3,7 +3,7 @@ package org.flexlite.domUI.collections
 	
 	/**
 	 * Tree组件的集合类数据源对象接口 
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ITreeCollection extends ICollection
 	{

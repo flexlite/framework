@@ -8,7 +8,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * Tree事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TreeEvent extends Event
 	{

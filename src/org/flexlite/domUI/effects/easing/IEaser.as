@@ -2,7 +2,7 @@ package org.flexlite.domUI.effects.easing
 {
 	/**
 	 * 为Animation类提供时间缓动功能的接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IEaser
 	{

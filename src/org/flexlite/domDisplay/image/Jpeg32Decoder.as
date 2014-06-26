@@ -15,7 +15,7 @@ package org.flexlite.domDisplay.image
 	
 	/**
 	 * Jpeg32位图解码器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Jpeg32Decoder implements IBitmapDecoder
 	{

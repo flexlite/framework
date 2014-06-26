@@ -27,7 +27,7 @@ package org.flexlite.domUI.components.supportClasses
 	[ExcludeClass]
 	/**
 	 * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DropDownController extends EventDispatcher
 	{

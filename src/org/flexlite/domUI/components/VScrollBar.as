@@ -18,7 +18,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 垂直滚动条组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class VScrollBar extends ScrollBarBase
 	{

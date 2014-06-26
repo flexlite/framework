@@ -14,7 +14,7 @@ package org.flexlite.domUI.components
 	/**
 	 * 带输入框的下拉列表控件。不带输入功能的下拉列表请使用DropDownList。
 	 * @see org.flexlite.domUI.components.DropDownList
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ComboBox extends DropDownListBase
 	{

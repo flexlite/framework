@@ -26,7 +26,7 @@ package org.flexlite.domUI.components.supportClasses
 	[DefaultProperty(name="viewport",array="false")]
 	/**
 	 * 滚动条基类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ScrollBarBase extends TrackBase
 	{

@@ -4,7 +4,7 @@ package org.flexlite.domUI.managers
 	
 	/**
 	 * 焦点管理器接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IFocusManager
 	{

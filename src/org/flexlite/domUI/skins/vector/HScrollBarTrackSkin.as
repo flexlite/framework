@@ -9,7 +9,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * 水平滚动条track默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class HScrollBarTrackSkin extends VectorSkin
 	{

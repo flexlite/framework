@@ -4,7 +4,7 @@ package org.flexlite.domUI.core
 
 	/**
 	 * 皮肤对象接口。只有实现此接口的皮肤会被匹配公开同名变量,并注入到主机组件上。
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ISkin
 	{

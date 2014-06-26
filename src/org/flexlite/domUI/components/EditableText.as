@@ -28,7 +28,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 可编辑文本控件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class EditableText extends TextBase 
 		implements IEditableText,IDisplayText,IViewport

@@ -8,7 +8,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 水平滑块控件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class HSlider extends SliderBase
 	{

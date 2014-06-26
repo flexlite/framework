@@ -2,7 +2,7 @@ package org.flexlite.domUI.events
 {
 	/**
 	 * PropertyChangeEventKind 类定义 PropertyChangeEvent 类的 kind 属性的常量值。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PropertyChangeEventKind
 	{

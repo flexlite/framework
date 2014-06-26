@@ -9,7 +9,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * 水平滑块thumb默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SliderThumbSkin extends VectorSkin
 	{

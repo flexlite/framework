@@ -5,7 +5,7 @@ package org.flexlite.domUI.components
 	[DXML(show="true")]
 	/**
 	 * 切换按钮
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ToggleButton extends ToggleButtonBase
 	{

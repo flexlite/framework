@@ -42,7 +42,7 @@ package org.flexlite.domUtils
 	 * 运行时显示列表调试工具。
 	 * 快捷键：F11开启或关闭调试;F12开启或结束选择;F2复制选中的属性名;F3复制选中属性值;
 	 * F5:最大化或还原属性窗口;F6:设置选中节点为浏览树的根
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Debugger extends Group
 	{

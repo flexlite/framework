@@ -46,7 +46,7 @@ package org.flexlite.domDll
 			
 	/**
 	 * 资源管理器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Dll extends EventDispatcher
 	{

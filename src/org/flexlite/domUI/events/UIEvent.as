@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * UI事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class UIEvent extends Event
 	{

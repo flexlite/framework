@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 移动事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class MoveEvent extends Event
 	{

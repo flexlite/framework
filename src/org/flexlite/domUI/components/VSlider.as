@@ -7,7 +7,7 @@ package org.flexlite.domUI.components
 	[DXML(show="true")]
 	/**
 	 * 垂直滑块控件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VSlider extends SliderBase
 	{

@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 集合类型数据改变事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class CollectionEvent extends Event
 	{

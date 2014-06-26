@@ -6,7 +6,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 工具提示事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ToolTipEvent extends Event
 	{

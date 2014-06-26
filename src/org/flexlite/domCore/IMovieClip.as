@@ -4,7 +4,7 @@ package org.flexlite.domCore
 	
 	/**
 	 * 影片剪辑接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IMovieClip extends IEventDispatcher
 	{

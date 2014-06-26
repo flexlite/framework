@@ -5,7 +5,7 @@ package org.flexlite.domUI.effects.easing
 	 * 缓动包括两个阶段：加速，或缓入阶段，接着是减速，或缓出阶段。<br/>
 	 * 加速和减速的速率基于 exponent 属性。exponent 属性的值越大，加速和减速的速率越快。<br/>
 	 * 使用 easeInFraction 属性指定动画加速的百分比。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Power extends EaseInOutBase
 	{

@@ -9,7 +9,7 @@ package code.app.mvc
 	
 	/**
 	 * 命令总线上下文
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Context extends EventDispatcher
 	{

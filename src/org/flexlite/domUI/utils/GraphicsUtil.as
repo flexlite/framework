@@ -5,7 +5,7 @@ package org.flexlite.domUI.utils
 	[ExcludeClass]
 	/**
 	 * 绘图工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class GraphicsUtil
 	{

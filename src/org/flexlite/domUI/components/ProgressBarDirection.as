@@ -3,7 +3,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 定义进度条控件增长方向的常量
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ProgressBarDirection
 	{

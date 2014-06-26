@@ -10,7 +10,7 @@ package org.flexlite.domUI.utils
 	
 	/**
 	 * 获取皮肤定义的公开属性名工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SkinPartUtil
 	{

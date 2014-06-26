@@ -32,7 +32,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 下拉列表控件基类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DropDownListBase extends List
 	{

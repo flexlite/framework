@@ -37,7 +37,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 可设置外观的文本输入控件基类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class SkinnableTextBase extends SkinnableComponent
 	{

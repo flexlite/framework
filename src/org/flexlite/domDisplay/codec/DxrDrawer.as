@@ -17,7 +17,7 @@ package org.flexlite.domDisplay.codec
 	/**
 	 * 影片剪辑位图化工具，通常不需要关心此类，直接调用DxrData.draw()方法即可。
 	 * 注意：在AIR里，影片剪辑若不在显示列表，切换帧时会有残影的bug，转换前请先将MC都加到显示列表里。FP里没有这个问题。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DxrDrawer
 	{

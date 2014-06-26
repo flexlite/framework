@@ -7,7 +7,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 带有标题，内容区域的面板组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Panel extends SkinnableContainer
 	{

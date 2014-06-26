@@ -3,7 +3,7 @@ package  org.flexlite.domUI.effects.easing
 	/**
 	 * Sine 类使用 Sine 函数定义缓动功能。<br/>
 	 * 缓动包括两个阶段：加速，或缓入阶段，接着是减速，或缓出阶段。使用 easeInFraction 属性指定动画加速的百分比。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Sine extends EaseInOutBase
 	{

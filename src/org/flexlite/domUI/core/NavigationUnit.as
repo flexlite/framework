@@ -5,7 +5,7 @@ package org.flexlite.domUI.core
 	/**
 	 * NavigationUnit 类为 IViewport 类的getVerticalScrollPositionDelta() 
 	 * 和 getHorizontalScrollPositionDelta() 方法定义可能的值。 
-	 * @author DOM
+	 * @author dom
 	 */	
 	public final class NavigationUnit
 	{

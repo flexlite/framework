@@ -14,7 +14,7 @@ package org.flexlite.domDll.resolvers
 	
 	/**
 	 * 声音文件解析器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SoundResolver implements IResolver
 	{

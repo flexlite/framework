@@ -7,7 +7,7 @@ package org.flexlite.domUI.skins.vector
 	use namespace dx_internal;
 	/**
 	 * 水平滚动条默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class HScrollBarSkin extends VectorSkin
 	{

@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 对象的一个属性发生更改时传递到事件侦听器的事件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class PropertyChangeEvent extends Event
 	{

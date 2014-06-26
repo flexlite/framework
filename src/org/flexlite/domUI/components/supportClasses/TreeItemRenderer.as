@@ -14,7 +14,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * Tree组件的项呈示器基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer
 	{

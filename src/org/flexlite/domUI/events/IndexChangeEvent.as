@@ -4,7 +4,7 @@ package org.flexlite.domUI.events
 	
 	/**
 	 * 索引改变事件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class IndexChangeEvent extends Event
 	{

@@ -5,7 +5,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * IOverride 接口用于视图状态覆盖。State 类 overrides 属性数组中的所有条目均必须实现此接口。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IOverride
 	{

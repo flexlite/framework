@@ -2,7 +2,7 @@ package org.flexlite.domUI.effects.animation
 {
 	/**
 	 * RepeatBehavior类定义用于 Animation类的repeatBehavior属性的常量。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class RepeatBehavior
 	{

@@ -6,7 +6,7 @@ package org.flexlite.domUI.core
 	 * 可以使用 addData() 方法直接添加数据，也可以使用 addHandler() 方法间接添加数据。
 	 * addHandler() 方法会注册一个回调，请求该数据时将调用此回调。添加非本机格式的数据可能需要进行大量计算或转换，此时该方法就非常有用。
 	 * 例如，如果您具有原始声音数据，则可以添加 MP3 格式处理程序。仅当请求 MP3 数据时才执行 MP3 转换。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DragSource
 	{

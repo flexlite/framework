@@ -11,7 +11,7 @@ package org.flexlite.domUI.effects
 	
 	/**
 	 * 淡入淡出特效，此动画作用于对象的alpha属性。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Fade extends Effect
 	{

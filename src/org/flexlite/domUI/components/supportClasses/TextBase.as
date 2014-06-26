@@ -18,7 +18,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 文本基类,实现对文本的自动布局，样式属性设置。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TextBase extends UIComponent implements IDisplayText
 	{

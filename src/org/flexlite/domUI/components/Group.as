@@ -32,7 +32,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 自动布局容器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Group extends GroupBase implements IVisualElementContainer
 	{

@@ -35,7 +35,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 按钮组件基类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ButtonBase extends SkinnableComponent
 	{

@@ -17,7 +17,7 @@ package org.flexlite.domUI.managers
 	[Event(name="updateComplete", type="org.flexlite.domUI.events.UIEvent")]
 	/**
 	 * 布局管理器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class LayoutManager extends EventDispatcher
 	{

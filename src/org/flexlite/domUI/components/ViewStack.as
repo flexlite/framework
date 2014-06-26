@@ -28,7 +28,7 @@ package org.flexlite.domUI.components
 	[Event(name="valueCommit", type="org.flexlite.domUI.events.UIEvent")]
 	/**
 	 * 层级堆叠容器,一次只显示一个子对象。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ViewStack extends Group implements IViewStack,ICollection
 	{

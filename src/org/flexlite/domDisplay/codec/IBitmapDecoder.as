@@ -4,7 +4,7 @@ package org.flexlite.domDisplay.codec
 	
 	/**
 	 * 
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IBitmapDecoder
 	{

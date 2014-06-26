@@ -22,7 +22,7 @@ import org.flexlite.domUI.core.DomGlobals;
 
 /**
  * 延迟执行函数管理类
- * @author DOM
+ * @author dom
  */
 class DelayCall extends Shape
 {

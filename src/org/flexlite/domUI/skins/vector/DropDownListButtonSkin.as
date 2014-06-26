@@ -9,7 +9,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * DropDownList下拉按钮默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DropDownListButtonSkin extends VectorSkin
 	{

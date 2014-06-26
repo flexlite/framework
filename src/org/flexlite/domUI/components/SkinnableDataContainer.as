@@ -24,7 +24,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 可设置外观的数据项目容器基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SkinnableDataContainer extends SkinnableComponent implements IItemRendererOwner
 	{

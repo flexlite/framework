@@ -15,7 +15,7 @@ package org.flexlite.domUI.collections
 	[DefaultProperty(name="source")]
 	/**
 	 * XML的集合类数据结构包装器,通常作为Tree组件的数据源。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class XMLCollection extends EventDispatcher 
 		implements ICollection,ITreeCollection

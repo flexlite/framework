@@ -4,7 +4,7 @@ package code.app
 
 	/**
 	 * 公共数据
-	 * @author DOM
+	 * @author dom
 	 */
 	public class CommonData extends Dictionary
 	{

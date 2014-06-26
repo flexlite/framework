@@ -20,7 +20,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 列表组件
-	 * @author DOM
+	 * @author dom
 	 */
 	public class List extends ListBase
 	{

@@ -11,7 +11,7 @@ package org.flexlite.domUI.effects
 	
 	/**
 	 * 缩放特效,此动画作用于对象的scaleX,scaleY以及x,y属性。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Scale extends Effect
 	{

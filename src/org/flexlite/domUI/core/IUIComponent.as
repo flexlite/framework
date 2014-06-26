@@ -4,7 +4,7 @@ package org.flexlite.domUI.core
 
 	/**
 	 * UI组件接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IUIComponent extends IVisualElement
 	{

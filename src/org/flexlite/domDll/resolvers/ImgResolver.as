@@ -13,7 +13,7 @@ package org.flexlite.domDll.resolvers
 	 * 图片文件解析器<br/>
 	 * 由于图片如果直接缓存解码后的数据将会造成巨大的内存开销。 所以图片只缓存二进制数据，
 	 * 需要使用时异步获取。即使把图片配置到预加载组里，也需要通过异步方式才能获取。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ImgResolver extends BinResolver
 	{

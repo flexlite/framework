@@ -11,7 +11,7 @@ package org.flexlite.domUI.effects
 	
 	/**
 	 * 移动特效
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Move extends Effect
 	{

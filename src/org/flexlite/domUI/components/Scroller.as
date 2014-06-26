@@ -21,7 +21,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 滚动条组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Scroller extends SkinnableComponent implements IVisualElementContainer
 	{

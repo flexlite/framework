@@ -18,7 +18,7 @@ package org.flexlite.domDisplay.codec
 	
 	/**
 	 * DXR动画解码器
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class DxrDecoder
 	{

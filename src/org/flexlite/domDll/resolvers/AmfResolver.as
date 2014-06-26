@@ -4,7 +4,7 @@ package org.flexlite.domDll.resolvers
 	/**
 	 * 二进制序列化对象解析器<br/>
 	 * 将调用ByteArray.writeObject()方法序列化的二进制文件，解析为Object对象。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class AmfResolver extends BinResolver
 	{

@@ -2,7 +2,7 @@ package org.flexlite.domUI.components
 {
 	/**
 	 * 项呈示器的主机组件接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IItemRendererOwner
 	{

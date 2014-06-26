@@ -3,7 +3,7 @@ package org.flexlite.domDisplay
 	
 	/**
 	 * 能够解析DxrData的显示对象接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IDxrDisplay
 	{

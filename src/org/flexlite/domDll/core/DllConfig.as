@@ -8,7 +8,7 @@ package org.flexlite.domDll.core
 	use namespace dx_internal;
 	/**
 	 * Dll配置文件解析器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DllConfig implements IDllConfig
 	{

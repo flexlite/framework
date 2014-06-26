@@ -2,7 +2,7 @@ package org.flexlite.domUI.core
 {
 	/**
 	 * 滚动条显示策略常量
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ScrollPolicy
 	{

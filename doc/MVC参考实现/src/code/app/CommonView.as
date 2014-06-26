@@ -4,7 +4,7 @@ package code.app
 
 	/**
 	 * 公共视图
-	 * @author DOM
+	 * @author dom
 	 */
 	public class CommonView extends Dictionary
 	{

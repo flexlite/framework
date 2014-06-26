@@ -28,7 +28,7 @@ package org.flexlite.domUI.components
 	 * 素材包装器。<p/>
 	 * 注意：UIAsset仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
 	 * 若做了引起skin尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class UIAsset extends UIComponent implements ISkinnableClient
 	{

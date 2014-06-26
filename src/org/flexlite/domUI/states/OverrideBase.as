@@ -6,7 +6,7 @@ package org.flexlite.domUI.states
 	
 	/**
 	 * OverrideBase 类是视图状态所用的 override 类的基类。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class OverrideBase extends OnDemandEventDispatcher implements IOverride
 	{

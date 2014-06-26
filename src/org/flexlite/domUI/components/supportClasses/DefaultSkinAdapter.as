@@ -14,7 +14,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	/**
 	 * 默认的ISkinAdapter接口实现
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DefaultSkinAdapter implements ISkinAdapter
 	{

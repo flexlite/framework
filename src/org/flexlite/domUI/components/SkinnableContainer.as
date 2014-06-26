@@ -25,7 +25,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 可设置外观的容器的基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SkinnableContainer extends SkinnableComponent implements IVisualElementContainer
 	{

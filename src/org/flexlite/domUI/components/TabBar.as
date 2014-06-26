@@ -20,7 +20,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 选项卡组件
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TabBar extends ListBase
 	{

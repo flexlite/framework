@@ -3,7 +3,7 @@ package org.flexlite.domUI.events
 	import flash.events.Event;
 	/**
 	 * 从TrackBase组件分派的事件。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class TrackBaseEvent extends Event
 	{

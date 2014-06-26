@@ -5,7 +5,7 @@ package org.flexlite.domCore
 	
 	/**
 	 * 位图素材显示对象接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface IBitmapAsset
 	{

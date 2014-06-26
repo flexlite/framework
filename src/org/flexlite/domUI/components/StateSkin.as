@@ -40,7 +40,7 @@ package org.flexlite.domUI.components
 	/**
 	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
 	 * @see org.flexlite.domUI.components.supportClasses.Skin
-	 * @author DOM
+	 * @author dom
 	 */
 	public class StateSkin extends EventDispatcher 
 		implements IStateClient, ISkin, IContainer

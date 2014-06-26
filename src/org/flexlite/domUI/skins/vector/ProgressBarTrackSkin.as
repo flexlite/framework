@@ -7,7 +7,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * 进度条轨道默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ProgressBarTrackSkin extends VectorSkin
 	{

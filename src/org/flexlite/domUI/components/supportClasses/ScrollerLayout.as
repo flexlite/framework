@@ -12,7 +12,7 @@ package org.flexlite.domUI.components.supportClasses
 	use namespace dx_internal;
 	/**
 	 * 滚动条布局类
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class ScrollerLayout extends LayoutBase
 	{

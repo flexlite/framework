@@ -8,7 +8,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 弹出对话框，可能包含消息、标题、按钮（“确定”、“取消”、“是”和“否”的任意组合)。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Alert extends TitleWindow
 	{

@@ -8,7 +8,7 @@ package org.flexlite.domUI.skins.vector
 	use namespace dx_internal;
 	/**
 	 * 滚动条向左滚动按钮默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class ScrollBarLeftButtonSkin extends VectorSkin
 	{

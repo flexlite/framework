@@ -8,7 +8,7 @@ package org.flexlite.domUI.skins.vector
 	
 	/**
 	 * TitleWindow默认皮肤
-	 * @author DOM
+	 * @author dom
 	 */
 	public class TitleWindowSkin extends PanelSkin
 	{

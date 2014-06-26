@@ -13,7 +13,7 @@ package org.flexlite.domUI.components
 	
 	/**
 	 * 单选按钮
-	 * @author DOM
+	 * @author dom
 	 */
 	public class RadioButton extends ToggleButtonBase
 	{

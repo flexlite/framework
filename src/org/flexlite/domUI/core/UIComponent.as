@@ -78,7 +78,7 @@ package org.flexlite.domUI.core
 	
 	/**
 	 * 显示对象基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class UIComponent extends Sprite 
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,

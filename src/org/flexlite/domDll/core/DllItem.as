@@ -5,7 +5,7 @@ package org.flexlite.domDll.core
 	use namespace dx_internal;
 	/**
 	 * 加载项
-	 * @author DOM
+	 * @author dom
 	 */
 	public class DllItem
 	{

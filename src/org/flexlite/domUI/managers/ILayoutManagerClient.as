@@ -5,7 +5,7 @@ package org.flexlite.domUI.managers
 
 	/**
 	 * 使用布局管理器的组件接口
-	 * @author DOM
+	 * @author dom
 	 */
 	public interface ILayoutManagerClient extends IEventDispatcher
 	{

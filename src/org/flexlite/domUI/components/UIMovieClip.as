@@ -13,7 +13,7 @@ package org.flexlite.domUI.components
 	[Event(name="playComplete", type="org.flexlite.domUI.events.UIEvent")]
 	/**
 	 * 影片剪辑素材包装器,通常用于在UI中控制动画素材的播放。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class UIMovieClip extends UIAsset implements IMovieClip
 	{

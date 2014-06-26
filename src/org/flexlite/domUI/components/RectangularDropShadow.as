@@ -15,7 +15,7 @@ package org.flexlite.domUI.components
 	 * 矩形投影显示元素。<br/>
 	 * 此类通常用于替代DropShadowFilter，优化投影性能。
 	 * 当需要对矩形显示对象应用投影时，请尽可能使用此类来替代投影滤镜，以获取更高的性能。
-	 * @author DOM
+	 * @author dom
 	 */
 	public class RectangularDropShadow extends UIComponent
 	{

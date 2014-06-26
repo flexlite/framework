@@ -5,7 +5,7 @@ package org.flexlite.domUI.managers
 
 	/**
 	 * 包含工具提示功能的组件接口
-	 * @author DOM
+	 * @author dom
 	 */	
 	public interface IToolTipManagerClient extends IEventDispatcher
 	{

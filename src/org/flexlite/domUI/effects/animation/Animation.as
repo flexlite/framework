@@ -10,7 +10,7 @@ package org.flexlite.domUI.effects.animation
 
 	/**
 	 * 数值缓动工具类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class Animation
 	{

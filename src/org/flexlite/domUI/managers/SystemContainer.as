@@ -10,7 +10,7 @@ package org.flexlite.domUI.managers
 	
 	/**
 	 * SystemManager的虚拟子容器
-	 * @author DOM
+	 * @author dom
 	 */
 	public class SystemContainer implements IContainer
 	{

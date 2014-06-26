@@ -11,7 +11,7 @@ package org.flexlite.domUI.skins
 	
 	/**
 	 * Vector主题皮肤基类
-	 * @author DOM
+	 * @author dom
 	 */
 	public class VectorSkin extends Skin
 	{

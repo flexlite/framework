@@ -3,7 +3,7 @@ package org.flexlite.domUI.effects.easing
 	/**
 	 * Elastic 类实现缓动功能，此时目标对象移动是由一个指数衰减正弦波定义的。
 	 * 效果目标向着最终值减速，然后继续通过最终值。接着它围绕最终值在越来越小的增量内振荡，最后达到最终值。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public class Elastic implements IEaser
 	{

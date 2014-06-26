@@ -3,7 +3,7 @@ package org.flexlite.domUI.core
 	/**
 	 * 定义弹出位置的常量值。
 	 * 该常量决定目标对象相对于父级组件的弹出位置。
-	 * @author DOM
+	 * @author dom
 	 */	
 	public final class PopUpPosition
 	{	
