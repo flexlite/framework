@@ -649,7 +649,7 @@ package org.flexlite.domUI.components
 			validateProperties();
 			if(textField)
 			{
-				textField.setSelection(0,textField.length-1);
+				textField.setSelection(0,textField.length);
 			}
 		}
 		
