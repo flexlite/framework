@@ -518,8 +518,6 @@ package org.flexlite.domUI.components
 			if(oldRenderer&&oldRenderer is DisplayObject)
 			{
 				recycle(oldRenderer);
-				dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
-					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
 			}
 		}
 		
