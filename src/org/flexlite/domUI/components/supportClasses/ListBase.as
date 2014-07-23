@@ -585,7 +585,7 @@ package org.flexlite.domUI.components.supportClasses
 			return true;
 		}
 		
-		private var selectedIndexAdjusted:Boolean = false;
+		dx_internal var selectedIndexAdjusted:Boolean = false;
 		/**
 		 * 仅调整选中索引值而不更新选中项,即在提交属性阶段itemSelected方法不会被调用，也不会触发changing和change事件。
 		 * @param newIndex 新索引。

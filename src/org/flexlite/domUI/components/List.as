@@ -357,6 +357,112 @@ package org.flexlite.domUI.components
 			renderer.removeEventListener(MouseEvent.MOUSE_UP, item_mouseUpHandler);
 		}
 		/**
+		 * @inheritDoc
+		 */
+		override protected function itemAdded(index:int):void
+		{
+			adjustSelection(index, true); 
+		}
+		/**
+		 * @inheritDoc
+		 */
+		override protected function itemRemoved(index:int):void
+		{
+			adjustSelection(index, false);        
+		}
+		/**
+		 * @inheritDoc
+		 */
+		override protected function adjustSelection(index:int, add:Boolean=false):void
+		{
+			var i:int; 
+			var curr:Number; 
+			var newInterval:Vector.<int> = new Vector.<int>(); 
+			var e:IndexChangeEvent; 
+			
+			if (selectedIndex == NO_SELECTION || doingWholesaleChanges)
+			{
+				if (dataProvider && dataProvider.length == 1 && requireSelection)
+				{
+					newInterval.push(0);
+					_selectedIndices = newInterval;   
+					_selectedIndex = 0; 
+					
+					dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+				}
+				return; 
+			}
+			
+			if ((!selectedIndices && selectedIndex > NO_SELECTION) ||
+				(selectedIndex > NO_SELECTION && selectedIndices.indexOf(selectedIndex) == -1))
+			{
+				commitSelection(); 
+			}
+			
+			if (add)
+			{
+				for (i = 0; i < selectedIndices.length; i++)
+				{
+					curr = selectedIndices[i];
+					
+					if (curr >= index)
+						newInterval.push(curr + 1); 
+					else 
+						newInterval.push(curr); 
+				}
+			}
+			else
+			{
+				if ((!selectedIndices||selectedIndices.length==0) 
+					&& selectedIndices.length == 1 
+					&& index == selectedIndex && requireSelection)
+				{
+					if (dataProvider.length == 0)
+					{
+						newInterval = new Vector.<int>(); 
+					}
+					else
+					{
+						_proposedSelectedIndex = 0; 
+						invalidateProperties();
+						
+						if (index == 0)
+							return;
+						
+						newInterval.push(0);  
+					}
+				}
+				else
+				{    
+					for (i = 0; i < selectedIndices.length; i++)
+					{
+						curr = selectedIndices[i]; 
+						if (curr > index)
+							newInterval.push(curr - 1); 
+						else if (curr < index) 
+							newInterval.push(curr);
+					}
+				}
+			}
+			
+			var oldIndices:Vector.<int> = selectedIndices;  
+			_selectedIndices = newInterval;
+			_selectedIndex = getFirstItemValue(newInterval);
+			if (_selectedIndices != oldIndices)
+			{
+				selectedIndexAdjusted = true; 
+				invalidateProperties(); 
+			}
+		}
+		
+		private function getFirstItemValue(v:Vector.<int>):int
+		{
+			if (v && v.length > 0)
+				return v[0]; 
+			else 
+				return -1; 
+		}
+		/**
 		 * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
 		 */		
 		dx_internal var captureItemRenderer:Boolean = true;
