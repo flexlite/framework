@@ -307,8 +307,8 @@ package org.flexlite.domUI.components
 				}
 				else
 				{
-					_skin.width = unscaledWidth;
-					_skin.height = unscaledHeight;
+					if(_skin.width != unscaledWidth)_skin.width = unscaledWidth;
+					if(_skin.height != unscaledHeight)_skin.height = unscaledHeight;
 					if(_skin is IInvalidateDisplay)
 						IInvalidateDisplay(_skin).validateNow();
 				}
