@@ -194,7 +194,7 @@ package org.flexlite.domDll
 		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
 		 * 注意：Dll通常是只缓存文件字节流数据(占内存很少),而解码后的对像采用的是动态缓存，
 		 * 在外部引用都断开时能自动回收,所以不需要显式销毁它们。
-		 * @param name 配置文件中加载项的name属性
+		 * @param name 配置文件中加载项的name属性或资源组名
 		 */
 		public static function destroyRes(name:String):Boolean
 		{
@@ -585,15 +585,34 @@ package org.flexlite.domDll
 		 * 销毁某个资源文件的二进制数据,返回是否删除成功。
 		 * 注意：Dll通常是只缓存文件字节流数据(占内存很少),而解码后的对像采用的是动态缓存，
 		 * 在外部引用都断开时能自动回收,所以不需要显式销毁它们。
-		 * @param name 配置文件中加载项的name属性
+		 * @param name 配置文件中加载项的name属性或资源组名
 		 */
 		public function destroyRes(name:String):Boolean
 		{
-			var type:String = dllConfig.getType(name);
-			if(type=="")
-				return false;
-			var resolver:IResolver = getResolverByType(type);
-			return resolver.destroyRes(name);
+			var group:Vector.<DllItem> = this.dllConfig.getGroupByName(name);
+			if(group){
+				var index:int = this.loadedGroups.indexOf(name);
+				if(index!=-1){
+					this.loadedGroups.splice(index,1);
+				}
+				var length:int = group.length;
+				for(var i:int=0;i<length;i++){
+					var item:DllItem = group[i];
+					item.loaded = false;
+					var analyzer:IResolver = this.getResolverByType(item.type);
+					analyzer.destroyRes(item.name);
+				}
+				return true;
+			}
+			else{
+				var type:String = this.dllConfig.getType(name);
+				if(type=="")
+					return false;
+				item = this.dllConfig.getDllItem(name);
+				item.loaded = false;
+				analyzer = this.getResolverByType(type);
+				return analyzer.destroyRes(name);
+			}
 		}
 	}
 }
