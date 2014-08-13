@@ -107,12 +107,12 @@ package org.flexlite.domDll
 		 * 创建自定义的加载资源组
 		 * @param name 要创建的加载资源组的组名
 		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @param override 是否覆盖已经存在的同名资源组,默认false。
+		 * @param overrideOld 是否覆盖已经存在的同名资源组,默认false。
 		 * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
 		 */				
-		public static function createGroup(name:String,keys:Array,override:Boolean = false):Boolean
+		public static function createGroup(name:String,keys:Array,overrideOld:Boolean = false):Boolean
 		{
-			return instance.createGroup(name,keys,override);
+			return instance.createGroup(name,keys,overrideOld);
 		}
 		/**
 		 * 语言版本,如"cn","en","tw"等。
@@ -253,7 +253,7 @@ package org.flexlite.domDll
 			dllLoader = new DllLoader();
 			dllLoader.addEventListener(DllEvent.GROUP_PROGRESS,dispatchEvent);
 			dllLoader.addEventListener(DllEvent.GROUP_COMPLETE,onGroupComp);
-			dllLoader.addEventListener(DllEvent.ITEM_LOAD_FINISHED,dispatchEvent)
+			dllLoader.addEventListener(DllEvent.ITEM_LOAD_FINISHED,dispatchEvent);
 		}
 		
 		/**
@@ -340,12 +340,12 @@ package org.flexlite.domDll
 		 * 创建自定义的加载资源组
 		 * @param name 要创建的加载资源组的组名
 		 * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @param override 是否覆盖已经存在的同名资源组,默认false。
+		 * @param overrideOld 是否覆盖已经存在的同名资源组,默认false。
 		 * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
 		 */			
-		private function createGroup(name:String,keys:Array,override:Boolean=false):Boolean
+		private function createGroup(name:String,keys:Array,overrideOld:Boolean=false):Boolean
 		{
-			if(override)
+			if(overrideOld)
 			{
 				var index:int = loadedGroups.indexOf(name);
 				if(index!=-1)
@@ -353,7 +353,7 @@ package org.flexlite.domDll
 					loadedGroups.splice(index,1);
 				}
 			}
-			return dllConfig.createGroup(name,keys,override);
+			return dllConfig.createGroup(name,keys,overrideOld);
 		}
 		/**
 		 * dll配置数据

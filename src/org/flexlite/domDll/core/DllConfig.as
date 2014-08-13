@@ -45,9 +45,9 @@ package org.flexlite.domDll.core
 		/**
 		 * @inheritDoc
 		 */	
-		public function createGroup(name:String,keys:Array,override:Boolean=false):Boolean
+		public function createGroup(name:String,keys:Array,overrideOld:Boolean=false):Boolean
 		{
-			if((!override&&groupDic[name])||!keys||keys.length==0)
+			if((!overrideOld&&groupDic[name])||!keys||keys.length==0)
 				return false;
 			var group:Array = [];
 			for each(var key:String in keys)
