@@ -345,6 +345,14 @@ package org.flexlite.domDll
 		 */			
 		private function createGroup(name:String,keys:Array,override:Boolean=false):Boolean
 		{
+			if(override)
+			{
+				var index:int = loadedGroups.indexOf(name);
+				if(index!=-1)
+				{
+					loadedGroups.splice(index,1);
+				}
+			}
 			return dllConfig.createGroup(name,keys,override);
 		}
 		/**
