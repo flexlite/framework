@@ -340,7 +340,12 @@ package org.flexlite.domUI.components
 			if(textField.numLines==0)
 				return 1;
 			var lineHeight:Number = textField.getLineMetrics(0).height;
-			return int((value)/lineHeight)+1;
+			var offsetHeight:Number = (height-4)%lineHeight;
+			if(textField.textHeight + offsetHeight-height==value)
+			{
+				return textField.maxScrollV;
+			}
+			return int((value-2)/lineHeight)+1;
 		}
 		/**
 		 * 根据垂直滚动位置获取对应的垂直像位置
@@ -593,7 +598,7 @@ package org.flexlite.domUI.components
 			}
 			else
 			{
-				var lineHeight:Number = (textField.textHeight-4)/numLines;
+				var lineHeight:Number = textField.getLineMetrics(0).height;
 				var offsetHeight:Number = (height-4)%lineHeight;
 				contentHeight = textField.textHeight + offsetHeight;
 			}
