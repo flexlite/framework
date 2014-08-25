@@ -4,6 +4,7 @@ package org.flexlite.domUI.components.supportClasses
 	
 	import org.flexlite.domCore.dx_internal;
 	import org.flexlite.domUI.components.Scroller;
+	import org.flexlite.domUI.core.ILayoutElement;
 	import org.flexlite.domUI.core.IViewport;
 	import org.flexlite.domUI.core.ScrollPolicy;
 	import org.flexlite.domUI.core.UIComponent;
@@ -24,6 +25,27 @@ package org.flexlite.domUI.components.supportClasses
 			super();
 		}
 		
+		private var _useMinimalContentSize:Boolean = false;
+		/**
+		 * 使用最小的视域尺寸（排除两端空白区域）来决定是否显示滚动条。设置此属性为true，会由Scroller自行测量视域尺寸，
+		 * 而不采用viewport提供的视域尺寸。通常用于避免特殊情况下滚动条无限循环问题(viewport含有设置过相对布局属性的子项)。
+		 */
+		public function get useMinimalContentSize():Boolean
+		{
+			return _useMinimalContentSize;
+		}
+		
+		public function set useMinimalContentSize(value:Boolean):void
+		{
+			if(_useMinimalContentSize==value)
+				return;
+			_useMinimalContentSize = value;
+			if(target)
+			{
+				target.invalidateDisplayList();
+			}
+		}
+		
 		/**
 		 * 开始显示滚动条的最小溢出值。例如：contentWidth >= viewport width + SDT时显示水平滚动条。
 		 */		
@@ -42,11 +64,44 @@ package org.flexlite.domUI.components.supportClasses
 		 */		
 		private function getLayoutContentSize(viewport:IViewport):Point
 		{
+			var group:GroupBase = viewport as GroupBase;
+			if(group&&_useMinimalContentSize)
+			{
+				return measureContentSize(group);
+			}
 			var cw:Number = viewport.contentWidth;
 			var ch:Number = viewport.contentHeight;
 			if (((cw == 0) && (ch == 0)) || (isNaN(cw) || isNaN(ch)))
 				return new Point(0,0);
 			return new Point(cw, ch);
+		}
+		/**
+		 * 重新测量viewport的视域尺寸，如果有相对布局属性，排除两端的空白。
+		 */		
+		private function measureContentSize(target:GroupBase):Point
+		{
+			var maxX:Number = 0;
+			var maxY:Number = 0;
+			var minX:Number = 0;
+			var minY:Number = 0;
+			var count:int = target.numElements;
+			
+			for (var i:int = 0; i < count; i++)
+			{
+				var layoutElement:ILayoutElement = target.getElementAt(i) as ILayoutElement;
+				if (!layoutElement||!layoutElement.includeInLayout)
+					continue;
+				
+				var preferredX:Number = layoutElement.preferredX;
+				var preferredY:Number = layoutElement.preferredY;
+				var preferredWidth:Number = layoutElement.preferredWidth;
+				var preferredHeight:Number = layoutElement.preferredHeight;
+				minX = Math.floor(Math.min(minX,preferredX));
+				minY = Math.floor(Math.min(minY,preferredY));
+				maxX = Math.ceil(Math.max(maxX, preferredX + preferredWidth));
+				maxY = Math.ceil(Math.max(maxY, preferredY + preferredHeight));
+			}
+			return new Point(maxX-minX,maxY-minY);
 		}
 		
 		
