@@ -1381,7 +1381,7 @@ package org.flexlite.domUI.core
 		{
 			if(scaleX>0)
 				return super.x;
-			return super.x = layoutBoundsWidth;
+			return super.x - layoutBoundsWidth;
 		}
 		/**
 		 * @inheritDoc
