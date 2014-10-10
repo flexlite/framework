@@ -753,8 +753,7 @@ package org.flexlite.domUI.layouts
 			var paddingR:Number = isNaN(_paddingRight)?padding:_paddingRight;
 			var paddingT:Number = isNaN(_paddingTop)?padding:_paddingTop;
 			var paddingB:Number = isNaN(_paddingBottom)?padding:_paddingBottom;
-			var horizontalGap:Number = isNaN(_horizontalGap)?0:_horizontalGap;
-			var verticalGap:Number = isNaN(_verticalGap)?0:_verticalGap;
+			
 			if(indexInViewCalculated)
 			{
 				indexInViewCalculated = false;
@@ -789,6 +788,8 @@ package org.flexlite.domUI.layouts
 			var rowIndex:int;
 			var orientedByColumns:Boolean = (orientation == TileOrientation.COLUMNS);
 			var index:int = startIndex;
+			var horizontalGap:Number = isNaN(_horizontalGap)?0:_horizontalGap;
+			var verticalGap:Number = isNaN(_verticalGap)?0:_verticalGap;
 			for(var i:int = startIndex;i <= endIndex;i++)
 			{
 				if(useVirtualLayout)
